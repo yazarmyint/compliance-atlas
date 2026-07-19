@@ -101,6 +101,11 @@ FOOTER_LINES = [
 
 LICENSING_MODELS = ("per_user", "consumption", "included", "n/a")
 
+# <meta name="description"> and og:description, substituted into the template head by build_html.py.
+# The counts are filled from the assembled dataset so the summary cannot drift from it.
+DESCRIPTION = ("{tagline}. {rows} control mappings across {frameworks} compliance frameworks and {products} "
+               "Microsoft security products, each rated for claim strength and verified against an official source.")
+
 META = {
     "title": BRAND["title"],
     "version": BRAND["atlas_version"],
@@ -180,8 +185,11 @@ def main():
     vdates = sorted(r["last_verified"] for r in rows if r.get("last_verified"))
     verified_range = {"earliest": vdates[0], "latest": vdates[-1]} if vdates else {}
 
+    description = DESCRIPTION.format(tagline=BRAND["tagline"], rows=len(rows),
+                                     frameworks=len(frameworks), products=len(PRODUCTS))
+
     meta = dict(META, generated=datetime.datetime.now().isoformat(timespec="seconds"),
-                verified_range=verified_range)
+                verified_range=verified_range, description_meta=description)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
