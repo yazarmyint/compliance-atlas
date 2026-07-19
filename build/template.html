@@ -651,29 +651,33 @@ function vSearch(q){
 function vMissing(kind, id){ return `<div class="pagehead"><h1>Not found</h1><div class="full">No ${esc(kind)} “${esc(id)}”.</div></div>`; }
 
 /* ---------------- router ---------------- */
+const dec = s => { try { return decodeURIComponent(s||""); } catch(e){ return s||""; } };
 function render(){
   const h = location.hash.replace(/^#\/?/, "");
   const [p1, p2, p3, p4] = h.split("/");
   const app = document.getElementById("app");
-  let tab = "home", html;
+  /* view: the page name for document.title. Empty on the landing page, which takes the bare brand. */
+  let tab = "home", html, view = "";
   if(!p1) html = vHome();
-  else if(p1==="industry") { html = vIndustry(p2); tab="home"; }
-  else if(p1==="frameworks"){ html = vFrameworks(); tab="frameworks"; }
-  else if(p1==="framework"){ html = vFramework(p2); tab="frameworks"; }
-  else if(p1==="products"){ html = vProducts(); tab="products"; }
-  else if(p1==="product" && p3==="solution"){ html = vSolution(p2, p4); tab="products"; }
-  else if(p1==="product"){ html = vProduct(p2); tab="products"; }
+  else if(p1==="industry") { html = vIndustry(p2); tab="home"; view = IND[p2]?.name || "Not found"; }
+  else if(p1==="frameworks"){ html = vFrameworks(); tab="frameworks"; view = "Frameworks"; }
+  else if(p1==="framework"){ html = vFramework(p2); tab="frameworks"; view = FW[p2]?.name || "Not found"; }
+  else if(p1==="products"){ html = vProducts(); tab="products"; view = PROD_ORDER.length===1 ? prodFull(PROD_ORDER[0]) : "Products"; }
+  else if(p1==="product" && p3==="solution"){ html = vSolution(p2, p4); tab="products"; view = SOL[dec(p4)] ? `${dec(p4)} · ${prodName(p2)}` : "Not found"; }
+  else if(p1==="product"){ html = vProduct(p2); tab="products"; view = PRODUCTS[p2] ? prodFull(p2) : "Not found"; }
   else if(p1==="solutions"){ location.hash = "#/products"; return; }               /* legacy route */
   else if(p1==="solution"){ location.hash = `#/product/${PROD_ORDER[0]}/solution/${p2}`; return; }  /* legacy route */
-  else if(p1==="matrix" && p2){ html = vMatrixProduct(p2); tab="matrix"; }
-  else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; }
-  else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; }
-  else if(p1==="search"){ html = vSearch(p2); tab=""; }
-  else html = vMissing("page", p1);
+  else if(p1==="matrix" && p2){ html = vMatrixProduct(p2); tab="matrix"; view = PRODUCTS[p2] ? `${prodName(p2)} density` : "Not found"; }
+  else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; view = "Density matrix"; }
+  else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; view = FW[p3] ? `${FW[p3].name} × ${dec(p4)}` : "Not found"; }
+  else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; }
+  else { html = vMissing("page", p1); view = "Not found"; }
   app.innerHTML = html;
   document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.tab===tab));
   if(!["framework"].includes(p1)) fwFilter = null;
   window.scrollTo(0,0);
+  /* Per-route title: bookmarks, browser history and pasted links now identify the view (PR-003). */
+  document.title = view ? `${view} · ${META.brand.title}` : META.brand.title;
 }
 window.addEventListener("hashchange", render);
 
