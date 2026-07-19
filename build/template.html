@@ -590,11 +590,16 @@ function vCell(pid, fid, skey){
 function vSearch(q){
   q = decodeURIComponent(q||"").trim();
   const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  /* Index every field a reader might reasonably search on. The government-cloud note and the two
+     evidence examples are the sector-specific content ("GCC High", "Azure Government", "DoD");
+     coverage/confidence make "direct support" a query; id makes a cited row findable by its id. */
   const hay = r => [r.control_ref, r.control_intent, rowSolution(r), (r.also_involves||[]).join(" "),
     r.capability_detail, r.how_it_supports, r.external_dependencies, r.legacy_dependencies,
     (r.related_microsoft||[]).map(e=>(RELPROD[e.product]||e.product)+" "+(e.note||"")).join(" "),
     r.license_requirement, r.licensing_model, r.product, prodFull(r.product),
-    FW[r.framework].name, r.control_domain].join(" ").toLowerCase();
+    FW[r.framework].name, r.control_domain,
+    r.cloud_availability_note, r.config_evidence_example, r.operational_evidence_example,
+    r.coverage, r.confidence, r.id].join(" ").toLowerCase();
   const hits = terms.length ? ROWS.filter(r => terms.every(t => hay(r).includes(t))) : [];
   return `<div class="pagehead"><div class="overline">Global search</div><h1>“${esc(q)}”</h1>
     <div class="metaline"><span class="count-pill">${hits.length} matching row(s)</span></div></div>
