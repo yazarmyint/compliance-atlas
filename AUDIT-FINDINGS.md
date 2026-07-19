@@ -1168,3 +1168,131 @@ Visibility confirmed by `gh repo view`: `"isPrivate": true`, `"visibility": "PRI
 copyright exposure identified in PR-042 is closed before it could be created, and the licence position is
 settled. PR-040, PR-041, and PR-042 are resolved. Remaining pre-publish blockers: **PR-001** (keyboard and
 screen-reader navigation) and **PR-043** (public name / `working_title`).
+
+## 20. Presentation and metadata quick-wins (2026-07-19)
+
+Execution of PROJECT-REVIEW roadmap item 3 (**PR-043**) and section 5(b) items 8, 9, 10, 11, 14 and 17
+(**PR-012**, **PR-010**, **PR-003**, **PR-014a/b**, **PR-046**, **PR-006**, **PR-007**). **All work is in
+`build/template.html`, `build/assemble.py` and `build/build_html.py`. No `rows_*.py` module was opened and no
+row field was changed** — proven mechanically in §20.9. Accessibility (PR-001, PR-002) was deliberately left
+alone even where this session edited adjacent markup; it is the next session.
+
+### 20.1 PR-043 — public name settled
+
+`BRAND.title` = **Compliance Atlas**, `working_title` = **False**, so the header's "· working title" suffix is
+gone. `BRAND.tagline` is now the short **"Mapping frameworks to the Microsoft security stack"** and is rendered
+as its own element (hero overline, brand tooltip) rather than concatenated into any title string. The
+`<title>`/`document.title` base is "Compliance Atlas". The old tagline's substance ("honest about claim
+strength") is not lost: it is carried by the hero lede and, from this session, by the taxonomy legend itself.
+
+### 20.2 PR-012 — search index (highest value-per-hour item in the review)
+
+Six fields added to the `hay()` concatenation: `cloud_availability_note`, `config_evidence_example`,
+`operational_evidence_example`, `coverage`, `confidence`, `id`.
+
+| Query | Before | After | Rows containing the exact phrase |
+|---|---|---|---|
+| `gcc high` | 2 | **222** | 216 |
+| `azure government` | 2 | **90** | 89 |
+| `dod` | 2 | **179** | 179 |
+| `direct support` | 8 | **128** | 128 |
+
+Search returns slightly more than the exact-phrase count because it is a term-AND match, not a phrase match
+(a row carrying "GCC" and "High" in different sentences matches "gcc high"); the review's acceptance figures of
+~216/~89/~179 are the phrase counts and are met exactly. Row ids now resolve: `csf-pr-ps-04-sentinel`,
+`hipaa-312-b-sentinel`, `iso-a-8-16-mdc` each return their one row.
+
+§15.7 item-8 spot checks re-run, all still product-correct: **CSPM** 26 → 35 (all Defender for Cloud), **CIEM**
+1 → 18 (all MDC), **attack path** 15 → 15 (MDC + Defender XDR), **MCSB** 18 → 25 (all MDC), **FIM** 2 → 2 (all
+MDC). FIM stays at 2 because only two rows use the acronym at all; the indexing change suppressed nothing.
+
+### 20.3 PR-010 — the claim taxonomy is now on screen
+
+Three placements, all reading from `META`; **no definition text is duplicated in the template**, so a
+definition cannot drift between dataset and UI.
+
+1. **Landing legend** under the stats bar ("How to read a mapping"): four coverage levels, three confidence
+   levels, four licensing models, each with its `META` definition, rendered with the live badge/meter/chip
+   components so the legend and the rows are visibly the same objects.
+2. **Tooltips**: `covBadge()` and `confMeter()` now carry `title="<label> — <definition>"`, and the licensing
+   chip gained a tooltip via a new `licChip()` helper (previously it had none).
+3. **Compact coverage legend** at the top of the framework view, immediately above the stacked product cards,
+   where the Direct/Partial/Evidence distinction is most acute (the PR-013 `PR.PS-04` case).
+
+When the about page is written (PR-044) it must take its definitions from `META` the same way.
+
+### 20.4 PR-003 — per-route `document.title`
+
+`render()` derives a view name per route and sets `"<view> · Compliance Atlas"` at the end of the render; the
+landing page keeps the bare brand. Verified across nine routes (§20.8). A `dec()` helper tolerates malformed
+percent-encoding in a hash segment rather than throwing.
+
+### 20.5 PR-014(a)(b) — verification currency surfaced
+
+(a) `last_verified` renders as a muted `✓ 2026-07-17` chip in the **collapsed** row summary, so footer line 4's
+"currency is governed by each row's last-verified date" is legible without expanding anything.
+(b) The hand-maintained `brand.as_of` (already stale at 2026-07-18) is **removed** and replaced by
+`meta.verified_range`, computed in `assemble.py` from the rows' own `last_verified` values. The hero reads
+"rows verified 2026-07-16 – 2026-07-18" and cannot go stale by construction.
+
+**Not done, deliberately:** `default_last_verified` is untouched (2026-07-16), no row's `last_verified` was
+changed, and the re-verification of the 124-row 2026-07-16 Purview cohort remains §15.7 item 5 / PR-014(d) for
+its own session. Surfacing the dates makes that cohort's age visible, which is the point.
+
+### 20.6 PR-006, PR-007 — small fixes
+
+`color-scheme: light` on `:root` and `color-scheme: dark` on `[data-theme="dark"]`, so scrollbars and native
+form chrome follow the theme. A `<p class="loading">Loading the atlas…</p>` placeholder inside `<main>`, which
+`render()` replaces wholesale on first run.
+
+### 20.7 PR-046 — page metadata
+
+`meta.description_meta` is composed in `assemble.py` from the tagline plus the live row/framework/product
+counts, so the social and search summary cannot drift from the dataset. `build_html.py` substitutes
+`__BRAND_TITLE__` and `__META_DESCRIPTION__` into the head **before** the data payload is inserted (so dataset
+content can never be mistaken for a marker), asserting on each marker as it already does for `/*__DATA__*/`.
+The head now carries `<meta name="description">`, `og:type`, `og:title`, `og:description`, and an inline SVG
+data-URI favicon of the ¶ brand glyph in the accent ink.
+
+**`og:image` deliberately skipped.** It requires an absolute hosted URL, which would cost the zero-external-
+asset property that makes the `file://` copy fully self-contained. Confirmed: the built head contains **zero**
+non-`data:` `src`/`href` references.
+
+### 20.8 Verification
+
+A Node harness runs the built file's application script against a minimal DOM stub and asserts against the
+rendered HTML — 29 checks, 0 failures: nine per-route titles; the landing legend containing all eleven `META`
+definitions verbatim; the compact framework legend; `covBadge`/`confMeter`/`licChip` tooltips carrying their
+`META` definitions; the `last_verified` chip inside `<summary>` (that is, visible while collapsed); the three
+search acceptance counts; row-id search; and the brand strings including the absence of the working-title
+suffix.
+
+Rendered checks in headless Chrome from `file://`, confirming the offline path still works end to end:
+landing page in **light** and **dark** (legend legible in both; every custom property the new CSS uses is
+defined in both theme blocks — checked mechanically, only the two font variables are `:root`-only, which is
+pre-existing and correct), and the framework view showing the compact legend and the verification chips in
+place without disturbing the row grid.
+
+**Print:** the GLBA framework printed to PDF before and after — **22 → 23 pages**. The single extra page is the
+compact legend plus chip reflow; pagination is otherwise unchanged and rows still expand under `beforeprint`.
+The full per-framework print pass remains §15.7 item 9.
+
+### 20.9 Gate: the dataset did not move
+
+The `.gitattributes` normalization from §19.2 makes `git diff` a usable drift check, and this is its first real
+use. Against the pre-session baseline, `compliance-atlas.json` shows **10 insertions, 6 deletions, all inside
+`meta`**:
+
+- `brand.working_title` `true` → `false`
+- `brand.tagline` replaced
+- `brand.as_of` removed
+- `meta.generated` timestamp bumped
+- `meta.verified_range` and `meta.description_meta` added
+
+Parsed deep-equality against the baseline confirms **`rows` identical (378 == 378)**, and `products`,
+`related_products`, `solutions`, `frameworks` and `industries` identical. JSON↔HTML reconcile: the embedded
+data island parses to an object equal to `compliance-atlas.json`, 378 rows.
+
+**Verdict: COMPLETE.** PR-043, PR-012, PR-010, PR-003, PR-014(a)(b), PR-006, PR-007 and PR-046 are resolved.
+With PR-043 cleared, **PR-001 (keyboard and screen-reader navigation) is the last remaining pre-publish
+blocker**.
