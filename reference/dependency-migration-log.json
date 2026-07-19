@@ -1,0 +1,1472 @@
+[
+ {
+  "id": "dpr-a5",
+  "original": "Contract/DPA and SOW terms; policy management and document-control process",
+  "related": [],
+  "external": "Contract/DPA and SOW terms; policy management and document-control process",
+  "flagged": []
+ },
+ {
+  "id": "dpr-d9",
+  "original": "Data-mapping exercise; collection controls in intake apps/forms",
+  "related": [],
+  "external": "Data-mapping exercise; collection controls in intake apps/forms",
+  "flagged": []
+ },
+ {
+  "id": "dpr-d11",
+  "original": "De-identification/anonymization process and tooling (primary); analytics environment controls",
+  "related": [],
+  "external": "De-identification/anonymization process and tooling (primary); analytics environment controls",
+  "flagged": []
+ },
+ {
+  "id": "dpr-e12",
+  "original": "Legal-approved retention schedule; retention controls for non-M365 repositories",
+  "related": [],
+  "external": "Legal-approved retention schedule; retention controls for non-M365 repositories",
+  "flagged": [
+   "retention controls for non-M365 repositories"
+  ]
+ },
+ {
+  "id": "dpr-e13",
+  "original": "Return-of-data procedure; physical media destruction and certificates",
+  "related": [],
+  "external": "Return-of-data procedure; physical media destruction and certificates",
+  "flagged": []
+ },
+ {
+  "id": "dpr-f14-22",
+  "original": "Microsoft Priva Subject Rights Requests (if licensed); privacy operations process; app-level data stores",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Microsoft Priva Subject Rights Requests (if licensed)"
+   }
+  ],
+  "external": "privacy operations process; app-level data stores",
+  "flagged": []
+ },
+ {
+  "id": "dpr-i30-31",
+  "original": "IR plan and breach-notification process; SupplierWeb security contacts; SIEM/SOAR",
+  "related": [],
+  "external": "IR plan and breach-notification process; SupplierWeb security contacts; SIEM/SOAR",
+  "flagged": []
+ },
+ {
+  "id": "dpr-j33",
+  "original": "Vulnerability scanning/pen-test program; enterprise risk assessment; change-management system",
+  "related": [],
+  "external": "Vulnerability scanning/pen-test program; enterprise risk assessment; change-management system",
+  "flagged": []
+ },
+ {
+  "id": "dpr-j35",
+  "original": "CMDB/asset register; device lifecycle (recovery/disposal) records; Intune device inventory",
+  "related": [
+   {
+    "product": "intune",
+    "solution": null,
+    "role": "contributing",
+    "note": "Intune device inventory"
+   }
+  ],
+  "external": "CMDB/asset register; device lifecycle (recovery/disposal) records",
+  "flagged": []
+ },
+ {
+  "id": "dpr-j36",
+  "original": "Entra ID, Conditional Access/MFA, PIM, access reviews, joiner-mover-leaver process (primary)",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "primary",
+    "note": "Entra ID, Conditional Access/MFA, PIM, access reviews, joiner-mover-leaver process (primary)"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "dpr-j40",
+  "original": "IDS/IPS and network monitoring (Defender/SIEM); offboarding communications process",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "IDS/IPS and network monitoring (Defender/SIEM)"
+   }
+  ],
+  "external": "offboarding communications process",
+  "flagged": []
+ },
+ {
+  "id": "dpr-j47",
+  "original": "TLS/IPsec configuration on services and network gear; certificate lifecycle management; M365 platform TLS (Microsoft-managed)",
+  "related": [],
+  "external": "TLS/IPsec configuration on services and network gear; certificate lifecycle management; M365 platform TLS (Microsoft-managed)",
+  "flagged": [
+   "M365 platform TLS (Microsoft-managed)"
+  ]
+ },
+ {
+  "id": "dpr-j48",
+  "original": "BitLocker/FileVault via Intune; device compliance policy reports (primary)",
+  "related": [
+   {
+    "product": "intune",
+    "solution": null,
+    "role": "contributing",
+    "note": "BitLocker/FileVault via Intune"
+   }
+  ],
+  "external": "device compliance policy reports (primary)",
+  "flagged": []
+ },
+ {
+  "id": "dpr-j49",
+  "original": "M365 service encryption (inherited); encryption for non-M365 stores; Azure Key Vault key ceremony for Customer Key",
+  "related": [],
+  "external": "M365 service encryption (inherited); encryption for non-M365 stores; Azure Key Vault key ceremony for Customer Key",
+  "flagged": [
+   "M365 service encryption (inherited)",
+   "encryption for non-M365 stores",
+   "Azure Key Vault key ceremony for Customer Key"
+  ]
+ },
+ {
+  "id": "dpr-j50",
+  "original": "Anonymization/synthetic-data tooling in the engineering pipeline (primary)",
+  "related": [],
+  "external": "Anonymization/synthetic-data tooling in the engineering pipeline (primary)",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-3",
+  "original": "Entra role design, PIM, access reviews for duty-level SoD (primary); org design",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "primary",
+    "note": "Entra role design, PIM, access reviews for duty-level SoD (primary)"
+   }
+  ],
+  "external": "org design",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-9",
+  "original": "CMDB/asset register with owners; process to reconcile data inventory to asset owners",
+  "related": [],
+  "external": "CMDB/asset register with owners; process to reconcile data inventory to asset owners",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-10",
+  "original": "Acceptable-use policy; user awareness training",
+  "related": [],
+  "external": "Acceptable-use policy; user awareness training",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-12",
+  "original": "Classification policy document; data owners assigning classifications outside M365",
+  "related": [],
+  "external": "Classification policy document; data owners assigning classifications outside M365",
+  "flagged": [
+   "data owners assigning classifications outside M365"
+  ]
+ },
+ {
+  "id": "iso-a-5-13",
+  "original": "Labelling procedures for physical and non-M365 digital media",
+  "related": [],
+  "external": "Labelling procedures for physical and non-M365 digital media",
+  "flagged": [
+   "Labelling procedures for physical and non-M365 digital media"
+  ]
+ },
+ {
+  "id": "iso-a-5-14",
+  "original": "Transfer agreements (legal); SPO/Teams external-sharing settings; Entra B2B configuration",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "Entra B2B configuration"
+   }
+  ],
+  "external": "Transfer agreements (legal); SPO/Teams external-sharing settings",
+  "flagged": [
+   "SPO/Teams external-sharing settings"
+  ]
+ },
+ {
+  "id": "iso-a-5-25",
+  "original": "Incident classification procedure; SIEM/SOAR case tooling",
+  "related": [],
+  "external": "Incident classification procedure; SIEM/SOAR case tooling",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-28",
+  "original": "Forensic procedure and chain-of-custody policy; endpoint/network forensics tooling",
+  "related": [],
+  "external": "Forensic procedure and chain-of-custody policy; endpoint/network forensics tooling",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-31",
+  "original": "Legal register ownership; counsel review of applicability",
+  "related": [],
+  "external": "Legal register ownership; counsel review of applicability",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-33",
+  "original": "Records governance policy; protection for physical/non-M365 records",
+  "related": [],
+  "external": "Records governance policy; protection for physical/non-M365 records",
+  "flagged": [
+   "protection for physical/non-M365 records"
+  ]
+ },
+ {
+  "id": "iso-a-5-34",
+  "original": "Privacy program and ROPA; Microsoft Priva (if licensed); DPO oversight",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Privacy program and ROPA"
+   },
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Microsoft Priva (if licensed)"
+   }
+  ],
+  "external": "DPO oversight",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-5-36",
+  "original": "Internal audit function; policy exception process",
+  "related": [],
+  "external": "Internal audit function; policy exception process",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-7-10",
+  "original": "Media inventory and disposal process; device control (Defender for Endpoint); destruction certificates",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "device control (Defender for Endpoint)"
+   }
+  ],
+  "external": "Media inventory and disposal process; destruction certificates",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-8-1",
+  "original": "Intune device management + BitLocker; Defender for Endpoint",
+  "related": [
+   {
+    "product": "intune",
+    "solution": null,
+    "role": "contributing",
+    "note": "Intune device management + BitLocker"
+   },
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender for Endpoint"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-8-3",
+  "original": "Entra ID, Conditional Access, PIM, SharePoint permission model (primary)",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "primary",
+    "note": "Entra ID, Conditional Access, PIM, SharePoint permission model (primary)"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-8-10",
+  "original": "Retention schedule (legal); deletion for non-M365 stores",
+  "related": [],
+  "external": "Retention schedule (legal); deletion for non-M365 stores",
+  "flagged": [
+   "deletion for non-M365 stores"
+  ]
+ },
+ {
+  "id": "iso-a-8-11",
+  "original": "Masking/tokenization tooling in data platforms (primary); DB-level dynamic masking",
+  "related": [],
+  "external": "Masking/tokenization tooling in data platforms (primary); DB-level dynamic masking",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-8-12",
+  "original": "Network egress controls; Defender for Cloud Apps for unsanctioned SaaS",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender for Cloud Apps for unsanctioned SaaS"
+   }
+  ],
+  "external": "Network egress controls",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-8-15",
+  "original": "SIEM (Sentinel) for aggregation/correlation and non-M365 logs",
+  "related": [
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "SIEM (Sentinel) for aggregation/correlation and non-M365 logs"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-8-16",
+  "original": "Sentinel/Defender XDR for network and system monitoring",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Sentinel/Defender XDR for network and system monitoring"
+   },
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "Sentinel/Defender XDR for network and system monitoring"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "iso-a-8-24",
+  "original": "Key management (Azure Key Vault/HSM), TLS management, BitLocker; crypto policy document",
+  "related": [],
+  "external": "Key management (Azure Key Vault/HSM), TLS management, BitLocker; crypto policy document",
+  "flagged": [
+   "Key management (Azure Key Vault/HSM), TLS management, BitLocker"
+  ]
+ },
+ {
+  "id": "soc2-cc1-1",
+  "original": "Code of conduct; HR disciplinary process; ethics training",
+  "related": [],
+  "external": "Code of conduct; HR disciplinary process; ethics training",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc4-1",
+  "original": "Internal audit program; management review cadence",
+  "related": [],
+  "external": "Internal audit program; management review cadence",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc6-1",
+  "original": "Entra ID + Conditional Access + MFA + PIM (primary); network ACLs",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "primary",
+    "note": "Entra ID + Conditional Access + MFA + PIM (primary)"
+   }
+  ],
+  "external": "network ACLs",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc6-5",
+  "original": "Media-sanitization process (NIST 800-88 aligned); asset disposal vendor certificates",
+  "related": [],
+  "external": "Media-sanitization process (NIST 800-88 aligned); asset disposal vendor certificates",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc6-7",
+  "original": "Backup media handling; TLS configuration (platform)",
+  "related": [],
+  "external": "Backup media handling; TLS configuration (platform)",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc7-2",
+  "original": "Sentinel/Defender XDR (infrastructure anomalies); availability monitoring",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Sentinel/Defender XDR (infrastructure anomalies)"
+   },
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "Sentinel/Defender XDR (infrastructure anomalies)"
+   }
+  ],
+  "external": "availability monitoring",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc7-3",
+  "original": "Incident classification procedure; SIEM case management",
+  "related": [],
+  "external": "Incident classification procedure; SIEM case management",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc7-4",
+  "original": "IR plan and runbooks; SOAR; communications/legal",
+  "related": [],
+  "external": "IR plan and runbooks; SOAR; communications/legal",
+  "flagged": []
+ },
+ {
+  "id": "soc2-cc8-1",
+  "original": "Change-management system and approvals; testing process",
+  "related": [],
+  "external": "Change-management system and approvals; testing process",
+  "flagged": []
+ },
+ {
+  "id": "soc2-c1-1",
+  "original": "Confidentiality commitments inventory (contracts); data owners for non-M365 stores",
+  "related": [],
+  "external": "Confidentiality commitments inventory (contracts); data owners for non-M365 stores",
+  "flagged": [
+   "data owners for non-M365 stores"
+  ]
+ },
+ {
+  "id": "soc2-c1-2",
+  "original": "Physical document destruction; third-party data return/destruction clauses",
+  "related": [],
+  "external": "Physical document destruction; third-party data return/destruction clauses",
+  "flagged": []
+ },
+ {
+  "id": "soc2-p1-p3",
+  "original": "Privacy notice/consent tooling (e.g., Microsoft Priva Consent Management, OneTrust); legal review; web/app collection controls",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Privacy notice/consent tooling (e.g., Microsoft Priva Consent Management, OneTrust)"
+   }
+  ],
+  "external": "legal review; web/app collection controls",
+  "flagged": []
+ },
+ {
+  "id": "soc2-p4-1",
+  "original": "Purpose register (ROPA); application-level use controls; Priva",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Priva"
+   }
+  ],
+  "external": "Purpose register (ROPA); application-level use controls",
+  "flagged": []
+ },
+ {
+  "id": "soc2-p4-2",
+  "original": "Retention schedule approved by legal/privacy; non-M365 store retention",
+  "related": [],
+  "external": "Retention schedule approved by legal/privacy; non-M365 store retention",
+  "flagged": [
+   "non-M365 store retention"
+  ]
+ },
+ {
+  "id": "soc2-p4-3",
+  "original": "Disposal for non-M365/physical stores",
+  "related": [],
+  "external": "Disposal for non-M365/physical stores",
+  "flagged": [
+   "Disposal for non-M365/physical stores"
+  ]
+ },
+ {
+  "id": "soc2-p5",
+  "original": "Microsoft Priva Subject Rights Requests (if licensed); identity-verification process",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Microsoft Priva Subject Rights Requests (if licensed)"
+   }
+  ],
+  "external": "identity-verification process",
+  "flagged": []
+ },
+ {
+  "id": "soc2-p6-2-3",
+  "original": "Disclosure register process; breach determination (legal)",
+  "related": [],
+  "external": "Disclosure register process; breach determination (legal)",
+  "flagged": []
+ },
+ {
+  "id": "soc2-p8-1",
+  "original": "Complaint intake and resolution process; privacy office",
+  "related": [],
+  "external": "Complaint intake and resolution process; privacy office",
+  "flagged": []
+ },
+ {
+  "id": "soc2-a1",
+  "original": "M365/Azure platform SLAs; BCDR plan and tests; backup solution (e.g., Microsoft 365 Backup)",
+  "related": [],
+  "external": "M365/Azure platform SLAs; BCDR plan and tests; backup solution (e.g., Microsoft 365 Backup)",
+  "flagged": [
+   "M365/Azure platform SLAs",
+   "backup solution (e.g., Microsoft 365 Backup)"
+  ]
+ },
+ {
+  "id": "soc2-pi1",
+  "original": "Application input/processing/output controls; data quality tooling; QA process",
+  "related": [],
+  "external": "Application input/processing/output controls; data quality tooling; QA process",
+  "flagged": []
+ },
+ {
+  "id": "hipaa-308-a1-a",
+  "original": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
+  "related": [],
+  "external": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
+  "flagged": [
+   "non-M365 system discovery"
+  ]
+ },
+ {
+  "id": "hipaa-308-a1-c",
+  "original": "Sanction policy document; HR disciplinary process",
+  "related": [],
+  "external": "Sanction policy document; HR disciplinary process",
+  "flagged": []
+ },
+ {
+  "id": "hipaa-308-a1-d",
+  "original": "Review procedure and assigned reviewer; SIEM for EHR/non-M365 logs",
+  "related": [],
+  "external": "Review procedure and assigned reviewer; SIEM for EHR/non-M365 logs",
+  "flagged": [
+   "SIEM for EHR/non-M365 logs"
+  ]
+ },
+ {
+  "id": "hipaa-308-a4",
+  "original": "Entra ID groups + access reviews; EHR role-based access; minimum-necessary policy",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "Entra ID groups + access reviews"
+   }
+  ],
+  "external": "EHR role-based access; minimum-necessary policy",
+  "flagged": []
+ },
+ {
+  "id": "hipaa-308-a6",
+  "original": "IR plan; breach risk assessment (§164.402); OCR notification process",
+  "related": [],
+  "external": "IR plan; breach risk assessment (§164.402); OCR notification process",
+  "flagged": []
+ },
+ {
+  "id": "hipaa-308-a8",
+  "original": "Independent security evaluation/audit; penetration testing program",
+  "related": [],
+  "external": "Independent security evaluation/audit; penetration testing program",
+  "flagged": []
+ },
+ {
+  "id": "hipaa-310-d2",
+  "original": "Physical media sanitization + destruction certificates; device decommissioning process",
+  "related": [],
+  "external": "Physical media sanitization + destruction certificates; device decommissioning process",
+  "flagged": []
+ },
+ {
+  "id": "hipaa-312-a2-iv",
+  "original": "M365 service encryption (inherited); EHR/database encryption; key management",
+  "related": [],
+  "external": "M365 service encryption (inherited); EHR/database encryption; key management",
+  "flagged": [
+   "M365 service encryption (inherited)"
+  ]
+ },
+ {
+  "id": "hipaa-312-b",
+  "original": "EHR/clinical system audit logging; SIEM aggregation",
+  "related": [],
+  "external": "EHR/clinical system audit logging; SIEM aggregation",
+  "flagged": []
+ },
+ {
+  "id": "hipaa-312-c",
+  "original": "SharePoint versioning (platform); EHR integrity mechanisms; backup/restore validation",
+  "related": [],
+  "external": "SharePoint versioning (platform); EHR integrity mechanisms; backup/restore validation",
+  "flagged": [
+   "SharePoint versioning (platform)"
+  ]
+ },
+ {
+  "id": "hipaa-312-e",
+  "original": "TLS configuration (platform-managed in M365); site-to-site VPN/interface engines for HL7/FHIR feeds",
+  "related": [],
+  "external": "TLS configuration (platform-managed in M365); site-to-site VPN/interface engines for HL7/FHIR feeds",
+  "flagged": [
+   "TLS configuration (platform-managed in M365)"
+  ]
+ },
+ {
+  "id": "hipaa-316-b",
+  "original": "Policy authoring/review process; document-control ownership",
+  "related": [],
+  "external": "Policy authoring/review process; document-control ownership",
+  "flagged": []
+ },
+ {
+  "id": "171-3-1-3",
+  "original": "Network segmentation/boundary flow control; enclave architecture",
+  "related": [],
+  "external": "Network segmentation/boundary flow control; enclave architecture",
+  "flagged": []
+ },
+ {
+  "id": "171-3-1-22",
+  "original": "Public-posting review procedure; web CMS controls",
+  "related": [],
+  "external": "Public-posting review procedure; web CMS controls",
+  "flagged": []
+ },
+ {
+  "id": "171-3-3-1",
+  "original": "SIEM (Sentinel) for estate-wide log aggregation and non-M365 sources",
+  "related": [
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "SIEM (Sentinel) for estate-wide log aggregation and non-M365 sources"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "171-3-3-2",
+  "original": "Entra ID unique identities; prohibition of shared credentials",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "Entra ID unique identities"
+   }
+  ],
+  "external": "prohibition of shared credentials",
+  "flagged": []
+ },
+ {
+  "id": "171-3-3-8",
+  "original": "SIEM-side log protection; export handling procedure",
+  "related": [],
+  "external": "SIEM-side log protection; export handling procedure",
+  "flagged": []
+ },
+ {
+  "id": "171-3-6-1-2",
+  "original": "IR plan; DIBNet-report procedure (DFARS 7012); SIEM/SOAR",
+  "related": [],
+  "external": "IR plan; DIBNet-report procedure (DFARS 7012); SIEM/SOAR",
+  "flagged": []
+ },
+ {
+  "id": "171-3-8-4",
+  "original": "CUI Registry-aligned marking policy; physical media marking procedure",
+  "related": [],
+  "external": "CUI Registry-aligned marking policy; physical media marking procedure",
+  "flagged": []
+ },
+ {
+  "id": "171-3-8-7",
+  "original": "Intune/Defender device control (port-level); asset-scope definition",
+  "related": [
+   {
+    "product": "intune",
+    "solution": null,
+    "role": "contributing",
+    "note": "Intune/Defender device control (port-level)"
+   },
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Intune/Defender device control (port-level)"
+   }
+  ],
+  "external": "asset-scope definition",
+  "flagged": []
+ },
+ {
+  "id": "171-3-9-2",
+  "original": "Entra offboarding (account disable, session revoke); HR process feed",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "Entra offboarding (account disable, session revoke)"
+   }
+  ],
+  "external": "HR process feed",
+  "flagged": []
+ },
+ {
+  "id": "171-3-12-1-3",
+  "original": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
+  "related": [],
+  "external": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
+  "flagged": []
+ },
+ {
+  "id": "171-3-13-8",
+  "original": "TLS/VPN configuration; FIPS 140 module validation documentation (Microsoft)",
+  "related": [],
+  "external": "TLS/VPN configuration; FIPS 140 module validation documentation (Microsoft)",
+  "flagged": [
+   "FIPS 140 module validation documentation (Microsoft)"
+  ]
+ },
+ {
+  "id": "171-3-13-16",
+  "original": "BitLocker on endpoints (Intune); M365 service encryption (inherited); non-M365 store encryption",
+  "related": [
+   {
+    "product": "intune",
+    "solution": null,
+    "role": "contributing",
+    "note": "BitLocker on endpoints (Intune)"
+   }
+  ],
+  "external": "M365 service encryption (inherited); non-M365 store encryption",
+  "flagged": [
+   "M365 service encryption (inherited)",
+   "non-M365 store encryption"
+  ]
+ },
+ {
+  "id": "171-3-14-7",
+  "original": "Defender XDR/Sentinel for system-level detection; acceptable-use definitions",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender XDR/Sentinel for system-level detection"
+   },
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender XDR/Sentinel for system-level detection"
+   }
+  ],
+  "external": "acceptable-use definitions",
+  "flagged": []
+ },
+ {
+  "id": "53-ac-3",
+  "original": "Entra ID authorizations, Conditional Access, application ACLs (primary)",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "primary",
+    "note": "Entra ID authorizations, Conditional Access, application ACLs (primary)"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "53-ac-4",
+  "original": "Network segmentation and boundary flow control; cross-domain solutions",
+  "related": [],
+  "external": "Network segmentation and boundary flow control; cross-domain solutions",
+  "flagged": []
+ },
+ {
+  "id": "53-ac-21",
+  "original": "Sharing-agreement process; partner vetting; B2B collaboration configuration (Entra)",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "B2B collaboration configuration (Entra)"
+   }
+  ],
+  "external": "Sharing-agreement process; partner vetting",
+  "flagged": []
+ },
+ {
+  "id": "53-ac-22",
+  "original": "Web publishing review procedure; CMS controls",
+  "related": [],
+  "external": "Web publishing review procedure; CMS controls",
+  "flagged": []
+ },
+ {
+  "id": "53-au-2-12",
+  "original": "Logging configuration on non-M365 components; SIEM collection (Sentinel)",
+  "related": [
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "SIEM collection (Sentinel)"
+   }
+  ],
+  "external": "Logging configuration on non-M365 components",
+  "flagged": [
+   "Logging configuration on non-M365 components"
+  ]
+ },
+ {
+  "id": "53-au-6",
+  "original": "SIEM correlation and dashboards; assigned reviewer roles",
+  "related": [],
+  "external": "SIEM correlation and dashboards; assigned reviewer roles",
+  "flagged": []
+ },
+ {
+  "id": "53-au-9",
+  "original": "SIEM-side log protection; export handling procedure",
+  "related": [],
+  "external": "SIEM-side log protection; export handling procedure",
+  "flagged": []
+ },
+ {
+  "id": "53-au-11",
+  "original": "SIEM/archive retention for non-M365 logs; records schedule approval (e.g., NARA GRS alignment)",
+  "related": [],
+  "external": "SIEM/archive retention for non-M365 logs; records schedule approval (e.g., NARA GRS alignment)",
+  "flagged": [
+   "SIEM/archive retention for non-M365 logs"
+  ]
+ },
+ {
+  "id": "53-cm-12",
+  "original": "Information-location documentation for non-M365 components; data-flow diagrams",
+  "related": [],
+  "external": "Information-location documentation for non-M365 components; data-flow diagrams",
+  "flagged": [
+   "Information-location documentation for non-M365 components"
+  ]
+ },
+ {
+  "id": "53-ir-4",
+  "original": "IR plan and SOC processes; SIEM/SOAR; agency reporting obligations (FISMA/US-CERT)",
+  "related": [],
+  "external": "IR plan and SOC processes; SIEM/SOAR; agency reporting obligations (FISMA/US-CERT)",
+  "flagged": []
+ },
+ {
+  "id": "53-ir-9",
+  "original": "Spillage response roles and procedures; system-level sanitization where required",
+  "related": [],
+  "external": "Spillage response roles and procedures; system-level sanitization where required",
+  "flagged": []
+ },
+ {
+  "id": "53-mp-3",
+  "original": "Marking policy (e.g., CUI Registry alignment); physical media marking procedure",
+  "related": [],
+  "external": "Marking policy (e.g., CUI Registry alignment); physical media marking procedure",
+  "flagged": []
+ },
+ {
+  "id": "53-mp-6",
+  "original": "Media sanitization program per NIST SP 800-88; destruction certificates; Microsoft datacenter media handling (inherited, evidenced via FedRAMP packages)",
+  "related": [],
+  "external": "Media sanitization program per NIST SP 800-88; destruction certificates; Microsoft datacenter media handling (inherited, evidenced via FedRAMP packages)",
+  "flagged": [
+   "Microsoft datacenter media handling (inherited, evidenced via FedRAMP packages)"
+  ]
+ },
+ {
+  "id": "53-mp-7",
+  "original": "Intune/Defender device control (port/device-class level)",
+  "related": [
+   {
+    "product": "intune",
+    "solution": null,
+    "role": "contributing",
+    "note": "Intune/Defender device control (port/device-class level)"
+   },
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Intune/Defender device control (port/device-class level)"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "53-ps-4",
+  "original": "Entra offboarding automation (disable, revoke, session kill); exit process",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "Entra offboarding automation (disable, revoke, session kill)"
+   }
+  ],
+  "external": "exit process",
+  "flagged": []
+ },
+ {
+  "id": "53-ra-3",
+  "original": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
+  "related": [],
+  "external": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
+  "flagged": []
+ },
+ {
+  "id": "53-sc-8",
+  "original": "TLS/IPsec configuration; FIPS 140 module validation documentation (platform)",
+  "related": [],
+  "external": "TLS/IPsec configuration; FIPS 140 module validation documentation (platform)",
+  "flagged": []
+ },
+ {
+  "id": "53-sc-28",
+  "original": "Platform storage encryption (inherited via FedRAMP authorization); BitLocker on endpoints (Intune)",
+  "related": [
+   {
+    "product": "intune",
+    "solution": null,
+    "role": "contributing",
+    "note": "BitLocker on endpoints (Intune)"
+   }
+  ],
+  "external": "Platform storage encryption (inherited via FedRAMP authorization)",
+  "flagged": []
+ },
+ {
+  "id": "53-si-4",
+  "original": "Defender XDR/Sentinel (attack detection, network monitoring); monitoring strategy",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender XDR/Sentinel (attack detection, network monitoring)"
+   },
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender XDR/Sentinel (attack detection, network monitoring)"
+   }
+  ],
+  "external": "monitoring strategy",
+  "flagged": []
+ },
+ {
+  "id": "53-si-12",
+  "original": "Approved records schedule (NARA GRS for federal); retention for non-M365 systems",
+  "related": [],
+  "external": "Approved records schedule (NARA GRS for federal); retention for non-M365 systems",
+  "flagged": [
+   "retention for non-M365 systems"
+  ]
+ },
+ {
+  "id": "53-si-19",
+  "original": "De-identification tooling and technique selection (SP 800-188); dataset release process",
+  "related": [],
+  "external": "De-identification tooling and technique selection (SP 800-188); dataset release process",
+  "flagged": []
+ },
+ {
+  "id": "csf-gv-oc-03",
+  "original": "Legal/GRC ownership of the obligations register",
+  "related": [],
+  "external": "Legal/GRC ownership of the obligations register",
+  "flagged": []
+ },
+ {
+  "id": "csf-id-am-07",
+  "original": "Inventory for non-M365 data platforms; data owners assigning designations",
+  "related": [],
+  "external": "Inventory for non-M365 data platforms; data owners assigning designations",
+  "flagged": [
+   "Inventory for non-M365 data platforms"
+  ]
+ },
+ {
+  "id": "csf-id-am-08",
+  "original": "ITAM/CMDB for systems and devices; SDLC processes",
+  "related": [],
+  "external": "ITAM/CMDB for systems and devices; SDLC processes",
+  "flagged": []
+ },
+ {
+  "id": "csf-pr-ds-01",
+  "original": "Platform storage encryption (inherited); backup solution; database TDE",
+  "related": [],
+  "external": "Platform storage encryption (inherited); backup solution; database TDE",
+  "flagged": []
+ },
+ {
+  "id": "csf-pr-ds-02",
+  "original": "TLS/network encryption (platform); VPN for site-to-site flows",
+  "related": [],
+  "external": "TLS/network encryption (platform); VPN for site-to-site flows",
+  "flagged": []
+ },
+ {
+  "id": "csf-pr-ds-10",
+  "original": "Application sandboxing/platform protections; VDI controls where used",
+  "related": [],
+  "external": "Application sandboxing/platform protections; VDI controls where used",
+  "flagged": []
+ },
+ {
+  "id": "csf-pr-ps-04",
+  "original": "SIEM ingestion and monitoring content (Sentinel)",
+  "related": [
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "SIEM ingestion and monitoring content (Sentinel)"
+   }
+  ],
+  "external": "",
+  "flagged": []
+ },
+ {
+  "id": "csf-de-cm-03",
+  "original": "SIEM/UEBA for infrastructure-level activity; HR triggers",
+  "related": [],
+  "external": "SIEM/UEBA for infrastructure-level activity; HR triggers",
+  "flagged": []
+ },
+ {
+  "id": "csf-de-cm-03-ai",
+  "original": "Managed browser/device footprint; network AI-app discovery (Defender for Cloud Apps)",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "network AI-app discovery (Defender for Cloud Apps)"
+   }
+  ],
+  "external": "Managed browser/device footprint",
+  "flagged": []
+ },
+ {
+  "id": "csf-de-ae-02",
+  "original": "SIEM correlation rules; SOC triage process",
+  "related": [],
+  "external": "SIEM correlation rules; SOC triage process",
+  "flagged": []
+ },
+ {
+  "id": "csf-rs-an-03",
+  "original": "Defender XDR/Sentinel forensics; IR analysis procedure",
+  "related": [
+   {
+    "product": "defender-xdr",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender XDR/Sentinel forensics"
+   },
+   {
+    "product": "sentinel",
+    "solution": null,
+    "role": "contributing",
+    "note": "Defender XDR/Sentinel forensics"
+   }
+  ],
+  "external": "IR analysis procedure",
+  "flagged": []
+ },
+ {
+  "id": "csf-rs-an-06-07",
+  "original": "Forensic imaging tooling; chain-of-custody procedure",
+  "related": [],
+  "external": "Forensic imaging tooling; chain-of-custody procedure",
+  "flagged": []
+ },
+ {
+  "id": "pci-3-2-1",
+  "original": "CDE database retention/purge routines; tokenization strategy",
+  "related": [],
+  "external": "CDE database retention/purge routines; tokenization strategy",
+  "flagged": []
+ },
+ {
+  "id": "pci-3-3-1",
+  "original": "Payment application SAD purge validation; acquirer/processor controls",
+  "related": [],
+  "external": "Payment application SAD purge validation; acquirer/processor controls",
+  "flagged": []
+ },
+ {
+  "id": "pci-3-4-2",
+  "original": "VDI/remote-access session policies; documented authorization workflow",
+  "related": [],
+  "external": "VDI/remote-access session policies; documented authorization workflow",
+  "flagged": []
+ },
+ {
+  "id": "pci-3-5-1",
+  "original": "Tokenization/DB encryption in the CDE; key management",
+  "related": [],
+  "external": "Tokenization/DB encryption in the CDE; key management",
+  "flagged": []
+ },
+ {
+  "id": "pci-4-2-1",
+  "original": "TLS configuration and certificate management on transmission endpoints; network architecture",
+  "related": [],
+  "external": "TLS configuration and certificate management on transmission endpoints; network architecture",
+  "flagged": []
+ },
+ {
+  "id": "pci-4-2-2",
+  "original": "Coverage for non-M365 messaging channels (consumer apps) via endpoint/browser controls",
+  "related": [],
+  "external": "Coverage for non-M365 messaging channels (consumer apps) via endpoint/browser controls",
+  "flagged": [
+   "Coverage for non-M365 messaging channels (consumer apps) via endpoint/browser controls"
+  ]
+ },
+ {
+  "id": "pci-7-2-1",
+  "original": "CDE access control systems; Entra RBAC + access reviews",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "Entra RBAC + access reviews"
+   }
+  ],
+  "external": "CDE access control systems",
+  "flagged": []
+ },
+ {
+  "id": "pci-10-5-1",
+  "original": "SIEM retention for CDE/network logs (primary)",
+  "related": [],
+  "external": "SIEM retention for CDE/network logs (primary)",
+  "flagged": []
+ },
+ {
+  "id": "pci-12-5-2",
+  "original": "Network/data-flow diagrams; CDE inventory; QSA scoping review",
+  "related": [],
+  "external": "Network/data-flow diagrams; CDE inventory; QSA scoping review",
+  "flagged": []
+ },
+ {
+  "id": "pci-12-10-7",
+  "original": "IR procedure for unexpected PAN; CDE-side detection tooling",
+  "related": [],
+  "external": "IR procedure for unexpected PAN; CDE-side detection tooling",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-b",
+  "original": "Written risk-assessment methodology; Qualified Individual ownership",
+  "related": [],
+  "external": "Written risk-assessment methodology; Qualified Individual ownership",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-c1",
+  "original": "Entra RBAC + access reviews (primary); application entitlements",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "primary",
+    "note": "Entra RBAC + access reviews (primary)"
+   }
+  ],
+  "external": "application entitlements",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-c2",
+  "original": "CMDB/ITAM; HR systems; facilities records",
+  "related": [],
+  "external": "CMDB/ITAM; HR systems; facilities records",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-c3",
+  "original": "TLS on external transmission paths; database encryption; key management",
+  "related": [],
+  "external": "TLS on external transmission paths; database encryption; key management",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-c6",
+  "original": "Application-database purge routines; paper records destruction",
+  "related": [],
+  "external": "Application-database purge routines; paper records destruction",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-c7",
+  "original": "Change-management process/tooling",
+  "related": [],
+  "external": "Change-management process/tooling",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-c8",
+  "original": "SIEM for application/infrastructure logs; core-system audit trails",
+  "related": [],
+  "external": "SIEM for application/infrastructure logs; core-system audit trails",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-h",
+  "original": "Written IR plan; legal/communications; SIEM/SOAR",
+  "related": [],
+  "external": "Written IR plan; legal/communications; SIEM/SOAR",
+  "flagged": []
+ },
+ {
+  "id": "glba-314-4-j",
+  "original": "Breach counsel determination; FTC filing process",
+  "related": [],
+  "external": "Breach counsel determination; FTC filing process",
+  "flagged": []
+ },
+ {
+  "id": "ferpa-99-10",
+  "original": "SIS/registrar extract (primary record store); request intake and verification process; §99.12 redaction review",
+  "related": [],
+  "external": "SIS/registrar extract (primary record store); request intake and verification process; §99.12 redaction review",
+  "flagged": []
+ },
+ {
+  "id": "ferpa-99-31-a1ii",
+  "original": "SIS role-based access (primary); annual notification defining school-official criteria (§99.7); Entra group hygiene",
+  "related": [
+   {
+    "product": "entra",
+    "solution": null,
+    "role": "contributing",
+    "note": "Entra group hygiene"
+   }
+  ],
+  "external": "SIS role-based access (primary); annual notification defining school-official criteria (§99.7)",
+  "flagged": []
+ },
+ {
+  "id": "ferpa-99-30-33",
+  "original": "Consent workflow and records; §99.31 exception determinations; disclosure agreements binding recipients (§99.33)",
+  "related": [],
+  "external": "Consent workflow and records; §99.31 exception determinations; disclosure agreements binding recipients (§99.33)",
+  "flagged": []
+ },
+ {
+  "id": "ferpa-99-32",
+  "original": "Registrar-maintained disclosure record (primary); SIS access logging",
+  "related": [],
+  "external": "Registrar-maintained disclosure record (primary); SIS access logging",
+  "flagged": []
+ },
+ {
+  "id": "ferpa-99-31a6-35",
+  "original": "Written agreements specifying destruction terms (§99.31(a)(6)(iii)); recipient-side destruction attestation",
+  "related": [],
+  "external": "Written agreements specifying destruction terms (§99.31(a)(6)(iii)); recipient-side destruction attestation",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-5-1-c",
+  "original": "Collection-point design; purpose specification (privacy office)",
+  "related": [],
+  "external": "Collection-point design; purpose specification (privacy office)",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-5-1-e",
+  "original": "Approved retention schedule; application-store purges",
+  "related": [],
+  "external": "Approved retention schedule; application-store purges",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-5-2",
+  "original": "DPO function; ROPA; processor agreements",
+  "related": [],
+  "external": "DPO function; ROPA; processor agreements",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-15",
+  "original": "Microsoft Priva Subject Rights Requests (if licensed); line-of-business system search",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Microsoft Priva Subject Rights Requests (if licensed)"
+   }
+  ],
+  "external": "line-of-business system search",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-17",
+  "original": "Priva SRR (if licensed); application-level deletion; backup-cycle policy statement",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Priva SRR (if licensed)"
+   }
+  ],
+  "external": "application-level deletion; backup-cycle policy statement",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-20",
+  "original": "Application-level structured exports; Priva",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Priva"
+   }
+  ],
+  "external": "Application-level structured exports",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-25",
+  "original": "Privacy engineering in product/app design; DPIA-driven measures",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "Privacy engineering in product/app design"
+   }
+  ],
+  "external": "DPIA-driven measures",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-30",
+  "original": "ROPA tooling/process (Priva, GRC platform, registers); DPO ownership",
+  "related": [
+   {
+    "product": "priva",
+    "solution": null,
+    "role": "contributing",
+    "note": "ROPA tooling/process (Priva, GRC platform, registers)"
+   }
+  ],
+  "external": "DPO ownership",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-32-1-a",
+  "original": "Application/database encryption; pseudonymisation tooling; key management",
+  "related": [],
+  "external": "Application/database encryption; pseudonymisation tooling; key management",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-32-1-d",
+  "original": "Pen-test program; audit function",
+  "related": [],
+  "external": "Pen-test program; audit function",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-33-34",
+  "original": "Breach counsel; supervisory-authority filing process; subject-communication mechanics",
+  "related": [],
+  "external": "Breach counsel; supervisory-authority filing process; subject-communication mechanics",
+  "flagged": []
+ },
+ {
+  "id": "gdpr-35",
+  "original": "DPIA methodology and register; DPO consultation",
+  "related": [],
+  "external": "DPIA methodology and register; DPO consultation",
+  "flagged": []
+ }
+]

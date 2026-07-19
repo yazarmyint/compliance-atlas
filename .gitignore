@@ -1,0 +1,67 @@
+# ---------------------------------------------------------------------------
+# Python build artifacts
+# ---------------------------------------------------------------------------
+build/__pycache__/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ---------------------------------------------------------------------------
+# Editor / OS cruft
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*~
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+.DS_Store?
+._*
+
+# Claude Code local (machine-specific permissions; not shared state)
+.claude/settings.local.json
+
+# ---------------------------------------------------------------------------
+# REDISTRIBUTION-RESTRICTED SOURCE DOCUMENTS — safety net
+#
+# These live in ../compliance-atlas-reference-private/ (outside this tree) and
+# must NEVER be committed: git history is permanent and this repository is
+# intended to become public. See reference/SOURCES.md for what each file is and
+# where to re-download it.
+#
+# The patterns below are a backstop against an accidental re-copy into the tree.
+# They are name-level, so they do not block the public-domain NIST PDFs.
+# ---------------------------------------------------------------------------
+
+# The private sibling directory itself, in case it is ever copied inside.
+compliance-atlas-reference-private/
+reference-private/
+
+# AICPA Trust Services Criteria (copyright AICPA; download licence, no redistribution)
+AICPA-TSC-2017-2022POF.pdf
+AICPA-TSC-2017-2022POF.txt
+**/AICPA-*
+
+# Microsoft SSPA Data Protection Requirements (vendor supplier-programme document)
+DPR-v12.pdf
+DPR-v12.txt
+**/DPR-v*
+
+# PCI SSC document-library capture (licence-gated; the saved file is an HTML gate page)
+pci-dss-401.pdf
+**/pci-dss-*.pdf
+
+# Microsoft Learn service-description captures (Microsoft Terms of Use; cite the live URL instead)
+purview-service-description.md
+**/*-service-description.md
+
+# ---------------------------------------------------------------------------
+# Scratch
+# ---------------------------------------------------------------------------
+scratch/
+tmp/
+*.tmp

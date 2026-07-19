@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compliance Atlas</title>
+<style>
+/* ============ Compliance Atlas — folio styling, zero external deps ============ */
+:root{
+  --paper:#faf7f0; --paper-2:#f2ede1; --card:#fffdf8; --ink:#20242c; --ink-2:#565b66; --ink-3:#8a8f99;
+  --rule:#d9d2c2; --rule-2:#c5bda9; --accent:#7c2d12; --accent-ink:#7c2d12; --link:#1e5fae;
+  --direct:#177245; --partial:#1e5fae; --evidence:#96690f; --nocover:#6e6a63;
+  --direct-bg:#e3f0e8; --partial-bg:#e5edf8; --evidence-bg:#f5ecd9; --nocover-bg:#edeae3;
+  --warn-bg:#f7ead2; --warn-ink:#7a5410; --warn-rule:#d9b56a;
+  --danger:#a03123; --danger-bg:#f7e2de;
+  --heat-0:#efe9dc; --heat-txt-hi:#fffdf8;
+  --shadow:0 1px 2px rgba(60,50,30,.08), 0 4px 14px rgba(60,50,30,.07);
+  --font-display:Cambria,"Palatino Linotype",Georgia,"Times New Roman",serif;
+  --font-body:"Segoe UI Variable Text","Segoe UI",-apple-system,"Helvetica Neue",sans-serif;
+  --font-mono:"Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+}
+[data-theme="dark"]{
+  --paper:#181b22; --paper-2:#131519; --card:#20242d; --ink:#e6e2d8; --ink-2:#a9adb6; --ink-3:#7c818c;
+  --rule:#343a46; --rule-2:#434a58; --accent:#d08770; --accent-ink:#d08770; --link:#5b96d6;
+  --direct:#35a370; --partial:#5b96d6; --evidence:#b3861f; --nocover:#9a958c;
+  --direct-bg:#1d3229; --partial-bg:#1e2c3f; --evidence-bg:#332a17; --nocover-bg:#2a2c2e;
+  --warn-bg:#332a17; --warn-ink:#d9b56a; --warn-rule:#8a6d2e;
+  --danger:#e08577; --danger-bg:#3a221f;
+  --heat-0:#232833; --heat-txt-hi:#10141b;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font:15px/1.55 var(--font-body);
+  background-image:repeating-linear-gradient(0deg, transparent 0 2px, rgba(120,100,60,.016) 2px 4px);
+}
+[data-theme="dark"] body{background-image:repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,.012) 2px 4px)}
+a{color:var(--link); text-decoration:none} a:hover{text-decoration:underline}
+h1,h2,h3,.serif{font-family:var(--font-display); font-weight:600; letter-spacing:.01em}
+mark{background:var(--warn-bg); color:inherit; padding:0 2px; border-radius:2px}
+.mono{font-family:var(--font-mono)}
+.wrap{max-width:1180px; margin:0 auto; padding:0 28px}
+.overline{font:600 11px/1 var(--font-body); letter-spacing:.18em; text-transform:uppercase; color:var(--accent-ink)}
+.muted{color:var(--ink-2)} .small{font-size:12.5px} .tiny{font-size:11.5px}
+
+/* ---------- header ---------- */
+header.site{position:sticky; top:0; z-index:50; background:var(--paper); border-bottom:1px solid var(--rule-2)}
+header.site .bar{display:flex; align-items:center; gap:18px; padding:12px 0}
+.brand{display:flex; align-items:baseline; gap:10px; white-space:nowrap; cursor:pointer}
+.brand .glyph{font-family:var(--font-display); font-size:22px; color:var(--accent-ink)}
+.brand b{font-family:var(--font-display); font-size:18px; font-weight:600}
+.brand span{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+nav.tabs{display:flex; gap:2px; margin-left:6px}
+nav.tabs a{padding:7px 12px; border-radius:6px; color:var(--ink-2); font-size:13.5px; font-weight:600; white-space:nowrap}
+nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 0 1px var(--rule)}
+.spacer{flex:1}
+.searchbox{position:relative}
+.searchbox input{
+  width:290px; max-width:34vw; padding:8px 12px 8px 32px; border:1px solid var(--rule-2); border-radius:8px;
+  background:var(--card); color:var(--ink); font:13.5px var(--font-body); outline:none;
+}
+.searchbox input:focus{border-color:var(--link); box-shadow:0 0 0 3px color-mix(in srgb, var(--link) 18%, transparent)}
+.searchbox .icon{position:absolute; left:10px; top:8px; color:var(--ink-3); pointer-events:none}
+.iconbtn{border:1px solid var(--rule-2); background:var(--card); color:var(--ink-2); border-radius:8px; padding:7px 10px; cursor:pointer; font-size:13px}
+.iconbtn:hover{color:var(--ink)}
+
+/* ---------- badges & chips ---------- */
+.badge{display:inline-flex; align-items:center; gap:6px; font:600 11.5px/1 var(--font-body); letter-spacing:.02em;
+  padding:4px 9px; border-radius:999px; white-space:nowrap}
+.badge::before{content:""; width:7px; height:7px; border-radius:2px; background:currentColor}
+.b-direct{color:var(--direct); background:var(--direct-bg); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--direct) 35%, transparent)}
+.b-partial{color:var(--partial); background:var(--partial-bg); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--partial) 35%, transparent)}
+.b-evidence{color:var(--evidence); background:var(--evidence-bg); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--evidence) 40%, transparent)}
+.b-evidence::before{border-radius:50%}
+.b-nocover{color:var(--nocover); background:var(--nocover-bg); box-shadow:inset 0 0 0 1px var(--rule-2)}
+.b-nocover::before{background:transparent; border:1.5px dashed currentColor; width:6px; height:6px}
+.conf{display:inline-flex; align-items:center; gap:5px; font-size:11.5px; color:var(--ink-2); white-space:nowrap}
+.conf .dots{letter-spacing:2px; font-size:10px}
+.chip{display:inline-block; font:600 11px/1 var(--font-mono); padding:4px 8px; border-radius:6px;
+  background:var(--paper-2); color:var(--ink-2); box-shadow:inset 0 0 0 1px var(--rule); white-space:nowrap}
+.chip.sol{color:var(--accent-ink); background:color-mix(in srgb, var(--accent) 9%, var(--paper-2))}
+.chip.prod{color:var(--ink); background:color-mix(in srgb, var(--ink) 7%, var(--paper-2)); box-shadow:inset 0 0 0 1px var(--rule-2)}
+.chip.gov{color:var(--warn-ink); background:var(--warn-bg); box-shadow:inset 0 0 0 1px var(--warn-rule)}
+.chip.unv{color:var(--danger); background:var(--danger-bg); box-shadow:inset 0 0 0 1px var(--danger)}
+.ref{font:600 13px var(--font-mono); color:var(--ink); white-space:nowrap}
+
+/* ---------- hero / landing ---------- */
+.hero{padding:44px 0 8px; border-bottom:1px solid var(--rule)}
+.hero h1{font-size:42px; margin:10px 0 6px; line-height:1.08}
+.hero p.lede{max-width:70ch; color:var(--ink-2); font-size:16px; margin:6px 0 22px}
+.stats{display:flex; gap:0; border:1px solid var(--rule-2); border-radius:12px; overflow:hidden; background:var(--card); box-shadow:var(--shadow); margin-bottom:34px; flex-wrap:wrap}
+.stat{flex:1 1 130px; padding:16px 20px; border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat b{display:block; font:600 30px/1.1 var(--font-display); color:var(--ink)}
+.stat span{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.grid{display:grid; gap:14px}
+.grid.cards{grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); margin:20px 0 44px}
+.card{background:var(--card); border:1px solid var(--rule-2); border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
+  cursor:pointer; transition:transform .12s ease, border-color .12s ease; position:relative; overflow:hidden}
+.card:hover{transform:translateY(-2px); border-color:var(--rule-2)}
+.card::after{content:"→"; position:absolute; right:16px; top:14px; color:var(--ink-3); font-size:15px; transition:transform .12s}
+.card:hover::after{transform:translateX(3px); color:var(--accent-ink)}
+.card h3{margin:2px 0 6px; font-size:19px}
+.card .desc{color:var(--ink-2); font-size:13px; min-height:2.6em}
+.card .meta{display:flex; gap:6px; flex-wrap:wrap; margin-top:12px}
+.minibar{display:flex; height:6px; border-radius:3px; overflow:hidden; margin-top:12px; background:var(--paper-2)}
+.minibar i{display:block; height:100%}
+.minibar i+i{margin-left:2px}
+section.block{padding:26px 0 6px}
+section.block h2{font-size:24px; margin:4px 0 4px}
+section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
+
+/* ---------- framework / product page ---------- */
+.pagehead{padding:30px 0 18px; border-bottom:1px solid var(--rule)}
+.pagehead h1{font-size:31px; margin:8px 0 4px}
+.pagehead .full{color:var(--ink-2); max-width:88ch; font-size:14px}
+.pagehead .metaline{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; align-items:center}
+.crumb{font-size:12.5px; color:var(--ink-3)} .crumb a{color:var(--ink-3)} .crumb a:hover{color:var(--link)}
+.callout{border:1px solid var(--warn-rule); background:var(--warn-bg); color:var(--warn-ink);
+  border-radius:10px; padding:12px 16px; font-size:13px; margin:16px 0; max-width:100%}
+.callout.gray{border-color:var(--rule-2); background:var(--paper-2); color:var(--ink-2)}
+.toolrow{display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:16px 0 4px}
+.toolrow .lbl{font-size:12px; color:var(--ink-3); letter-spacing:.06em; text-transform:uppercase}
+.fbtn{border:1px solid var(--rule-2); background:var(--card); border-radius:999px; padding:5px 12px; cursor:pointer;
+  font:600 12px var(--font-body); color:var(--ink-2)}
+.fbtn.on{color:var(--ink); border-color:var(--ink-3); background:var(--paper-2)}
+.domain{margin:26px 0 8px}
+.domain h3{font-size:14px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2);
+  border-bottom:1px solid var(--rule); padding-bottom:8px; margin:0 0 12px; font-family:var(--font-body); font-weight:700}
+
+/* ---------- control groups (product-stacked cards) ---------- */
+.ctrl{margin:0 0 16px}
+.ctrlhead{display:flex; gap:14px; align-items:baseline; padding:6px 2px 8px; flex-wrap:wrap}
+.ctrlhead .ref{font-size:14px}
+.ctrlhead .intent{font-size:13.8px; color:var(--ink); max-width:100ch; line-height:1.45}
+.ctrl details.row{margin-left:14px; border-left:3px solid var(--rule-2)}
+.ctrl details.row[open]{border-left-color:var(--accent)}
+
+/* ---------- mapping rows ---------- */
+details.row{background:var(--card); border:1px solid var(--rule-2); border-radius:10px; margin:0 0 10px; box-shadow:var(--shadow); overflow:hidden}
+details.row summary{list-style:none; cursor:pointer; padding:13px 16px; display:grid;
+  grid-template-columns:minmax(96px,auto) 1fr auto; gap:6px 16px; align-items:center}
+details.row summary::-webkit-details-marker{display:none}
+details.row summary:hover{background:color-mix(in srgb, var(--paper-2) 55%, var(--card))}
+.row .intent{font-size:13.8px; color:var(--ink); line-height:1.45}
+.row .intent .solline{display:block; margin-top:5px}
+.row .variant{display:block; margin-top:4px; font-size:12.5px; color:var(--ink-2)}
+.row .badges{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+.row .flip{color:var(--ink-3); font-size:12px; transition:transform .15s; margin-left:2px}
+details[open] .flip{transform:rotate(90deg)}
+.row .body{border-top:1px solid var(--rule); padding:16px 18px 18px; display:grid; grid-template-columns:1.5fr 1fr; gap:18px 26px}
+.row .body h4{margin:0 0 4px; font:700 11px var(--font-body); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.row .body p{margin:0 0 14px; font-size:13.5px; color:var(--ink)}
+.row .body .aside p{color:var(--ink-2)}
+.row .src a{display:block; font-size:12.5px; overflow-wrap:anywhere; margin-bottom:4px}
+.row .relms{margin:0 0 14px}
+.row .relms .rel{font-size:12.5px; color:var(--ink-2); margin:0 0 6px; line-height:1.45}
+.row .relms .rel b{color:var(--ink); font-weight:600}
+.row .foot{grid-column:1 / -1; display:flex; gap:10px; align-items:center; flex-wrap:wrap; border-top:1px dashed var(--rule); padding-top:12px}
+.rowcaveat{grid-column:1 / -1; border:1px solid var(--warn-rule); background:var(--warn-bg); color:var(--warn-ink);
+  padding:10px 12px; border-radius:8px; font-size:12.5px}
+.rowunv{grid-column:1 / -1; border:1px solid var(--danger); background:var(--danger-bg); color:var(--danger);
+  padding:10px 12px; border-radius:8px; font-size:12.5px; font-weight:600}
+details.unvrow{border-color:var(--danger)}
+
+/* ---------- progressive-disclosure toggle (notes / scope detail) ---------- */
+details.disclose{margin:10px 0 2px; border:1px solid var(--rule); border-radius:8px; background:var(--paper-2)}
+details.disclose>summary{list-style:none; cursor:pointer; padding:8px 12px; font:600 12px var(--font-body);
+  letter-spacing:.04em; color:var(--ink-2); display:flex; align-items:center; gap:6px}
+details.disclose>summary::-webkit-details-marker{display:none}
+details.disclose>summary:hover{color:var(--ink)}
+details.disclose>summary .flip{color:var(--ink-3); font-size:12px; transition:transform .15s; margin-left:auto}
+details.disclose[open]>summary{border-bottom:1px solid var(--rule)}
+details.disclose .disc-body{padding:12px 14px; font-size:13px; color:var(--ink-2); line-height:1.55}
+
+/* ---------- matrix ---------- */
+.matrixwrap{overflow-x:auto; padding:8px 0 30px}
+table.matrix{border-collapse:separate; border-spacing:2px; font-size:12px}
+table.matrix th{font:600 11px var(--font-body); color:var(--ink-2); padding:6px 8px; text-align:left; background:transparent}
+table.matrix thead th{height:132px; position:relative; min-width:54px; padding:0}
+table.matrix thead th .rot{position:absolute; bottom:8px; left:50%; transform-origin:bottom left; transform:rotate(-52deg); white-space:nowrap; display:block; line-height:1}
+table.matrix tbody th{white-space:nowrap; padding-right:12px}
+table.matrix td{width:52px; height:38px; text-align:center; border-radius:6px; background:var(--heat-0);
+  font:600 12px var(--font-mono); color:var(--ink-2); cursor:pointer; position:relative}
+table.matrix td.z{cursor:default; color:var(--ink-3); opacity:.55}
+table.matrix td:hover:not(.z){outline:2px solid var(--ink); outline-offset:1px}
+table.matrix td.total, table.matrix th.total{background:transparent; font-weight:700; color:var(--ink); cursor:default}
+.legendrow{display:flex; gap:16px; align-items:center; font-size:12px; color:var(--ink-2); flex-wrap:wrap; margin:6px 0 12px}
+.legendrow .sw{display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:5px}
+
+/* ---------- search results ---------- */
+.result-item{margin-bottom:10px}
+.count-pill{font:600 11px var(--font-mono); background:var(--paper-2); border-radius:999px; padding:3px 9px; color:var(--ink-2); box-shadow:inset 0 0 0 1px var(--rule)}
+
+/* ---------- footer ---------- */
+footer.site{border-top:1px solid var(--rule-2); margin-top:56px; padding:26px 0 44px; color:var(--ink-3); font-size:12px}
+footer.site .disc{max-width:100ch; margin-bottom:10px; line-height:1.6}
+footer.site .legal{max-width:100ch; margin:0 0 12px; padding:0 0 0 16px; line-height:1.7}
+footer.site .legal li{margin:0}
+kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-width:2px; border-radius:4px; padding:1px 5px; background:var(--paper-2); color:var(--ink-2)}
+
+/* ---------- print ---------- */
+@media print{
+  header.site, .toolrow, .searchbox, .iconbtn, footer .kbdhint{display:none !important}
+  body{background:#fff; font-size:11px}
+  .card, details.row{box-shadow:none; break-inside:avoid}
+  details.row::details-content, details.disclose::details-content{content-visibility:visible; display:block}
+  a{color:inherit}
+  .hero h1{font-size:28px}
+}
+@media (max-width:840px){
+  details.row summary{grid-template-columns:1fr}
+  .row .badges{justify-content:flex-start}
+  .row .body{grid-template-columns:1fr}
+  .searchbox input{width:160px}
+  nav.tabs a{padding:7px 8px; font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<script id="pcm-data" type="application/json">/*__DATA__*/</script>
+
+<header class="site"><div class="wrap bar">
+  <div class="brand" onclick="location.hash='#/'" title="Home" id="brandBox">
+    <span class="glyph">¶</span><b id="brandTitle"></b><span id="brandVer"></span>
+  </div>
+  <nav class="tabs" id="tabs">
+    <a href="#/" data-tab="home">Industries</a>
+    <a href="#/frameworks" data-tab="frameworks">Frameworks</a>
+    <a href="#/products" data-tab="products">Product Pivot</a>
+    <a href="#/matrix" data-tab="matrix">Density Matrix</a>
+  </nav>
+  <div class="spacer"></div>
+  <div class="searchbox">
+    <span class="icon">⌕</span>
+    <input id="q" type="search" placeholder="Search controls, refs, products…  ( / )" autocomplete="off" aria-label="Global search">
+  </div>
+  <button class="iconbtn" id="themeBtn" title="Toggle light/dark">◐</button>
+  <button class="iconbtn" onclick="window.print()" title="Print current view">⎙</button>
+</div></header>
+
+<main id="app" class="wrap" aria-live="polite"></main>
+
+<footer class="site"><div class="wrap">
+  <ul class="legal" id="footLegal"></ul>
+  <div class="disc" id="footDisc"></div>
+  <div id="footMeta"></div>
+  <div class="kbdhint" style="margin-top:8px">Press <kbd>/</kbd> to search · Data regenerated from <span class="mono">compliance-atlas.json</span>; do not hand-edit this file.</div>
+</div></footer>
+
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("pcm-data").textContent);
+const ROWS = DATA.rows, FW = DATA.frameworks, SOL = DATA.solutions, IND = DATA.industries, META = DATA.meta;
+const PRODUCTS = DATA.products, RELPROD = DATA.related_products || {};
+const FW_ORDER = Object.keys(FW), PROD_ORDER = Object.keys(PRODUCTS);
+const COV_CLASS = {"Direct Support":"b-direct","Partial Support":"b-partial","Evidence Support Only":"b-evidence","Not Covered":"b-nocover"};
+const COV_VAR = {"Direct Support":"--direct","Partial Support":"--partial","Evidence Support Only":"--evidence","Not Covered":"--nocover"};
+const COV_ORDER = ["Direct Support","Partial Support","Evidence Support Only","Not Covered"];
+const CONF_DOTS = {High:"●●●",Medium:"●●○",Low:"●○○"};
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+/* Shared explainer for the product pivot (rendered once on the Products index, not per product page). */
+const PIVOT_EXPLAINER = "One configuration, many frameworks: a control implemented once shows up as posture everywhere it maps. Open a product below to see every control each of its solutions supports across the atlas.";
+
+/* ---------------- product helpers (generalized) ---------------- */
+const prodName = pid => (PRODUCTS[pid]?.short_name) || (PRODUCTS[pid]?.official_name) || RELPROD[pid] || pid;
+const prodFull = pid => (PRODUCTS[pid]?.official_name) || RELPROD[pid] || pid;
+const solOrderFor = pid => (PRODUCTS[pid]?.solutions || []).concat(["None (boundary row)"]);
+const rowSolution = r => r.purview_solution;  /* schema field name retained for compatibility */
+const byFw = id => ROWS.filter(r => r.framework === id);
+const byProd = pid => ROWS.filter(r => r.product === pid);
+const bySolP = (pid, key) => ROWS.filter(r => r.product === pid && rowSolution(r) === key);
+const byAlsoP = (pid, key) => ROWS.filter(r => r.product === pid && (r.also_involves||[]).includes(key));
+const referencedBy = pid => ROWS.filter(r => r.product !== pid && (r.related_microsoft||[]).some(e => e.product === pid));
+
+/* ---------------- shared fragments ---------------- */
+function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}">${esc(cov)}</span>`; }
+function confMeter(c){ return `<span class="conf" title="Confidence: ${esc(c)}"><span class="dots">${CONF_DOTS[c]||""}</span>${esc(c)}</span>`; }
+function minibar(rows){
+  const n = rows.length || 1;
+  return `<div class="minibar" title="${COV_ORDER.map(c=>`${c}: ${rows.filter(r=>r.coverage===c).length}`).join(" · ")}">` +
+    COV_ORDER.map(c => { const k = rows.filter(r=>r.coverage===c).length;
+      return k ? `<i style="width:${(100*k/n).toFixed(1)}%;background:var(${COV_VAR[c]})"></i>` : ""; }).join("") + `</div>`;
+}
+function solChip(r){
+  const key = rowSolution(r);
+  const main = key === "None (boundary row)"
+    ? `<span class="chip">No ${esc(prodName(r.product))} mapping (boundary)</span>`
+    : `<a href="#/product/${r.product}/solution/${encodeURIComponent(key)}" onclick="event.stopPropagation()"><span class="chip sol">${esc(key)}</span></a>`;
+  const also = (r.also_involves||[]).map(a =>
+    `<a href="#/product/${r.product}/solution/${encodeURIComponent(a)}" onclick="event.stopPropagation()"><span class="chip" title="Also involves">+ ${esc(a)}</span></a>`).join(" ");
+  return main + (also ? " " + also : "");
+}
+function prodChip(r){ return `<span class="chip prod" title="${esc(prodFull(r.product))}">${esc(prodName(r.product))}</span>`; }
+function relatedBlock(r){
+  const rel = r.related_microsoft || [];
+  if(!rel.length) return "";
+  return `<h4>Related Microsoft products</h4><div class="relms">` + rel.map(e =>
+    `<div class="rel">▸ <b>${esc(RELPROD[e.product]||prodFull(e.product))}</b> · ${esc(e.role)}${e.solution?` · ${esc(e.solution)}`:""}<br><span class="tiny">${esc(e.note||"")}</span></div>`).join("") + `</div>`;
+}
+function rowCard(r, opts={}){
+  const unv = r.status !== "verified";
+  const fw = FW[r.framework];
+  const grouped = !!opts.grouped;
+  const col1 = grouped ? prodChip(r) : `<span class="ref" title="${esc(fw.name)}">${esc(r.control_ref)}</span>`;
+  const variant = grouped && opts.groupIntent && r.control_intent !== opts.groupIntent
+    ? `<span class="variant">${esc(r.control_intent)}</span>` : "";
+  const intentLine = grouped ? `<span class="intent">${variant}<span class="solline">${solChip(r)}${opts.showFw?` <a href="#/framework/${r.framework}" onclick="event.stopPropagation()"><span class="chip">${esc(fw.name)}</span></a>`:""}</span></span>`
+    : `<span class="intent">${esc(r.control_intent)}
+        <span class="solline">${prodChip(r)} ${solChip(r)}${opts.showFw?` <a href="#/framework/${r.framework}" onclick="event.stopPropagation()"><span class="chip">${esc(fw.name)}</span></a>`:""}</span></span>`;
+  return `<details class="row ${unv?"unvrow":""}" id="${esc(r.id)}">
+    <summary>
+      ${col1}
+      ${intentLine}
+      <span class="badges">${covBadge(r.coverage)}${confMeter(r.confidence)}
+        ${r.cloud_availability_note?`<span class="chip gov" title="US Government cloud caveat; expand for detail">GOV ⚠</span>`:""}
+        ${unv?`<span class="chip unv">UNVERIFIED</span>`:""}
+        <span class="flip">›</span></span>
+    </summary>
+    <div class="body">
+      ${unv?`<div class="rowunv">UNVERIFIED: this row could not be confirmed against a live source; do not present without independent verification.</div>`:""}
+      <div class="mainsec">
+        <h4>How it supports the control</h4><p>${esc(r.how_it_supports)}</p>
+        <h4>Capability detail</h4><p>${esc(r.capability_detail)}</p>
+        <h4>Configuration evidence</h4><p>${esc(r.config_evidence_example)}</p>
+        <h4>Operational evidence</h4><p>${esc(r.operational_evidence_example)}</p>
+      </div>
+      <div class="aside">
+        ${relatedBlock(r)}
+        <h4>External dependencies</h4><p>${esc(r.external_dependencies || "None recorded")}</p>
+        <h4>License requirement <span class="chip" style="margin-left:4px">${esc(r.licensing_model)}</span></h4><p>${esc(r.license_requirement)}</p>
+        <h4>Sources</h4><div class="src">${(r.sources||[]).map(u=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//,""))}</a>`).join("")}</div>
+      </div>
+      ${r.cloud_availability_note?`<div class="rowcaveat">⚠ <b>US Government clouds:</b> ${esc(r.cloud_availability_note)}</div>`:""}
+      <div class="foot tiny muted">
+        <span>${esc(prodFull(r.product))}</span>
+        <span>· Framework: <a href="#/framework/${r.framework}">${esc(fw.name)}</a> · ${esc(r.framework_version)}</span>
+        <span>· Status: <b>${esc(r.status)}</b></span><span>· Last verified: ${esc(r.last_verified)}</span><span>· ID: <span class="mono">${esc(r.id)}</span></span>
+      </div>
+    </div>
+  </details>`;
+}
+function groupByDomain(rows){
+  const m = new Map();
+  rows.forEach(r => { const d = r.control_domain || "General"; if(!m.has(d)) m.set(d, []); m.get(d).push(r); });
+  return m;
+}
+function groupByControl(rows){
+  const m = new Map();
+  rows.forEach(r => {
+    const k = r.control_ref;
+    if(!m.has(k)) m.set(k, {ref:k, intent:r.control_intent, rows:[]});
+    m.get(k).rows.push(r);
+  });
+  return [...m.values()];
+}
+function renderControlGroups(rows){
+  /* Framework view core: controls with product-tagged mapping cards stacked beneath.
+     Generalized for N products; with one product each control usually carries one card. */
+  let h = "";
+  for(const [dom, rs] of groupByDomain(rows)){
+    h += `<div class="domain"><h3>${esc(dom)} <span class="count-pill">${rs.length}</span></h3>`;
+    for(const g of groupByControl(rs)){
+      h += `<div class="ctrl"><div class="ctrlhead"><span class="ref">${esc(g.ref)}</span><span class="intent">${esc(g.intent)}</span></div>`;
+      h += g.rows.map(r => rowCard(r, {grouped:true, groupIntent:g.intent})).join("");
+      h += `</div>`;
+    }
+    h += `</div>`;
+  }
+  return h;
+}
+function detailToggle(detail, label){
+  /* Progressive disclosure: collapsed <details> holding the verbatim long-form note/scope.
+     Native element (no JS to toggle), works offline; joins the print-expansion path below. */
+  if(!detail) return "";
+  return `<details class="disclose"><summary>${esc(label)} <span class="flip">›</span></summary>`
+    + `<div class="disc-body">${esc(detail)}</div></details>`;
+}
+function cmChip(fw){
+  const t = fw.compliance_manager_template || {};
+  return t.exists
+    ? `<span class="chip" title="${esc(t.note||"")}">Compliance Manager template: ${esc(t.name)}</span>`
+    : `<span class="chip" title="${esc(t.note||"")}">No Compliance Manager template</span>`;
+}
+
+/* ---------------- views ---------------- */
+function vHome(){
+  const inds = Object.entries(IND);
+  return `<div class="hero">
+    <div class="overline">${esc(META.brand.tagline)} · as of ${esc(META.brand.as_of)}</div>
+    <h1>Where does the Microsoft stack fit?</h1>
+    <p class="lede">Pick an industry, open the frameworks it answers to, and read off each control's
+      product mappings: claim strength, license tier, evidence examples, and the source behind every statement.</p>
+    <div class="stats">
+      <div class="stat"><b>${PROD_ORDER.length}</b><span>product${PROD_ORDER.length>1?"s":""}</span></div>
+      <div class="stat"><b>${Object.keys(FW).length}</b><span>frameworks</span></div>
+      <div class="stat"><b>${ROWS.length}</b><span>control mappings</span></div>
+      <div class="stat"><b>${ROWS.filter(r=>r.coverage==="Direct Support").length}</b><span>direct-support claims</span></div>
+      <div class="stat"><b>${ROWS.filter(r=>r.status!=="verified").length}</b><span>unverified rows</span></div>
+    </div>
+  </div>
+  <section class="block"><div class="overline">Industry lens</div><h2>Start from an industry</h2>
+  <div class="grid cards">${inds.map(([id,i])=>{
+    const rows = ROWS.filter(r => i.frameworks.includes(r.framework));
+    return `<div class="card" onclick="location.hash='#/industry/${id}'">
+      <h3>${esc(i.name)}</h3><div class="desc">${esc(i.note)}</div>
+      <div class="meta">${i.frameworks.map(f=>`<span class="chip">${esc(FW[f]?.name||f)}</span>`).join("")}</div>
+      ${minibar(rows)}</div>`; }).join("")}
+  </div></section>`;
+}
+function vIndustry(id){
+  const i = IND[id]; if(!i) return vMissing("industry", id);
+  return `<div class="pagehead">
+    <div class="crumb"><a href="#/">Industries</a> / ${esc(i.name)}</div>
+    <h1>${esc(i.name)}</h1><div class="full">${esc(i.note)}</div>
+    ${detailToggle(i.note_detail, "Full industry notes")}</div>
+  <section class="block"><h2>Applicable frameworks</h2>
+  <div class="grid cards">${i.frameworks.map(fid=>{
+    const f = FW[fid], rows = byFw(fid);
+    return `<div class="card" onclick="location.hash='#/framework/${fid}'">
+      <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
+      <div class="desc">${esc(f.applies_to)}</div>
+      <div class="meta"><span class="count-pill">${rows.length} mapped controls</span>${f.compliance_manager_template?.exists?`<span class="chip">CM template ✓</span>`:""}</div>
+      ${minibar(rows)}</div>`; }).join("")}
+  </div></section>`;
+}
+function vFrameworks(){
+  return `<div class="pagehead"><div class="overline">Framework view</div><h1>Frameworks</h1>
+    <div class="full">Every mapped control, grouped by framework. Each row is verified against a live official source; per-row dates govern currency.</div></div>
+  <div class="grid cards" style="margin-top:22px">${FW_ORDER.map(fid=>{
+    const f = FW[fid], rows = byFw(fid);
+    return `<div class="card" onclick="location.hash='#/framework/${fid}'">
+      <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
+      <div class="desc">${esc(f.applies_to)}</div>
+      <div class="meta"><span class="count-pill">${rows.length} controls</span>${cmChip(f)}</div>
+      ${minibar(rows)}</div>`; }).join("")}</div>`;
+}
+let fwFilter = null;
+function vFramework(id){
+  const f = FW[id]; if(!f) return vMissing("framework", id);
+  let rows = byFw(id);
+  const filters = COV_ORDER.filter(c => rows.some(r=>r.coverage===c));
+  if(fwFilter) rows = rows.filter(r=>r.coverage===fwFilter);
+  return `<div class="pagehead">
+    <div class="crumb"><a href="#/frameworks">Frameworks</a> / ${esc(f.name)}</div>
+    <h1>${esc(f.name)}</h1>
+    <div class="full">${esc(f.full_name)}</div>
+    <div class="metaline">
+      <span class="chip">${esc(f.version)}</span><span class="chip">${esc(f.authority)}</span>${cmChip(f)}
+      <a class="small" href="${esc(f.official_source)}" target="_blank" rel="noopener">Official source ↗</a>
+      ${f.document_url && f.document_url!==f.official_source?`<a class="small" href="${esc(f.document_url)}" target="_blank" rel="noopener">Document ↗</a>`:""}
+    </div>
+    ${f.notes?`<div class="callout">${esc(f.notes)}</div>`:""}
+    ${detailToggle(f.notes_detail, "Full framework notes")}
+  </div>
+  <div class="toolrow"><span class="lbl">Coverage filter</span>
+    <button class="fbtn ${!fwFilter?"on":""}" onclick="fwFilter=null;render()">All (${byFw(id).length})</button>
+    ${filters.map(c=>`<button class="fbtn ${fwFilter===c?"on":""}" onclick="fwFilter='${c}';render()">${c} (${byFw(id).filter(r=>r.coverage===c).length})</button>`).join("")}
+    <span class="spacer"></span>
+    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
+    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
+  </div>
+  ${renderControlGroups(rows)}`;
+}
+function vProducts(){
+  if(PROD_ORDER.length === 1) return vProduct(PROD_ORDER[0]);  /* single product: land directly, via the generalized component */
+  return `<div class="pagehead"><div class="overline">Product Pivot</div><h1>Products</h1>
+    <div class="full">${esc(PIVOT_EXPLAINER)}</div></div>
+  <div class="grid cards" style="margin-top:22px">${PROD_ORDER.map(pid=>{
+    const rows = byProd(pid);
+    return `<div class="card" onclick="location.hash='#/product/${pid}'">
+      <h3>${esc(prodFull(pid))}</h3><div class="desc">${esc(PRODUCTS[pid].notes||"")}</div>
+      <div class="meta"><span class="count-pill">${rows.length} mappings</span><span class="count-pill">${PRODUCTS[pid].solutions.length} solutions</span></div>
+      ${minibar(rows)}</div>`; }).join("")}</div>`;
+}
+function vProduct(pid){
+  const p = PRODUCTS[pid]; if(!p) return vMissing("product", pid);
+  const refs = referencedBy(pid);
+  return `<div class="pagehead"><div class="overline">Product Pivot${PROD_ORDER.length>1?` · <a href="#/products">all products</a>`:""}</div>
+    <h1>${esc(p.official_name)}</h1>
+    <div class="full">${esc(p.notes)}</div>
+    <div class="metaline">
+      <a class="small" href="${esc(p.licensing_source)}" target="_blank" rel="noopener">Authoritative licensing source ↗</a>
+      <a class="small" href="${esc(p.naming_source)}" target="_blank" rel="noopener">Product overview ↗</a>
+      <span class="chip">${byProd(pid).length} mappings</span>
+    </div>
+    ${detailToggle(p.notes_detail, "Full mapping notes")}
+  </div>
+  <div class="grid cards" style="margin-top:22px">${p.solutions.map(key=>{
+    const s = SOL[key]||{}, prim = bySolP(pid,key), also = byAlsoP(pid,key);
+    const fwids = [...new Set(prim.concat(also).map(r=>r.framework))];
+    return `<div class="card" onclick="location.hash='#/product/${pid}/solution/${encodeURIComponent(key)}'">
+      <h3>${esc(key)}</h3><div class="desc">${esc(s.scope||"")}</div>
+      <div class="meta"><span class="count-pill">${prim.length} primary</span><span class="count-pill">${also.length} contributing</span><span class="count-pill">${fwids.length} frameworks</span></div>
+      ${minibar(prim)}</div>`; }).join("")}
+  </div>
+  ${refs.length?`<section class="block"><h2>Referenced by other products' mappings</h2>
+    <p class="subtitle muted small">Rows mapped to another product that name ${esc(p.official_name)} as a related product.</p>
+    ${refs.map(r=>rowCard(r,{showFw:true})).join("")}</section>`:""}`;
+}
+function vSolution(pid, key){
+  key = decodeURIComponent(key);
+  const p = PRODUCTS[pid]; if(!p) return vMissing("product", pid);
+  const s = SOL[key]; if(!s) return vMissing("solution", key);
+  const prim = bySolP(pid,key), also = byAlsoP(pid,key);
+  const groupFw = rows => FW_ORDER.filter(f=>rows.some(r=>r.framework===f))
+    .map(f=>`<div class="domain"><h3>${esc(FW[f].name)} <span class="count-pill">${rows.filter(r=>r.framework===f).length}</span></h3>
+      ${rows.filter(r=>r.framework===f).map(r=>rowCard(r,{showFw:false})).join("")}</div>`).join("");
+  return `<div class="pagehead">
+    <div class="crumb"><a href="#/products">Product Pivot</a> / <a href="#/product/${pid}">${esc(prodName(pid))}</a> / ${esc(key)}</div>
+    <h1>${esc(key)}</h1><div class="full">${esc(s.full_name)}. ${esc(s.scope)}</div>
+    <div class="metaline"><a class="small" href="${esc(s.url)}" target="_blank" rel="noopener">Microsoft Learn ↗</a>
+      <span class="chip">${prim.length} primary mappings</span><span class="chip">${also.length} contributing mappings</span></div>
+    ${detailToggle(s.scope_detail, "Full scope")}
+  </div>
+  <div class="toolrow">
+    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
+    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
+  </div>
+  ${prim.length?`<section class="block"><h2>Primary mappings</h2>${groupFw(prim)}</section>`:""}
+  ${also.length?`<section class="block"><h2>Contributing mappings</h2><p class="subtitle muted small">Rows where ${esc(key)} strengthens a control mapped primarily to another solution.</p>${groupFw(also)}</section>`:""}`;
+}
+function heatColor(v, max){
+  if(!v) return null;
+  const t = Math.pow(v/max, .6);
+  return `color-mix(in srgb, var(--partial) ${Math.round(14+72*t)}%, var(--heat-0))`;
+}
+function matrixTable(rowLabels, colLabels, cellFn, opts={}){
+  /* Generic heat table. rowLabels/colLabels: [{id,label}]. cellFn(rid,cid) -> {count, href} */
+  let max = 1;
+  rowLabels.forEach(r=>colLabels.forEach(c=>{ max = Math.max(max, cellFn(r.id,c.id).count); }));
+  const head = `<thead><tr><th></th>${colLabels.map(c=>`<th><span class="rot">${esc(c.label)}</span></th>`).join("")}<th class="total" style="vertical-align:bottom">Σ</th></tr></thead>`;
+  const body = rowLabels.map(r=>{
+    let rowTotal = 0;
+    const tds = colLabels.map(c=>{
+      const {count, href} = cellFn(r.id, c.id); rowTotal += count;
+      if(!count) return `<td class="z">·</td>`;
+      const bg = heatColor(count, max), dark = count/max > .55;
+      return `<td style="background:${bg};${dark?"color:var(--heat-txt-hi);":""}" title="${esc(r.label)} × ${esc(c.label)}: ${count} row(s)" onclick="location.hash='${href}'">${count}</td>`;
+    }).join("");
+    return `<tr><th>${esc(r.label)}</th>${tds}<td class="total">${rowTotal}</td></tr>`;
+  }).join("");
+  const totals = `<tr><th class="total">Σ</th>${colLabels.map(c=>{
+    const t = rowLabels.reduce((a,r)=>a+cellFn(r.id,c.id).count, 0); return `<th class="total">${t}</th>`; }).join("")}<th class="total">${opts.grand??""}</th></tr>`;
+  return `<div class="matrixwrap"><table class="matrix">${head}<tbody>${body}${totals}</tbody></table></div>`;
+}
+function vMatrix(){
+  const fwL = FW_ORDER.map(f=>({id:f, label:FW[f].name}));
+  const prodL = PROD_ORDER.map(p=>({id:p, label:prodName(p)}));
+  const top = matrixTable(fwL, prodL,
+    (fid,pid)=>({count: byFw(fid).filter(r=>r.product===pid).length, href:`#/matrix/${pid}`}),
+    {grand: ROWS.length});
+  /* Single-product convenience: embed the per-product drill below, via the same generalized body. */
+  const drills = PROD_ORDER.length===1 ? matrixProductSection(PROD_ORDER[0])
+    : `<p class="subtitle muted small" style="margin-top:6px">Click a product column cell to drill into its frameworks × solutions matrix.</p>`;
+  return `<div class="pagehead"><div class="overline">Coverage density</div><h1>Frameworks × products</h1>
+    <div class="full">Count of mapped controls per product. Darker = more rows. Drill into a product for its frameworks × solutions detail.
+    Boundary rows (deliberate "not covered" verdicts) count toward totals; honesty is part of the map.</div></div>
+  ${top}${drills}`;
+}
+function matrixProductSection(pid){
+  const fwL = FW_ORDER.map(f=>({id:f, label:FW[f].name}));
+  const solL = solOrderFor(pid).map(s=>({id:s, label: s==="None (boundary row)"?"(boundary)":s}));
+  const inner = matrixTable(fwL, solL,
+    (fid,skey)=>({count: byFw(fid).filter(r=>r.product===pid && rowSolution(r)===skey).length,
+                  href:`#/cell/${pid}/${fid}/${encodeURIComponent(skey)}`}),
+    {grand: byProd(pid).length});
+  return `<section class="block"><h2>${esc(prodFull(pid))}: frameworks × solutions</h2>
+    <div class="legendrow"><span class="muted">cells are primary-solution counts; contributing solutions are listed on each row · click a cell to open its rows</span></div>
+    ${inner}</section>`;
+}
+function vMatrixProduct(pid){
+  const p = PRODUCTS[pid]; if(!p) return vMissing("product", pid);
+  return `<div class="pagehead"><div class="crumb"><a href="#/matrix">Density Matrix</a> / ${esc(prodName(pid))}</div>
+    <h1>${esc(prodFull(pid))} density</h1></div>
+  ${matrixProductSection(pid)}`;
+}
+function vCell(pid, fid, skey){
+  skey = decodeURIComponent(skey);
+  const f = FW[fid]; if(!f) return vMissing("framework", fid);
+  if(!PRODUCTS[pid]) return vMissing("product", pid);
+  const rows = byFw(fid).filter(r=>r.product===pid && rowSolution(r)===skey);
+  return `<div class="pagehead"><div class="crumb"><a href="#/matrix">Density Matrix</a> / cell</div>
+    <h1>${esc(f.name)} × ${esc(skey)} <span class="chip prod">${esc(prodName(pid))}</span></h1>
+    <div class="metaline"><span class="count-pill">${rows.length} row(s)</span></div></div>
+  <div style="height:14px"></div>${rows.map(r=>rowCard(r)).join("")}`;
+}
+function vSearch(q){
+  q = decodeURIComponent(q||"").trim();
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const hay = r => [r.control_ref, r.control_intent, rowSolution(r), (r.also_involves||[]).join(" "),
+    r.capability_detail, r.how_it_supports, r.external_dependencies, r.legacy_dependencies,
+    (r.related_microsoft||[]).map(e=>(RELPROD[e.product]||e.product)+" "+(e.note||"")).join(" "),
+    r.license_requirement, r.licensing_model, r.product, prodFull(r.product),
+    FW[r.framework].name, r.control_domain].join(" ").toLowerCase();
+  const hits = terms.length ? ROWS.filter(r => terms.every(t => hay(r).includes(t))) : [];
+  return `<div class="pagehead"><div class="overline">Global search</div><h1>“${esc(q)}”</h1>
+    <div class="metaline"><span class="count-pill">${hits.length} matching row(s)</span></div></div>
+  <div style="height:14px"></div>
+  ${hits.length ? hits.map(r=>`<div class="result-item">${rowCard(r,{showFw:true})}</div>`).join("")
+    : `<div class="callout gray">No rows match. Try a control ref (e.g. <span class="mono">3.13.16</span>, <span class="mono">A.8.12</span>, <span class="mono">CC6.7</span>), a product (<span class="mono">purview</span>), or a keyword (<span class="mono">retention</span>, <span class="mono">CUI</span>).</div>`}`;
+}
+function vMissing(kind, id){ return `<div class="pagehead"><h1>Not found</h1><div class="full">No ${esc(kind)} “${esc(id)}”.</div></div>`; }
+
+/* ---------------- router ---------------- */
+function render(){
+  const h = location.hash.replace(/^#\/?/, "");
+  const [p1, p2, p3, p4] = h.split("/");
+  const app = document.getElementById("app");
+  let tab = "home", html;
+  if(!p1) html = vHome();
+  else if(p1==="industry") { html = vIndustry(p2); tab="home"; }
+  else if(p1==="frameworks"){ html = vFrameworks(); tab="frameworks"; }
+  else if(p1==="framework"){ html = vFramework(p2); tab="frameworks"; }
+  else if(p1==="products"){ html = vProducts(); tab="products"; }
+  else if(p1==="product" && p3==="solution"){ html = vSolution(p2, p4); tab="products"; }
+  else if(p1==="product"){ html = vProduct(p2); tab="products"; }
+  else if(p1==="solutions"){ location.hash = "#/products"; return; }               /* legacy route */
+  else if(p1==="solution"){ location.hash = `#/product/${PROD_ORDER[0]}/solution/${p2}`; return; }  /* legacy route */
+  else if(p1==="matrix" && p2){ html = vMatrixProduct(p2); tab="matrix"; }
+  else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; }
+  else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; }
+  else if(p1==="search"){ html = vSearch(p2); tab=""; }
+  else html = vMissing("page", p1);
+  app.innerHTML = html;
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.tab===tab));
+  if(!["framework"].includes(p1)) fwFilter = null;
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", render);
+
+/* ---------------- search box ---------------- */
+const q = document.getElementById("q");
+q.addEventListener("keydown", e => { if(e.key==="Enter" && q.value.trim()) location.hash = "#/search/"+encodeURIComponent(q.value.trim()); });
+document.addEventListener("keydown", e => {
+  if(e.key==="/" && document.activeElement!==q){ e.preventDefault(); q.focus(); }
+  if(e.key==="Escape") q.blur();
+});
+
+/* ---------------- theme ---------------- */
+const themeBtn = document.getElementById("themeBtn");
+function setTheme(t){ document.documentElement.dataset.theme = t; try{localStorage.setItem("pcm-theme", t);}catch(e){} }
+themeBtn.addEventListener("click", ()=> setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+(function(){ let t = new URLSearchParams(location.search).get("theme");
+  if(!t){ try{t=localStorage.getItem("pcm-theme");}catch(e){} }
+  if(!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark":"light"; setTheme(t); })();
+
+/* ---------------- print: expand rows, then restore ---------------- */
+window.addEventListener("beforeprint", ()=>document.querySelectorAll("details.row, details.disclose").forEach(d=>{d.dataset.wasOpen=d.open?"1":""; d.open=true;}));
+window.addEventListener("afterprint", ()=>document.querySelectorAll("details.row, details.disclose").forEach(d=>{if(!d.dataset.wasOpen) d.open=false; delete d.dataset.wasOpen;}));
+
+/* ---------------- brand & footer ---------------- */
+document.title = META.brand.title;
+document.getElementById("brandTitle").textContent = META.brand.title;
+document.getElementById("brandVer").textContent = "v" + META.brand.atlas_version + (META.brand.working_title ? " · working title" : "");
+document.getElementById("footLegal").innerHTML = (META.footer_lines||[]).map(l=>`<li>${esc(l)}</li>`).join("");
+document.getElementById("footDisc").textContent = META.disclaimer;
+document.getElementById("footMeta").innerHTML =
+  `Generated ${esc(META.generated)} from compliance-atlas.json · ${ROWS.length} rows · ${Object.keys(FW).length} frameworks · ${PROD_ORDER.length} product(s) · per-row verification dates govern currency.`;
+
+render();
+</script>
+</body>
+</html>

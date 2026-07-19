@@ -1,0 +1,37 @@
+# Normalize line endings to LF in the repository AND in the working tree.
+#
+# This project's QA method depends on byte-level comparison: the drift ledgers in
+# AUDIT-FINDINGS §16.3 and the `_detail` byte-equality gate in §18.2 both assert that
+# specific field values and generated artifacts are byte-identical to a baseline.
+#
+# The working tree at first commit was MIXED: the row modules, compliance-atlas.html,
+# compliance-atlas.json, and the reference snapshots were CRLF (Python's text-mode
+# write on Windows emits \r\n); assemble.py, common.py, template.html, and the docs
+# were LF. The global setting is core.autocrlf=true, so without a rule here the repo
+# would inherit that inconsistency permanently and produce noisy, meaningless diffs.
+#
+# `eol=lf` normalizes on check-in and check-out, so the repository holds LF
+# throughout. A rebuild on Windows re-emits CRLF in the working tree, which check-in
+# normalization then folds back to LF — so a rebuild that changes no content shows no
+# diff. This is what makes `git diff` usable as a drift check alongside the existing
+# ledgers.
+#
+# Note this DOES change the on-disk line endings of the generated artifacts at the
+# next checkout. That is safe: the drift gates compare parsed JSON field values, not
+# raw file bytes, and both artifacts are regenerable from build/.
+
+* text=auto eol=lf
+
+# Explicit: build inputs and outputs stay LF.
+*.py    text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.xml   text eol=lf
+
+# Binary — never touch, never diff as text.
+*.pdf   binary
+*.xlsx  binary
+*.png   binary
+*.jpg   binary
