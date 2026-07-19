@@ -82,11 +82,14 @@ INDUSTRIES = {
 }
 
 BRAND = {
-    "title": "Compliance Atlas",           # neutral working title — final public name TBD
-    "working_title": True,
-    "tagline": "Mapping Microsoft security capabilities to compliance frameworks, honest about claim strength and verified against sources",
+    # Public name settled 2026-07-19 (PROJECT-REVIEW PR-043). The tagline is rendered as its own
+    # element (hero overline, brand tooltip), never concatenated into the title string.
+    "title": "Compliance Atlas",
+    "working_title": False,
+    "tagline": "Mapping frameworks to the Microsoft security stack",
     "atlas_version": "2.0.0",
-    "as_of": "2026-07-18",
+    # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
+    # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
 
 FOOTER_LINES = [
@@ -97,6 +100,11 @@ FOOTER_LINES = [
 ]
 
 LICENSING_MODELS = ("per_user", "consumption", "included", "n/a")
+
+# <meta name="description"> and og:description, substituted into the template head by build_html.py.
+# The counts are filled from the assembled dataset so the summary cannot drift from it.
+DESCRIPTION = ("{tagline}. {rows} control mappings across {frameworks} compliance frameworks and {products} "
+               "Microsoft security products, each rated for claim strength and verified against an official source.")
 
 META = {
     "title": BRAND["title"],
@@ -172,7 +180,16 @@ def main():
             assert dep["product"] in RELATED_PRODUCTS or dep["product"] in PRODUCTS, f"row {r['id']} unknown related product {dep['product']}"
             assert dep["role"] in ("primary", "contributing"), f"row {r['id']} bad dependency role"
 
-    meta = dict(META, generated=datetime.datetime.now().isoformat(timespec="seconds"))
+    # Verification currency, derived from the rows rather than declared by hand (PR-014b).
+    # default_last_verified and every row's last_verified are read-only here.
+    vdates = sorted(r["last_verified"] for r in rows if r.get("last_verified"))
+    verified_range = {"earliest": vdates[0], "latest": vdates[-1]} if vdates else {}
+
+    description = DESCRIPTION.format(tagline=BRAND["tagline"], rows=len(rows),
+                                     frameworks=len(frameworks), products=len(PRODUCTS))
+
+    meta = dict(META, generated=datetime.datetime.now().isoformat(timespec="seconds"),
+                verified_range=verified_range, description_meta=description)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

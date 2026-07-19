@@ -3,10 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Compliance Atlas</title>
+<!-- __BRAND_TITLE__ / __META_DESCRIPTION__ are substituted from meta.brand.title and
+     meta.description_meta by build_html.py, so crawlers see them without running the script.
+     og:image is deliberately omitted: it would require an absolute hosted URL and break the
+     zero-external-asset property that makes the file:// copy fully self-contained. -->
+<title>__BRAND_TITLE__</title>
+<meta name="description" content="__META_DESCRIPTION__">
+<meta property="og:type" content="website">
+<meta property="og:title" content="__BRAND_TITLE__">
+<meta property="og:description" content="__META_DESCRIPTION__">
+<!-- Favicon: the ¶ brand glyph (%C2%B6) in the accent ink on paper, inline so nothing is fetched. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%23faf7f0'/%3E%3Ctext x='32' y='48' text-anchor='middle' font-family='Georgia,serif' font-size='46' font-weight='600' fill='%237c2d12'%3E%C2%B6%3C/text%3E%3C/svg%3E">
 <style>
 /* ============ Compliance Atlas — folio styling, zero external deps ============ */
 :root{
+  color-scheme: light;   /* native chrome (scrollbars, search-field clear button) follows the theme */
   --paper:#faf7f0; --paper-2:#f2ede1; --card:#fffdf8; --ink:#20242c; --ink-2:#565b66; --ink-3:#8a8f99;
   --rule:#d9d2c2; --rule-2:#c5bda9; --accent:#7c2d12; --accent-ink:#7c2d12; --link:#1e5fae;
   --direct:#177245; --partial:#1e5fae; --evidence:#96690f; --nocover:#6e6a63;
@@ -20,6 +31,7 @@
   --font-mono:"Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
 }
 [data-theme="dark"]{
+  color-scheme: dark;
   --paper:#181b22; --paper-2:#131519; --card:#20242d; --ink:#e6e2d8; --ink-2:#a9adb6; --ink-3:#7c818c;
   --rule:#343a46; --rule-2:#434a58; --accent:#d08770; --accent-ink:#d08770; --link:#5b96d6;
   --direct:#35a370; --partial:#5b96d6; --evidence:#b3861f; --nocover:#9a958c;
@@ -84,6 +96,7 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .chip.prod{color:var(--ink); background:color-mix(in srgb, var(--ink) 7%, var(--paper-2)); box-shadow:inset 0 0 0 1px var(--rule-2)}
 .chip.gov{color:var(--warn-ink); background:var(--warn-bg); box-shadow:inset 0 0 0 1px var(--warn-rule)}
 .chip.unv{color:var(--danger); background:var(--danger-bg); box-shadow:inset 0 0 0 1px var(--danger)}
+.chip.ver{font-weight:400; color:var(--ink-3); background:transparent; box-shadow:inset 0 0 0 1px var(--rule)}
 .ref{font:600 13px var(--font-mono); color:var(--ink); white-space:nowrap}
 
 /* ---------- hero / landing ---------- */
@@ -111,6 +124,22 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 section.block{padding:26px 0 6px}
 section.block h2{font-size:24px; margin:4px 0 4px}
 section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
+
+/* ---------- taxonomy legend (definitions rendered from META, never duplicated here) ---------- */
+.legend{border:1px solid var(--rule-2); border-radius:12px; background:var(--card); box-shadow:var(--shadow);
+  padding:18px 20px; margin:0 0 34px}
+.legend>.overline{display:block; margin-bottom:12px}
+.legend .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px 28px}
+.legend h4{margin:0 0 9px; font:700 11px var(--font-body); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.legend dl{margin:0}
+.legend dl>div+div{margin-top:11px}
+.legend dt{margin:0 0 4px}
+.legend dd{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
+.legend.compact{padding:12px 16px; margin:16px 0 0}
+.legend.compact dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px 24px}
+.legend.compact dl>div+div{margin-top:0}
+.legend.compact dd{font-size:12px}
+.legend.compact dt{margin:0 0 3px}
 
 /* ---------- framework / product page ---------- */
 .pagehead{padding:30px 0 18px; border-bottom:1px solid var(--rule)}
@@ -190,6 +219,9 @@ table.matrix td.total, table.matrix th.total{background:transparent; font-weight
 .legendrow{display:flex; gap:16px; align-items:center; font-size:12px; color:var(--ink-2); flex-wrap:wrap; margin:6px 0 12px}
 .legendrow .sw{display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:5px}
 
+/* ---------- pre-script placeholder ---------- */
+.loading{padding:72px 0 0; margin:0; font-family:var(--font-display); font-size:19px; color:var(--ink-3)}
+
 /* ---------- search results ---------- */
 .result-item{margin-bottom:10px}
 .count-pill{font:600 11px var(--font-mono); background:var(--paper-2); border-radius:999px; padding:3px 9px; color:var(--ink-2); box-shadow:inset 0 0 0 1px var(--rule)}
@@ -241,7 +273,9 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
   <button class="iconbtn" onclick="window.print()" title="Print current view">⎙</button>
 </div></header>
 
-<main id="app" class="wrap" aria-live="polite"></main>
+<!-- The placeholder is the whole of <main> until render() replaces it; on a slow connection the
+     ~1 MB single-file payload would otherwise paint a blank page. -->
+<main id="app" class="wrap" aria-live="polite"><p class="loading">Loading the atlas…</p></main>
 
 <footer class="site"><div class="wrap">
   <ul class="legal" id="footLegal"></ul>
@@ -275,9 +309,38 @@ const bySolP = (pid, key) => ROWS.filter(r => r.product === pid && rowSolution(r
 const byAlsoP = (pid, key) => ROWS.filter(r => r.product === pid && (r.also_involves||[]).includes(key));
 const referencedBy = pid => ROWS.filter(r => r.product !== pid && (r.related_microsoft||[]).some(e => e.product === pid));
 
+/* ---------------- taxonomy definitions (single source: META) ---------------- */
+/* The four coverage levels, three confidence levels and four licensing models are defined once in
+   assemble.py and shipped in META. Everything on screen — legends and tooltips alike — reads from
+   here, so a definition can never drift between the dataset and the UI. */
+const COV_DEF = META.coverage_levels || {}, CONF_DEF = META.confidence_levels || {}, LIC_DEF = META.licensing_models || {};
+const withDef = (label, def) => def ? `${label} — ${def}` : label;
+/* Dataset currency, derived at build time from the rows' own last_verified values. */
+function verifiedRange(){
+  const v = META.verified_range || {};
+  if(!v.earliest) return "";
+  return v.earliest === v.latest ? `rows verified ${v.earliest}` : `rows verified ${v.earliest} – ${v.latest}`;
+}
+
 /* ---------------- shared fragments ---------------- */
-function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}">${esc(cov)}</span>`; }
-function confMeter(c){ return `<span class="conf" title="Confidence: ${esc(c)}"><span class="dots">${CONF_DOTS[c]||""}</span>${esc(c)}</span>`; }
+function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}" title="${esc(withDef(cov, COV_DEF[cov]))}">${esc(cov)}</span>`; }
+function confMeter(c){ return `<span class="conf" title="${esc(withDef("Confidence: "+c, CONF_DEF[c]))}"><span class="dots">${CONF_DOTS[c]||""}</span>${esc(c)}</span>`; }
+function licChip(model){ return `<span class="chip" style="margin-left:4px" title="${esc(withDef(model, LIC_DEF[model]))}">${esc(model)}</span>`; }
+/* dl > div > (dt, dd) — the div wrapper is valid HTML5 and lets the pairs be grid items. */
+function defList(pairs){ return `<dl>` + pairs.map(([t,d]) => `<div><dt>${t}</dt><dd>${esc(d)}</dd></div>`).join("") + `</dl>`; }
+function taxonomyLegend(compact){
+  /* compact = coverage only, for the framework view where stacked product cards make the
+     Direct/Partial/Evidence distinction most acute. Full = all three taxonomies, landing page. */
+  const cov = COV_ORDER.filter(c => COV_DEF[c]).map(c => [covBadge(c), COV_DEF[c]]);
+  if(compact) return `<div class="legend compact"><div class="cols">${defList(cov)}</div></div>`;
+  const conf = Object.keys(CONF_DOTS).filter(c => CONF_DEF[c]).map(c => [confMeter(c), CONF_DEF[c]]);
+  const lic = Object.entries(LIC_DEF).map(([k,v]) => [`<span class="chip">${esc(k)}</span>`, v]);
+  return `<div class="legend"><span class="overline">How to read a mapping</span><div class="cols">
+    <div><h4>Coverage · what the claim means</h4>${defList(cov)}</div>
+    <div><h4>Confidence · how far it stretches</h4>${defList(conf)}</div>
+    <div><h4>Licensing model</h4>${defList(lic)}</div>
+  </div></div>`;
+}
 function minibar(rows){
   const n = rows.length || 1;
   return `<div class="minibar" title="${COV_ORDER.map(c=>`${c}: ${rows.filter(r=>r.coverage===c).length}`).join(" · ")}">` +
@@ -317,6 +380,7 @@ function rowCard(r, opts={}){
       <span class="badges">${covBadge(r.coverage)}${confMeter(r.confidence)}
         ${r.cloud_availability_note?`<span class="chip gov" title="US Government cloud caveat; expand for detail">GOV ⚠</span>`:""}
         ${unv?`<span class="chip unv">UNVERIFIED</span>`:""}
+        ${r.last_verified?`<span class="chip ver" title="Last verified against its sources on ${esc(r.last_verified)}">✓ ${esc(r.last_verified)}</span>`:""}
         <span class="flip">›</span></span>
     </summary>
     <div class="body">
@@ -330,7 +394,7 @@ function rowCard(r, opts={}){
       <div class="aside">
         ${relatedBlock(r)}
         <h4>External dependencies</h4><p>${esc(r.external_dependencies || "None recorded")}</p>
-        <h4>License requirement <span class="chip" style="margin-left:4px">${esc(r.licensing_model)}</span></h4><p>${esc(r.license_requirement)}</p>
+        <h4>License requirement ${licChip(r.licensing_model)}</h4><p>${esc(r.license_requirement)}</p>
         <h4>Sources</h4><div class="src">${(r.sources||[]).map(u=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//,""))}</a>`).join("")}</div>
       </div>
       ${r.cloud_availability_note?`<div class="rowcaveat">⚠ <b>US Government clouds:</b> ${esc(r.cloud_availability_note)}</div>`:""}
@@ -389,7 +453,7 @@ function cmChip(fw){
 function vHome(){
   const inds = Object.entries(IND);
   return `<div class="hero">
-    <div class="overline">${esc(META.brand.tagline)} · as of ${esc(META.brand.as_of)}</div>
+    <div class="overline">${esc(META.brand.tagline)}${verifiedRange()?` · ${esc(verifiedRange())}`:""}</div>
     <h1>Where does the Microsoft stack fit?</h1>
     <p class="lede">Pick an industry, open the frameworks it answers to, and read off each control's
       product mappings: claim strength, license tier, evidence examples, and the source behind every statement.</p>
@@ -400,6 +464,7 @@ function vHome(){
       <div class="stat"><b>${ROWS.filter(r=>r.coverage==="Direct Support").length}</b><span>direct-support claims</span></div>
       <div class="stat"><b>${ROWS.filter(r=>r.status!=="verified").length}</b><span>unverified rows</span></div>
     </div>
+    ${taxonomyLegend(false)}
   </div>
   <section class="block"><div class="overline">Industry lens</div><h2>Start from an industry</h2>
   <div class="grid cards">${inds.map(([id,i])=>{
@@ -462,6 +527,7 @@ function vFramework(id){
     <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
     <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
   </div>
+  ${taxonomyLegend(true)}
   ${renderControlGroups(rows)}`;
 }
 function vProducts(){
@@ -590,11 +656,16 @@ function vCell(pid, fid, skey){
 function vSearch(q){
   q = decodeURIComponent(q||"").trim();
   const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  /* Index every field a reader might reasonably search on. The government-cloud note and the two
+     evidence examples are the sector-specific content ("GCC High", "Azure Government", "DoD");
+     coverage/confidence make "direct support" a query; id makes a cited row findable by its id. */
   const hay = r => [r.control_ref, r.control_intent, rowSolution(r), (r.also_involves||[]).join(" "),
     r.capability_detail, r.how_it_supports, r.external_dependencies, r.legacy_dependencies,
     (r.related_microsoft||[]).map(e=>(RELPROD[e.product]||e.product)+" "+(e.note||"")).join(" "),
     r.license_requirement, r.licensing_model, r.product, prodFull(r.product),
-    FW[r.framework].name, r.control_domain].join(" ").toLowerCase();
+    FW[r.framework].name, r.control_domain,
+    r.cloud_availability_note, r.config_evidence_example, r.operational_evidence_example,
+    r.coverage, r.confidence, r.id].join(" ").toLowerCase();
   const hits = terms.length ? ROWS.filter(r => terms.every(t => hay(r).includes(t))) : [];
   return `<div class="pagehead"><div class="overline">Global search</div><h1>“${esc(q)}”</h1>
     <div class="metaline"><span class="count-pill">${hits.length} matching row(s)</span></div></div>
@@ -605,29 +676,33 @@ function vSearch(q){
 function vMissing(kind, id){ return `<div class="pagehead"><h1>Not found</h1><div class="full">No ${esc(kind)} “${esc(id)}”.</div></div>`; }
 
 /* ---------------- router ---------------- */
+const dec = s => { try { return decodeURIComponent(s||""); } catch(e){ return s||""; } };
 function render(){
   const h = location.hash.replace(/^#\/?/, "");
   const [p1, p2, p3, p4] = h.split("/");
   const app = document.getElementById("app");
-  let tab = "home", html;
+  /* view: the page name for document.title. Empty on the landing page, which takes the bare brand. */
+  let tab = "home", html, view = "";
   if(!p1) html = vHome();
-  else if(p1==="industry") { html = vIndustry(p2); tab="home"; }
-  else if(p1==="frameworks"){ html = vFrameworks(); tab="frameworks"; }
-  else if(p1==="framework"){ html = vFramework(p2); tab="frameworks"; }
-  else if(p1==="products"){ html = vProducts(); tab="products"; }
-  else if(p1==="product" && p3==="solution"){ html = vSolution(p2, p4); tab="products"; }
-  else if(p1==="product"){ html = vProduct(p2); tab="products"; }
+  else if(p1==="industry") { html = vIndustry(p2); tab="home"; view = IND[p2]?.name || "Not found"; }
+  else if(p1==="frameworks"){ html = vFrameworks(); tab="frameworks"; view = "Frameworks"; }
+  else if(p1==="framework"){ html = vFramework(p2); tab="frameworks"; view = FW[p2]?.name || "Not found"; }
+  else if(p1==="products"){ html = vProducts(); tab="products"; view = PROD_ORDER.length===1 ? prodFull(PROD_ORDER[0]) : "Products"; }
+  else if(p1==="product" && p3==="solution"){ html = vSolution(p2, p4); tab="products"; view = SOL[dec(p4)] ? `${dec(p4)} · ${prodName(p2)}` : "Not found"; }
+  else if(p1==="product"){ html = vProduct(p2); tab="products"; view = PRODUCTS[p2] ? prodFull(p2) : "Not found"; }
   else if(p1==="solutions"){ location.hash = "#/products"; return; }               /* legacy route */
   else if(p1==="solution"){ location.hash = `#/product/${PROD_ORDER[0]}/solution/${p2}`; return; }  /* legacy route */
-  else if(p1==="matrix" && p2){ html = vMatrixProduct(p2); tab="matrix"; }
-  else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; }
-  else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; }
-  else if(p1==="search"){ html = vSearch(p2); tab=""; }
-  else html = vMissing("page", p1);
+  else if(p1==="matrix" && p2){ html = vMatrixProduct(p2); tab="matrix"; view = PRODUCTS[p2] ? `${prodName(p2)} density` : "Not found"; }
+  else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; view = "Density matrix"; }
+  else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; view = FW[p3] ? `${FW[p3].name} × ${dec(p4)}` : "Not found"; }
+  else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; }
+  else { html = vMissing("page", p1); view = "Not found"; }
   app.innerHTML = html;
   document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.tab===tab));
   if(!["framework"].includes(p1)) fwFilter = null;
   window.scrollTo(0,0);
+  /* Per-route title: bookmarks, browser history and pasted links now identify the view (PR-003). */
+  document.title = view ? `${view} · ${META.brand.title}` : META.brand.title;
 }
 window.addEventListener("hashchange", render);
 
@@ -654,6 +729,7 @@ window.addEventListener("afterprint", ()=>document.querySelectorAll("details.row
 /* ---------------- brand & footer ---------------- */
 document.title = META.brand.title;
 document.getElementById("brandTitle").textContent = META.brand.title;
+document.getElementById("brandBox").title = META.brand.tagline + " · Home";
 document.getElementById("brandVer").textContent = "v" + META.brand.atlas_version + (META.brand.working_title ? " · working title" : "");
 document.getElementById("footLegal").innerHTML = (META.footer_lines||[]).map(l=>`<li>${esc(l)}</li>`).join("");
 document.getElementById("footDisc").textContent = META.disclaimer;

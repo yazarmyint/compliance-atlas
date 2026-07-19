@@ -4,10 +4,9 @@
   "version": "2.0.0",
   "brand": {
    "title": "Compliance Atlas",
-   "working_title": true,
-   "tagline": "Mapping Microsoft security capabilities to compliance frameworks, honest about claim strength and verified against sources",
-   "atlas_version": "2.0.0",
-   "as_of": "2026-07-18"
+   "working_title": false,
+   "tagline": "Mapping frameworks to the Microsoft security stack",
+   "atlas_version": "2.0.0"
   },
   "footer_lines": [
    "Informational reference only; not legal, audit, or compliance advice.",
@@ -15,7 +14,7 @@
    "Framework and standard names are the property of their respective owners and are used for identification only.",
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it."
   ],
-  "generated": "2026-07-19T17:16:25",
+  "generated": "2026-07-19T18:24:58",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
@@ -42,7 +41,12 @@
    "Medium": "Reasonable mapping; acceptance may vary by assessor/scope.",
    "Low": "Defensible but narrow or contested; position carefully."
   },
-  "disclaimer": "Mapped products support or evidence controls; they do not by themselves make an organization compliant with any framework. Control references are practical intent mappings in original words, not quotations of the standards. Licensing claims derive from each product's authoritative licensing source and can change; verify before relying on it."
+  "disclaimer": "Mapped products support or evidence controls; they do not by themselves make an organization compliant with any framework. Control references are practical intent mappings in original words, not quotations of the standards. Licensing claims derive from each product's authoritative licensing source and can change; verify before relying on it.",
+  "verified_range": {
+   "earliest": "2026-07-16",
+   "latest": "2026-07-18"
+  },
+  "description_meta": "Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
  },
  "products": {
   "purview": {
