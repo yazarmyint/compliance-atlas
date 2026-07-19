@@ -654,6 +654,7 @@ window.addEventListener("afterprint", ()=>document.querySelectorAll("details.row
 /* ---------------- brand & footer ---------------- */
 document.title = META.brand.title;
 document.getElementById("brandTitle").textContent = META.brand.title;
+document.getElementById("brandBox").title = META.brand.tagline + " · Home";
 document.getElementById("brandVer").textContent = "v" + META.brand.atlas_version + (META.brand.working_title ? " · working title" : "");
 document.getElementById("footLegal").innerHTML = (META.footer_lines||[]).map(l=>`<li>${esc(l)}</li>`).join("");
 document.getElementById("footDisc").textContent = META.disclaimer;

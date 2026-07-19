@@ -82,9 +82,11 @@ INDUSTRIES = {
 }
 
 BRAND = {
-    "title": "Compliance Atlas",           # neutral working title — final public name TBD
-    "working_title": True,
-    "tagline": "Mapping Microsoft security capabilities to compliance frameworks, honest about claim strength and verified against sources",
+    # Public name settled 2026-07-19 (PROJECT-REVIEW PR-043). The tagline is rendered as its own
+    # element (hero overline, brand tooltip), never concatenated into the title string.
+    "title": "Compliance Atlas",
+    "working_title": False,
+    "tagline": "Mapping frameworks to the Microsoft security stack",
     "atlas_version": "2.0.0",
     "as_of": "2026-07-18",
 }
