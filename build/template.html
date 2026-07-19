@@ -84,6 +84,7 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .chip.prod{color:var(--ink); background:color-mix(in srgb, var(--ink) 7%, var(--paper-2)); box-shadow:inset 0 0 0 1px var(--rule-2)}
 .chip.gov{color:var(--warn-ink); background:var(--warn-bg); box-shadow:inset 0 0 0 1px var(--warn-rule)}
 .chip.unv{color:var(--danger); background:var(--danger-bg); box-shadow:inset 0 0 0 1px var(--danger)}
+.chip.ver{font-weight:400; color:var(--ink-3); background:transparent; box-shadow:inset 0 0 0 1px var(--rule)}
 .ref{font:600 13px var(--font-mono); color:var(--ink); white-space:nowrap}
 
 /* ---------- hero / landing ---------- */
@@ -297,6 +298,12 @@ const referencedBy = pid => ROWS.filter(r => r.product !== pid && (r.related_mic
    here, so a definition can never drift between the dataset and the UI. */
 const COV_DEF = META.coverage_levels || {}, CONF_DEF = META.confidence_levels || {}, LIC_DEF = META.licensing_models || {};
 const withDef = (label, def) => def ? `${label} — ${def}` : label;
+/* Dataset currency, derived at build time from the rows' own last_verified values. */
+function verifiedRange(){
+  const v = META.verified_range || {};
+  if(!v.earliest) return "";
+  return v.earliest === v.latest ? `rows verified ${v.earliest}` : `rows verified ${v.earliest} – ${v.latest}`;
+}
 
 /* ---------------- shared fragments ---------------- */
 function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}" title="${esc(withDef(cov, COV_DEF[cov]))}">${esc(cov)}</span>`; }
@@ -356,6 +363,7 @@ function rowCard(r, opts={}){
       <span class="badges">${covBadge(r.coverage)}${confMeter(r.confidence)}
         ${r.cloud_availability_note?`<span class="chip gov" title="US Government cloud caveat; expand for detail">GOV ⚠</span>`:""}
         ${unv?`<span class="chip unv">UNVERIFIED</span>`:""}
+        ${r.last_verified?`<span class="chip ver" title="Last verified against its sources on ${esc(r.last_verified)}">✓ ${esc(r.last_verified)}</span>`:""}
         <span class="flip">›</span></span>
     </summary>
     <div class="body">
@@ -428,7 +436,7 @@ function cmChip(fw){
 function vHome(){
   const inds = Object.entries(IND);
   return `<div class="hero">
-    <div class="overline">${esc(META.brand.tagline)} · as of ${esc(META.brand.as_of)}</div>
+    <div class="overline">${esc(META.brand.tagline)}${verifiedRange()?` · ${esc(verifiedRange())}`:""}</div>
     <h1>Where does the Microsoft stack fit?</h1>
     <p class="lede">Pick an industry, open the frameworks it answers to, and read off each control's
       product mappings: claim strength, license tier, evidence examples, and the source behind every statement.</p>

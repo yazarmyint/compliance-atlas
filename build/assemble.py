@@ -88,7 +88,8 @@ BRAND = {
     "working_title": False,
     "tagline": "Mapping frameworks to the Microsoft security stack",
     "atlas_version": "2.0.0",
-    "as_of": "2026-07-18",
+    # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
+    # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
 
 FOOTER_LINES = [
@@ -174,7 +175,13 @@ def main():
             assert dep["product"] in RELATED_PRODUCTS or dep["product"] in PRODUCTS, f"row {r['id']} unknown related product {dep['product']}"
             assert dep["role"] in ("primary", "contributing"), f"row {r['id']} bad dependency role"
 
-    meta = dict(META, generated=datetime.datetime.now().isoformat(timespec="seconds"))
+    # Verification currency, derived from the rows rather than declared by hand (PR-014b).
+    # default_last_verified and every row's last_verified are read-only here.
+    vdates = sorted(r["last_verified"] for r in rows if r.get("last_verified"))
+    verified_range = {"earliest": vdates[0], "latest": vdates[-1]} if vdates else {}
+
+    meta = dict(META, generated=datetime.datetime.now().isoformat(timespec="seconds"),
+                verified_range=verified_range)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
