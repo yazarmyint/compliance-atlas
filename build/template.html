@@ -112,6 +112,22 @@ section.block{padding:26px 0 6px}
 section.block h2{font-size:24px; margin:4px 0 4px}
 section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
 
+/* ---------- taxonomy legend (definitions rendered from META, never duplicated here) ---------- */
+.legend{border:1px solid var(--rule-2); border-radius:12px; background:var(--card); box-shadow:var(--shadow);
+  padding:18px 20px; margin:0 0 34px}
+.legend>.overline{display:block; margin-bottom:12px}
+.legend .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px 28px}
+.legend h4{margin:0 0 9px; font:700 11px var(--font-body); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.legend dl{margin:0}
+.legend dl>div+div{margin-top:11px}
+.legend dt{margin:0 0 4px}
+.legend dd{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
+.legend.compact{padding:12px 16px; margin:16px 0 0}
+.legend.compact dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px 24px}
+.legend.compact dl>div+div{margin-top:0}
+.legend.compact dd{font-size:12px}
+.legend.compact dt{margin:0 0 3px}
+
 /* ---------- framework / product page ---------- */
 .pagehead{padding:30px 0 18px; border-bottom:1px solid var(--rule)}
 .pagehead h1{font-size:31px; margin:8px 0 4px}
@@ -275,9 +291,32 @@ const bySolP = (pid, key) => ROWS.filter(r => r.product === pid && rowSolution(r
 const byAlsoP = (pid, key) => ROWS.filter(r => r.product === pid && (r.also_involves||[]).includes(key));
 const referencedBy = pid => ROWS.filter(r => r.product !== pid && (r.related_microsoft||[]).some(e => e.product === pid));
 
+/* ---------------- taxonomy definitions (single source: META) ---------------- */
+/* The four coverage levels, three confidence levels and four licensing models are defined once in
+   assemble.py and shipped in META. Everything on screen — legends and tooltips alike — reads from
+   here, so a definition can never drift between the dataset and the UI. */
+const COV_DEF = META.coverage_levels || {}, CONF_DEF = META.confidence_levels || {}, LIC_DEF = META.licensing_models || {};
+const withDef = (label, def) => def ? `${label} — ${def}` : label;
+
 /* ---------------- shared fragments ---------------- */
-function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}">${esc(cov)}</span>`; }
-function confMeter(c){ return `<span class="conf" title="Confidence: ${esc(c)}"><span class="dots">${CONF_DOTS[c]||""}</span>${esc(c)}</span>`; }
+function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}" title="${esc(withDef(cov, COV_DEF[cov]))}">${esc(cov)}</span>`; }
+function confMeter(c){ return `<span class="conf" title="${esc(withDef("Confidence: "+c, CONF_DEF[c]))}"><span class="dots">${CONF_DOTS[c]||""}</span>${esc(c)}</span>`; }
+function licChip(model){ return `<span class="chip" style="margin-left:4px" title="${esc(withDef(model, LIC_DEF[model]))}">${esc(model)}</span>`; }
+/* dl > div > (dt, dd) — the div wrapper is valid HTML5 and lets the pairs be grid items. */
+function defList(pairs){ return `<dl>` + pairs.map(([t,d]) => `<div><dt>${t}</dt><dd>${esc(d)}</dd></div>`).join("") + `</dl>`; }
+function taxonomyLegend(compact){
+  /* compact = coverage only, for the framework view where stacked product cards make the
+     Direct/Partial/Evidence distinction most acute. Full = all three taxonomies, landing page. */
+  const cov = COV_ORDER.filter(c => COV_DEF[c]).map(c => [covBadge(c), COV_DEF[c]]);
+  if(compact) return `<div class="legend compact"><div class="cols">${defList(cov)}</div></div>`;
+  const conf = Object.keys(CONF_DOTS).filter(c => CONF_DEF[c]).map(c => [confMeter(c), CONF_DEF[c]]);
+  const lic = Object.entries(LIC_DEF).map(([k,v]) => [`<span class="chip">${esc(k)}</span>`, v]);
+  return `<div class="legend"><span class="overline">How to read a mapping</span><div class="cols">
+    <div><h4>Coverage · what the claim means</h4>${defList(cov)}</div>
+    <div><h4>Confidence · how far it stretches</h4>${defList(conf)}</div>
+    <div><h4>Licensing model</h4>${defList(lic)}</div>
+  </div></div>`;
+}
 function minibar(rows){
   const n = rows.length || 1;
   return `<div class="minibar" title="${COV_ORDER.map(c=>`${c}: ${rows.filter(r=>r.coverage===c).length}`).join(" · ")}">` +
@@ -330,7 +369,7 @@ function rowCard(r, opts={}){
       <div class="aside">
         ${relatedBlock(r)}
         <h4>External dependencies</h4><p>${esc(r.external_dependencies || "None recorded")}</p>
-        <h4>License requirement <span class="chip" style="margin-left:4px">${esc(r.licensing_model)}</span></h4><p>${esc(r.license_requirement)}</p>
+        <h4>License requirement ${licChip(r.licensing_model)}</h4><p>${esc(r.license_requirement)}</p>
         <h4>Sources</h4><div class="src">${(r.sources||[]).map(u=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//,""))}</a>`).join("")}</div>
       </div>
       ${r.cloud_availability_note?`<div class="rowcaveat">⚠ <b>US Government clouds:</b> ${esc(r.cloud_availability_note)}</div>`:""}
@@ -400,6 +439,7 @@ function vHome(){
       <div class="stat"><b>${ROWS.filter(r=>r.coverage==="Direct Support").length}</b><span>direct-support claims</span></div>
       <div class="stat"><b>${ROWS.filter(r=>r.status!=="verified").length}</b><span>unverified rows</span></div>
     </div>
+    ${taxonomyLegend(false)}
   </div>
   <section class="block"><div class="overline">Industry lens</div><h2>Start from an industry</h2>
   <div class="grid cards">${inds.map(([id,i])=>{
@@ -462,6 +502,7 @@ function vFramework(id){
     <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
     <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
   </div>
+  ${taxonomyLegend(true)}
   ${renderControlGroups(rows)}`;
 }
 function vProducts(){
