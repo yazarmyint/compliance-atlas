@@ -1083,3 +1083,88 @@ Baseline: pre-edit `compliance-atlas.json` snapshot.
 
 **Pass verdict: SHIP.** Depth relocated, nothing deleted (every `_detail` byte-equal to its original); zero row-field
 drift; §16 prose invariant preserved; scannable card grid restored; the atlas's dense detail survives one click away.
+
+---
+
+## 19. Version control, copyright triage, and licensing (2026-07-19)
+
+Execution of PROJECT-REVIEW roadmap item 1 (findings **PR-040** no version control, **PR-042** copyrighted
+documents in the tree, **PR-041** no licence). **No build source or generated output was modified; no rebuild was
+run.** The atlas remains at 378 rows / 11 frameworks / 6 products, byte-unchanged.
+
+### 19.1 Copyright triage of `reference/` — performed BEFORE `git init`
+
+Order was deliberate: git history is permanent and this repository is intended to become public, so
+redistribution-restricted documents had to leave the tree before any commit existed. **6 of 23 files moved out**
+to the sibling directory `../compliance-atlas-reference-private/` (moved, not deleted; they remain available
+locally for re-verification passes).
+
+| Excluded file | Basis |
+|---|---|
+| `AICPA-TSC-2017-2022POF.pdf` · `.txt` | Copyright AICPA; download licence for the recipient's own use. The `.txt` is a derivative and carries the same restriction. |
+| `DPR-v12.pdf` · `.txt` | Microsoft supplier-programme document, published for enrolled suppliers, not licensed for third-party redistribution. |
+| `pci-dss-401.pdf` | PCI SSC document-library capture. **Also confirmed misnamed** (file begins `<!DOCTYPE html>`, not `%PDF`) — it is the HTML gate page, corroborating §14.5's finding that the local PDF was unusable and that PCI numbering was verified via the Azure Policy initiative page instead. Excluded on both grounds. |
+| `purview-service-description.md` | Verbatim Microsoft Learn content under the Microsoft Terms of Use, not an open licence. The live URL is the citation of record in the dataset, so nothing is lost. |
+
+**17 files kept**, all safe to publish: the NIST publications (SP 800-53 R5, SP 800-171 R2, CSF 2.0) and eCFR
+extracts (45 CFR 164, 16 CFR 314, 34 CFR 99) as US-government public domain under 17 U.S.C. §105, plus
+`hipaa-sections.txt` (derived from public-domain eCFR text) and the project's own generated artifacts
+(`baseline-pre-refactor.json`, `baseline-pre-humanization.json`, `dependency-migration-log.json`,
+`xlsx-extract.json`).
+
+New file **`reference/SOURCES.md`** records, per file: what it is, its official re-download URL, and its
+redistribution status — plus a decision rule for future additions (government publication → commit; standards
+body or vendor documentation → never commit; uncertain → treat as restricted).
+
+**None of the excluded documents is a build input.** `assemble.py` and `build_html.py` read only `build/`; these
+were human/agent verification inputs. Their absence does not affect regenerability.
+
+### 19.2 Version control established
+
+`git init` on branch `main`; single commit `2f1d38a`, **45 files tracked**.
+
+Verification gate run before pushing anywhere:
+- `git status` clean;
+- explicit tracked-file scan for all six excluded filenames plus a regex sweep on
+  `aicpa|dpr-v|pci-dss|service-description` — **zero matches**;
+- tracked PDFs enumerated: the three NIST publications only;
+- `.gitignore` backstop tested with `git check-ignore` — all four restricted paths correctly ignored, while the
+  public-domain `nist-csf-2.pdf` correctly is not.
+
+The same scan was re-run against the pushed remote tree via the GitHub API: 45 blobs, zero restricted files.
+
+**`.gitattributes` added (`* text=auto eol=lf`).** The working tree was mixed at first commit: the row modules,
+`compliance-atlas.html`, `compliance-atlas.json`, and the reference snapshots were CRLF (Python's text-mode write
+on Windows), while `assemble.py`, `common.py`, `template.html`, and the documentation were LF. The machine's
+global `core.autocrlf=true` would have baked that inconsistency into history. Normalizing to LF means a rebuild
+that changes no content produces no diff, which makes `git diff` usable as a drift check alongside the existing
+manual ledgers. **Consequence to note:** the generated artifacts' on-disk line endings change at the next
+checkout. This is safe — the §16.3 and §18.2 drift gates compare parsed JSON field values, not raw file bytes,
+and both artifacts regenerate from `build/`.
+
+### 19.3 Licensing decision (owner: Yazar)
+
+| Scope | Licence | File |
+|---|---|---|
+| Build code — all of `build/` | **MIT** | `LICENSE` |
+| Atlas content, dataset, generated artifacts, project documentation | **CC BY 4.0** | `LICENSE-CONTENT.md` |
+
+A "Licensing" section in `README.md` states the split. **No footer line was added to the artifact** — that is a
+`template.html`/`assemble.py` change reserved for the publishing session, per PR-041's roadmap sequencing.
+
+`LICENSE-CONTENT.md` makes the dependency explicit: open licensing of this work is only possible *because* the
+atlas paraphrases control intent rather than quoting standards text. That authoring rule is therefore promoted
+from an internal discipline to a **licence condition on anyone adapting the atlas** — adapters must not
+substitute verbatim standard text for the paraphrases. The licence also disclaims any rights in third-party
+framework texts and trademarks, and restates the not-legal-advice / not-an-attestation position.
+
+### 19.4 Remote
+
+Private GitHub repository created via `gh`: **https://github.com/yazarmyint/compliance-atlas**.
+Visibility confirmed by `gh repo view`: `"isPrivate": true`, `"visibility": "PRIVATE"`. `main` tracks
+`origin/main`; working tree clean and in sync. No credentials stored in the repository.
+
+**Verdict: COMPLETE.** The project is under version control with an off-machine private backup, the permanent
+copyright exposure identified in PR-042 is closed before it could be created, and the licence position is
+settled. PR-040, PR-041, and PR-042 are resolved. Remaining pre-publish blockers: **PR-001** (keyboard and
+screen-reader navigation) and **PR-043** (public name / `working_title`).
