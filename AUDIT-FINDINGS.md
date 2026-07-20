@@ -2924,3 +2924,81 @@ scoped to `details.row > summary .badges`, with a comment saying why. The genera
 this project already applies to the dataset: a count derived from the DOM has to be scoped to the
 place the thing is rendered *once*, and the way to find out is to run the interaction and read the
 output rather than to reason about it.
+
+## 29. Reader-facing polish (2026-07-20) — legend layout (PR-059), feedback link, social card
+
+Three small reader-facing items on one branch, one commit each, owner-approved after a lightweight
+checkpoint. No row touched: `compliance-atlas.json` diffs zero lines across all three, the strictest
+gate the project has run. These are template, docs, and asset changes only.
+
+### 29.1 PR-059 · the taxonomy legend regained its height (owner-reported)
+
+**Finding.** On the landing page the "How to read a mapping" legend had grown several times taller
+than intended: the License tier column rendered at roughly 2.2x the height of Coverage, Confidence,
+and Licensing model, and sat on a second grid row beneath them. The owner reported it as the six tier
+definitions plus the scope paragraph being "stacked under the Coverage column."
+
+**Root cause — not what the report assumed, and worth recording.** License tier was *already* its own
+fourth column in `taxonomyLegend()`; it had been since PR-015. It never *fit*. The grid was
+`repeat(auto-fit, minmax(280px, 1fr))` with a 24–28px gap, so four columns needed
+4×280 + 3×28 = **1204px** against a landing-page inner width of ~**1082px**. `auto-fit` therefore laid
+out **three** columns at every landing viewport and wrapped the fourth under Coverage. What looked
+like authoring ("stacked under column 1") was a wrap artifact. The scope paragraph then piled on top:
+it lived *inside* the tier column as a `<p>`, and being an order of magnitude longer than any single
+definition, it set the whole block's height. The fix is layout arithmetic, not restructuring.
+
+**What was built.**
+
+- **Explicit column counts via `@container`, not `@media`.** This distinction is load-bearing and the
+  first attempt got it wrong. The same `taxonomyLegend(false)` renders full-bleed on the landing page
+  (~1082px) *and* inside the About page's 78ch prose column (~589px measured). A viewport media query
+  cannot tell those two apart, so a `@media (min-width:1000px)` four-column rule fired on the About
+  legend too and squeezed it into four ~110px tracks — taller and worse than before (measured 1200px,
+  unchanged). Switching the legend to `container-type: inline-size` and querying container width fixes
+  it: four columns only when the legend itself is wide. Pure CSS, no new page-load dependency. The
+  default (no container-query support) is a single readable column, so an old engine degrades to
+  readable rather than to four shredded columns.
+- **The scope note moved out of the column grid into the atlas's existing `detailToggle()` helper** —
+  a `<details class="disclose">`, the same native disclosure used for long-form notes elsewhere in the
+  atlas (it already carries the `:focus-visible` ring and the print-expansion path). It is *not* a new
+  pattern. The compact legend on the framework view had the same bloat — it rendered the entire scope
+  note as a `<p>` — and got the same treatment.
+- **Commercial-only signal preserved without opening the disclosure.** The hard constraint was that a
+  reader filtering by tier must be told what the bands do not cover. The `<summary>` label states it in
+  the always-visible line: *"License tier bands cover Microsoft 365 commercial licensing only — scope
+  and limitations"*. The full note (verbatim, every clause: commercial-only, no G/F/Business-Premium
+  dimension, consumption-has-no-tier, the "+n" toggle semantics, derived-not-replacement,
+  related-products exclusion) sits inside. Definitions stay visible by default in all three contexts;
+  only the long scope note collapses.
+
+**Measured legend-block height (headless Chrome, px):**
+
+| Context | Viewport / column width | Before | After | Δ |
+|---|---|---|---|---|
+| Landing legend | 1440px | 1087 | 571 | −47% |
+| Landing legend | 1024px | 1177 | 809 | −31% |
+| About-page legend | 631px prose column (both viewports) | 1200 | 954 | −21% |
+| Framework compact legend | 1440px | 181 | 131 | −28% |
+| Framework compact legend | 1024px | 270 | 202 | −25% |
+
+Column balance at 1440px went from `311 / 311 / 311 / 697` (tier column 2.2x its neighbours, on a
+second row) to `460 / 460 / 460 / 460` (one row, four columns; the tier track is widened to `1.35fr`
+so its six entries end at roughly the depth of the others' four). At the two-column step it is
+`275 / 275` then `406 / 406`.
+
+**The constraint conflict, and the choice — recorded so the next person does not "just tidy that long
+definition."** The checkpoint direction asked to trim the six tier definitions (the `partial`
+definition is the outlier at 232 chars vs ~90 for the others) to Confidence's per-entry length
+discipline. That was **declined, deliberately, and the conflict was surfaced rather than resolved
+silently.** Every legend definition string — `license_bands`, `license_band_partial`,
+`license_band_scope` — lives in `META`, generated from `build/license_bands.py` so the legend a reader
+sees cannot drift from the derivation that produces the bands. Editing any of those strings changes
+`compliance-atlas.json`, which violates this session's empty-JSON-diff constraint. **The empty diff
+outranks a cosmetic trim.** The height problem was solved with layout alone; the definition text is
+byte-unchanged. **Trimming the `partial` definition is a data change and a separate commit with a
+non-empty JSON diff — it is not a text edit to the template.** Owner concurred at the checkpoint.
+
+**Accessibility / keyboard.** The new `details.disclose` is the atlas's standard native disclosure:
+`<summary>` is focusable and toggles on Enter and Space with no JS, and it inherits the existing
+focus-ring and print-expansion CSS. axe was run over both the standard and filtered route suites with
+the new disclosures present — results in §29.4.

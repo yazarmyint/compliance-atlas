@@ -172,16 +172,37 @@ section.block h2{font-size:24px; margin:4px 0 4px}
 section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
 
 /* ---------- taxonomy legend (definitions rendered from META, never duplicated here) ---------- */
+/* container-type so the column count below can respond to the legend's own width. The same
+   legend renders full-bleed on the landing page (~1082px) and inside the about page's 78ch
+   prose column (~589px); a viewport media query cannot tell those apart and would give the
+   narrow one four 110px columns. Pure CSS, no dependency. */
 .legend{border:1px solid var(--rule-2); border-radius:12px; background:var(--card); box-shadow:var(--shadow);
-  padding:18px 20px; margin:0 0 34px}
+  padding:18px 20px; margin:0 0 34px; container-type:inline-size}
 .legend>.overline{display:block; margin-bottom:12px}
-.legend .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px 28px}
+/* Explicit column counts, not auto-fit. auto-fit with minmax(280px,1fr) could never fit the
+   fourth taxonomy (4x280 + 3 gaps = 1204px against a 1082px inner width), so License tier
+   silently wrapped under Coverage and column 1 rendered several times the height of its
+   neighbours. License tier carries six entries to the others' four, so at the four-column
+   step its track is widened: the extra width buys back wrapped lines and the columns end at
+   roughly the same depth. Default is the narrow case, so a browser without container-query
+   support degrades to one readable column rather than to four unreadable ones. */
+.legend .cols{display:grid; grid-template-columns:minmax(0,1fr); gap:18px 24px}
+@container (min-width:520px){ .legend .cols{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@container (min-width:1000px){ .legend .cols{grid-template-columns:1fr 1fr 1fr 1.35fr} }
+/* The scope note sits below the grid, not inside a column: it qualifies one taxonomy but is
+   an order of magnitude longer than any definition, and in-column it set the block's height. */
+.legend>details.disclose{margin:16px 0 0}
 .legend h4{margin:0 0 9px; font:700 11px var(--font-body); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
 .legend dl{margin:0}
 .legend dl>div+div{margin-top:11px}
 .legend dt{margin:0 0 4px}
 .legend dd{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
 .legend.compact{padding:12px 16px; margin:16px 0 0}
+/* The compact legend holds one taxonomy, so its .cols is a single full-width track and the
+   coverage <dl> inside does its own across-the-width grid. Without this it would inherit the
+   four-column rule above and be squeezed into the first of four tracks. */
+.legend.compact .cols{grid-template-columns:minmax(0,1fr)}
+.legend.compact>details.disclose{margin:10px 0 0}
 .legend.compact dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px 24px}
 .legend.compact dl>div+div{margin-top:0}
 .legend.compact dd{font-size:12px}
@@ -405,6 +426,10 @@ const COV_DEF = META.coverage_levels || {}, CONF_DEF = META.confidence_levels ||
 const BAND_DEF = META.license_bands || {}, BAND_PARTIAL_DEF = META.license_band_partial || "",
       BAND_SCOPE = META.license_band_scope || "";
 const BAND_ORDER = ["e3","e5","addon","consumption","na"];
+/* Chrome, not data: the summary label for the collapsed scope note. It states the commercial-only
+   limit in the always-visible summary, so a reader who never opens the disclosure still cannot
+   mistake a band for a G/F/Business-Premium claim; the full note is verbatim inside. */
+const BAND_SCOPE_LABEL = "License tier bands cover Microsoft 365 commercial licensing only — scope and limitations";
 const withDef = (label, def) => def ? `${label} — ${def}` : label;
 /* Dataset currency, derived at build time from the rows' own last_verified values. */
 function verifiedRange(){
@@ -442,7 +467,7 @@ function taxonomyLegend(compact){
      lives -- so it carries the scope limitation even though it drops the other
      taxonomies. A reader filtering by tier must be told what the bands do not cover. */
   if(compact) return `<div class="legend compact"><div class="cols">${defList(cov)}</div>
-    <p class="tiny muted">${esc(BAND_SCOPE)}</p></div>`;
+    ${detailToggle(BAND_SCOPE, BAND_SCOPE_LABEL)}</div>`;
   const conf = Object.keys(CONF_DOTS).filter(c => CONF_DEF[c]).map(c => [confMeter(c), CONF_DEF[c]]);
   const lic = Object.entries(LIC_DEF).map(([k,v]) => [`<span class="chip">${esc(k)}</span>`, v]);
   const band = BAND_ORDER.filter(b => BAND_DEF[b])
@@ -452,9 +477,9 @@ function taxonomyLegend(compact){
     <div><h4>Coverage · what the claim means</h4>${defList(cov)}</div>
     <div><h4>Confidence · how far it stretches</h4>${defList(conf)}</div>
     <div><h4>Licensing model</h4>${defList(lic)}</div>
-    <div><h4>License tier · what you need to own</h4>${defList(band)}
-      <p class="tiny muted">${esc(BAND_SCOPE)}</p></div>
-  </div></div>`;
+    <div><h4>License tier · what you need to own</h4>${defList(band)}</div>
+  </div>
+  ${detailToggle(BAND_SCOPE, BAND_SCOPE_LABEL)}</div>`;
 }
 function minibar(rows){
   const n = rows.length || 1;
