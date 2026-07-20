@@ -379,7 +379,7 @@ URLS = {
     # the two rows that cited it were repointed to URLS["dspm"] — which both already cited, making the
     # repoint a de-duplication. LIC["dspm_ai"] and the "DSPM for AI" solution stay: the classic solution
     # is still a distinct licensed thing in the portal, and SOLUTIONS["DSPM for AI"] correctly keeps the
-    # classic article as its own documentation. See README for the retirement trigger.
+    # classic article as its own documentation. See docs/MAINTENANCE.md for the retirement trigger.
     "customer_key": "https://learn.microsoft.com/purview/customer-key-overview",
     "sd": SD,
     "gcch": "https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/plan-for-microsoft-purview-gcc-high-deployments",

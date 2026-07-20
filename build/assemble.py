@@ -1,7 +1,7 @@
 """Assemble compliance-atlas.json from per-framework row modules.
 Run:  python build/assemble.py
 Add a framework: create build/rows_<name>.py exposing FRAMEWORK (dict) and ROWS (list), append to MODULES.
-Add a product: see README.md "Add a product" — products-map entry in common.py, row modules with
+Add a product: see docs/AUTHORING.md "Add a product" — products-map entry in common.py, row modules with
 product=<id>, solutions registered in SOLUTIONS and the product's solutions list.
 
 Canonical file renamed 2026-07-17: purview-compliance-map.json -> compliance-atlas.json (platform generalization)."""
