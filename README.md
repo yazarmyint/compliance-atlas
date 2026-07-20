@@ -25,10 +25,16 @@ discipline are in [`docs/AUTHORING.md`](docs/AUTHORING.md).
 
 ## Use it
 
-Open **`compliance-atlas.html`** in any browser. It is one self-contained file: works offline from
-`file://`, no server, no build step, no external dependencies.
+**→ [yazarmyint.github.io/compliance-atlas](https://yazarmyint.github.io/compliance-atlas/)** —
+nothing to install, and every view has its own link you can share.
 
-Live version: *(URL to be added at publish.)*
+Or take it offline. The atlas is **one self-contained HTML file** with no external dependencies of
+any kind: download `compliance-atlas.html` from the
+[latest release](https://github.com/yazarmyint/compliance-atlas/releases/latest) (or clone the repo)
+and open it in any browser. It works from `file://`, needs no server and no build step, and behaves
+identically to the hosted copy — which makes it usable inside an air-gapped or
+restricted-egress environment. `compliance-atlas.json` ships alongside it for anyone consuming the
+dataset directly.
 
 ## Licence
 
@@ -52,6 +58,7 @@ identification only; this is an independent project, not affiliated with or endo
 |---|---|
 | `compliance-atlas.html` | The atlas itself — generated output, never hand-edited |
 | `compliance-atlas.json` | Canonical dataset — generated output, never hand-edited |
+| `index.html` | Redirect stub so GitHub Pages serves the atlas at the site root — generated output, never hand-edited |
 | [`CHANGELOG.md`](CHANGELOG.md) | Reader-facing version history and the MAJOR/MINOR/PATCH policy |
 | [`docs/AUTHORING.md`](docs/AUTHORING.md) | Shipping state, file layout, row schema, and the add-a-framework / add-a-product procedures |
 | [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) | Dated maintenance triggers and the framework backlog |
@@ -61,13 +68,13 @@ identification only; this is an independent project, not affiliated with or endo
 | [`CONTENT-REVIEW.md`](CONTENT-REVIEW.md) | Editorial consistency review of the rendered prose |
 | [`reference/SOURCES.md`](reference/SOURCES.md) | Provenance and redistribution status of every file in `reference/` |
 | `build/` | The generator: row modules, product and solution maps, template, assembler |
-| `tools/check_urls.py` | Resolves every URL cited anywhere in the dataset |
+| [`tools/`](tools/README.md) | Standing QA: `check_urls.py` resolves every cited URL, `axe_check.mjs` runs WCAG 2.1 A/AA over every view in both themes |
 
 ## Regenerate
 
 ```powershell
 python build/assemble.py      # row modules + maps → compliance-atlas.json
-python build/build_html.py    # JSON + template.html → compliance-atlas.html
+python build/build_html.py    # JSON + template.html → compliance-atlas.html + index.html
 ```
 
 Edit content in `build/rows_*.py`, maps in `build/common.py`, presentation in `build/template.html`;

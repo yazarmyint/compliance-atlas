@@ -1,0 +1,16 @@
+{
+  "name": "compliance-atlas-tools",
+  "private": true,
+  "version": "1.0.0",
+  "description": "QA harnesses for Compliance Atlas. Not part of the published artifact.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "axe": "node axe_check.mjs",
+    "axe:live": "node axe_check.mjs --url https://yazarmyint.github.io/compliance-atlas/compliance-atlas.html"
+  },
+  "devDependencies": {
+    "axe-core": "^4.10.0",
+    "puppeteer-core": "^23.0.0"
+  }
+}
