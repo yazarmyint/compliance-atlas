@@ -172,6 +172,19 @@ section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
 .legend.compact dt{margin:0 0 3px}
 
 /* ---------- framework / product page ---------- */
+/* ---------- about page: a prose column, the only long-form reading view in the atlas ---------- */
+.about{max-width:78ch}
+.about h2{font-size:19px; margin:34px 0 10px}
+.about h3{font-size:14px; margin:20px 0 6px}
+.about p{margin:0 0 11px; color:var(--ink-2); line-height:1.65}
+.about ul{margin:0 0 11px; padding-left:20px; color:var(--ink-2); line-height:1.65}
+.about li{margin:0 0 7px}
+.about li>b, .about p>b{color:var(--ink-1)}
+.about .legend{margin:14px 0 0}
+.about dl.absent{margin:0}
+.about dl.absent>div{margin:0 0 10px}
+.about dl.absent dt{font-weight:600; color:var(--ink-1)}
+.about dl.absent dd{margin:2px 0 0; color:var(--ink-2); line-height:1.6}
 .pagehead{padding:30px 0 18px; border-bottom:1px solid var(--rule)}
 .pagehead h1{font-size:31px; margin:8px 0 4px}
 .pagehead .full{color:var(--ink-2); max-width:88ch; font-size:14px}
@@ -305,6 +318,7 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
     <a href="#/frameworks" data-tab="frameworks">Frameworks</a>
     <a href="#/products" data-tab="products">Product Pivot</a>
     <a href="#/matrix" data-tab="matrix">Density Matrix</a>
+    <a href="#/about" data-tab="about">About</a>
   </nav>
   <div class="spacer"></div>
   <div class="searchbox">
@@ -328,6 +342,7 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
 <footer class="site"><div class="wrap">
   <ul class="legal" id="footLegal"></ul>
   <div class="disc" id="footDisc"></div>
+  <nav id="footLinks" aria-label="About this atlas"></nav>
   <div id="footMeta"></div>
   <div class="kbdhint" style="margin-top:8px">Press <kbd>/</kbd> to search · Data regenerated from <span class="mono">compliance-atlas.json</span>; do not hand-edit this file.</div>
 </div></footer>
@@ -532,7 +547,15 @@ function vHome(){
       <h3>${esc(i.name)}</h3><div class="desc">${esc(i.note)}</div>
       <div class="meta">${i.frameworks.map(f=>`<span class="chip">${esc(FW[f]?.name||f)}</span>`).join("")}</div>
       ${minibar(rows)}</a>`; }).join("")}
-  </div></section>`;
+  </div>
+  ${/* PR-021: say out loud which sectors have no lens and why, rather than letting a reader from one
+       of them conclude the atlas simply forgot them. Same META list the about page renders in full. */""}
+  <p class="small muted" style="margin-top:16px; max-width:88ch">
+    <b>Not covered here:</b> ${(META.absent_industries||[]).map(a =>
+      `${esc(a.sector)} (needs ${esc(a.framework)})`).join(", ")} — each would need a framework the atlas
+    does not map, so none can be added by relabelling what is already here.
+    <a href="#/about">Why, in full</a>.</p>
+  </section>`;
 }
 function vIndustry(id){
   const i = IND[id]; if(!i) return vMissing("industry", id);
@@ -747,6 +770,103 @@ function vSearch(q){
 }
 function vMissing(kind, id){ return `<div class="pagehead"><h1>Not found</h1><div class="full">No ${esc(kind)} “${esc(id)}”.</div></div>`; }
 
+/* ---------------- about / methodology (PR-044, absorbing PR-021) ---------------- */
+/* Written for someone who has never seen the repository: no section references, no build jargon.
+   Everything factual is read from META or counted off ROWS, so the page cannot claim a scope,
+   a count, or a date the dataset does not actually have. The taxonomy definitions are the shared
+   legend component — this page defines none of them itself. */
+function vAbout(){
+  const P = META.project || {}, unver = ROWS.filter(r => r.status !== "verified").length;
+  const repo = esc(P.repo_url || ""), issues = esc(P.issues_url || "");
+  const prodNames = PROD_ORDER.map(prodFull).join(", ");
+  const absent = (META.absent_industries || []).map(a =>
+    `<div><dt>${esc(a.sector)}</dt><dd>Would need ${esc(a.framework)}. ${esc(a.reason)}</dd></div>`).join("");
+  return `<div class="pagehead">
+    <div class="overline">Methodology &amp; scope</div>
+    <h1>About this atlas</h1>
+    <div class="full">${esc(META.brand.title)} maps published regulatory and control frameworks onto Microsoft security
+      products, one control at a time, and shows its working. This page covers how a mapping is made,
+      what it will and will not tell you, and how to correct it when it is wrong.</div>
+  </div>
+
+  <section class="block about">
+    <h2>What this is, and what it is not</h2>
+    <p>This is a reference mapping. For every control in every framework it carries, the atlas records which
+      Microsoft product bears on that control, how strongly, what you could show an assessor as evidence, and
+      the sources behind the claim.</p>
+    <p>It is <b>not</b> an attestation, a certification, or an assessment of your organization. It is not legal
+      or audit advice. Most importantly, it never claims that a product <b>satisfies</b> a requirement. Products
+      support controls and produce evidence for them; organizations satisfy requirements, through configuration,
+      process, and people that no dataset can see. Every verdict here is worded to keep that distinction visible,
+      which is why the strongest one available is <b>Direct Support</b> and not “compliant”.</p>
+
+    <h2>How a row is made</h2>
+    <p>Every row starts from the framework text, not from a product datasheet.</p>
+    <ul>
+      <li><b>Frameworks are version-pinned.</b> Each row states the edition it maps — ISO/IEC 27001:2022,
+        PCI DSS v4.0.1, NIST SP 800-53 Rev 5 — because control numbering moves between revisions and a mapping
+        to an unnamed edition is not checkable.</li>
+      <li><b>Control intent is paraphrased, never quoted.</b> The atlas says what a control is asking for in its
+        own words. That is partly a copyright constraint and partly a usability one, but it cuts both ways:
+        a paraphrase is an interpretation, so read the standard itself before relying on any mapping.</li>
+      <li><b>Every row cites at least one official source and at least one Microsoft source.</b> The official
+        source is the framework's own authority — the regulator, the standards body, the regulation text. The
+        Microsoft source is the product documentation behind the capability claim. The one exception is a
+        boundary row: where the verdict is <b>Not Covered</b> there is no Microsoft capability to cite, and that
+        absence is the finding.</li>
+      <li><b>Every row carries its own verification date</b>, recording when its claims were last checked against
+        those sources — not when this page was generated.</li>
+      <li><b>Rows that could not be confirmed are labelled UNVERIFIED</b> rather than quietly published alongside
+        the rest. ${unver === 0
+          ? `The atlas currently has none: all ${ROWS.length} rows have been checked against a live source.`
+          : `The atlas currently has ${plural(unver, "such row")}.`}</li>
+    </ul>
+
+    <h2>How to read a mapping</h2>
+    <p>Three taxonomies do the work. Coverage says how strong the claim is, confidence says how far it stretches,
+      and the licensing model says how you pay for the capability. They are defined once and used everywhere:</p>
+    ${taxonomyLegend(false)}
+
+    <h2>Scope, and its edges</h2>
+    <p>${PROD_ORDER.length} products — ${esc(prodNames)} — across ${Object.keys(FW).length} frameworks and
+      ${ROWS.length} control mappings.</p>
+    <h3>The product roadmap is closed</h3>
+    <p>These six cover the ground where compliance frameworks and the Microsoft security stack actually meet:
+      data protection, identity, endpoint, detection and response, logging, and cloud posture. Adding a seventh
+      would mean either repeating what these already carry or reaching for products whose relationship to control
+      text is too thin to map honestly. Depth across ${Object.keys(FW).length} frameworks is worth more here than
+      breadth across more products.</p>
+    <h3>Some products appear only as references</h3>
+    <p>Microsoft Priva is named on privacy rows as a contributing product but has no rows of its own. It belongs
+      in the picture, and mapping it properly is a larger job than gesturing at it — so it is pointed to rather
+      than half-covered.</p>
+    <h3>Some industries are missing, and it is a framework problem</h3>
+    <p>Each sector below would need a framework the atlas does not yet map. None of them can be added by
+      relabelling what is already here.</p>
+    <dl class="absent">${absent}</dl>
+
+    <h2>How current it is</h2>
+    <p>${verifiedRange() ? esc(verifiedRange().replace(/^rows /, "Rows currently in the atlas were ")) + "." : ""}
+      ${esc(META.reverification_policy || "")}</p>
+    <p>The <b>built</b> timestamp in the footer is a different thing: it is when this page was last generated, and
+      it moves on every rebuild whether or not any content changed. The version number is what tells you the
+      content changed.</p>
+
+    <h2>Who maintains it, and how to correct it</h2>
+    <p>${esc(P.maintainer || "")} maintains the atlas independently. It is not affiliated with, sponsored by, or
+      endorsed by Microsoft. The dataset and the code that builds it are public:
+      <a href="${repo}">${repo}</a>.</p>
+    <p><b>Corrections are wanted.</b> With ${ROWS.length} rows spanning six products that change constantly, some
+      of this is wrong and more of it will go stale. If you find a mis-mapped control, a licensing claim that no
+      longer holds, or a dead citation, please <a href="${issues}">open an issue</a> — fixes are recorded so you
+      can see that a report landed.</p>
+    <p>Content is licensed <b>${esc(P.content_license || "")}</b> and the build code <b>${esc(P.code_license || "")}</b>;
+      reuse and adapt it with attribution. That open license is only possible because the atlas paraphrases control
+      intent instead of reproducing standards text — the frameworks themselves remain the property of their authors,
+      so anyone adapting this work needs to keep the paraphrase rule intact.</p>
+  </section>`;
+}
+
 /* ---------------- router ---------------- */
 const dec = s => { try { return decodeURIComponent(s||""); } catch(e){ return s||""; } };
 const srStatus = document.getElementById("srstatus");
@@ -779,6 +899,7 @@ function render(opts){
   else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; view = "Density matrix"; note = plural(ROWS.length, "mapping"); }
   else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; view = FW[p3] ? `${FW[p3].name} × ${dec(p4)}` : "Not found"; countRows = true; }
   else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; countRows = true; }
+  else if(p1==="about"){ html = vAbout(); tab="about"; view = "About"; }
   else { html = vMissing("page", p1); view = "Not found"; }
   app.innerHTML = html;
   document.querySelectorAll("#tabs a").forEach(a=>{
@@ -855,6 +976,15 @@ document.getElementById("brandBox").title = META.brand.tagline + " · Home";
 document.getElementById("brandVer").textContent = "v" + META.brand.atlas_version + (META.brand.working_title ? " · working title" : "");
 document.getElementById("footLegal").innerHTML = (META.footer_lines||[]).map(l=>`<li>${esc(l)}</li>`).join("");
 document.getElementById("footDisc").textContent = META.disclaimer;
+/* Footer links: the about route plus the off-site repository. Kept out of footer_lines, which are
+   escaped plain text by design. */
+(function(){
+  const P = META.project || {};
+  const links = [`<a href="#/about">About &amp; methodology</a>`];
+  if(P.repo_url) links.push(`<a href="${esc(P.repo_url)}">Source &amp; data on GitHub</a>`);
+  if(P.issues_url) links.push(`<a href="${esc(P.issues_url)}">Report a correction</a>`);
+  document.getElementById("footLinks").innerHTML = links.join(`<span aria-hidden="true"> · </span>`);
+})();
 document.getElementById("footMeta").innerHTML =
   `Generated ${esc(META.generated)} from compliance-atlas.json · ${ROWS.length} rows · ${Object.keys(FW).length} frameworks · ${PROD_ORDER.length} product(s) · per-row verification dates govern currency.`;
 

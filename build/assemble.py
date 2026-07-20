@@ -133,6 +133,30 @@ FOOTER_LINES = [
 
 LICENSING_MODELS = ("per_user", "consumption", "included", "n/a")
 
+# Who maintains this and where corrections go (PR-044). Shipped in META so the about page and the
+# footer render the same strings; nothing here is hand-typed into template.html.
+PROJECT = {
+    "maintainer": "Yazar",
+    "repo_url": "https://github.com/yazarmyint/compliance-atlas",
+    "issues_url": "https://github.com/yazarmyint/compliance-atlas/issues",
+    "changelog_url": "https://github.com/yazarmyint/compliance-atlas/blob/main/CHANGELOG.md",
+    "content_license": "CC BY 4.0",
+    "code_license": "MIT",
+}
+
+# PR-021: sectors a reader might expect and won't find, each gated on a framework the atlas does not
+# map. Rendered twice — a short line on the Industries index, the full list on the about page — from
+# this one definition, so the two cannot drift. Keep the reasons honest about which are decisions and
+# which are gaps: CJIS is a genuine omission (PROJECT-REVIEW PR-025), the other two are structural.
+ABSENT_INDUSTRIES = [
+    {"sector": "State & local government", "framework": "CJIS Security Policy",
+     "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision — it is the strongest candidate for the next framework added."},
+    {"sector": "Energy & utilities", "framework": "NERC CIP",
+     "reason": "Built around the operational technology and control systems that run the bulk electric system, which none of the six products reach."},
+    {"sector": "Pharmaceuticals & medical devices", "framework": "21 CFR Part 11",
+     "reason": "Turns on validation and electronic-signature semantics for FDA-regulated records rather than the security controls mapped here."},
+]
+
 # <meta name="description"> and og:description, substituted into the template head by build_html.py.
 # The counts are filled from the assembled dataset so the summary cannot drift from it.
 DESCRIPTION = ("{tagline}. {rows} control mappings across {frameworks} compliance frameworks and {products} "
@@ -142,6 +166,15 @@ META = {
     "title": BRAND["title"],
     "version": BRAND["atlas_version"],
     "brand": BRAND,
+    "project": PROJECT,
+    "absent_industries": ABSENT_INDUSTRIES,
+    # Stated on the about page. Deliberately a statement of intent with no service promise attached:
+    # this is a one-person project and pretending otherwise would be the dishonest option.
+    "reverification_policy": ("Every row carries the date its claims were last checked against a live source. "
+                              "Full re-verification passes are run at least twice a year, and targeted ones whenever a "
+                              "diarised change lands — a framework revision, a Microsoft rename, a licensing restructure. "
+                              "This is a single-maintainer project, so treat those dates as the real currency signal "
+                              "rather than any assumption that the whole atlas is refreshed continuously."),
     "footer_lines": FOOTER_LINES,
     "generated": None,  # set at assemble time
     "default_last_verified": VERIFIED_DATE,

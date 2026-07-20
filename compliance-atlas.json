@@ -8,6 +8,32 @@
    "tagline": "Mapping frameworks to the Microsoft security stack",
    "atlas_version": "2.0.0"
   },
+  "project": {
+   "maintainer": "Yazar",
+   "repo_url": "https://github.com/yazarmyint/compliance-atlas",
+   "issues_url": "https://github.com/yazarmyint/compliance-atlas/issues",
+   "changelog_url": "https://github.com/yazarmyint/compliance-atlas/blob/main/CHANGELOG.md",
+   "content_license": "CC BY 4.0",
+   "code_license": "MIT"
+  },
+  "absent_industries": [
+   {
+    "sector": "State & local government",
+    "framework": "CJIS Security Policy",
+    "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision — it is the strongest candidate for the next framework added."
+   },
+   {
+    "sector": "Energy & utilities",
+    "framework": "NERC CIP",
+    "reason": "Built around the operational technology and control systems that run the bulk electric system, which none of the six products reach."
+   },
+   {
+    "sector": "Pharmaceuticals & medical devices",
+    "framework": "21 CFR Part 11",
+    "reason": "Turns on validation and electronic-signature semantics for FDA-regulated records rather than the security controls mapped here."
+   }
+  ],
+  "reverification_policy": "Every row carries the date its claims were last checked against a live source. Full re-verification passes are run at least twice a year, and targeted ones whenever a diarised change lands — a framework revision, a Microsoft rename, a licensing restructure. This is a single-maintainer project, so treat those dates as the real currency signal rather than any assumption that the whole atlas is refreshed continuously.",
   "footer_lines": [
    "Informational reference only; not legal, audit, or compliance advice.",
    "Independent community project. Not affiliated with, sponsored, or endorsed by Microsoft Corporation.",
@@ -15,7 +41,7 @@
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it.",
    "Atlas content © 2026 Yazar, licensed CC BY 4.0; the build code is MIT. Reuse and adapt it freely with attribution."
   ],
-  "generated": "2026-07-20T09:38:35",
+  "generated": "2026-07-20T09:41:20",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
