@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "2.9.1",
+  "version": "2.10.0",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "2.9.1"
+   "atlas_version": "2.10.0"
   },
   "project": {
    "maintainer": "Yazar",
@@ -41,7 +41,7 @@
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it.",
    "Atlas content © 2026 Yazar, licensed CC BY 4.0; the build code is MIT. Reuse and adapt it freely with attribution."
   ],
-  "generated": "2026-07-20T11:17:21",
+  "generated": "2026-07-20T13:19:14",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
@@ -69,6 +69,628 @@
    "Low": "Defensible but narrow or contested; position carefully."
   },
   "disclaimer": "Mapped products support or evidence controls; they do not by themselves make an organization compliant with any framework. Control references are practical intent mappings in original words, not quotations of the standards. Licensing claims derive from each product's authoritative licensing source and can change; verify before relying on it.",
+  "maintenance": {
+   "triggers": [
+    {
+     "id": "TRG-CMMC-PHASE2",
+     "type": "framework",
+     "cadence_days": null,
+     "title": "CMMC Phase 2: C3PAO Level 2 certification required in new DoD contracts",
+     "next_review": "2026-08-12",
+     "last_executed": "2026-07-16",
+     "affects": [],
+     "rows": [],
+     "note": "Nov 10, 2026: CMMC Phase 2 begins; C3PAO Level 2 certifications required in new applicable DoD contracts. Reviewed 90 days ahead so the DIB lens text is right before readers arrive on it."
+    },
+    {
+     "id": "TRG-HIPAA-FINAL-RULE",
+     "type": "framework",
+     "cadence_days": null,
+     "title": "HIPAA Security Rule final rule",
+     "next_review": "2027-04-01",
+     "last_executed": "2026-07-16",
+     "affects": [],
+     "rows": [],
+     "note": "~Jul 2027: HIPAA Security Rule final rule target (per OMB agenda); rows flag proposed changes as direction-of-travel."
+    },
+    {
+     "id": "TRG-DPR-VERSION",
+     "type": "framework",
+     "cadence_days": 365,
+     "title": "SSPA DPR version refresh",
+     "next_review": "2027-02-12",
+     "last_executed": "2026-07-16",
+     "affects": [],
+     "rows": [],
+     "note": "Annual (~Q1): SSPA DPR version refresh (v12 -> v13 likely early 2027); requirement numbering can shift."
+    },
+    {
+     "id": "TRG-PURVIEW-SD-LICENSING",
+     "type": "licensing",
+     "cadence_days": 180,
+     "title": "Purview service description: per-feature licensing tables and naming",
+     "next_review": "2027-01-15",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "LIC",
+       "labels_manual"
+      ],
+      [
+       "LIC",
+       "labels_auto"
+      ],
+      [
+       "LIC",
+       "label_encryption"
+      ],
+      [
+       "LIC",
+       "customer_key"
+      ],
+      [
+       "LIC",
+       "classification_analytics"
+      ],
+      [
+       "LIC",
+       "dlp_core"
+      ],
+      [
+       "LIC",
+       "dlp_teams"
+      ],
+      [
+       "LIC",
+       "dlp_endpoint"
+      ],
+      [
+       "LIC",
+       "retention_basic"
+      ],
+      [
+       "LIC",
+       "retention_advanced"
+      ],
+      [
+       "LIC",
+       "records"
+      ],
+      [
+       "LIC",
+       "audit_std"
+      ],
+      [
+       "LIC",
+       "audit_prem"
+      ],
+      [
+       "LIC",
+       "ediscovery_std"
+      ],
+      [
+       "LIC",
+       "irm"
+      ],
+      [
+       "LIC",
+       "cc"
+      ],
+      [
+       "LIC",
+       "ib"
+      ],
+      [
+       "LIC",
+       "cm"
+      ],
+      [
+       "LIC",
+       "dspm"
+      ],
+      [
+       "LIC",
+       "dspm_ai"
+      ]
+     ],
+     "rows": [],
+     "note": "Microsoft renames: check the Purview service description and solution overview pages; the atlas already reflects the unified eDiscovery (classic retired Aug 2025), Data explorer, DSPM current version, and \"Microsoft Purview Suite\" SKU naming."
+    },
+    {
+     "id": "TRG-DSPM-CLASSIC",
+     "type": "naming",
+     "cadence_days": 120,
+     "title": "Classic DSPM pages retire: re-evaluate the dspm / dspm_ai constant split",
+     "next_review": "2026-12-04",
+     "last_executed": "2026-07-20",
+     "affects": [
+      [
+       "LIC",
+       "dspm"
+      ],
+      [
+       "LIC",
+       "dspm_ai"
+      ],
+      [
+       "GOV",
+       "dspm_ai"
+      ],
+      [
+       "SOLUTIONS",
+       "DSPM for AI"
+      ]
+     ],
+     "rows": [
+      "csf-de-cm-03-ai",
+      "gdpr-35"
+     ],
+     "note": "Both /purview/dspm-for-ai and /purview/data-security-posture-management now carry \"(classic)\" banners pointing at the unified data-security-posture-management-learn-about article. As of 2026-07-20 the split is still correct: the portal shows DSPM and DSPM for AI (classic) as separate solutions with separate entitlements, so LIC['dspm']/LIC['dspm_ai'], GOV['dspm_ai'], and the two SOLUTIONS entries all describe real distinctions. URLS['dspm_ai'] is already gone -- the two rows that cited the classic article were repointed to the unified one (AUDIT-FINDINGS SS23). THE TRIGGER: once the classic solutions leave the portal, collapse dspm_ai into dspm, fold GOV['dspm_ai'] into the unified GCC High note, and drop the \"(classic; converging into DSPM)\" gloss from SOLUTIONS['DSPM for AI']. That is a row-modeling change (purview_solution on csf-de-cm-03-ai and the also_involves entry on gdpr-35), so it needs a session authorized to touch protected fields."
+    },
+    {
+     "id": "TRG-ENTRA-LICENSING",
+     "type": "licensing",
+     "cadence_days": 120,
+     "title": "Entra licensing article: P1/P2 inclusion lists and Governance split",
+     "next_review": "2026-11-25",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "ENTRA_LIC",
+       "ca"
+      ],
+      [
+       "ENTRA_LIC",
+       "mfa"
+      ],
+      [
+       "ENTRA_LIC",
+       "id_protection"
+      ],
+      [
+       "ENTRA_LIC",
+       "pim"
+      ],
+      [
+       "ENTRA_LIC",
+       "gov_core"
+      ],
+      [
+       "ENTRA_LIC",
+       "gov_lcw"
+      ],
+      [
+       "ENTRA_LIC",
+       "free"
+      ]
+     ],
+     "rows": [],
+     "note": "ADDED by PR-050, not migrated: the prose trigger list named no owner for any ENTRA_LIC constant, despite SS22.2 finding two of the seven changed in the last pass (ENTRA_LIC['ca'] missing E7/F1/F3/EMS E3, PR-037a; ENTRA_LIC['id_protection'] missing E7, Microsoft Defender Suite, EMS E5). Re-derive all seven from the Entra licensing article."
+    },
+    {
+     "id": "TRG-INTUNE-LICENSING",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "Intune licensing restructure: Suite capabilities distributed into M365 tiers",
+     "next_review": "2026-10-17",
+     "last_executed": "2026-07-20",
+     "affects": [
+      [
+       "INTUNE_LIC",
+       "p1"
+      ],
+      [
+       "INTUNE_LIC",
+       "p1_ca"
+      ],
+      [
+       "INTUNE_LIC",
+       "epm"
+      ]
+     ],
+     "rows": [],
+     "note": "Intune licensing restructure (July 2026 -- in effect, documentation still catching up): Suite capabilities are now distributed into Microsoft 365 tiers (E3: Plan 2 + Remote Help + Advanced Analytics; E5/E7: adds EPM, Cloud PKI, EAM). Confirmed live 2026-07-20 and INTUNE_LIC['epm'] was rewritten to the present tense. STILL PENDING: the restructure is stated in exactly one Learn location, the planning guide step 3. The canonical Intune licensing article was rewritten to drop per-bundle contents entirely (it now names only Plan 1 / Plan 2 / Suite and defers to the commercial pricing page), and fundamentals/advanced-capabilities says only \"select Microsoft 365 bundles\" without naming them. Re-check both once they carry the mapping again; until then the planning guide is the sole first-party citation for which tier includes EPM. Note also the article moved from fundamentals/licenses to fundamentals/licensing."
+    },
+    {
+     "id": "TRG-INTUNE-DOCS-MOVE",
+     "type": "naming",
+     "cadence_days": 120,
+     "title": "Intune documentation path migration",
+     "next_review": "2026-12-13",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "INTUNE_URLS",
+       "what_is"
+      ],
+      [
+       "INTUNE_URLS",
+       "licensing"
+      ],
+      [
+       "INTUNE_URLS",
+       "advanced"
+      ]
+     ],
+     "rows": [],
+     "note": "Intune docs migrated to learn.microsoft.com/intune/* (off /mem/intune). (The forward defender-xdr links on Intune/Entra rows were reconciled when Defender XDR landed; see AUDIT-FINDINGS SS13.4.) Both legs are enforced by RETIRED_NAMES; this trigger covers redirect retirement, which the lint cannot see."
+    },
+    {
+     "id": "TRG-MDO-P1-E3G3",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "MDO Plan 1 inclusion in E3/G3 completes rollout",
+     "next_review": "2026-11-21",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "DEFENDER_LIC",
+       "mdo_p1"
+      ]
+     ],
+     "rows": [],
+     "note": "MDO Plan 1 in E3/G3 (effective July 1, 2026): encoded in DEFENDER_LIC['mdo_p1']. Confirmed live 2026-07-19: rollout began June 2026 and Microsoft expects completion during 2026, but the Defender service description's MDO Plan 1 SKU list does NOT yet name E3/G3. Re-check that list once the rollout completes and drop the dated qualifier from the string when the service description catches up."
+    },
+    {
+     "id": "TRG-DEFENDER-SUITE-NAME",
+     "type": "naming",
+     "cadence_days": 120,
+     "title": "Microsoft Defender Suite naming: retire the \"(formerly ...)\" gloss",
+     "next_review": "2026-11-16",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "DEFENDER_LIC",
+       "mde_p1"
+      ],
+      [
+       "DEFENDER_LIC",
+       "mde_p2"
+      ],
+      [
+       "DEFENDER_LIC",
+       "mdvm"
+      ],
+      [
+       "DEFENDER_LIC",
+       "mdo_p1"
+      ],
+      [
+       "DEFENDER_LIC",
+       "mdo_p2"
+      ],
+      [
+       "DEFENDER_LIC",
+       "mdi"
+      ],
+      [
+       "DEFENDER_LIC",
+       "mdca"
+      ],
+      [
+       "DEFENDER_LIC",
+       "xdr"
+      ]
+     ],
+     "rows": [],
+     "note": "The SKU formerly called Microsoft 365 E5 Security is now Microsoft Defender Suite, with EDU/GOV/FLW variants plus Microsoft Defender + Purview Suite FLW. All EIGHT DEFENDER_LIC strings were re-derived 2026-07-19 (AUDIT-FINDINGS SS22.2); the SIX that name the SKU carry the \"(formerly Microsoft 365 E5 Security)\" gloss so holders of older paperwork still recognize it. Drop the gloss once the old name has fully left circulation -- at which point remove the pair from RETIRED_NAMES too, or the lint will start flagging the gloss itself. (Corrected in the PR-050 migration: the prose list said \"all six strings were re-derived\", conflating the eight re-derived with the six glossed.)"
+    },
+    {
+     "id": "TRG-MDVM-GOV",
+     "type": "sovereign",
+     "cadence_days": 180,
+     "title": "MDVM add-on purchase availability in GCC High/DoD",
+     "next_review": "2027-01-29",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "DEFENDER_GOV",
+       "mdvm"
+      ]
+     ],
+     "rows": [],
+     "note": "MDVM add-on in GCC High/DoD: the add-on trial is unavailable there; confirm purchase availability for gov tenants before relying on MDVM-premium capabilities in CMMC assessments."
+    },
+    {
+     "id": "TRG-DEFENDER-RENAMES",
+     "type": "naming",
+     "cadence_days": 120,
+     "title": "Defender family product and workload naming",
+     "next_review": "2026-12-22",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "PRODUCTS",
+       "defender-xdr"
+      ]
+     ],
+     "rows": [],
+     "note": "Defender family renames are frequent (MTP -> M365 Defender -> Defender XDR; MCAS -> Defender for Cloud Apps); re-check PRODUCTS['defender-xdr'] naming and the four workload names at each maintenance pass. The known pairs are enforced continuously by RETIRED_NAMES; this trigger is the discovery half, which no lint can do."
+    },
+    {
+     "id": "TRG-SENTINEL-PORTAL-RETIRE",
+     "type": "retirement",
+     "cadence_days": null,
+     "title": "Microsoft Sentinel Azure-portal retirement",
+     "next_review": "2026-12-31",
+     "last_executed": "2026-07-19",
+     "affects": [],
+     "rows": [],
+     "note": "Mar 31, 2027: Microsoft Sentinel Azure-portal retirement (extended from Jul 1, 2026; announced Feb 12, 2026). After this date Sentinel is Defender-portal only; the atlas already describes the Defender-portal experience. Note the date coincidentally matches the unrelated 50 GB promo lock-in date, which is a trap for a future reader."
+    },
+    {
+     "id": "TRG-SENTINEL-50GB",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "Sentinel 50 GB commitment tier: GA status and promo extension",
+     "next_review": "2026-10-24",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "SENTINEL_LIC",
+       "ingest"
+      ]
+     ],
+     "rows": [],
+     "note": "Dec 31, 2026 / Mar 31, 2027: Sentinel 50 GB commitment tier promo. Launched Oct 1, 2025 in public preview; promotional pricing extended twice and now runs through Dec 31, 2026, with sign-ups in that window locking the discounted rate through Mar 31, 2027 (Partner Center announcement, Jun 26, 2026; re-verified 2026-07-19). Encoded in SENTINEL_LIC['ingest']. Two things to check at the next pass: whether the tier reaches GA, and whether the promo is extended a third time. Note the billing article still describes commitment tiers as starting at 100 GB/day, so the 50 GB tier is documented only in the promo announcement and the pricing page. THIS IS THE TRIGGER THAT FAILED SILENTLY BEFORE PUBLICATION (PR-036): it was correctly diarised, its underlying fact changed twice, and nothing said so."
+    },
+    {
+     "id": "TRG-SENTINEL-LAKE-METERS",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "Sentinel data lake meters",
+     "next_review": "2026-11-14",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "SENTINEL_LIC",
+       "retention"
+      ]
+     ],
+     "rows": [],
+     "note": "Ingestion, processing, storage (6:1 compression), and query are encoded in SENTINEL_LIC['retention']. Two further meters exist on the billing article and are NOT modelled in any row, deliberately, because no current row makes a claim that rests on them: advanced data insights (per compute hour for notebook sessions/jobs and custom-graph node/edge building; pools of 12/32/80 vCores) and the Sentinel graph meters (custom graph build/query per compute hour; embedded graphs in the Defender and Purview portals are free, but MCP graph tool access is charged). Revisit if a row ever claims notebook or graph capability."
+    },
+    {
+     "id": "TRG-SENTINEL-E5-GRANT",
+     "type": "licensing",
+     "cadence_days": 365,
+     "title": "Sentinel E5/E7 data grant",
+     "next_review": "2027-07-14",
+     "last_executed": "2026-07-20",
+     "affects": [
+      [
+       "SENTINEL_LIC",
+       "free_benefit"
+      ]
+     ],
+     "rows": [],
+     "note": "5 MB/user/day, eligible SKUs incl. E7. Verified 2026-07-18 on the offer page and re-verified 2026-07-20 in the completion pass, which fetched the offer page directly (AUDIT-FINDINGS SS22.11; SENTINEL_LIC['free_benefit'] is in REVERIFIED_LIC_KEYS_2). Re-check annually. (Corrected in the PR-050 migration: the prose list still carried \"Not re-verified in the 2026-07-19 pass -- the offer page was not fetched\", a caveat the next day's pass closed and nobody went back to update. Exactly the failure mode PR-050 exists to stop.)"
+    },
+    {
+     "id": "TRG-SENTINEL-PRICING-MODEL",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "Sentinel automation and inclusion meters",
+     "next_review": "2026-12-05",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "SENTINEL_LIC",
+       "soar"
+      ],
+      [
+       "SENTINEL_LIC",
+       "included"
+      ]
+     ],
+     "rows": [],
+     "note": "ADDED by PR-050, not migrated: SENTINEL_LIC['soar'] (automation rules included, Logic Apps billed separately) and SENTINEL_LIC['included'] had no trigger owner in the prose list. Both passed in SS22.2; both are consumption-model claims on the billing article and belong on the consumption clock."
+    },
+    {
+     "id": "TRG-SENTINEL-CHINA",
+     "type": "watch",
+     "cadence_days": null,
+     "title": "Sentinel in China (21Vianet) retirement",
+     "next_review": "2026-08-18",
+     "last_executed": "2026-07-19",
+     "affects": [],
+     "rows": [],
+     "note": "Sentinel in China (21Vianet) retires Aug 18, 2026: irrelevant to US-focused rows; noted for completeness."
+    },
+    {
+     "id": "TRG-MDC-CHINA",
+     "type": "watch",
+     "cadence_days": null,
+     "title": "Defender for Cloud in China (21Vianet) retirement",
+     "next_review": "2026-10-01",
+     "last_executed": "2026-07-19",
+     "affects": [],
+     "rows": [],
+     "note": "Defender for Cloud in China (21Vianet) retires Oct 1, 2026: likewise noted for completeness only."
+    },
+    {
+     "id": "TRG-MDC-PORTAL-PIVOT",
+     "type": "naming",
+     "cadence_days": 120,
+     "title": "Defender for Cloud experiences migrating into the Defender portal",
+     "next_review": "2026-12-30",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "MDC_URLS",
+       "support_matrix"
+      ]
+     ],
+     "rows": [],
+     "note": "Defender for Cloud is migrating experiences into the Defender portal: rows describe capabilities, not portal location; re-check the portal-pivot state (support matrix \"Defender portal\" column) at each maintenance pass."
+    },
+    {
+     "id": "TRG-MDC-DASHBOARD-CATALOG",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "Regulatory compliance dashboard standards catalog and paid-plan gate",
+     "next_review": "2026-10-31",
+     "last_executed": "2026-07-20",
+     "affects": [
+      [
+       "MDC_LIC",
+       "dashboard"
+      ],
+      [
+       "MDC_GOV",
+       "dashboard"
+      ]
+     ],
+     "rows": [
+      "171-3-12-1-3-mdc"
+     ],
+     "note": "Regulatory compliance dashboard standards catalog churns: the built-in list tracks current publications (e.g., it now offers NIST 800-171 R3 while the atlas pins R2, noted on 171-3-12-1-3-mdc); re-verify the standards named in dashboard rows and the paid-plan gate (any plan except Servers P1/APIs P1) at each pass."
+    },
+    {
+     "id": "TRG-MDC-SERVERS-CSPM",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "Defender for Servers / CSPM feature boundaries and Azure Government gaps",
+     "next_review": "2026-11-28",
+     "last_executed": "2026-07-20",
+     "affects": [
+      [
+       "MDC_LIC",
+       "cspm"
+      ],
+      [
+       "MDC_LIC",
+       "foundational"
+      ],
+      [
+       "MDC_LIC",
+       "servers_p1"
+      ],
+      [
+       "MDC_LIC",
+       "servers_p2"
+      ],
+      [
+       "MDC_GOV",
+       "gaps"
+      ]
+     ],
+     "rows": [],
+     "note": "Defender for Servers / CSPM feature boundaries move: re-verify the free-vs-paid CSPM split, the Servers P2 inclusion list (premium MDVM, FIM, JIT, 500 MB/day ingestion benefit), and the Azure Government gap list (CIEM, Data & AI dashboard, APIs/App Service/AI Services plans absent as of 2026-07-18)."
+    },
+    {
+     "id": "TRG-MDC-WORKLOAD-METERS",
+     "type": "licensing",
+     "cadence_days": 90,
+     "title": "Defender for Cloud per-workload meters",
+     "next_review": "2026-11-07",
+     "last_executed": "2026-07-19",
+     "affects": [
+      [
+       "MDC_LIC",
+       "workload"
+      ]
+     ],
+     "rows": [],
+     "note": "ADDED by PR-050, not migrated: MDC_LIC['workload'] carries the per-resource meters (including the 73M-transaction Storage threshold that PROJECT-REVIEW SS4.4 challenged and SS22.5 confirmed against pricing-page footnote 6) and had no trigger owner in the prose list. Consumption clock, re-derived from the Azure pricing page."
+    }
+   ],
+   "trigger_types": {
+    "licensing": 90,
+    "naming": 120,
+    "retirement": null,
+    "framework": 365,
+    "sovereign": 180,
+    "watch": 365
+   },
+   "staleness_classes": {
+    "consumption": {
+     "cadence_days": 90,
+     "dicts": [
+      "SENTINEL_LIC",
+      "MDC_LIC"
+     ],
+     "why": "Meters, promotional windows, and preview-to-GA transitions, which move on Azure pricing-page cadence rather than SKU-table cadence. Both PR-036 misses were here."
+    },
+    "sku-volatile": {
+     "cadence_days": 120,
+     "dicts": [
+      "DEFENDER_LIC",
+      "ENTRA_LIC",
+      "INTUNE_LIC"
+     ],
+     "why": "The rename-prone SKU families. SS22.2 shows 7 of 8 DEFENDER_LIC keys changed in one pass, five of them for a single genuine upstream rename (PR-035); the Intune Suite restructure and Entra's E7/F1/F3 additions landed in the same six-month window."
+    },
+    "sku-stable": {
+     "cadence_days": 180,
+     "dicts": [
+      "LIC"
+     ],
+     "why": "Purview, held against one authoritative source (the service description per-feature tables) on one publisher cadence. SS22.2 looks volatile at 14 of 20 keys changed, but 12 of those 14 were a single systemic authoring defect (the Office 365 entitlement path, missing from 12 constants at once, SS22.4) and 9 were one Purview Suite naming catch-up. Only 3 keys showed genuine upstream movement, and 2 of those 3 were add-on SKU renames, which the RETIRED_NAMES lint catches without a clock. Treat 180 as a prior, not a measurement: it rests on a single pass over a dataset three days old, so recalibrate it from `last_executed` history once real cycles have run."
+    },
+    "boundary": {
+     "cadence_days": 365,
+     "dicts": [],
+     "why": "The 8 `licensing_model: \"n/a\"` rows. A `Not Covered` verdict rests on framework text, not on a licensing constant, so it ages at framework speed."
+    }
+   },
+   "retired_names": [
+    {
+     "current": "Microsoft Defender Suite",
+     "retired": [
+      "Microsoft 365 E5 Security"
+     ],
+     "note": "PR-035. Six DEFENDER_LIC strings carry the glossed form deliberately."
+    },
+    {
+     "current": "Microsoft Entra ID",
+     "retired": [
+      "Azure Active Directory",
+      "Azure AD"
+     ],
+     "note": "Retired 2023; docs/AUTHORING.md SSAdd a product calls this out explicitly."
+    },
+    {
+     "current": "Microsoft Defender for Cloud Apps",
+     "retired": [
+      "Microsoft Cloud App Security",
+      "MCAS"
+     ],
+     "note": "SOLUTIONS['Defender for Cloud Apps'] carries the glossed form."
+    },
+    {
+     "current": "Microsoft Defender XDR",
+     "retired": [
+      "Microsoft 365 Defender",
+      "Microsoft Threat Protection",
+      "MTP"
+     ],
+     "note": "Two renames deep: MTP -> M365 Defender -> Defender XDR."
+    },
+    {
+     "current": "Microsoft Purview eDiscovery (unified)",
+     "retired": [
+      "Advanced eDiscovery",
+      "eDiscovery (Premium)"
+     ],
+     "note": "Classic eDiscovery retired Aug 2025; the atlas already reflects the unified experience."
+    },
+    {
+     "current": "learn.microsoft.com/intune",
+     "retired": [
+      "/mem/intune"
+     ],
+     "note": "Intune docs migrated off the /mem/ path."
+    },
+    {
+     "current": "intune/fundamentals/licensing",
+     "retired": [
+      "intune/fundamentals/licenses"
+     ],
+     "note": "The canonical Intune licensing article moved; the old path still redirects."
+    }
+   ]
+  },
   "verified_range": {
    "earliest": "2026-07-16",
    "latest": "2026-07-20"
