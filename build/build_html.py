@@ -4,7 +4,17 @@ Never hand-edit the output file — edit template.html or the row modules, then 
 
 Renamed 2026-07-17 (platform generalization): reads compliance-atlas.json (was
 purview-compliance-map.json) and writes compliance-atlas.html (was purview-compliance-map.html)."""
-import datetime, html, json, os, re
+import datetime, html, json, os, re, shutil, sys
+
+# ---- stale-bytecode guard (PR-058). MUST stay above any future sibling import. ----
+# This entry point imports no build/ module today -- it reads the JSON and the template as files --
+# so the guard is preventive here, not load-bearing. It is present because the constraint the
+# project wants is "no build entry point can execute against stale cached bytecode", and that has
+# to hold for the entry point someone later adds a `from common import ...` to. See the full
+# explanation in assemble.py and AUDIT-FINDINGS §26.8.
+sys.dont_write_bytecode = True
+shutil.rmtree(os.path.join(os.path.dirname(os.path.abspath(__file__)), "__pycache__"),
+              ignore_errors=True)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON_PATH = os.path.join(ROOT, "compliance-atlas.json")

@@ -191,19 +191,21 @@ rows are why the `last_verified` policy is defensible).
 ### Step 5 — gate
 
 ```powershell
-Remove-Item -Recurse -Force build/__pycache__   # see the warning below -- do this first
 python build/assemble.py            # integrity assertions + the maintenance report
 python build/build_html.py
 python tools/check_urls.py          # citation resolution and redirect drift
 node tools/axe_check.mjs            # WCAG 2.1 A/AA, every view, both themes
 ```
 
-> **Clear `build/__pycache__` before the gate rebuild.** Python invalidates cached bytecode on
-> `(mtime, size)`. A re-verification pass makes exactly the kind of edit that defeats that check —
-> a same-length substitution inside a date or a SKU string, written seconds after the last build —
-> and `assemble.py` will then import a **stale `common.py`** and regenerate the JSON from the old
-> constants, silently and with exit 0. This was hit and reproduced while building this runbook. It is
-> the one failure mode in the gate that produces a confidently wrong artifact rather than an error.
+> **You no longer clear `build/__pycache__` by hand — the build does it.** `assemble.py` and
+> `build_html.py` each remove `build/__pycache__` before their first sibling import (PR-058), so a
+> pass cannot regenerate the artifact from stale bytecode whether or not you remembered a manual step.
+> This mattered: Python validates cached bytecode on `(mtime, size)`, a re-verification pass makes
+> exactly the edit that defeats that check — a same-length substitution inside a date or a SKU string,
+> written in the same second as the last build — and the old behaviour was to rebuild from the **old
+> constants, silently and with exit 0**. It was the one failure mode in the gate that produced a
+> confidently wrong artifact rather than an error. History and the reproduction are in
+> AUDIT-FINDINGS §26.8; the fix and its regression proof are in §26.11.
 
 Then `git diff compliance-atlas.json` and read it. **Expect it to be empty.** There is no noise floor:
 since PR-057 the dataset carries nothing time-derived, so a rebuild that changes no content leaves it

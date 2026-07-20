@@ -5,8 +5,27 @@ Add a product: see docs/AUTHORING.md "Add a product" — products-map entry in c
 product=<id>, solutions registered in SOLUTIONS and the product's solutions list.
 
 Canonical file renamed 2026-07-17: purview-compliance-map.json -> compliance-atlas.json (platform generalization)."""
-import importlib, json, os, re, sys, datetime
+import importlib, json, os, re, shutil, sys, datetime
 from urllib.parse import urlparse
+
+# ---- stale-bytecode guard (PR-058). MUST stay above the sibling imports below. ----
+# Python validates cached bytecode on (source mtime truncated to whole seconds, source size), so a
+# same-length edit written in the same second as the previous build leaves a .pyc that validates as
+# fresh. The build then regenerates the artifact from OLD constants -- silently, with exit 0. That
+# is not hypothetical: it was hit and reproduced against a date edit in common.py (AUDIT-FINDINGS
+# §26.8), and a re-verification pass makes exactly that kind of edit.
+#
+# The cache is therefore removed outright, before the first sibling import. Setting
+# sys.dont_write_bytecode alone would NOT close this: it stops new .pyc files being written, not
+# existing stale ones being loaded, which is the failure above exactly. It is set as well so the
+# purge does not simply re-litter the tree each run.
+#
+# Deliberately inline rather than factored into a shared build/ module: any such module would have
+# to be imported to run, and that import is itself served from the cache this code exists to
+# distrust. Six duplicated lines beat a guard that depends on what it is guarding against.
+sys.dont_write_bytecode = True
+shutil.rmtree(os.path.join(os.path.dirname(os.path.abspath(__file__)), "__pycache__"),
+              ignore_errors=True)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
