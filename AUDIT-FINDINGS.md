@@ -2833,3 +2833,52 @@ content-free rebuild leaves `compliance-atlas.json` byte-identical.
 The Phase 2 commit itself changes the dataset substantially: two new keys × 378 rows. That is the
 change, not drift. The property re-asserted at the gate is the Session 9 one — that a *subsequent*
 rebuild produces an empty diff.
+
+### 28.8 Gate results
+
+| Check | Result |
+|---|---|
+| `python build/assemble.py` | Passes. Integrity assertions, the four band guards, and the trigger-coverage assertion all clean |
+| Maintenance report | No warnings |
+| `RETIRED_NAMES` lint | Clean |
+| `python build/build_html.py` | Passes; footer "Built …" line present, format unchanged |
+| `tools/check_urls.py` | 151 OK, 2 WAF — the documented §7.2 pair, no new failures |
+| axe-core, standard route set (23 combinations) | **0 violations**, both themes |
+| axe-core, filtered routes — `?tier=e3`, `?tier=e5&meter=exclude`, `?tier=addon`, `?meter=exclude`, FERPA suppression, two other frameworks (14 combinations) | **0 violations**, both themes |
+| Three-step drift test, post-commit | **Pass.** No-change rebuild → 0 diff lines; one band edited → exactly one `license_band` value changed; reverted → 0 diff lines |
+| Protected fields | `license_requirement`, `licensing_model`, `coverage`, `confidence`, `last_verified`, `status`, `sources`, `control_ref` — **0 rows changed** across all 378, verified by field-level diff against `HEAD` |
+| Row shape | Exactly two keys added (`license_band`, `license_band_partial`); **none removed, none modified** |
+
+**Keyboard walk**, driven headlessly rather than assumed. Tab order on
+`#/framework/iso-27001-2022`, from the top of the view:
+
+| # | Control |
+|---|---|
+| 1 | "Official source ↗" link |
+| 2–5 | Coverage filter — All (57) · Direct Support (21) · Partial Support (31) · Evidence Support Only (5) |
+| 6–7 | Expand all · Collapse all |
+| 8–11 | **License tier** — All tiers (57) · E3 (40) · E5 (28) · Add-on (13) |
+| 12–13 | **No seat tier** — Include (12) · Exclude |
+
+Both new rows are reached in DOM order after the existing controls, and each is wrapped in a
+`role="group"` labelled by its own visible `<span>` — so a screen reader announces "License tier" or
+"No seat tier" as group context rather than presenting eight unrelated toggle buttons.
+
+Activation, both keys, focus tracked at each step:
+
+1. Focus **E5 (28)**, press **Enter** → the same button comes back focused with
+   `aria-pressed` flipped `false → true`; URL becomes `?tier=e5`; status region reads
+   *"ISO/IEC 27001:2022 — 28 mappings, license tier E5"*.
+2. Focus **Exclude**, press **Space** → same button refocused, `aria-pressed` `false → true`; URL
+   becomes `?tier=e5&meter=exclude`; status reads *"… — 16 mappings, license tier E5, rows with no
+   seat tier excluded"*.
+3. Focus **All tiers**, press **Enter** → refocused and pressed; URL drops to `?meter=exclude` only —
+   the cleared filter leaves no key behind (URL rule 1) while the unrelated toggle survives; status
+   reads *"… — 45 mappings, rows with no seat tier excluded"*.
+
+The focus behaviour is the part that needed the code change: the router previously restored focus by
+querying `.fbtn[data-cov="…"]`, so a tier or consumption press would have thrown focus into the
+coverage row. Each row now carries its own data attribute and its own `opts.focus` value.
+
+`history.length` did not grow across any of the three activations — filter changes use
+`replaceState`, so toggling does not fill the Back button (URL rule 4).
