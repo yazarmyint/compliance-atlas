@@ -12,8 +12,9 @@ The **atlas content and dataset**:
 - framework, industry, product, and solution metadata and notes
 - the coverage and confidence taxonomies and their definitions
 - the generated artifacts **`compliance-atlas.json`** and **`compliance-atlas.html`**
-- the project documentation: `README.md`, `AUDIT-FINDINGS.md`, `FRAMEWORK-SELECTION.md`,
-  `CONTENT-REVIEW.md`, `PROJECT-REVIEW.md`, `reference/SOURCES.md`
+- the project documentation: `README.md`, `docs/AUTHORING.md`, `docs/MAINTENANCE.md`,
+  `AUDIT-FINDINGS.md`, `FRAMEWORK-SELECTION.md`, `CONTENT-REVIEW.md`, `PROJECT-REVIEW.md`,
+  `CHANGELOG.md`, `reference/SOURCES.md`
 - the project's own generated reference snapshots in `reference/`
 
 The **build code** is licensed separately under the MIT Licence; see `LICENSE`.
@@ -55,7 +56,7 @@ works.** Their copyrights belong to their respective owners.
 This is why the atlas paraphrases rather than quotes. Every `control_intent` is an original
 restatement of a control's practical intent in the author's own words; the dataset deliberately
 reproduces no ISO, AICPA, PCI SSC, or NIST text. That editorial discipline — recorded throughout
-`AUDIT-FINDINGS.md` and enforced as an authoring rule in `README.md` — is what makes it possible to
+`AUDIT-FINDINGS.md` and enforced as an authoring rule in `docs/AUTHORING.md` — is what makes it possible to
 license this work openly at all. **Anyone adapting the atlas must preserve it.** Do not substitute
 verbatim standard text for the paraphrases.
 
