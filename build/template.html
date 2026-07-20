@@ -667,6 +667,15 @@ function tierKeep(r, tier, exclude){
   if(!isSeatRow(r)) return !exclude;
   return !tier || r.license_band === tier;
 }
+/* Button face + the same fact in words for a screen reader. The hidden span is APPENDED to the
+   visible text rather than replacing it via aria-label, so the accessible name still contains the
+   visible label verbatim (WCAG 2.5.3, Label in Name) instead of substituting a paraphrase for it. */
+function tierBtnFace(name, seat, composed){
+  const vis = composed ? `${name} (${seat} +${composed})` : `${name} (${seat})`;
+  const words = composed ? `${plural(seat, "mapping")} plus ${composed} with no seat tier`
+                         : plural(seat, "mapping");
+  return `${esc(vis)}<span class="sr-only"> — ${esc(words)}</span>`;
+}
 function setTier(t){ setQuery({tier: t || null}); render({focus:"tier", filter:t||""}); }
 function setMeter(exclude){ setQuery({meter: exclude ? "exclude" : null}); render({focus:"meter", filter:exclude?"exclude":"include"}); }
 
@@ -680,9 +689,14 @@ function vFramework(id){
      the reader will actually see, so no button ever advertises a number that clicking
      it cannot produce. */
   const afterCov = rows.slice();
-  const tierCount = t => afterCov.filter(r => tierKeep(r, t, exclude)).length;
+  const seatCount = t => afterCov.filter(r => isSeatRow(r) && (!t || r.license_band === t)).length;
   const seatPresent = SEAT_BANDS.filter(b => afterCov.some(r => r.license_band === b));
   const noSeatCount = afterCov.filter(r => !isSeatRow(r)).length;
+  /* Split counts: "E3 (28 +12)" is 28 rows AT that tier plus 12 that have no tier at all and
+     get composed in. A single total would attach the label "E3" to a number that is mostly not
+     E3 — the same over-promise the partial badge exists to prevent, one level up. The +n drops
+     when the reader excludes those rows, because then they are genuinely not there. */
+  const composed = exclude ? 0 : noSeatCount;
   /* Suppress an empty control -- but always render the tier row while a tier filter is
      active, so a pasted link into a single-band framework still has a way back out. */
   const showTier = seatPresent.length > 1 || !!tier;
@@ -709,9 +723,10 @@ function vFramework(id){
   </div>
   ${showTier?`<div class="toolrow"><span class="lbl" id="tierlbl">License tier</span>
     <span role="group" aria-labelledby="tierlbl">
-      <button type="button" class="fbtn ${!tier?"on":""}" data-tier="" aria-pressed="${!tier}" onclick="setTier(null)">All tiers (${tierCount(null)})</button>
-      ${seatPresent.map(b=>`<button type="button" class="fbtn ${tier===b?"on":""}" data-tier="${esc(b)}" aria-pressed="${tier===b}" onclick="setTier('${esc(b)}')">${esc(BAND_LABEL[b]||b)} (${tierCount(b)})</button>`).join("")}
+      <button type="button" class="fbtn ${!tier?"on":""}" data-tier="" aria-pressed="${!tier}" onclick="setTier(null)">${tierBtnFace("All tiers", seatCount(null), composed)}</button>
+      ${seatPresent.map(b=>`<button type="button" class="fbtn ${tier===b?"on":""}" data-tier="${esc(b)}" aria-pressed="${tier===b}" onclick="setTier('${esc(b)}')">${tierBtnFace(BAND_LABEL[b]||b, seatCount(b), composed)}</button>`).join("")}
     </span>
+    ${composed?`<span class="tiny muted">The <b>+${composed}</b> is rows with no seat tier — consumption-priced and boundary rows — which show under every tier unless excluded below.</span>`:""}
   </div>`:""}
   ${showMeter?`<div class="toolrow"><span class="lbl" id="meterlbl">No seat tier</span>
     <span role="group" aria-labelledby="meterlbl">
@@ -1071,11 +1086,22 @@ function render(opts){
   if(h1) h1.setAttribute("tabindex", "-1");
   if(countRows) note = plural(app.querySelectorAll("details.row").length, "mapping");
   if(fwFilter) note += `, filtered to ${fwFilter}`;
-  /* The status region has to state the tier lens too, or a screen-reader user who
-     presses "E5" hears only a row count change with no reason given for it. */
+  /* The status region has to state the tier lens too, or a screen-reader user who presses "E5"
+     hears only a row count change with no reason given for it. The split is announced in words,
+     matching the "+n" on the buttons: a bare total would tell a screen-reader user that 40 rows
+     are E3 when 12 of them have no tier at all. Counted off the rendered DOM, like every other
+     row count here, so what is announced is what is on screen. */
   if(p1 === "framework"){
     const t = tierOf();
-    if(t) note += `, license tier ${BAND_LABEL[t] || t}`;
+    const shown = app.querySelectorAll("details.row").length;
+    /* Scoped to the summary badge deliberately: the band chip also renders inside the row's
+       licence block, so an unscoped selector counts every row twice. */
+    const noSeat = app.querySelectorAll("details.row > summary .badges .chip.tier-consumption, "
+                                      + "details.row > summary .badges .chip.tier-na").length;
+    if(t){
+      note = `${plural(shown - noSeat, "mapping")} at license tier ${BAND_LABEL[t] || t}`;
+      if(noSeat) note += ` plus ${noSeat} with no seat tier`;
+    }
     if(meterExcluded()) note += `, rows with no seat tier excluded`;
   }
   if(first){

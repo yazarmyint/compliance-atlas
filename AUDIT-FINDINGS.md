@@ -2882,3 +2882,45 @@ coverage row. Each row now carries its own data attribute and its own `opts.focu
 
 `history.length` did not grow across any of the three activations — filter changes use
 `replaceState`, so toggling does not fill the Back button (URL rule 4).
+
+### 28.9 Split tier counts, and the bug the walk caught
+
+The owner read "Add-on (13)" off the keyboard walk and challenged it against the atlas-wide `addon`
+count of 1. The number was right — 1 add-on row plus the 12 no-seat-tier rows composed into every
+tier — but the challenge was the correct one to make: the label said *Add-on* and the number counted
+mostly-not-add-on rows. The original §7 promise ("no button advertises a count clicking it cannot
+produce") optimised for *how many rows will I see* over *how many are at this tier*, and the button
+label asserts the second.
+
+Tier buttons now carry **split counts**: `E3 (28 +12)`, `Add-on (1 +12)`, `All tiers (45 +12)`. Both
+questions are answered without clicking. The `+n` **drops entirely when the reader excludes the
+no-seat-tier rows** — `E3 (28)` — because at that point those rows are genuinely not there and a
+`+0` would be noise.
+
+Three details that mattered:
+
+- **The `+n` is carried in words, not only visually.** Each button appends a `.sr-only` span: the
+  accessible name is `"E3 (28 +12) — 28 mappings plus 12 with no seat tier"`. It is **appended to**
+  the visible text rather than replacing it via `aria-label`, so the accessible name still contains
+  the visible label verbatim (WCAG 2.5.3, Label in Name). Verified: all four buttons pass, and axe's
+  `label-content-name-mismatch`, `button-name`, `aria-toggle-field-name`, `nested-interactive` and
+  `aria-allowed-role` rules report zero violations on the modified controls.
+- **The status region announces the same split** — *"16 mappings at license tier E5 plus 12 with no
+  seat tier"* — rather than a bare total, which would have told a screen-reader user that 28 rows
+  were E5 when 12 of them have no tier at all.
+- **One explanatory line** sits on the tier row and in the legend, worded consistently with the
+  *No seat tier* toggle it refers to.
+
+**A real defect was introduced and caught here, and it is worth recording rather than quietly
+fixing.** The first implementation of the status announcement counted no-seat-tier rows with
+`app.querySelectorAll("details.row .chip.tier-consumption, …")`. The band chip renders **twice** per
+row — once in the summary badges, once inside the row's licence block — so the count came back
+doubled: 24 instead of 12, making the announced seat count `28 − 24 = 4`. The status read *"4
+mappings at license tier E5 plus 24 with no seat tier"*.
+
+It survived the first look because the `meter=exclude` case, which is the one the earlier walk
+exercised most closely, has `noSeat = 0` and therefore reported correctly. The selector is now
+scoped to `details.row > summary .badges`, with a comment saying why. The general lesson is the one
+this project already applies to the dataset: a count derived from the DOM has to be scoped to the
+place the thing is rendered *once*, and the way to find out is to run the interaction and read the
+output rather than to reason about it.

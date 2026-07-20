@@ -407,7 +407,8 @@ BAND_SCOPE_NOTE = ("Bands describe Microsoft 365 COMMERCIAL licensing only: ther
                    "or Business Premium dimension, and government licensing is covered by the per-row "
                    "cloud availability notes instead. Consumption-priced products (Microsoft Sentinel, "
                    "Defender for Cloud) have no seat tier at all, so they appear under every tier filter "
-                   "unless you exclude them with the consumption toggle. The band is derived from each "
+                   "unless you exclude them with the No seat tier toggle — which is what the \"+n\" on each "
+                   "tier button counts: rows at that tier, plus rows that have no tier at all. The band is derived from each "
                    "row's licence requirement and is a coarse signpost to it, never a replacement — the "
                    "full entitlement string stays on every row. Related-product mentions marked "
                    "\"(if licensed)\" are pointers to adjacent products, not banded or audited claims.")
