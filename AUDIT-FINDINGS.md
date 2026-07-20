@@ -7,6 +7,8 @@
 
 **Verdict key:** `CONFIRMED` (carries forward as-is, possibly reworded) · `CORRECTED` (ref, capability naming, or rating changed) · `REMOVED` (row dropped) · `ADDED` (gap filled with a new row).
 
+> **Doc layout note (2026-07-20, §24):** sections below written before §24 refer to the README for the row schema, the add-a-framework / add-a-product procedures, the file tree, and the maintenance triggers. Those now live in **`docs/AUTHORING.md`** and **`docs/MAINTENANCE.md`**; the README is a public front door. Historical references are left as written.
+
 ---
 
 ## 1. Framework-level findings
@@ -2023,3 +2025,97 @@ against the remote via the GitHub API).
 - **One owner action outstanding:** repository visibility → public, which resolves the 3 BROKEN links above.
 - **DSPM constant split:** still deliberately unmerged; trigger and exit conditions recorded in README.
 - **Harness debt:** the accessibility harness has now been rebuilt twice from scratch. It belongs in `tools/`.
+
+---
+
+## 24. Documentation restructure (2026-07-20) — README becomes a public front door
+
+Documentation-only session, run immediately before the repository goes public. **Zero changes to
+`build/`, no rebuild, no regeneration.** `compliance-atlas.json` and `compliance-atlas.html` are
+byte-identical to their §23 state; the atlas remains **378 rows / 11 frameworks / 6 products / 12
+industries** at **v2.9.0**. The About page in the artifact is untouched — it reads from `META`, not
+from the README, which is exactly why this restructure could not affect it.
+
+### 24.1 The problem
+
+The README had accumulated into a 308-line maintainer document. Of those lines, **265 (86%) were
+maintainer-only material**: the row schema, the add-a-framework and add-a-product procedures, the file
+tree, and a sixteen-bullet maintenance-trigger list. A stranger arriving at a public repository would
+have had to read past all of it to learn what the atlas is, how to open it, and how it is licensed.
+The publishing programme (§23) gave the *artifact* a reader-facing surface; the *repository* still had
+none.
+
+### 24.2 What moved
+
+| Old README section | Lines | Destination |
+|---|---|---|
+| Title, opening paragraph, "open the HTML" line | 1–18 | **README** — rewritten, tighter |
+| Brand-name note | 3 | `docs/AUTHORING.md` — byte-preserved |
+| File-rename note (2026-07-17) | 19–21 | `docs/AUTHORING.md` — byte-preserved |
+| Contents: framework table + row shape + mapping discipline | 23–53 | `docs/AUTHORING.md` — byte-preserved |
+| Files (tree diagram) | 55–77 | `docs/AUTHORING.md` — byte-preserved |
+| Licensing | 79–95 | **README** — three-line summary; rationale already stated in `LICENSE-CONTENT.md` |
+| Regenerate the HTML | 97–106 | `docs/AUTHORING.md` — byte-preserved (two-liner also in README) |
+| Row schema (current) | 108–135 | `docs/AUTHORING.md` — byte-preserved |
+| Add a framework | 137–161 | `docs/AUTHORING.md` — byte-preserved |
+| Add a product | 163–232 | `docs/AUTHORING.md` — byte-preserved (1 xref edit, §24.4) |
+| Maintenance triggers worth diarising | 234–299 | `docs/MAINTENANCE.md` — byte-preserved |
+| Backlog paragraph | 301–308 | `docs/MAINTENANCE.md` — byte-preserved |
+
+**Three judgement calls, enumerated rather than absorbed silently:**
+
+1. **The Contents section went to `AUTHORING`, not `MAINTENANCE`.** Its framework table is the
+   "shipping-state text" that add-a-product step 6 already instructs the author to update, and the
+   Sentinel and Defender for Cloud mapping-discipline paragraphs are rating rules — they govern how a
+   product's rows may be rated, which is authoring discipline, not a diary entry.
+2. **The brand-name and file-rename notes went to `AUTHORING`.** Neither was in the brief's relocation
+   list, and neither belongs on a public front page. Both describe `build/` facts, so they sit with
+   the file tree.
+3. **The licensing rationale was not moved, because it did not need to be.** Each of the four
+   propositions in the old README's licensing paragraph — no rights granted in third-party standards;
+   paraphrase-not-quote is what makes open licensing possible; adapters must keep the rule;
+   trademarks and non-affiliation — is already stated in `LICENSE-CONTENT.md` ("What this licence does
+   not and cannot cover"). The README keeps one sentence on the no-verbatim rule and links onward.
+
+### 24.3 Gate — content accounting
+
+Sections were extracted from the committed README by line range and each fragment checked for exact
+substring presence in its destination file. This is a mechanical check, not a reading:
+
+| | |
+|---|---|
+| Old README content lines | **308** |
+| Relocated byte-for-byte | **265** — all 10 fragments `EXACT` |
+| Rewritten into the new README | **34** |
+| Blank section separators, not carried | **9** |
+| **Unaccounted for** | **0** |
+| **Double-counted** | **0** |
+
+No section was tightened, re-worded, or partially dropped in transit. The new README is 78 lines.
+
+### 24.4 Cross-reference fixes
+
+| File | Change |
+|---|---|
+| `docs/AUTHORING.md` | Add-a-product step 6: "Update the **README** state text" → "Update the state text **in this document**". The only text edit inside relocated content. |
+| `LICENSE-CONTENT.md` | Documentation list extended with `docs/AUTHORING.md`, `docs/MAINTENANCE.md`, `CHANGELOG.md` (the last was already covered in substance but unlisted). |
+| `LICENSE-CONTENT.md` | "enforced as an authoring rule in `README.md`" → "in `docs/AUTHORING.md`" — the paraphrase rule moved with the authoring procedure. |
+| `AUDIT-FINDINGS.md` | One-line note under the header pointing readers at the new layout. Historical sections left as written. |
+
+**Two known-stale references deliberately not fixed**, because this session's envelope excludes
+`build/`: `build/assemble.py` line 4 ("Add a product: see README.md 'Add a product'") and
+`build/common.py` line 382 ("See README for the retirement trigger"). Both now point at content in
+`docs/AUTHORING.md` and `docs/MAINTENANCE.md` respectively. They are comments, invisible to readers
+and inert at build time. **Carry forward: fix both in the next session that touches `build/` for any
+other reason** — no rebuild should be spent on comment text alone.
+
+`PROJECT-REVIEW.md` and `CONTENT-REVIEW.md` cite README line numbers throughout. They are dated review
+records, so like the AUDIT-FINDINGS history they are left exactly as written.
+
+#### Carried forward
+
+- **Owner action still outstanding:** repository visibility → public. Unchanged from §23; this session
+  did not touch it. The three GitHub links in `META.project` still 404 until it happens.
+- **`build/` comment references** to the old README layout (above), for the next `build/` session.
+- **Harness debt** (§23): the accessibility harness still belongs in `tools/`. Not addressed here — no
+  rebuild, no artifact change, so nothing to re-test.
