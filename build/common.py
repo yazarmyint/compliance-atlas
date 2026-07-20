@@ -3,23 +3,26 @@
 VERIFIED_DATE = "2026-07-16"
 
 # ---------------------------------------------------------------------------
-# Data re-verification pass, 2026-07-19 (AUDIT-FINDINGS SS22).
+# Data re-verification passes (AUDIT-FINDINGS SS22).
 #
 # last_verified is a claim about when a row's facts were last checked against an
-# authoritative source, so it is bumped only where that is true. A row earns the
-# new date on exactly one of three bases:
+# authoritative source, so it is bumped only where that is true. A row earns a
+# pass's date on exactly one of three bases:
 #
-#   A  its license_requirement changed this session
-#   B  its sources changed this session
-#   C  the licensing constant governing it was re-fetched live this session and
+#   A  its license_requirement changed in that pass
+#   B  its sources changed in that pass
+#   C  the licensing constant governing it was re-fetched live in that pass and
 #      confirmed still correct (a PASS is a verification, not a non-event)
 #
-# A and C are both derived from REVERIFIED_LIC_KEYS below: it names every constant
-# whose governing authoritative source was actually fetched on 2026-07-19, whether
-# the string changed or passed. Constants absent from this set were NOT re-checked
-# this session, so rows resting solely on them keep their older date. That is the
-# point of the mechanism, and it is why this pass moves 324 of 378 rows rather
-# than all of them. Do not add a key here without fetching its source.
+# A and C are both derived from the pass's LIC-key set: it names every constant
+# whose governing authoritative source was actually fetched on that date, whether
+# the string changed or passed. Constants absent from every set were NOT re-checked
+# at all, so rows resting solely on them keep their authoring date. That is the
+# point of the mechanism, and it is why the 2026-07-19 pass moved 324 of 378 rows
+# rather than all of them. Do not add a key without fetching its source.
+#
+# Passes are applied in order by REVERIFY_PASSES, so a row touched by more than one
+# pass ends on the latest date that actually verified something it rests on.
 # ---------------------------------------------------------------------------
 REVERIFY_DATE = "2026-07-19"
 
@@ -47,13 +50,25 @@ REVERIFIED_LIC_KEYS = {
     ("MDC_LIC", "foundational"), ("MDC_LIC", "cspm"), ("MDC_LIC", "workload"),
 }
 
-# NOT re-verified on 2026-07-19, and deliberately so: their governing sources were not
-# fetched this session. Recorded to make the gap explicit rather than implicit.
-#   LIC dspm, dspm_ai              - DSPM get-started docs, no service-description rows
-#   INTUNE_LIC p1, p1_ca, epm      - Intune licensing + advanced-capabilities articles
-#   MDC_LIC servers_p1, servers_p2 - Defender for Servers plan-selection pages
-#   MDC_LIC dashboard              - assign-regulatory-compliance-standards prerequisites
-#   SENTINEL_LIC free_benefit      - Microsoft 365 E5 Sentinel benefit offer page
+# ---------------------------------------------------------------------------
+# Completion pass, 2026-07-20 (AUDIT-FINDINGS SS22.11). The eight constants the
+# 2026-07-19 pass left unverified, and the five source families it did not reach,
+# were fetched live on 2026-07-20. Nothing is now carried as "not re-verified".
+# ---------------------------------------------------------------------------
+REVERIFY_DATE_2 = "2026-07-20"
+
+# (dict name, key) pairs re-derived or re-confirmed against a live fetch on 2026-07-20.
+#   INTUNE_LIC p1, p1_ca, epm      - Intune licensing article + planning guide step 3
+#   MDC_LIC servers_p1, servers_p2 - Defender for Servers plan-selection / overview / FAQ
+#   MDC_LIC dashboard              - update-regulatory-compliance-packages prerequisites
+#   SENTINEL_LIC free_benefit      - Microsoft 365 Sentinel benefit offer page
+#   LIC dspm, dspm_ai              - DSPM get-started + DSPM-for-AI prerequisites
+REVERIFIED_LIC_KEYS_2 = {
+    ("INTUNE_LIC", "p1"), ("INTUNE_LIC", "p1_ca"), ("INTUNE_LIC", "epm"),
+    ("MDC_LIC", "servers_p1"), ("MDC_LIC", "servers_p2"), ("MDC_LIC", "dashboard"),
+    ("SENTINEL_LIC", "free_benefit"),
+    ("LIC", "dspm"), ("LIC", "dspm_ai"),
+}
 
 # Rows whose sources array changed on 2026-07-19 (basis B, PR-038 URL currency).
 REVERIFIED_SOURCE_ROWS = {
@@ -73,16 +88,28 @@ REVERIFIED_SOURCE_ROWS = {
 }
 
 
-def reverified_license_strings():
-    """The literal license strings governed by a constant re-verified on 2026-07-19."""
+def reverified_license_strings(keys=None):
+    """The literal license strings governed by a constant re-verified in a pass."""
     dicts = {"LIC": LIC, "ENTRA_LIC": ENTRA_LIC, "INTUNE_LIC": INTUNE_LIC,
              "DEFENDER_LIC": DEFENDER_LIC, "SENTINEL_LIC": SENTINEL_LIC, "MDC_LIC": MDC_LIC}
     out = set()
-    for dict_name, key in REVERIFIED_LIC_KEYS:
+    for dict_name, key in (REVERIFIED_LIC_KEYS if keys is None else keys):
         value = dicts[dict_name][key]
-        assert value, f"REVERIFIED_LIC_KEYS names an empty constant: {dict_name}[{key!r}]"
+        assert value, f"re-verified key names an empty constant: {dict_name}[{key!r}]"
         out.add(value)
     return out
+
+
+def reverify_passes():
+    """Re-verification passes in date order: (date, license strings, source rows).
+
+    Applied in this order, so a row covered by more than one pass ends on the
+    latest date that verified something it actually rests on.
+    """
+    return [
+        (REVERIFY_DATE, reverified_license_strings(REVERIFIED_LIC_KEYS), REVERIFIED_SOURCE_ROWS),
+        (REVERIFY_DATE_2, reverified_license_strings(REVERIFIED_LIC_KEYS_2), frozenset()),
+    ]
 
 # ---------------------------------------------------------------------------
 # Product dimension (platform generalization, 2026-07-17).
@@ -711,7 +738,7 @@ ENTRA_GOV = {
 INTUNE_LIC = {
     "p1": "Microsoft Intune Plan 1 (the base Intune service; included in Microsoft 365 bundles such as E3/E5/E7 and Enterprise Mobility + Security E3/E5, also available standalone)",
     "p1_ca": "Microsoft Intune Plan 1; enforcing the compliance signal through Conditional Access additionally requires Microsoft Entra ID P1",
-    "epm": "Endpoint Privilege Management: separate Intune add-on license or Microsoft Intune Suite, in addition to Intune Plan 1; from July 2026 also included in Microsoft 365 E5/E7",
+    "epm": "Endpoint Privilege Management: included in Microsoft 365 E5 and E7 since July 2026, when Intune Suite capabilities were distributed across Microsoft 365 tiers; on any other plan it remains a separate Intune add-on license or the Microsoft Intune Suite, in addition to Intune Plan 1",
 }
 
 INTUNE_URLS = {
@@ -876,9 +903,10 @@ SENTINEL_LIC = {
                   "data is scanned. These are the meters behind 12-month (PCI DSS) and multi-year (CMMC/800-53) retention mandates."),
     "free_benefit": ("Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all "
                      "Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and "
-                     "E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/"
-                     "audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and "
-                     "Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion."),
+                     "their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID "
+                     "sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection "
+                     "logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise "
+                     "Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion."),
     "soar": ("Microsoft Sentinel automation rules are included with the workspace (consumption-priced service); Logic "
              "Apps playbooks are billed separately under Azure Logic Apps consumption meters."),
     "included": ("Included with Microsoft Sentinel on the workspace (no separate license); cost follows the "

@@ -237,9 +237,15 @@ Sentinel, and Defender for Cloud ran as clean clones with only the refinements i
 - **Annual (~Q1)**: SSPA DPR version refresh (v12 → v13 likely early 2027); requirement numbering can shift.
 - Microsoft renames: check the Purview service description and solution overview pages; the atlas already reflects the
   unified eDiscovery (classic retired Aug 2025), Data explorer, DSPM current version, and "Microsoft Purview Suite" SKU naming.
-- **Intune licensing restructure (July 2026, in progress)**: Suite capabilities distributing into Microsoft 365 tiers
-  (E3: Plan 2 + Remote Help + Advanced Analytics; E5/E7: adds EPM, Cloud PKI, EAM). Re-verify Intune `license_requirement`
-  strings (esp. the EPM row) against the Intune licensing article once the rollout settles.
+- **Intune licensing restructure (July 2026 — in effect, documentation still catching up)**: Suite capabilities are now
+  distributed into Microsoft 365 tiers (E3: Plan 2 + Remote Help + Advanced Analytics; E5/E7: adds EPM, Cloud PKI, EAM).
+  Confirmed live 2026-07-20 and `INTUNE_LIC["epm"]` was rewritten to the present tense. **Still pending:** the
+  restructure is stated in exactly one Learn location, the [planning guide](https://learn.microsoft.com/intune/fundamentals/planning-guide)
+  step 3. The canonical [Intune licensing article](https://learn.microsoft.com/intune/fundamentals/licensing) was
+  rewritten to drop per-bundle contents entirely (it now names only Plan 1 / Plan 2 / Suite and defers to the commercial
+  pricing page), and `fundamentals/advanced-capabilities` says only "select Microsoft 365 bundles" without naming them.
+  Re-check both once they carry the mapping again; until then the planning guide is the sole first-party citation for
+  which tier includes EPM. Note also the article moved from `fundamentals/licenses` to `fundamentals/licensing`.
 - Intune docs migrated to `learn.microsoft.com/intune/*` (off `/mem/intune`). *(The forward `defender-xdr` links on
   Intune/Entra rows were reconciled when Defender XDR landed; see AUDIT-FINDINGS §13.4.)*
 - **MDO Plan 1 in E3/G3 (effective July 1, 2026)**: encoded in `DEFENDER_LIC["mdo_p1"]`. Confirmed live 2026-07-19:
