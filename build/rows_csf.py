@@ -124,7 +124,7 @@ ROWS = [
         "AI activity reports; sensitive-prompt detections",
         "Managed browser/device footprint; network AI-app discovery (Defender for Cloud Apps)",
         "Partial Support", "Medium", LIC["dspm_ai"], GOV["dspm_ai"],
-        [CSF, CSF_PDF, URLS["dspm_ai"], URLS["dspm"]], also=["Data Loss Prevention", "Communication Compliance"]),
+        [CSF, CSF_PDF, URLS["dspm"]], also=["Data Loss Prevention", "Communication Compliance"]),
 
     row("csf-de-ae-02", "DE.AE-02", "DE Detect",
         "Analyze potentially adverse events to better understand the associated activities.",

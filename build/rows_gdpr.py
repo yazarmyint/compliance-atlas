@@ -152,7 +152,7 @@ ROWS = [
         "DSPM/AI-activity reports attached to DPIA workpapers",
         "DPIA methodology and register; DPO consultation",
         "Evidence Support Only", "Medium", LIC["dspm"] + "; " + LIC["dspm_ai"], GOV["dspm_ai"],
-        [EURLEX, URLS["dspm"], URLS["dspm_ai"]], also=["DSPM for AI", "Data Classification"]),
+        [EURLEX, URLS["dspm"]], also=["DSPM for AI", "Data Classification"]),
 ]
 
 

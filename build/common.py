@@ -374,7 +374,12 @@ URLS = {
     "cm": "https://learn.microsoft.com/purview/compliance-manager",
     "cm_regs": "https://learn.microsoft.com/purview/compliance-manager-regulations-list",
     "dspm": "https://learn.microsoft.com/purview/data-security-posture-management-learn-about",
-    "dspm_ai": "https://learn.microsoft.com/purview/dspm-for-ai",
+    # No "dspm_ai" URL: /purview/dspm-for-ai now carries a "(classic)" banner naming
+    # data-security-posture-management-learn-about as its replacement (confirmed live 2026-07-20), so
+    # the two rows that cited it were repointed to URLS["dspm"] — which both already cited, making the
+    # repoint a de-duplication. LIC["dspm_ai"] and the "DSPM for AI" solution stay: the classic solution
+    # is still a distinct licensed thing in the portal, and SOLUTIONS["DSPM for AI"] correctly keeps the
+    # classic article as its own documentation. See README for the retirement trigger.
     "customer_key": "https://learn.microsoft.com/purview/customer-key-overview",
     "sd": SD,
     "gcch": "https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/plan-for-microsoft-purview-gcc-high-deployments",
