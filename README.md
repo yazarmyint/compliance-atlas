@@ -1,6 +1,6 @@
 # Compliance Atlas
 
-*(working title; the public name is TBD; the code parameterizes it in one place, `BRAND` in `build/assemble.py`.)*
+*(Public name settled 2026-07-19; parameterized in one place, `BRAND` in `build/assemble.py`.)*
 
 An audited, role-agnostic reference mapping compliance frameworks to Microsoft security-stack capabilities,
 built to answer: **"An organization operates in industry X and is subject to framework Y: where does the Microsoft
@@ -20,7 +20,7 @@ Open **`compliance-atlas.html`** in any browser (works offline from `file://`, z
 > now **`compliance-atlas.json`**; the output was `purview-compliance-map.html` → now **`compliance-atlas.html`**.
 > The old filenames are gone; do not look for them.
 
-## Contents (v1 2026-07-16 · Increment 1 2026-07-17 · Platform generalization v2.0.0 2026-07-17 · Entra + Intune + Defender XDR 2026-07-17 · Sentinel + Defender for Cloud 2026-07-18)
+## Contents (v2.9.0 — full version history in `CHANGELOG.md`)
 
 | Framework | Version pinned | Rows (all products) |
 |---|---|---|
@@ -58,6 +58,7 @@ M365 estate: a seam, not an overlap).
 compliance-atlas.html          ← the output (generated; never hand-edit)
 compliance-atlas.json          ← canonical dataset (generated; never hand-edit)
 AUDIT-FINDINGS.md              ← audit trail: legacy-xlsx audit, per-increment QA, generalization log
+CHANGELOG.md                   ← reader-facing version history + the MAJOR/MINOR/PATCH policy
 FRAMEWORK-SELECTION.md         ← framework scoping decisions; rejected candidates & backlog
 build/
   common.py                    ← PRODUCTS + RELATED_PRODUCTS maps, SOLUTIONS registry, LIC strings, URLs, GOV notes

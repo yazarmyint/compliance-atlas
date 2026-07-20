@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "2.0.0",
+  "version": "2.9.0",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "2.0.0"
+   "atlas_version": "2.9.0"
   },
   "project": {
    "maintainer": "Yazar",
@@ -41,7 +41,7 @@
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it.",
    "Atlas content © 2026 Yazar, licensed CC BY 4.0; the build code is MIT. Reuse and adapt it freely with attribution."
   ],
-  "generated": "2026-07-20T09:41:20",
+  "generated": "2026-07-20T09:51:34",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",

@@ -115,7 +115,12 @@ BRAND = {
     "title": "Compliance Atlas",
     "working_title": False,
     "tagline": "Mapping frameworks to the Microsoft security stack",
-    "atlas_version": "2.0.0",
+    # Bumped 2.0.0 -> 2.9.0 for the first public release (PR-045). 2.0.0 was set at the platform
+    # generalization and never moved through the eight milestones after it; CHANGELOG.md backfills
+    # those from the audit record and applies the versioning policy to them retroactively, which is
+    # what produces 2.9.0. This session is a MINOR bump on 2.8.1 under that policy: features and
+    # industry lenses added, no data-model or product-scope change.
+    "atlas_version": "2.9.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }

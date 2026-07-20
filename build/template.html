@@ -283,6 +283,12 @@ table.matrix tbody tr:last-child td.total{width:auto; height:auto; padding:6px 8
 /* ---------- footer ---------- */
 footer.site{border-top:1px solid var(--rule-2); margin-top:56px; padding:26px 0 44px; color:var(--ink-3); font-size:12px}
 footer.site .disc{max-width:100ch; margin-bottom:10px; line-height:1.6}
+/* Content version reads as the fact; the build timestamp is demoted beneath it (PR-045): a rebuild
+   that changed nothing must not look like an update. */
+footer.site #footVersion{margin-top:10px; font-size:13.5px; color:var(--ink-1); font-weight:600}
+footer.site #footVersion .sep{color:var(--ink-3); font-weight:400; margin:0 7px}
+footer.site #footVersion .facts{font-weight:400; color:var(--ink-2)}
+footer.site #footMeta{margin-top:3px; font-size:11.5px; color:var(--ink-3)}
 footer.site .legal{max-width:100ch; margin:0 0 12px; padding:0 0 0 16px; line-height:1.7}
 footer.site .legal li{margin:0}
 kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-width:2px; border-radius:4px; padding:1px 5px; background:var(--paper-2); color:var(--ink-2)}
@@ -343,6 +349,7 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
   <ul class="legal" id="footLegal"></ul>
   <div class="disc" id="footDisc"></div>
   <nav id="footLinks" aria-label="About this atlas"></nav>
+  <div id="footVersion"></div>
   <div id="footMeta"></div>
   <div class="kbdhint" style="margin-top:8px">Press <kbd>/</kbd> to search · Data regenerated from <span class="mono">compliance-atlas.json</span>; do not hand-edit this file.</div>
 </div></footer>
@@ -849,8 +856,10 @@ function vAbout(){
     <p>${verifiedRange() ? esc(verifiedRange().replace(/^rows /, "Rows currently in the atlas were ")) + "." : ""}
       ${esc(META.reverification_policy || "")}</p>
     <p>The <b>built</b> timestamp in the footer is a different thing: it is when this page was last generated, and
-      it moves on every rebuild whether or not any content changed. The version number is what tells you the
-      content changed.</p>
+      it moves on every rebuild whether or not any content changed. The version number above it is what tells you
+      the content changed — you are reading version <b>${esc(META.brand.atlas_version)}</b>, and the
+      ${P.changelog_url ? `<a href="${esc(P.changelog_url)}">changelog</a>` : "changelog"} records what moved in
+      each one, including corrections made after a reader reported them.</p>
 
     <h2>Who maintains it, and how to correct it</h2>
     <p>${esc(P.maintainer || "")} maintains the atlas independently. It is not affiliated with, sponsored by, or
@@ -982,11 +991,18 @@ document.getElementById("footDisc").textContent = META.disclaimer;
   const P = META.project || {};
   const links = [`<a href="#/about">About &amp; methodology</a>`];
   if(P.repo_url) links.push(`<a href="${esc(P.repo_url)}">Source &amp; data on GitHub</a>`);
+  if(P.changelog_url) links.push(`<a href="${esc(P.changelog_url)}">Changelog</a>`);
   if(P.issues_url) links.push(`<a href="${esc(P.issues_url)}">Report a correction</a>`);
   document.getElementById("footLinks").innerHTML = links.join(`<span aria-hidden="true"> · </span>`);
 })();
-document.getElementById("footMeta").innerHTML =
-  `Generated ${esc(META.generated)} from compliance-atlas.json · ${ROWS.length} rows · ${Object.keys(FW).length} frameworks · ${PROD_ORDER.length} product(s) · per-row verification dates govern currency.`;
+/* Content version, then the build timestamp beneath it. These are different facts: the version moves
+   when the dataset changes, the timestamp moves on every rebuild. */
+document.getElementById("footVersion").innerHTML =
+  `Version ${esc(META.brand.atlas_version)}<span class="sep" aria-hidden="true">·</span>` +
+  `<span class="facts">${ROWS.length} rows · ${Object.keys(FW).length} frameworks · ` +
+  `${plural(PROD_ORDER.length, "product")} · per-row verification dates govern currency</span>`;
+document.getElementById("footMeta").textContent =
+  `Built ${META.generated} from compliance-atlas.json. A rebuild moves this timestamp whether or not any content changed.`;
 
 render();
 </script>
