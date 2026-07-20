@@ -388,14 +388,24 @@ function minibar(rows){
     COV_ORDER.map(c => { const k = rows.filter(r=>r.coverage===c).length;
       return k ? `<i style="width:${(100*k/n).toFixed(1)}%;background:var(${COV_VAR[c]})"></i>` : ""; }).join("") + `</div>`;
 }
+/* Chips shown in a row's <summary> are plain spans, never links: a link inside a disclosure
+   control is a nested interactive control (WCAG 4.1.2 Name, Role, Value), which assistive tech
+   cannot reliably reach or describe. The same destinations are real links in the expanded body
+   (solLinks below, and the framework link already in the foot line), where nesting is legal. */
 function solChip(r){
   const key = rowSolution(r);
   const main = key === "None (boundary row)"
     ? `<span class="chip">No ${esc(prodName(r.product))} mapping (boundary)</span>`
-    : `<a href="#/product/${r.product}/solution/${encodeURIComponent(key)}" onclick="event.stopPropagation()"><span class="chip sol">${esc(key)}</span></a>`;
+    : `<span class="chip sol">${esc(key)}</span>`;
   const also = (r.also_involves||[]).map(a =>
-    `<a href="#/product/${r.product}/solution/${encodeURIComponent(a)}" onclick="event.stopPropagation()"><span class="chip" title="Also involves">+ ${esc(a)}</span></a>`).join(" ");
+    `<span class="chip" title="Also involves">+ ${esc(a)}</span>`).join(" ");
   return main + (also ? " " + also : "");
+}
+function solLinks(r){
+  const key = rowSolution(r);
+  const one = k => `<a href="#/product/${esc(r.product)}/solution/${esc(encodeURIComponent(k))}">${esc(k)}</a>`;
+  const parts = (key === "None (boundary row)" ? [] : [one(key)]).concat((r.also_involves||[]).map(one));
+  return parts.length ? `<span>· Solution: ${parts.join(", ")}</span>` : "";
 }
 function prodChip(r){ return `<span class="chip prod" title="${esc(prodFull(r.product))}">${esc(prodName(r.product))}</span>`; }
 function relatedBlock(r){
@@ -411,9 +421,9 @@ function rowCard(r, opts={}){
   const col1 = grouped ? prodChip(r) : `<span class="ref" title="${esc(fw.name)}">${esc(r.control_ref)}</span>`;
   const variant = grouped && opts.groupIntent && r.control_intent !== opts.groupIntent
     ? `<span class="variant">${esc(r.control_intent)}</span>` : "";
-  const intentLine = grouped ? `<span class="intent">${variant}<span class="solline">${solChip(r)}${opts.showFw?` <a href="#/framework/${r.framework}" onclick="event.stopPropagation()"><span class="chip">${esc(fw.name)}</span></a>`:""}</span></span>`
+  const intentLine = grouped ? `<span class="intent">${variant}<span class="solline">${solChip(r)}${opts.showFw?` <span class="chip">${esc(fw.name)}</span>`:""}</span></span>`
     : `<span class="intent">${esc(r.control_intent)}
-        <span class="solline">${prodChip(r)} ${solChip(r)}${opts.showFw?` <a href="#/framework/${r.framework}" onclick="event.stopPropagation()"><span class="chip">${esc(fw.name)}</span></a>`:""}</span></span>`;
+        <span class="solline">${prodChip(r)} ${solChip(r)}${opts.showFw?` <span class="chip">${esc(fw.name)}</span>`:""}</span></span>`;
   return `<details class="row ${unv?"unvrow":""}" id="${esc(r.id)}">
     <summary>
       ${col1}
@@ -441,7 +451,8 @@ function rowCard(r, opts={}){
       ${r.cloud_availability_note?`<div class="rowcaveat">⚠ <b>US Government clouds:</b> ${esc(r.cloud_availability_note)}</div>`:""}
       <div class="foot tiny muted">
         <span>${esc(prodFull(r.product))}</span>
-        <span>· Framework: <a href="#/framework/${r.framework}">${esc(fw.name)}</a> · ${esc(r.framework_version)}</span>
+        ${solLinks(r)}
+        <span>· Framework: <a href="#/framework/${esc(r.framework)}">${esc(fw.name)}</a> · ${esc(r.framework_version)}</span>
         <span>· Status: <b>${esc(r.status)}</b></span><span>· Last verified: ${esc(r.last_verified)}</span><span>· ID: <span class="mono">${esc(r.id)}</span></span>
       </div>
     </div>
