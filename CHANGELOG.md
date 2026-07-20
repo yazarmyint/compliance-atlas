@@ -38,6 +38,65 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.0.0 — 2026-07-20
+
+The license-tier lens (PR-015). Both stated user stories end "…and at what license tier?", and
+until now the artifact could not answer it: the entitlement string was on every row but reachable
+only by expanding rows one at a time.
+
+**For readers.** Every row now carries a coarse **license tier band** — `E3`, `E5`, `Add-on`,
+`Consumption`, or `n/a` — shown as a chip in the row summary and explained in the row's licence
+block. The framework view gains a **tier filter**, so you can ask "what does ISO 27001 look like
+if I only own E3?" and get an answer. Rows where the band is the *floor* rather than the whole
+story carry a **partial** badge meaning "reduced capability at this tier — read the licence
+requirement". That badge is not decoration: **114 of the 175 E3-band rows carry it**, so "E3"
+alone would systematically over-promise without it.
+
+The band never replaces the verbatim licence string, which stays rendered in full on every row.
+It is a coarse signpost derived from that string, and where the two seem to disagree the string
+is the authority.
+
+Two limits stated wherever the feature is explained: bands describe **commercial** Microsoft 365
+licensing only (no G3/G5, F-series, or Business Premium dimension — government licensing stays in
+the per-row cloud availability notes), and **consumption-priced products have no seat tier at
+all**. Sentinel and Defender for Cloud are metered per GB and per resource and do not care which
+seat SKU you hold, so they sit on their own axis: a separate include/exclude toggle, defaulting to
+include, rather than a fifth tier. Related-product "(if licensed)" mentions are pointers, not
+banded claims.
+
+**For consumers of `compliance-atlas.json`.** Two new row keys, both **additive** — no existing
+key changed, moved, or was removed:
+
+- `license_band` — one of `e3` | `e5` | `addon` | `consumption` | `na`
+- `license_band_partial` — boolean
+
+Plus `meta.license_bands`, `meta.license_band_partial`, and `meta.license_band_scope` carrying the
+reader-facing definitions. Existing code that ignores unknown keys needs no change.
+
+**Why MAJOR rather than MINOR,** given the change is additive and breaks nothing: the policy above
+defines MAJOR as *a data-model change*, not as a breaking change, and defines MINOR as *existing
+rows keep their shape* — which they do not here. AUDIT-FINDINGS §27.4 additionally rules that any
+shape change to rows is MAJOR unconditionally, with no consumer-population argument admitted. The
+argument that additive changes are harmless is exactly the class of reasoning that scoping was
+written to exclude. Sorted MAJOR on the policy as written; amending the policy to sort additive
+row changes as MINOR is a separate discussion to have on its own merits, not while holding a
+change that would benefit from it.
+
+- **Added** `build/license_bands.py`: the 49-entry mapping from licensing constant to band, the
+  floor-determination rules F1–F7, and the two-entry row-override table. The mapping is keyed on
+  the **constant coordinate**, not on the 110 distinct prose strings those constants compose into
+  and not on substring heuristics over prose — so it is a reviewed table, not a pile of guesses.
+- **Added** four build guards, all hard failures: a licensing constant with no band (G1), a row
+  whose licence string matches no constant and is not the `n/a` literal (G2), a band that
+  disagrees with `licensing_model` about consumption or boundary status (G3), and a tier claim
+  written into row prose where the mapping cannot see it (G4). There is no silent default band.
+- **Added** URL state for the tier filter and consumption toggle: `#/framework/<id>?tier=e3`,
+  `?meter=exclude`. A filtered view is now linkable. The complete key registry — including `cov`
+  and PR-004's `#/row/<id>`, both reserved and deliberately unimplemented — is in
+  `docs/AUTHORING.md` so PR-004 inherits the scheme instead of retrofitting it.
+- **Unchanged:** `license_requirement` and `licensing_model` were read and not written. No claim
+  moved, no coverage or confidence rating changed, and no `last_verified` date moved.
+
 ## 2.10.1 — 2026-07-20
 
 Build integrity. Nothing a reader sees changes; nothing in any row changes.

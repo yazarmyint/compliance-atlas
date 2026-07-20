@@ -2676,3 +2676,160 @@ Reported in full to the owner at the merge gate. Recorded here in summary:
 | Footer "Built …" line | Present, format unchanged |
 | `tools/check_urls.py` | Clean, documented §7.2 WAF pair excepted |
 | axe-core | Zero violations |
+
+---
+
+## 28. The license-tier lens (PR-015) — v3.0.0
+
+The first session since publication to change the row data model. Two phases by owner instruction:
+a report with zero file changes, then implementation against decisions taken on that report. The
+Phase 1 report is the design record; this section records what was built and what the numbers did.
+
+### 28.1 The finding that made this tractable
+
+PR-015 estimated "a few dozen distinct strings" and recommended keying a mapping on the constant name
+rather than a regex over prose. Both halves were right, and the inventory sharpened them:
+
+| Measure | Count |
+|---|---|
+| Rows | 378 |
+| Distinct `license_requirement` strings | **110** |
+| Licensing constants those strings are composed from | **49** |
+| Rows carrying a bare constant with no extra prose | 220 |
+| Distinct strings embedding 2 constants / 3 constants | 57 / 6 |
+| Distinct strings embedding no constant | 1 (the `"n/a"` literal) |
+
+So the reviewed table is 49 entries keyed on `(dict_name, key)`, not 110 keyed on prose. That is the
+difference between a table a human can audit in one sitting and one nobody will ever re-read. The
+substring resolution this rests on is the same technique `assemble.py` already used for the
+maintenance report and for `last_verified`; two preconditions that make it sound — constant values
+are unique, and no value is a substring of another — are now **asserted** rather than assumed, so a
+future constant that broke either would fail the build instead of quietly banding rows off the wrong
+coordinate.
+
+### 28.2 Escalations, and what the owner decided
+
+Six went up. None were resolved in Phase 1; all six came back decided.
+
+| # | Question | Decision |
+|---|---|---|
+| E1 | `classification_analytics`: E3 keeps "data aggregation without the explorer interfaces" — does that "function"? | **e5, no partial.** Codified as **rule F7**: "functions" means reader-usable capability; background processing behind no reachable interface does not band. |
+| E2 | `mdo_p1`: E3 inclusion effective July 1 2026, rollout incomplete — a band that depends on today's date | **e3 + partial**, as a hard-coded literal. `TRG-MDO-P1-E3G3` extended to own dropping the flag. |
+| E3 | `dspm_ai` mixes a seat tier with consumption meters | **e5 + partial** |
+| E4 | `xdr`: E3-with-add-on qualifies, E5 qualifies unaided | **e5, no partial**, per F1 (lowest tier qualifying unaided) |
+| E5 | What does `partial` mean in a band that asserts no tier exists? | **Not permitted at all** in the consumption band — a taxonomy rule, asserted in code, not merely a mapping outcome. Billing nuance stays in the verbatim string. |
+| E6 | Two rows carry an E5 claim in prose no constant covers | **Explicit row-override table**, reason string required and asserted non-empty. Doubles as G4's acknowledged-override list. |
+
+E2 is the one worth remembering. "Effective July 1, 2026" invites an implementation that compares the
+date against `today()`, which would make 6 rows change band on a calendar boundary with no commit
+behind it — reintroducing exactly the class of defect PR-057 removed when it took the build timestamp
+out of the dataset. The band is a literal; the re-check is a diarized trigger. This is written into
+`license_bands.py`, into the trigger note, and into `docs/AUTHORING.md`, because it is the kind of
+"improvement" a future session would otherwise make in good faith.
+
+### 28.3 Distribution, against the Phase 1 forecast
+
+| Band | Forecast (Phase 1 §5) | Final | Δ |
+|---|---|---|---|
+| `e3` | 173 | **175** | +2 |
+| `e5` | 110 | **108** | −2 |
+| `addon` | 1 | **1** | 0 |
+| `consumption` | 86 | **86** | 0 |
+| `na` | 8 | **8** | 0 |
+| partial | 145 | **149** | +4 |
+
+Every delta is attributable to a decision, and no others appeared:
+
+- **E2** moved `53-si-8-defender` and `pci-5-4-1-defender` from e5 to e3, and set partial on both. The
+  other four `mdo_p1` rows were already e3 via `mde_p1`, so the band decision was invisible on them —
+  a good illustration of F3 doing its job.
+- **E6** set partial on `iso-a-5-10` and `53-ac-21`.
+- E1, E3, E4 and E5 confirmed the Phase 1 proposal, so they moved nothing.
+
+Two distribution facts shaped the UI. **FERPA collapses to a single band** (6 rows, all e3), so its
+tier filter is suppressed — the existing empty-control pattern handles it. And **114 of 175 e3 rows
+carry `partial`**: the honest headline of the E3 lens is not "175 rows work on E3" but "175 rows
+*start* on E3, and two thirds of them are reduced there". That is why the partial badge is styled
+prominently and carries its meaning in text rather than sitting as a quiet superscript.
+
+### 28.4 Consumption is an axis, not a tier
+
+The owner chose the orthogonal filter model. Sentinel and Defender for Cloud are metered per GB and
+per protected resource and do not care which seat SKU a tenant holds, so putting them on a tier scale
+would have made "E3" mean two different things in one control. Instead the tier buttons select a seat
+band and a separate toggle governs rows with no seat tier, **defaulting to include** — so a reader who
+never touches it sees those rows under every tier, which is the truthful default: they really are
+available on E3, for money.
+
+The boundary rows (`na`) follow the same toggle rather than getting one of their own. They make no
+licence claim at all, so "no seat tier applies" describes them accurately, and the control is labelled
+*No seat tier* rather than *Consumption* so it is not lying about what it governs. **This was a small
+judgement call inside the owner's decision and is flagged as such** — the alternative, always showing
+the 8 boundary rows under every tier filter, is defensible and reversible in one line.
+
+Verified behaviour, headless:
+
+| State | Rows shown | Composition |
+|---|---|---|
+| ISO, unfiltered | 57 | E3 28 · E5 16 · Add-on 1 · Consumption 12 |
+| ISO `?tier=e3` | 40 | E3 28 + Consumption 12 |
+| ISO `?tier=e3&meter=exclude` | 28 | E3 28 |
+| ISO `?tier=addon` | 13 | Add-on 1 + Consumption 12 |
+| ISO `?tier=bogus` | 57 | falls back to unfiltered (URL rule 3) |
+| FERPA | 6 | both controls suppressed — one band, no consumption rows |
+
+Button counts are computed off the coverage-filtered set and include the no-seat-tier rows the reader
+will actually see, so no button advertises a number that clicking it cannot produce.
+
+### 28.5 Four guards, no default band
+
+All hard failures, all proven to fire by deliberately breaking them in a scratch tree:
+
+| Guard | Trip condition | Proven by |
+|---|---|---|
+| G1 | licensing constant with no `BANDS` entry | added `MDC_LIC["brand_new_meter"]` → build failed naming the coordinate |
+| G2 | licence string matching no constant, and not `"n/a"` | replaced `LIC["ib"]` with free prose → failed naming the row |
+| G3 | band disagrees with `licensing_model` | re-banded `LIC["ib"]` to consumption → failed naming both values |
+| G4 | tier token in row prose outside any constant | appended `"; full coverage requires E5"` → failed, quoting the residual text |
+
+Three further assertions were proven the same way: `ROW_OVERRIDES` naming a non-existent row, an
+override with an empty reason string, and `partial` set on a consumption-band entry. A fifth failure
+mode — a row citing both seat-tier and consumption constants, which rule F6 says cannot happen — is
+asserted in `derive()` and fired when `SENTINEL_LIC["soar"]` was temporarily re-banded to a seat tier.
+
+G4 is the one that earns its keep. A constant-keyed mapping has exactly one blind spot — prose the
+constants do not cover — and that blind spot was **already occupied** when the mapping was written:
+`iso-a-5-10` and `53-ac-21` both append "advanced policy tips: E5-tier" after an e3 constant. Without
+G4 the derivation would have silently reported both as unqualified E3. The guard turns the one thing
+this design could get quietly wrong into a build failure.
+
+### 28.6 Versioning: 3.0.0, and the argument against it
+
+Adding `license_band` and `license_band_partial` to all 378 rows is a row-shape change. The policy's
+MAJOR row is "a data-model change"; the MINOR row requires that "existing rows keep their shape",
+which they do not. §27.4 additionally rules any shape change to rows MAJOR unconditionally, with no
+consumer-population argument admitted.
+
+The honest counter-argument, recorded because it is not weak: under strict semver MAJOR means
+*breaking*, and this change is purely additive — no consumer of `compliance-atlas.json` needs to
+change anything, which was not true of the `meta.generated` removal that shipped as a PATCH. There is
+a real asymmetry there. It does not win, because this project's policy is deliberately not semver: it
+sorts on data-model change, not on breakage, and §27.4 exists precisely to stop the `meta.generated`
+reasoning from travelling to rows. Sorting additive row changes as MINOR is a policy amendment to
+argue on its own merits — not a bump to take while holding the change that benefits from it.
+
+The band was never considered for relocation outside the row objects. It is a per-row derived
+property, it must travel with the row for any JSON consumer, and the row detail renders it. Moving it
+to a `meta.*` lookup keyed by row id to buy a cheaper version number would be choosing a worse data
+model to flatter a version string.
+
+### 28.7 Determinism, and the drift check
+
+Every input is committed content: the 49 constant values, the `BANDS` table, and the two-entry
+override table. No clock, no network, no filesystem state. The fold is order-independent — `min` over
+a total order, `any` over booleans — so two identical checkouts produce identical bands and a
+content-free rebuild leaves `compliance-atlas.json` byte-identical.
+
+The Phase 2 commit itself changes the dataset substantially: two new keys × 378 rows. That is the
+change, not drift. The property re-asserted at the gate is the Session 9 one — that a *subsequent*
+rebuild produces an empty diff.

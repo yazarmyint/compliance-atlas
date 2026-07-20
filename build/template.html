@@ -130,6 +130,16 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .chip.gov{color:var(--warn-ink); background:var(--warn-bg); box-shadow:inset 0 0 0 1px var(--warn-rule)}
 .chip.unv{color:var(--danger); background:var(--danger-bg); box-shadow:inset 0 0 0 1px var(--danger)}
 .chip.ver{font-weight:400; color:var(--ink-3); background:transparent; box-shadow:inset 0 0 0 1px var(--rule)}
+/* PR-015 license bands. The tier chip is deliberately quiet -- it is a signpost to the
+   licence string, not a claim in its own right. The partial badge is NOT quiet: two
+   thirds of the e3 band carries it, so "E3" alone would systematically over-promise if
+   the qualifier were easy to miss. Both carry their meaning in TEXT; colour only
+   reinforces (WCAG 1.4.1). */
+.chip.tier{color:var(--ink); background:color-mix(in srgb, var(--accent) 7%, var(--paper-2)); box-shadow:inset 0 0 0 1px var(--rule-2)}
+.chip.tier-consumption, .chip.tier-na{color:var(--ink-3); background:transparent; box-shadow:inset 0 0 0 1px var(--rule)}
+.chip.partial{color:var(--warn-ink); background:var(--warn-bg); box-shadow:inset 0 0 0 1px var(--warn-rule)}
+.bandline{display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-bottom:6px}
+.bandline span{flex:1 1 100%}
 .ref{font:600 13px var(--font-mono); color:var(--ink); white-space:nowrap}
 
 /* ---------- hero / landing ---------- */
@@ -390,6 +400,11 @@ const referencedBy = pid => ROWS.filter(r => r.product !== pid && (r.related_mic
    assemble.py and shipped in META. Everything on screen — legends and tooltips alike — reads from
    here, so a definition can never drift between the dataset and the UI. */
 const COV_DEF = META.coverage_levels || {}, CONF_DEF = META.confidence_levels || {}, LIC_DEF = META.licensing_models || {};
+/* PR-015. Band definitions come from the dataset, which generates them from the same
+   module that derives the bands -- so the legend cannot drift from the mapping. */
+const BAND_DEF = META.license_bands || {}, BAND_PARTIAL_DEF = META.license_band_partial || "",
+      BAND_SCOPE = META.license_band_scope || "";
+const BAND_ORDER = ["e3","e5","addon","consumption","na"];
 const withDef = (label, def) => def ? `${label} — ${def}` : label;
 /* Dataset currency, derived at build time from the rows' own last_verified values. */
 function verifiedRange(){
@@ -402,19 +417,43 @@ function verifiedRange(){
 function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}" title="${esc(withDef(cov, COV_DEF[cov]))}">${esc(cov)}</span>`; }
 function confMeter(c){ return `<span class="conf" title="${esc(withDef("Confidence: "+c, CONF_DEF[c]))}"><span class="dots">${CONF_DOTS[c]||""}</span>${esc(c)}</span>`; }
 function licChip(model){ return `<span class="chip" style="margin-left:4px" title="${esc(withDef(model, LIC_DEF[model]))}">${esc(model)}</span>`; }
+/* PR-015. Band label and partial badge.
+   The band NEVER replaces the licence string -- both the summary chip and the detail
+   block sit alongside the verbatim requirement, which stays rendered in full. */
+const BAND_LABEL = {e3:"E3", e5:"E5", addon:"Add-on", consumption:"Consumption", na:"n/a"};
+function bandChip(r){
+  const b = r.license_band; if(!b) return "";
+  const cls = (b==="consumption"||b==="na") ? ` tier-${b}` : "";
+  return `<span class="chip tier${cls}" title="${esc(withDef("License tier: "+(BAND_LABEL[b]||b), BAND_DEF[b]))}">${esc(BAND_LABEL[b]||b)}</span>`;
+}
+/* Text-carried, not colour-carried, and the title gives a screen reader the full
+   sentence rather than the bare word "partial". */
+function partialBadge(r){
+  return r.license_band_partial
+    ? `<span class="chip partial" title="${esc(BAND_PARTIAL_DEF)}">partial</span>` : "";
+}
 /* dl > div > (dt, dd) — the div wrapper is valid HTML5 and lets the pairs be grid items. */
 function defList(pairs){ return `<dl>` + pairs.map(([t,d]) => `<div><dt>${t}</dt><dd>${esc(d)}</dd></div>`).join("") + `</dl>`; }
 function taxonomyLegend(compact){
   /* compact = coverage only, for the framework view where stacked product cards make the
      Direct/Partial/Evidence distinction most acute. Full = all three taxonomies, landing page. */
   const cov = COV_ORDER.filter(c => COV_DEF[c]).map(c => [covBadge(c), COV_DEF[c]]);
-  if(compact) return `<div class="legend compact"><div class="cols">${defList(cov)}</div></div>`;
+  /* The compact legend appears on the framework view, which is where the tier filter
+     lives -- so it carries the scope limitation even though it drops the other
+     taxonomies. A reader filtering by tier must be told what the bands do not cover. */
+  if(compact) return `<div class="legend compact"><div class="cols">${defList(cov)}</div>
+    <p class="tiny muted">${esc(BAND_SCOPE)}</p></div>`;
   const conf = Object.keys(CONF_DOTS).filter(c => CONF_DEF[c]).map(c => [confMeter(c), CONF_DEF[c]]);
   const lic = Object.entries(LIC_DEF).map(([k,v]) => [`<span class="chip">${esc(k)}</span>`, v]);
+  const band = BAND_ORDER.filter(b => BAND_DEF[b])
+    .map(b => [`<span class="chip tier${(b==="consumption"||b==="na")?` tier-${b}`:""}">${esc(BAND_LABEL[b]||b)}</span>`, BAND_DEF[b]])
+    .concat([[`<span class="chip partial">partial</span>`, BAND_PARTIAL_DEF]]);
   return `<div class="legend"><span class="overline">How to read a mapping</span><div class="cols">
     <div><h4>Coverage · what the claim means</h4>${defList(cov)}</div>
     <div><h4>Confidence · how far it stretches</h4>${defList(conf)}</div>
     <div><h4>Licensing model</h4>${defList(lic)}</div>
+    <div><h4>License tier · what you need to own</h4>${defList(band)}
+      <p class="tiny muted">${esc(BAND_SCOPE)}</p></div>
   </div></div>`;
 }
 function minibar(rows){
@@ -464,6 +503,7 @@ function rowCard(r, opts={}){
       ${col1}
       ${intentLine}
       <span class="badges">${covBadge(r.coverage)}${confMeter(r.confidence)}
+        ${bandChip(r)}${partialBadge(r)}
         ${r.cloud_availability_note?`<span class="chip gov" title="US Government cloud caveat; expand for detail">GOV ⚠</span>`:""}
         ${unv?`<span class="chip unv">UNVERIFIED</span>`:""}
         ${r.last_verified?`<span class="chip ver" title="Last verified against its sources on ${esc(r.last_verified)}">✓ ${esc(r.last_verified)}</span>`:""}
@@ -480,7 +520,11 @@ function rowCard(r, opts={}){
       <div class="aside">
         ${relatedBlock(r)}
         <h4>External dependencies</h4><p>${esc(r.external_dependencies || "None recorded")}</p>
-        <h4>License requirement ${licChip(r.licensing_model)}</h4><p>${esc(r.license_requirement)}</p>
+        <h4>License requirement ${licChip(r.licensing_model)}</h4>
+        <p class="tiny muted bandline">Tier band: ${bandChip(r)}${partialBadge(r)}
+          <span>${esc(BAND_DEF[r.license_band] || "")}</span>
+          ${r.license_band_partial?`<span>${esc(BAND_PARTIAL_DEF)}</span>`:""}</p>
+        <p>${esc(r.license_requirement)}</p>
         <h4>Sources</h4><div class="src">${(r.sources||[]).map(u=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\//,""))}</a>`).join("")}</div>
       </div>
       ${r.cloud_availability_note?`<div class="rowcaveat">⚠ <b>US Government clouds:</b> ${esc(r.cloud_availability_note)}</div>`:""}
@@ -599,11 +643,51 @@ function vFrameworks(){
 }
 let fwFilter = null;
 function setFwFilter(c){ fwFilter = c; render({focus:"filter", filter:c}); }
+
+/* ---------------- PR-015 license-tier lens ----------------
+   The tier filter and the consumption toggle are ORTHOGONAL, because that is what the
+   licensing actually is: Sentinel and Defender for Cloud are metered per GB and per
+   resource and do not care which seat SKU you hold, so they have no place on a tier
+   scale. Modelling them as a fifth tier would have made "E3" mean two different things.
+
+   So: the tier buttons select a SEAT band (e3/e5/addon), and rows with no seat tier --
+   consumption-priced rows and the boundary rows that make no licence claim at all --
+   are governed by a separate include/exclude toggle that defaults to INCLUDE. A reader
+   who never touches the toggle sees every no-seat-tier row under every tier, which is
+   the truthful default: those rows really are available on E3, for money.
+
+   Both live in the URL (scheme in docs/AUTHORING.md), so a filtered view is linkable. */
+const SEAT_BANDS = ["e3","e5","addon"];
+const isSeatRow = r => SEAT_BANDS.includes(r.license_band);
+function tierOf(){ const t = qget("tier"); return SEAT_BANDS.includes(t) ? t : null; }
+function meterExcluded(){ return qget("meter") === "exclude"; }
+/* A row survives the tier lens if it matches the selected seat band, or if it has no
+   seat tier and the reader has not excluded those. */
+function tierKeep(r, tier, exclude){
+  if(!isSeatRow(r)) return !exclude;
+  return !tier || r.license_band === tier;
+}
+function setTier(t){ setQuery({tier: t || null}); render({focus:"tier", filter:t||""}); }
+function setMeter(exclude){ setQuery({meter: exclude ? "exclude" : null}); render({focus:"meter", filter:exclude?"exclude":"include"}); }
+
 function vFramework(id){
   const f = FW[id]; if(!f) return vMissing("framework", id);
   let rows = byFw(id);
+  const tier = tierOf(), exclude = meterExcluded();
   const filters = COV_ORDER.filter(c => rows.some(r=>r.coverage===c));
   if(fwFilter) rows = rows.filter(r=>r.coverage===fwFilter);
+  /* Counts are computed off the coverage-filtered set and include the no-seat-tier rows
+     the reader will actually see, so no button ever advertises a number that clicking
+     it cannot produce. */
+  const afterCov = rows.slice();
+  const tierCount = t => afterCov.filter(r => tierKeep(r, t, exclude)).length;
+  const seatPresent = SEAT_BANDS.filter(b => afterCov.some(r => r.license_band === b));
+  const noSeatCount = afterCov.filter(r => !isSeatRow(r)).length;
+  /* Suppress an empty control -- but always render the tier row while a tier filter is
+     active, so a pasted link into a single-band framework still has a way back out. */
+  const showTier = seatPresent.length > 1 || !!tier;
+  const showMeter = noSeatCount > 0;
+  rows = rows.filter(r => tierKeep(r, tier, exclude));
   return `<div class="pagehead">
     <div class="crumb"><a href="#/frameworks">Frameworks</a> / ${esc(f.name)}</div>
     <h1>${esc(f.name)}</h1>
@@ -623,6 +707,19 @@ function vFramework(id){
     <button type="button" class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
     <button type="button" class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
   </div>
+  ${showTier?`<div class="toolrow"><span class="lbl" id="tierlbl">License tier</span>
+    <span role="group" aria-labelledby="tierlbl">
+      <button type="button" class="fbtn ${!tier?"on":""}" data-tier="" aria-pressed="${!tier}" onclick="setTier(null)">All tiers (${tierCount(null)})</button>
+      ${seatPresent.map(b=>`<button type="button" class="fbtn ${tier===b?"on":""}" data-tier="${esc(b)}" aria-pressed="${tier===b}" onclick="setTier('${esc(b)}')">${esc(BAND_LABEL[b]||b)} (${tierCount(b)})</button>`).join("")}
+    </span>
+  </div>`:""}
+  ${showMeter?`<div class="toolrow"><span class="lbl" id="meterlbl">No seat tier</span>
+    <span role="group" aria-labelledby="meterlbl">
+      <button type="button" class="fbtn ${!exclude?"on":""}" data-meter="include" aria-pressed="${!exclude}" onclick="setMeter(false)">Include (${noSeatCount})</button>
+      <button type="button" class="fbtn ${exclude?"on":""}" data-meter="exclude" aria-pressed="${exclude}" onclick="setMeter(true)">Exclude</button>
+    </span>
+    <span class="tiny muted">Consumption-priced rows (Sentinel, Defender for Cloud) and boundary rows have no seat tier, so they show under every tier unless excluded.</span>
+  </div>`:""}
   ${taxonomyLegend(true)}
   ${renderControlGroups(rows)}`;
 }
@@ -770,7 +867,8 @@ function vSearch(q){
   const hay = r => [r.control_ref, r.control_intent, rowSolution(r), (r.also_involves||[]).join(" "),
     r.capability_detail, r.how_it_supports, r.external_dependencies, r.legacy_dependencies,
     (r.related_microsoft||[]).map(e=>(RELPROD[e.product]||e.product)+" "+(e.note||"")).join(" "),
-    r.license_requirement, r.licensing_model, r.product, prodFull(r.product),
+    r.license_requirement, r.licensing_model, r.license_band, BAND_LABEL[r.license_band],
+    r.license_band_partial ? "partial tier" : "", r.product, prodFull(r.product),
     FW[r.framework].name, r.control_domain,
     r.cloud_availability_note, r.config_evidence_example, r.operational_evidence_example,
     r.coverage, r.confidence, r.id].join(" ").toLowerCase();
@@ -836,8 +934,9 @@ function vAbout(){
     </ul>
 
     <h2>How to read a mapping</h2>
-    <p>Three taxonomies do the work. Coverage says how strong the claim is, confidence says how far it stretches,
-      and the licensing model says how you pay for the capability. They are defined once and used everywhere:</p>
+    <p>Four taxonomies do the work. Coverage says how strong the claim is, confidence says how far it stretches,
+      the licensing model says how you pay for the capability, and the license tier says roughly what you have to
+      own before you can use it. They are defined once and used everywhere:</p>
     ${taxonomyLegend(false)}
 
     <h2>Scope, and its edges</h2>
@@ -886,12 +985,45 @@ function vAbout(){
 
 /* ---------------- router ---------------- */
 const dec = s => { try { return decodeURIComponent(s||""); } catch(e){ return s||""; } };
+
+/* ---------------- URL state (PR-015) ----------------
+   Grammar:  #/<path>[?<key>=<value>&...]
+   The hash is split on "?" BEFORE the existing "/" split, so every path route that
+   worked before still works untouched and every link minted before this change is
+   still valid. The complete key registry -- including `cov` and the future `#/row/<id>`
+   from PR-004, both reserved and not implemented here -- is in docs/AUTHORING.md.
+
+   Four rules this obeys:
+     1. Absent key = no filter. A default is never written into the URL, so a bare
+        route always means "unfiltered" and stays copy-pasteable.
+     2. Unknown keys are ignored rather than treated as errors, so a later PR can add
+        one without breaking links minted today.
+     3. Invalid values fall back to unfiltered (see tierOf), rather than rendering an
+        empty view the reader cannot diagnose.
+     4. Filter changes use replaceState, navigation uses the hash: toggling a filter
+        five times should not cost five presses of the Back button. */
+function hashParts(){
+  const raw = location.hash.replace(/^#\/?/, "");
+  const i = raw.indexOf("?");
+  return i < 0 ? [raw, ""] : [raw.slice(0, i), raw.slice(i + 1)];
+}
+const hashPath = () => hashParts()[0];
+function qget(k){
+  try { return new URLSearchParams(hashParts()[1]).get(k); } catch(e){ return null; }
+}
+function setQuery(patch){
+  const [path, qs] = hashParts();
+  const q = new URLSearchParams(qs);
+  Object.keys(patch).forEach(k => { const v = patch[k]; if(v == null) q.delete(k); else q.set(k, v); });
+  const s = q.toString();
+  history.replaceState(null, "", "#/" + path + (s ? "?" + s : ""));
+}
 const srStatus = document.getElementById("srstatus");
 const plural = (k, w) => `${k} ${w}${k===1?"":"s"}`;
 let booted = false;
 function render(opts){
   opts = opts || {};
-  const h = location.hash.replace(/^#\/?/, "");
+  const h = hashPath();
   const [p1, p2, p3, p4] = h.split("/");
   const app = document.getElementById("app");
   /* view: the page name for document.title. Empty on the landing page, which takes the bare brand.
@@ -939,12 +1071,22 @@ function render(opts){
   if(h1) h1.setAttribute("tabindex", "-1");
   if(countRows) note = plural(app.querySelectorAll("details.row").length, "mapping");
   if(fwFilter) note += `, filtered to ${fwFilter}`;
+  /* The status region has to state the tier lens too, or a screen-reader user who
+     presses "E5" hears only a row count change with no reason given for it. */
+  if(p1 === "framework"){
+    const t = tierOf();
+    if(t) note += `, license tier ${BAND_LABEL[t] || t}`;
+    if(meterExcluded()) note += `, rows with no seat tier excluded`;
+  }
   if(first){
     /* leave focus where it is */
-  } else if(opts.focus === "filter"){
+  } else if(opts.focus === "filter" || opts.focus === "tier" || opts.focus === "meter"){
     /* Re-rendering destroys the button that was just pressed; put focus back on its replacement
-       so a keyboard user stays in the filter row. No preventScroll: let it scroll back into view. */
-    const b = app.querySelector(`.fbtn[data-cov="${opts.filter || ""}"]`);
+       so a keyboard user stays in the filter row. No preventScroll: let it scroll back into view.
+       Each filter row has its OWN data attribute: keying all three off data-cov would bounce
+       focus into the coverage row whenever a tier or consumption button was pressed. */
+    const attr = opts.focus === "filter" ? "data-cov" : opts.focus === "tier" ? "data-tier" : "data-meter";
+    const b = app.querySelector(`.fbtn[${attr}="${opts.filter || ""}"]`);
     if(b) b.focus(); else if(h1) h1.focus({preventScroll:true});
   } else if(h1){
     h1.focus({preventScroll:true});

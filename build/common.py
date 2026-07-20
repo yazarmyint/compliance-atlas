@@ -337,7 +337,16 @@ MAINTENANCE = [
              "live 2026-07-19: rollout began June 2026 and Microsoft expects completion during 2026, but "
              "the Defender service description's MDO Plan 1 SKU list does NOT yet name E3/G3. Re-check "
              "that list once the rollout completes and drop the dated qualifier from the string when the "
-             "service description catches up."},
+             "service description catches up. "
+             "ALSO OWNS THE BAND (PR-015, Session 10 escalation E2): license_bands.BANDS maps this "
+             "constant to ('e3', partial=True). The band is e3 because the effective date has passed; "
+             "THE PARTIAL FLAG'S ONLY BASIS IS THE INCOMPLETE ROLLOUT -- that an E3/G3 tenant may not "
+             "have received it yet -- and nothing else about the capability is reduced at E3. So when "
+             "this trigger fires: if the rollout has completed and the service description names E3/G3, "
+             "flip that entry to ('e3', False) in the same pass. If the rollout has NOT completed, leave "
+             "it and re-diarize. The pair is a hard-coded literal on purpose and must never be computed "
+             "from the current date -- a clock-derived band would move with no commit behind it and "
+             "break the strict empty-diff drift check (SS27.1)."},
     {"id": "TRG-DEFENDER-SUITE-NAME", "type": "naming", "cadence_days": 120,
      "title": "Microsoft Defender Suite naming: retire the \"(formerly ...)\" gloss",
      "next_review": "2026-11-16", "last_executed": "2026-07-19",
