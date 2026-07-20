@@ -121,7 +121,7 @@ Each row is a dict with these fields:
 | `external_dependencies` | free text for everything that is **not** a Microsoft product (processes, contracts, CMDB, customer-side ops, generic SIEM/tooling categories). |
 | `legacy_dependencies` | the original pre-split `non_purview_dependencies` string, preserved verbatim for provenance. |
 | `cloud_availability_note` | GCC/GCC High/DoD caveats where they exist |
-| `sources` | ≥1 official framework URL + ≥1 Microsoft Learn URL |
+| `sources` | ≥1 official framework URL + ≥1 Microsoft Learn URL (boundary rows, coverage `Not Covered`, carry the framework URL only) |
 | `status`, `last_verified` | `verified` \| `UNVERIFIED`; per-row date governs currency |
 
 Authoring modules still write the **free-text `non_purview_dependencies`** (via the `row()` helper); `assemble.py` splits
@@ -142,8 +142,11 @@ rather than guessed into a product.
      (`purview_solution: "None (boundary row)"`, coverage `Not Covered`) are encouraged where the question
      comes up anyway.
    - Paraphrase control intent; never reproduce ISO/AICPA/PCI text (copyrighted); paraphrase NIST/US law too.
-   - Every row: ≥1 official framework source + ≥1 Microsoft Learn URL. Anything unconfirmed ships as
-     `status: "UNVERIFIED"` (renders with a red warning), never silently.
+   - Every row: ≥1 official framework source. Every row with coverage other than `Not Covered` also carries
+     ≥1 Microsoft Learn URL. **Boundary rows are exempt from the Microsoft half** — a `Not Covered` verdict has
+     no Microsoft capability to cite, so the framework source stands alone (six rows do this today: `dpr-j48`,
+     `soc2-p1-p3`, `soc2-a1`, `soc2-pi1`, `53-mp-6`, `gdpr-30`). `assemble.py` enforces both halves.
+     Anything unconfirmed ships as `status: "UNVERIFIED"` (renders with a red warning), never silently.
    - `license_requirement` comes from the product's authoritative licensing source only (for Purview, the
      **service description per-feature tables** in `common.py → LIC`); `cloud_availability_note` from the US
      Government service descriptions (`GOV`).
