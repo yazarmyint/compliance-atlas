@@ -2265,7 +2265,17 @@ The drift test was therefore run against a **documented noise floor of exactly o
 constraint the session actually operated under is unchanged and stricter than the original wording:
 this session must not widen that floor by any amount. It did not.
 
-### 26.2 PR-057 (raised here) — relocate the build timestamp out of the JSON
+### 26.2 Two deferred findings raised here — PR-057 and PR-058
+
+Both are build-integrity items, both deferred, and both **earmarked as one small build-integrity
+session**: each attacks a different way the build can lie about what it just produced.
+
+Raised in this document rather than appended to `PROJECT-REVIEW.md` deliberately. PROJECT-REVIEW is an
+independent end-to-end review with its own provenance, and the maintainer appending findings to it
+would muddy that. §21 set the precedent for raising PR-numbered findings here (PR-055 and PR-056 were
+raised in this document and noted as absent from PROJECT-REVIEW); PR-057 and PR-058 follow it.
+
+#### PR-057 · relocate the build timestamp out of the JSON
 
 **Deferred, not implemented.** `meta.generated` is the only moving field in a content-free rebuild.
 Moving it out of `compliance-atlas.json` and injecting it into the HTML at build time in
@@ -2274,10 +2284,29 @@ property and make `git diff compliance-atlas.json` a zero-tolerance drift check 
 one-line-tolerance one. The footer feature is unaffected; the value simply arrives from a different
 place. Estimated 1–2 hours including a rebuild and a `_detail` byte-equality confirmation.
 
-Raised in this document rather than appended to `PROJECT-REVIEW.md` deliberately. PROJECT-REVIEW is an
-independent end-to-end review with its own provenance, and the maintainer appending findings to it
-would muddy that. §21 set the precedent for raising PR-numbered findings here (PR-055 and PR-056 were
-raised in this document and noted as absent from PROJECT-REVIEW); PR-057 follows it.
+#### PR-058 · make the stale-bytecode mitigation structural, not procedural
+
+**Deferred, not implemented.** §26.8 records a real, reproduced failure: `assemble.py` regenerated the
+artifact from a **stale `build/__pycache__`** after a same-length edit to `common.py`, silently and
+with exit 0. The mitigation shipped in this session is a line in runbook Step 5 telling the maintainer
+to clear the cache first.
+
+**That is the wrong shape of fix and should not be left standing.** A procedural mitigation protects
+the gate exactly as far as the person running it remembers to follow the runbook, and this failure
+mode is invisible when it fires — the build succeeds and the artifact is confidently wrong. The
+mitigation belongs in the build.
+
+`assemble.py` should clear or bypass bytecode caching for `build/` itself, so a stale-constant run is
+impossible whether or not Step 5 was followed. Options, cheapest first: set `sys.dont_write_bytecode`
+before importing the row modules; remove `build/__pycache__` at start-up; or invalidate explicitly via
+`importlib.invalidate_caches()` plus a source-mtime check. The first is a one-line change and costs
+only import speed, which is irrelevant at this size. Whichever is chosen, the runbook line stays as
+belt-and-braces but stops being load-bearing. Estimated under an hour, including reproducing the
+original failure to confirm the fix actually closes it.
+
+Ordered after PR-057 in the same session, not before: PR-057 tightens what the drift check tolerates,
+PR-058 makes sure the artifact the check runs against was built from current sources. Doing them
+together means one rebuild and one verification pass covers both.
 
 ### 26.3 Trigger inventory — what the prose list actually contained
 
@@ -2377,17 +2406,21 @@ constants by the §22 passes, so the constant is the real unit. 49 constants gov
 warning per row would print 370 lines carrying 49 lines of information, and a mechanism that noisy
 gets ignored, which is the failure PR-050 describes in a different form.
 
-**One deviation from the approved schema.** `cadence_days` was approved as required except on
-`retirement` triggers. Three `framework`/`watch` triggers are also fixed-date (CMMC Phase 2, and the
-two 21Vianet regional retirements), where a rolling clock adds nothing. The assertion was relaxed to
-"`cadence_days` is `None` or a positive int", with `None` meaning "fixed announced date, re-set by
-hand". Flagged rather than absorbed silently.
+**Approved amendment to the Phase 1 schema: `cadence_days` may be `None`.** The schema approved in
+Phase 1 required `cadence_days` on every trigger except `retirement`. Implementation found three
+`framework`/`watch` triggers that are also fixed-date — CMMC Phase 2 and the two 21Vianet regional
+retirements — where a rolling clock adds nothing. The assertion is therefore "`cadence_days` is
+`None` or a positive int", with `None` meaning "fixed announced date, re-set by hand". Raised in the
+Phase 2 gate report as a deviation and **accepted by the owner**, so it stands as an amendment to the
+approved schema rather than a variance from it.
 
-**Warning volume.** Zero today. 16 at +3 months (5 triggers, 11 consumption constants). 70 at +6
+**Warning volume.** Zero today. 15 at +3 months (4 triggers, 11 consumption constants). 68 at +6
 months, of which 49 are constants — the entire dataset was verified in two bulk passes on consecutive
 days, so everything ages in lockstep for one cycle. That is a property of the data, not the
 mechanism, and it resolves as soon as real passes land on scattered dates. 49 constant-lines at the
 point a twice-yearly full pass is genuinely due is a worklist; 370 row-lines would have been noise.
+(Figures are post-reseed: the first-cycle `next_review` dates were widened to 6–8 week windows per
+class after an initial seeding came out at 4–5.)
 
 ### 26.8 A harness gotcha found by running the drift test, now in the gate
 
