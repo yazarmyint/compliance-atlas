@@ -230,6 +230,23 @@ Re-author rows, change coverage or confidence verdicts on anything other than th
 of you, or add products or frameworks. Those are separate sessions with separate authorizations. The
 boundaries are in [`AUTHORING.md`](AUTHORING.md); this runbook does not duplicate them.
 
+## Committed assets
+
+**`og-image.png`** — the 1200×630 social card previewed when the atlas URL is shared, referenced by
+absolute URL from the `og:image` / `twitter:image` tags in `compliance-atlas.html` and `index.html`.
+Regenerate only if the brand **name or tagline** changes: `node tools/make_og_image.mjs` reads both
+from `compliance-atlas.json` and re-renders the card.
+
+**It has no maintenance trigger, and that is a deliberate design choice, not an omission.** The card
+is *countless* — it carries the name and tagline only, never row/framework/product counts. The reason
+is a reusable principle worth stating: **a binary asset is invisible to every gate this project runs.**
+No `git diff compliance-atlas.json`, no `check_urls.py`, and no `axe_check.mjs` can ever see a stale
+number baked into a PNG. Putting counts in the image would therefore create a class of staleness that
+nothing catches, so the counts live only in `og:description` — which is text, built from the dataset,
+and cannot drift. **Do not "helpfully" add counts to the card and then add a trigger to manage them;
+the countless card removed that problem at its root.** The general rule: no gate-invisible artifact
+should carry a claim that ages.
+
 ## Framework backlog
 
 Backlog (documented in FRAMEWORK-SELECTION.md): US state-privacy composite (CPRA-anchored),

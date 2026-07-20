@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The title, description and canonical URL below are substituted by build_html.py from
-     meta.brand.title, meta.description_meta and build_html.CANONICAL_URL, so crawlers see them
-     without running the script. (Deliberately not naming the substitution tokens here: the
-     replacement is a plain string swap and would rewrite them inside this comment too.)
-     og:image is deliberately omitted: it would require fetching a hosted asset and break the
-     zero-external-asset property that makes the file:// copy fully self-contained. The canonical
-     URL is an absolute string in the markup, not a fetch, so it costs the offline copy nothing —
-     a file:// reader simply carries a pointer back to the hosted original. -->
+<!-- The title, description, canonical URL and social-card image below are substituted by
+     build_html.py from the dataset meta and build_html's URL constants, so crawlers see them
+     without running the script. (Deliberately not naming the substitution tokens in this comment:
+     the replacement is a plain string swap and would rewrite them here too.)
+     og:image points at the hosted PNG by ABSOLUTE URL — a string pointer, not a fetch, exactly like
+     the canonical link above it — so it costs the offline file:// copy nothing and keeps the
+     zero-external-asset property intact. CAVEAT, BY DESIGN: the social card resolves only when the
+     page is loaded from its hosted URL. Opened from file:// the og/twitter tags are inert and no
+     preview is produced; that is expected, not a bug. The description carries the live counts (built
+     from the dataset); the image deliberately carries none, so nothing in the card can go stale. -->
 <title>__BRAND_TITLE__</title>
 <meta name="description" content="__META_DESCRIPTION__">
 <link rel="canonical" href="__CANONICAL_URL__">
@@ -18,6 +20,14 @@
 <meta property="og:title" content="__BRAND_TITLE__">
 <meta property="og:description" content="__META_DESCRIPTION__">
 <meta property="og:url" content="__CANONICAL_URL__">
+<meta property="og:image" content="__OG_IMAGE_URL__">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="__OG_IMAGE_ALT__">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="__BRAND_TITLE__">
+<meta name="twitter:description" content="__META_DESCRIPTION__">
+<meta name="twitter:image" content="__OG_IMAGE_URL__">
 <!-- Favicon: the ¶ brand glyph (%C2%B6) in the accent ink on paper, inline so nothing is fetched. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%23faf7f0'/%3E%3Ctext x='32' y='48' text-anchor='middle' font-family='Georgia,serif' font-size='46' font-weight='600' fill='%237c2d12'%3E%C2%B6%3C/text%3E%3C/svg%3E">
 <style>
