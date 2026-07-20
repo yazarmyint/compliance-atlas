@@ -18,13 +18,15 @@
 /* ============ Compliance Atlas — folio styling, zero external deps ============ */
 :root{
   color-scheme: light;   /* native chrome (scrollbars, search-field clear button) follows the theme */
-  --paper:#faf7f0; --paper-2:#f2ede1; --card:#fffdf8; --ink:#20242c; --ink-2:#565b66; --ink-3:#8a8f99;
+  /* Muted and status inks are set to clear 4.5:1 against every surface they are used on
+     (card, paper, paper-2, heat-0) in this theme. See the PR-056 note in AUDIT-FINDINGS 21. */
+  --paper:#faf7f0; --paper-2:#f2ede1; --card:#fffdf8; --ink:#20242c; --ink-2:#565b66; --ink-3:#656870;
   --rule:#d9d2c2; --rule-2:#c5bda9; --accent:#7c2d12; --accent-ink:#7c2d12; --link:#1e5fae;
-  --direct:#177245; --partial:#1e5fae; --evidence:#96690f; --nocover:#6e6a63;
+  --direct:#177245; --partial:#1e5fae; --evidence:#8d630e; --nocover:#6d6962;
   --direct-bg:#e3f0e8; --partial-bg:#e5edf8; --evidence-bg:#f5ecd9; --nocover-bg:#edeae3;
   --warn-bg:#f7ead2; --warn-ink:#7a5410; --warn-rule:#d9b56a;
   --danger:#a03123; --danger-bg:#f7e2de;
-  --heat-0:#efe9dc; --heat-txt-hi:#fffdf8;
+  --heat-0:#efe9dc;
   --shadow:0 1px 2px rgba(60,50,30,.08), 0 4px 14px rgba(60,50,30,.07);
   --font-display:Cambria,"Palatino Linotype",Georgia,"Times New Roman",serif;
   --font-body:"Segoe UI Variable Text","Segoe UI",-apple-system,"Helvetica Neue",sans-serif;
@@ -32,13 +34,13 @@
 }
 [data-theme="dark"]{
   color-scheme: dark;
-  --paper:#181b22; --paper-2:#131519; --card:#20242d; --ink:#e6e2d8; --ink-2:#a9adb6; --ink-3:#7c818c;
+  --paper:#181b22; --paper-2:#131519; --card:#20242d; --ink:#e6e2d8; --ink-2:#a9adb6; --ink-3:#8a8f99;
   --rule:#343a46; --rule-2:#434a58; --accent:#d08770; --accent-ink:#d08770; --link:#5b96d6;
-  --direct:#35a370; --partial:#5b96d6; --evidence:#b3861f; --nocover:#9a958c;
+  --direct:#3da776; --partial:#5b96d6; --evidence:#b68b28; --nocover:#9a958c;
   --direct-bg:#1d3229; --partial-bg:#1e2c3f; --evidence-bg:#332a17; --nocover-bg:#2a2c2e;
   --warn-bg:#332a17; --warn-ink:#d9b56a; --warn-rule:#8a6d2e;
   --danger:#e08577; --danger-bg:#3a221f;
-  --heat-0:#232833; --heat-txt-hi:#10141b;
+  --heat-0:#232833;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
@@ -239,14 +241,16 @@ table.matrix th{font:600 11px var(--font-body); color:var(--ink-2); padding:6px 
 table.matrix thead th{height:132px; position:relative; min-width:54px; padding:0}
 table.matrix thead th .rot{position:absolute; bottom:8px; left:50%; transform-origin:bottom left; transform:rotate(-52deg); white-space:nowrap; display:block; line-height:1}
 table.matrix tbody th{white-space:nowrap; padding-right:12px}
+/* Cell figures use --ink, not --ink-2: the heat ramp below is capped so that --ink clears
+   4.5:1 against every step of it in both themes (worst case 5.53 light / 4.70 dark). */
 table.matrix td{width:52px; height:38px; text-align:center; border-radius:6px; background:var(--heat-0);
-  font:600 12px var(--font-mono); color:var(--ink-2); cursor:pointer; position:relative; padding:0}
+  font:600 12px var(--font-mono); color:var(--ink); cursor:pointer; position:relative; padding:0}
 /* The cell's link fills the cell, so the click target is the whole cell as before. */
 table.matrix td a{display:flex; align-items:center; justify-content:center; width:100%; height:100%;
   color:inherit; text-decoration:none; border-radius:6px}
 table.matrix td a:hover{text-decoration:none}
 table.matrix td a:focus-visible{outline-offset:-3px; box-shadow:none}
-table.matrix td.z{cursor:default; color:var(--ink-3); opacity:.55}
+table.matrix td.z{cursor:default; color:var(--ink); opacity:.7}
 table.matrix td:hover:not(.z):not(.total):not(.corner){outline:2px solid var(--ink); outline-offset:1px}
 table.matrix td.corner{background:transparent; width:auto; height:auto; cursor:default}
 table.matrix td.total, table.matrix th.total{background:transparent; font-weight:700; color:var(--ink); cursor:default}
@@ -642,9 +646,14 @@ function vSolution(pid, key){
   ${also.length?`<section class="block"><h2>Contributing mappings</h2><p class="subtitle muted small">Rows where ${esc(key)} strengthens a control mapped primarily to another solution.</p>${groupFw(also)}</section>`:""}`;
 }
 function heatColor(v, max){
+  /* The ramp tops out at 55% --partial rather than 86%. Past that the mixed background lands in
+     a luminance band where neither a near-black nor a near-white figure reaches 4.5:1, so the
+     old light/dark text flip could not be fixed by choosing a better threshold - it had to be
+     removed. Capping here lets every cell keep a single --ink figure. The .6 exponent is
+     unchanged, so the low end of the ramp still separates as before. */
   if(!v) return null;
   const t = Math.pow(v/max, .6);
-  return `color-mix(in srgb, var(--partial) ${Math.round(14+72*t)}%, var(--heat-0))`;
+  return `color-mix(in srgb, var(--partial) ${Math.round(14+41*t)}%, var(--heat-0))`;
 }
 function matrixTable(rowLabels, colLabels, cellFn, opts={}){
   /* Generic heat table. rowLabels/colLabels: [{id,label}]. cellFn(rid,cid) -> {count, href}
@@ -661,9 +670,8 @@ function matrixTable(rowLabels, colLabels, cellFn, opts={}){
     const tds = colLabels.map(c=>{
       const {count, href} = cellFn(r.id, c.id); rowTotal += count;
       if(!count) return `<td class="z"><span aria-hidden="true">·</span><span class="sr-only">0</span></td>`;
-      const bg = heatColor(count, max), dark = count/max > .55;
       const name = `${r.label} × ${c.label}: ${count} row(s)`;
-      return `<td style="background:${bg};${dark?"color:var(--heat-txt-hi);":""}"><a href="${esc(href)}" title="${esc(name)}" aria-label="${esc(name)}">${count}</a></td>`;
+      return `<td style="background:${heatColor(count, max)}"><a href="${esc(href)}" title="${esc(name)}" aria-label="${esc(name)}">${count}</a></td>`;
     }).join("");
     return `<tr><th scope="row">${esc(r.label)}</th>${tds}<td class="total">${rowTotal}</td></tr>`;
   }).join("");
