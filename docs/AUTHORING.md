@@ -4,7 +4,7 @@ Maintainer reference for everything upstream of the generated files: the dataset
 state, the repository layout, the row schema, and the procedures for regenerating the build or adding
 a framework or a product. Reader-facing orientation lives in [`../README.md`](../README.md).
 
-## Contents (v2.9.0 — full version history in `CHANGELOG.md`)
+## Contents (v3.0.0 — full version history in `CHANGELOG.md`)
 
 | Framework | Version pinned | Rows (all products) |
 |---|---|---|
@@ -88,6 +88,7 @@ Each row is a dict with these fields:
 | `coverage`, `confidence` | fixed taxonomies (see above) |
 | `license_requirement` | SKU/entitlement string from the product's authoritative licensing source |
 | `licensing_model` | discriminator: `per_user` \| `consumption` \| `included` \| `n/a`. Defaults from the product's `default_licensing_model`; `n/a` for boundary rows. Exists so consumption-priced products (Sentinel, Defender for Cloud) fit without a SKU-only field. |
+| `license_band`, `license_band_partial` | **derived, never authored.** `e3` \| `e5` \| `addon` \| `consumption` \| `na`, plus a boolean. Written by `build/license_bands.py` at assemble time from the licensing constants the row's `license_requirement` is composed from. Do not set these in a row module — `assemble.py` overwrites them. See *License bands* below. |
 | `related_microsoft` | **structured** list of Microsoft-product dependencies: `{product, solution?, role: primary\|contributing, note?}`. `product` is a slug in `PRODUCTS` or `RELATED_PRODUCTS`. When a related product gains its own rows, row-level links attach here without another migration. |
 | `external_dependencies` | free text for everything that is **not** a Microsoft product (processes, contracts, CMDB, customer-side ops, generic SIEM/tooling categories). |
 | `legacy_dependencies` | the original pre-split `non_purview_dependencies` string, preserved verbatim for provenance. |
@@ -101,6 +102,86 @@ it into `related_microsoft` / `external_dependencies` / `legacy_dependencies` at
 families (Entra, Intune, Defender, Sentinel, Priva); everything else, including Microsoft-adjacent platform features
 (BitLocker, Key Vault, SharePoint, M365 service encryption), stays in `external_dependencies` and is flagged in the log
 rather than guessed into a product.
+
+## License bands (PR-015)
+
+`license_band` and `license_band_partial` are **derived at build time** by `build/license_bands.py`. Nothing in a
+row module sets them. The mapping is keyed on the **licensing constant coordinate** — `("LIC", "dlp_core")` — not on
+the row's prose, because the 378 rows compose 110 distinct `license_requirement` strings out of just **49
+constants**. Banding the 49 gives a reviewed table; banding the 110 would give a pile of near-duplicates, and
+substring heuristics over prose would silently misclassify the next string somebody writes.
+
+**Bands.** `e3` (included at M365 E3 or below) · `e5` (needs E5 or the relevant step-up) · `addon` (needs an add-on
+or standalone SKU) · `consumption` (metered; no seat tier exists) · `na` (boundary rows).
+
+**Floor banding.** A row bands at the *lowest* tier where any mapped capability functions, and sets
+`license_band_partial` when part of the mapping needs more. Rules F1–F7 are stated in full at the top of
+`build/license_bands.py` — read them before adding a mapping entry. Two rules bite most often: an "or" between
+routes to the same capability takes the minimum and does **not** set partial (F1), while a genuine capability split
+takes the minimum and **does** (F2). Two rules are owner decisions worth knowing: "functions" means reader-usable
+capability, so background processing behind no reachable interface does not band (F7), and **partial is not
+permitted in the `consumption` band** at all — "reduced at this tier" is meaningless where the band asserts no tier
+exists, so billing nuances stay in the verbatim string.
+
+**Commercial licensing only.** No G3/G5, F-series, or Business Premium dimension. Government licensing stays in the
+per-row `cloud_availability_note`. Related-product "(if licensed)" mentions are out of scope — pointers, not claims.
+
+**What fails the build.** All four are hard failures; there is deliberately no default band.
+
+| Guard | Fires when | Fix |
+|---|---|---|
+| G1 | a licensing constant has no `BANDS` entry | add the entry, citing the constant's own text |
+| G2 | a row's licence string matches no constant and is not the literal `n/a` | compose it from a constant, or set `n/a` if it is genuinely a boundary row |
+| G3 | the band disagrees with `licensing_model` about consumption or boundary status | one of the two is wrong; find out which |
+| G4 | a tier token (`E5`, `Plan 2`, `add-on`, …) appears in row prose *outside* any constant | move the claim into a constant, or add a `ROW_OVERRIDES` entry **with a stated reason** |
+
+G4 exists because a constant-keyed mapping has exactly one blind spot: prose the constants do not cover. Two rows
+hit it today (`iso-a-5-10`, `53-ac-21`, both appending "advanced policy tips: E5-tier"), and both are in
+`ROW_OVERRIDES`. Prefer moving a claim into a constant over adding an override — constants are covered by the
+maintenance triggers, and override entries are not.
+
+**Never clock-derive a band.** `DEFENDER_LIC["mdo_p1"]` is banded `("e3", True)` as a hard-coded literal even though
+its E3 inclusion has a stated effective date, because computing it from `date.today()` would move the band on a
+calendar boundary with no commit behind it — breaking the strict empty-diff drift check. Dated re-checks belong in
+`MAINTENANCE` (see `TRG-MDO-P1-E3G3`, which owns dropping that partial flag when the rollout completes), not in the
+derivation.
+
+## URL state scheme
+
+The router grammar is:
+
+```
+#/<path>[?<key>=<value>&<key>=<value>]
+```
+
+The hash is split on `?` **before** the existing `/` split, so every path route predating this scheme still works
+and every link minted before it is still valid.
+
+| Key | Values | Owner | Status |
+|---|---|---|---|
+| `tier` | `e3` \| `e5` \| `addon` | PR-015 | **implemented** |
+| `meter` | `exclude` (absent = include) | PR-015 | **implemented** |
+| `cov` | a `COV_ORDER` value, URL-encoded | coverage filter | **reserved, not implemented** — the filter is still module state |
+| `q` | search terms | search | **not migrating**; search stays on the path as `#/search/<q>` |
+
+`#/row/<id>` is **reserved for PR-004** (row deep links). It is deliberately its own route rather than a fragment on
+a filtered view: a row link must resolve identically regardless of what filter was active when someone copied it,
+or a shared link could land on a row the inherited filter hides.
+
+Four rules any new key must obey:
+
+1. **Absent key = no filter.** A default is never written into the URL. `?meter=include` is never emitted because
+   include is the default; only `?meter=exclude` appears.
+2. **Unknown keys are ignored, not errors** — so a later PR can add one without breaking existing links.
+3. **Invalid values fall back to unfiltered** and are not honoured, rather than rendering an empty view a reader
+   cannot diagnose.
+4. **Filter changes use `history.replaceState`; navigation uses the hash.** Toggling a filter five times must not
+   cost five presses of Back.
+
+Focus management: each filter row carries its **own** data attribute (`data-cov`, `data-tier`, `data-meter`) and its
+own `opts.focus` value. The router restores focus to the replacement of the button that was just pressed; keying
+more than one row off the same attribute would bounce focus into the wrong row.
+
 ## Add a framework
 
 1. **Verify first.** Pin the current version against the official source (regulator/SDO, not blogs, not memory).

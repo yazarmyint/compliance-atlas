@@ -9,6 +9,12 @@ Covered) and a confidence level, cites at least one official framework source, a
 was last verified. Mapped products **support or evidence** controls; the atlas never claims a product
 satisfies or meets a requirement.
 
+Every row also carries a coarse **license tier band** — E3 / E5 / Add-on / Consumption — so the
+framework view can be filtered to "what does this look like if I only own E3?". Bands are derived from
+each row's verbatim licensing string, which stays on the row; they cover **commercial** Microsoft 365
+licensing only, and consumption-priced products (Sentinel, Defender for Cloud) have no seat tier at
+all. A **partial** badge marks rows where the band is the floor rather than the whole story.
+
 ## What's in it
 
 **378 rows · 11 frameworks · 6 products** — every row `verified` against live sources.

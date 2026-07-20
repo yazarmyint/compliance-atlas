@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "2.10.1",
+  "version": "3.0.0",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "2.10.1"
+   "atlas_version": "3.0.0"
   },
   "project": {
    "maintainer": "Yazar",
@@ -56,6 +56,15 @@
    "included": "Included with a platform entitlement at no separate charge.",
    "n/a": "No license claim (boundary rows)."
   },
+  "license_bands": {
+   "e3": "Included at Microsoft 365 E3 or below.",
+   "e5": "Requires Microsoft 365 E5 or the relevant E5 step-up.",
+   "addon": "Requires an add-on or standalone SKU beyond the base seat licence.",
+   "consumption": "Consumption/meter-billed (Sentinel, Defender for Cloud). No seat tier applies.",
+   "na": "No licence claim — boundary rows, where the verdict is that the product does not cover the control."
+  },
+  "license_band_partial": "Reduced capability at this tier — the band is the lowest tier where something mapped here works, and part of the mapping needs a higher tier. Read the licence requirement on the row for what is and is not included.",
+  "license_band_scope": "Bands describe Microsoft 365 COMMERCIAL licensing only: there is no G3/G5, F-series, or Business Premium dimension, and government licensing is covered by the per-row cloud availability notes instead. Consumption-priced products (Microsoft Sentinel, Defender for Cloud) have no seat tier at all, so they appear under every tier filter unless you exclude them with the No seat tier toggle — which is what the \"+n\" on each tier button counts: rows at that tier, plus rows that have no tier at all. The band is derived from each row's licence requirement and is a coarse signpost to it, never a replacement — the full entitlement string stays on every row. Related-product mentions marked \"(if licensed)\" are pointers to adjacent products, not banded or audited claims.",
   "coverage_levels": {
    "Direct Support": "The product directly implements/enforces the control activity (within the stated scope).",
    "Partial Support": "The product implements part; a control outside it is also required.",
@@ -328,7 +337,7 @@
       ]
      ],
      "rows": [],
-     "note": "MDO Plan 1 in E3/G3 (effective July 1, 2026): encoded in DEFENDER_LIC['mdo_p1']. Confirmed live 2026-07-19: rollout began June 2026 and Microsoft expects completion during 2026, but the Defender service description's MDO Plan 1 SKU list does NOT yet name E3/G3. Re-check that list once the rollout completes and drop the dated qualifier from the string when the service description catches up."
+     "note": "MDO Plan 1 in E3/G3 (effective July 1, 2026): encoded in DEFENDER_LIC['mdo_p1']. Confirmed live 2026-07-19: rollout began June 2026 and Microsoft expects completion during 2026, but the Defender service description's MDO Plan 1 SKU list does NOT yet name E3/G3. Re-check that list once the rollout completes and drop the dated qualifier from the string when the service description catches up. ALSO OWNS THE BAND (PR-015, Session 10 escalation E2): license_bands.BANDS maps this constant to ('e3', partial=True). The band is e3 because the effective date has passed; THE PARTIAL FLAG'S ONLY BASIS IS THE INCOMPLETE ROLLOUT -- that an E3/G3 tenant may not have received it yet -- and nothing else about the capability is reduced at E3. So when this trigger fires: if the rollout has completed and the service description names E3/G3, flip that entry to ('e3', False) in the same pass. If the rollout has NOT completed, leave it and re-diarize. The pair is a hard-coded literal on purpose and must never be computed from the current date -- a clock-derived band would move with no commit behind it and break the strict empty-diff drift check (SS27.1)."
     },
     {
      "id": "TRG-DEFENDER-SUITE-NAME",
@@ -1498,7 +1507,9 @@
    "related_microsoft": [],
    "external_dependencies": "Contract/DPA and SOW terms; policy management and document-control process",
    "legacy_dependencies": "Contract/DPA and SOW terms; policy management and document-control process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "dpr-d9",
@@ -1531,7 +1542,9 @@
    "related_microsoft": [],
    "external_dependencies": "Data-mapping exercise; collection controls in intake apps/forms",
    "legacy_dependencies": "Data-mapping exercise; collection controls in intake apps/forms",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "dpr-d11",
@@ -1561,7 +1574,9 @@
    "related_microsoft": [],
    "external_dependencies": "De-identification/anonymization process and tooling (primary); analytics environment controls",
    "legacy_dependencies": "De-identification/anonymization process and tooling (primary); analytics environment controls",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "dpr-e12",
@@ -1592,7 +1607,9 @@
    "related_microsoft": [],
    "external_dependencies": "Legal-approved retention schedule; retention controls for non-M365 repositories",
    "legacy_dependencies": "Legal-approved retention schedule; retention controls for non-M365 repositories",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-e13",
@@ -1625,7 +1642,9 @@
    "related_microsoft": [],
    "external_dependencies": "Return-of-data procedure; physical media destruction and certificates",
    "legacy_dependencies": "Return-of-data procedure; physical media destruction and certificates",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "dpr-f14-22",
@@ -1664,7 +1683,9 @@
    ],
    "external_dependencies": "privacy operations process; app-level data stores",
    "legacy_dependencies": "Microsoft Priva Subject Rights Requests (if licensed); privacy operations process; app-level data stores",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-i30-31",
@@ -1697,7 +1718,9 @@
    "related_microsoft": [],
    "external_dependencies": "IR plan and breach-notification process; SupplierWeb security contacts; SIEM/SOAR",
    "legacy_dependencies": "IR plan and breach-notification process; SupplierWeb security contacts; SIEM/SOAR",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j33",
@@ -1730,7 +1753,9 @@
    "related_microsoft": [],
    "external_dependencies": "Vulnerability scanning/pen-test program; enterprise risk assessment; change-management system",
    "legacy_dependencies": "Vulnerability scanning/pen-test program; enterprise risk assessment; change-management system",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j35",
@@ -1770,7 +1795,9 @@
    ],
    "external_dependencies": "CMDB/asset register; device lifecycle (recovery/disposal) records",
    "legacy_dependencies": "CMDB/asset register; device lifecycle (recovery/disposal) records; Intune device inventory",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j36",
@@ -1807,7 +1834,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "Entra ID, Conditional Access/MFA, PIM, access reviews, joiner-mover-leaver process (primary)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j40",
@@ -1849,7 +1878,9 @@
    ],
    "external_dependencies": "offboarding communications process",
    "legacy_dependencies": "IDS/IPS and network monitoring (Defender/SIEM); offboarding communications process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j47",
@@ -1879,7 +1910,9 @@
    "related_microsoft": [],
    "external_dependencies": "TLS/IPsec configuration on services and network gear; certificate lifecycle management; M365 platform TLS (Microsoft-managed)",
    "legacy_dependencies": "TLS/IPsec configuration on services and network gear; certificate lifecycle management; M365 platform TLS (Microsoft-managed)",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j48",
@@ -1915,7 +1948,9 @@
    ],
    "external_dependencies": "device compliance policy reports (primary)",
    "legacy_dependencies": "BitLocker/FileVault via Intune; device compliance policy reports (primary)",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j49",
@@ -1949,7 +1984,9 @@
    "related_microsoft": [],
    "external_dependencies": "M365 service encryption (inherited); encryption for non-M365 stores; Azure Key Vault key ceremony for Customer Key",
    "legacy_dependencies": "M365 service encryption (inherited); encryption for non-M365 stores; Azure Key Vault key ceremony for Customer Key",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j50",
@@ -1980,7 +2017,9 @@
    "related_microsoft": [],
    "external_dependencies": "Anonymization/synthetic-data tooling in the engineering pipeline (primary)",
    "legacy_dependencies": "Anonymization/synthetic-data tooling in the engineering pipeline (primary)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j36-entra",
@@ -2019,7 +2058,9 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j45-entra",
@@ -2049,7 +2090,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j35-intune",
@@ -2086,7 +2129,9 @@
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j48-intune",
@@ -2129,7 +2174,9 @@
     "https://learn.microsoft.com/intune/device-management/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j37-defender",
@@ -2167,7 +2214,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j38-defender",
@@ -2204,7 +2253,9 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "dpr-j40-defender",
@@ -2251,7 +2302,9 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "dpr-i30-31-sentinel",
@@ -2297,7 +2350,9 @@
     "https://learn.microsoft.com/azure/sentinel/manage-soc-with-incident-metrics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j40-sentinel",
@@ -2343,7 +2398,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j38-mdc",
@@ -2384,7 +2441,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "dpr-j40-mdc",
@@ -2436,7 +2495,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-3",
@@ -2472,7 +2533,9 @@
    ],
    "external_dependencies": "org design",
    "legacy_dependencies": "Entra role design, PIM, access reviews for duty-level SoD (primary); org design",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-9",
@@ -2504,7 +2567,9 @@
    "related_microsoft": [],
    "external_dependencies": "CMDB/asset register with owners; process to reconcile data inventory to asset owners",
    "legacy_dependencies": "CMDB/asset register with owners; process to reconcile data inventory to asset owners",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-10",
@@ -2536,7 +2601,9 @@
    "related_microsoft": [],
    "external_dependencies": "Acceptable-use policy; user awareness training",
    "legacy_dependencies": "Acceptable-use policy; user awareness training",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-12",
@@ -2568,7 +2635,9 @@
    "related_microsoft": [],
    "external_dependencies": "Classification policy document; data owners assigning classifications outside M365",
    "legacy_dependencies": "Classification policy document; data owners assigning classifications outside M365",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-13",
@@ -2597,7 +2666,9 @@
    "related_microsoft": [],
    "external_dependencies": "Labeling procedures for physical and non-M365 digital media",
    "legacy_dependencies": "Labeling procedures for physical and non-M365 digital media",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-14",
@@ -2636,7 +2707,9 @@
    ],
    "external_dependencies": "Transfer agreements (legal); SPO/Teams external-sharing settings",
    "legacy_dependencies": "Transfer agreements (legal); SPO/Teams external-sharing settings; Entra B2B configuration",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-25",
@@ -2670,7 +2743,9 @@
    "related_microsoft": [],
    "external_dependencies": "Incident classification procedure; SIEM/SOAR case tooling",
    "legacy_dependencies": "Incident classification procedure; SIEM/SOAR case tooling",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-28",
@@ -2699,7 +2774,9 @@
    "related_microsoft": [],
    "external_dependencies": "Forensic procedure and chain-of-custody policy; endpoint/network forensics tooling",
    "legacy_dependencies": "Forensic procedure and chain-of-custody policy; endpoint/network forensics tooling",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-31",
@@ -2729,7 +2806,9 @@
    "related_microsoft": [],
    "external_dependencies": "Legal register ownership; counsel review of applicability",
    "legacy_dependencies": "Legal register ownership; counsel review of applicability",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-33",
@@ -2758,7 +2837,9 @@
    "related_microsoft": [],
    "external_dependencies": "Records governance policy; protection for physical/non-M365 records",
    "legacy_dependencies": "Records governance policy; protection for physical/non-M365 records",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-34",
@@ -2805,7 +2886,9 @@
    ],
    "external_dependencies": "DPO oversight",
    "legacy_dependencies": "Privacy program and ROPA; Microsoft Priva (if licensed); DPO oversight",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-36",
@@ -2834,7 +2917,9 @@
    "related_microsoft": [],
    "external_dependencies": "Internal audit function; policy exception process",
    "legacy_dependencies": "Internal audit function; policy exception process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-7-10",
@@ -2870,7 +2955,9 @@
    ],
    "external_dependencies": "Media inventory and disposal process; destruction certificates",
    "legacy_dependencies": "Media inventory and disposal process; device control (Defender for Endpoint); destruction certificates",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-1",
@@ -2912,7 +2999,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "Intune device management + BitLocker; Defender for Endpoint",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-3",
@@ -2948,7 +3037,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "Entra ID, Conditional Access, PIM, SharePoint permission model (primary)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-10",
@@ -2980,7 +3071,9 @@
    "related_microsoft": [],
    "external_dependencies": "Retention schedule (legal); deletion for non-M365 stores",
    "legacy_dependencies": "Retention schedule (legal); deletion for non-M365 stores",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-11",
@@ -3010,7 +3103,9 @@
    "related_microsoft": [],
    "external_dependencies": "Masking/tokenization tooling in data platforms (primary); DB-level dynamic masking",
    "legacy_dependencies": "Masking/tokenization tooling in data platforms (primary); DB-level dynamic masking",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-12",
@@ -3050,7 +3145,9 @@
    ],
    "external_dependencies": "Network egress controls",
    "legacy_dependencies": "Network egress controls; Defender for Cloud Apps for unsanctioned SaaS",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-15",
@@ -3086,7 +3183,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "SIEM (Sentinel) for aggregation/correlation and non-M365 logs",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-16",
@@ -3133,7 +3232,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "Sentinel/Defender XDR for network and system monitoring",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-24",
@@ -3163,7 +3264,9 @@
    "related_microsoft": [],
    "external_dependencies": "Key management (Azure Key Vault/HSM), TLS management, BitLocker; crypto policy document",
    "legacy_dependencies": "Key management (Azure Key Vault/HSM), TLS management, BitLocker; crypto policy document",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-3-entra",
@@ -3202,7 +3305,9 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-15-entra",
@@ -3241,7 +3346,9 @@
     "https://learn.microsoft.com/entra/identity/role-based-access-control/custom-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-16-entra",
@@ -3273,7 +3380,9 @@
     "https://learn.microsoft.com/entra/id-governance/identity-governance-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "addon",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-17-entra",
@@ -3303,7 +3412,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-sspr-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-5-18-entra",
@@ -3333,7 +3444,9 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-2-entra",
@@ -3362,7 +3475,9 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-3-entra",
@@ -3398,7 +3513,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-5-entra",
@@ -3428,7 +3545,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-16-entra",
@@ -3476,7 +3595,9 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-9-intune",
@@ -3512,7 +3633,9 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-6-7-intune",
@@ -3552,7 +3675,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-1-intune",
@@ -3599,7 +3724,9 @@
     "https://learn.microsoft.com/intune/device-security/endpoint-security-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-7-intune",
@@ -3635,7 +3762,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-9-intune",
@@ -3667,7 +3796,9 @@
     "https://learn.microsoft.com/intune/device-security/security-baselines/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-24-intune",
@@ -3706,7 +3837,9 @@
     "https://learn.microsoft.com/intune/device-configuration/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-7-defender",
@@ -3743,7 +3876,9 @@
     "https://learn.microsoft.com/defender-xdr/advanced-hunting-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-23-defender",
@@ -3786,7 +3921,9 @@
     "https://learn.microsoft.com/defender-cloud-apps/set-up-cloud-discovery"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-25-defender",
@@ -3833,7 +3970,9 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-7-defender",
@@ -3872,7 +4011,9 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-8-defender",
@@ -3909,7 +4050,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-12-defender",
@@ -3952,7 +4095,9 @@
     "https://learn.microsoft.com/defender-cloud-apps/what-is-defender-for-cloud-apps"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-16-defender",
@@ -4005,7 +4150,9 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-23-defender",
@@ -4042,7 +4189,9 @@
     "https://learn.microsoft.com/defender-endpoint/web-content-filtering"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "iso-a-8-16-mdi",
@@ -4085,7 +4234,9 @@
     "https://learn.microsoft.com/defender-for-identity/us-govt-gcc-high"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-7-sentinel",
@@ -4122,7 +4273,9 @@
     "https://learn.microsoft.com/azure/sentinel/use-matching-analytics-to-detect-threats"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-25-sentinel",
@@ -4167,7 +4320,9 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-26-sentinel",
@@ -4212,7 +4367,9 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-28-sentinel",
@@ -4251,7 +4408,9 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-15-sentinel",
@@ -4296,7 +4455,9 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-16-sentinel",
@@ -4349,7 +4510,9 @@
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-23-mdc",
@@ -4386,7 +4549,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/quickstart-onboard-aws"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-8-mdc",
@@ -4425,7 +4590,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-9-mdc",
@@ -4464,7 +4631,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-5-36-mdc",
@@ -4503,7 +4672,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-7-mdc",
@@ -4548,7 +4719,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "iso-a-8-16-mdc",
@@ -4593,7 +4766,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc1-1",
@@ -4622,7 +4797,9 @@
    "related_microsoft": [],
    "external_dependencies": "Code of conduct; HR disciplinary process; ethics training",
    "legacy_dependencies": "Code of conduct; HR disciplinary process; ethics training",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc4-1",
@@ -4651,7 +4828,9 @@
    "related_microsoft": [],
    "external_dependencies": "Internal audit program; management review cadence",
    "legacy_dependencies": "Internal audit program; management review cadence",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc6-1",
@@ -4689,7 +4868,9 @@
    ],
    "external_dependencies": "network ACLs",
    "legacy_dependencies": "Entra ID + Conditional Access + MFA + PIM (primary); network ACLs",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc6-5",
@@ -4720,7 +4901,9 @@
    "related_microsoft": [],
    "external_dependencies": "Media-sanitization process (NIST 800-88 aligned); asset disposal vendor certificates",
    "legacy_dependencies": "Media-sanitization process (NIST 800-88 aligned); asset disposal vendor certificates",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-7",
@@ -4752,7 +4935,9 @@
    "related_microsoft": [],
    "external_dependencies": "Backup media handling; TLS configuration (platform)",
    "legacy_dependencies": "Backup media handling; TLS configuration (platform)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc7-2",
@@ -4798,7 +4983,9 @@
    ],
    "external_dependencies": "availability monitoring",
    "legacy_dependencies": "Sentinel/Defender XDR (infrastructure anomalies); availability monitoring",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc7-3",
@@ -4828,7 +5015,9 @@
    "related_microsoft": [],
    "external_dependencies": "Incident classification procedure; SIEM case management",
    "legacy_dependencies": "Incident classification procedure; SIEM case management",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc7-4",
@@ -4860,7 +5049,9 @@
    "related_microsoft": [],
    "external_dependencies": "IR plan and runbooks; SOAR; communications/legal",
    "legacy_dependencies": "IR plan and runbooks; SOAR; communications/legal",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc8-1",
@@ -4889,7 +5080,9 @@
    "related_microsoft": [],
    "external_dependencies": "Change-management system and approvals; testing process",
    "legacy_dependencies": "Change-management system and approvals; testing process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "soc2-c1-1",
@@ -4921,7 +5114,9 @@
    "related_microsoft": [],
    "external_dependencies": "Confidentiality commitments inventory (contracts); data owners for non-M365 stores",
    "legacy_dependencies": "Confidentiality commitments inventory (contracts); data owners for non-M365 stores",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-c1-2",
@@ -4952,7 +5147,9 @@
    "related_microsoft": [],
    "external_dependencies": "Physical document destruction; third-party data return/destruction clauses",
    "legacy_dependencies": "Physical document destruction; third-party data return/destruction clauses",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-p1-p3",
@@ -4987,7 +5184,9 @@
    ],
    "external_dependencies": "legal review; web/app collection controls",
    "legacy_dependencies": "Privacy notice/consent tooling (e.g., Microsoft Priva Consent Management, OneTrust); legal review; web/app collection controls",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "soc2-p4-1",
@@ -5023,7 +5222,9 @@
    ],
    "external_dependencies": "Purpose register (ROPA); application-level use controls",
    "legacy_dependencies": "Purpose register (ROPA); application-level use controls; Priva",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "soc2-p4-2",
@@ -5052,7 +5253,9 @@
    "related_microsoft": [],
    "external_dependencies": "Retention schedule approved by legal/privacy; non-M365 store retention",
    "legacy_dependencies": "Retention schedule approved by legal/privacy; non-M365 store retention",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-p4-3",
@@ -5083,7 +5286,9 @@
    "related_microsoft": [],
    "external_dependencies": "Disposal for non-M365/physical stores",
    "legacy_dependencies": "Disposal for non-M365/physical stores",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-p5",
@@ -5121,7 +5326,9 @@
    ],
    "external_dependencies": "identity-verification process",
    "legacy_dependencies": "Microsoft Priva Subject Rights Requests (if licensed); identity-verification process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-p6-2-3",
@@ -5153,7 +5360,9 @@
    "related_microsoft": [],
    "external_dependencies": "Disclosure register process; breach determination (legal)",
    "legacy_dependencies": "Disclosure register process; breach determination (legal)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-p8-1",
@@ -5186,7 +5395,9 @@
    "related_microsoft": [],
    "external_dependencies": "Complaint intake and resolution process; privacy office",
    "legacy_dependencies": "Complaint intake and resolution process; privacy office",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-a1",
@@ -5214,7 +5425,9 @@
    "related_microsoft": [],
    "external_dependencies": "M365/Azure platform SLAs; BCDR plan and tests; backup solution (e.g., Microsoft 365 Backup)",
    "legacy_dependencies": "M365/Azure platform SLAs; BCDR plan and tests; backup solution (e.g., Microsoft 365 Backup)",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "soc2-pi1",
@@ -5242,7 +5455,9 @@
    "related_microsoft": [],
    "external_dependencies": "Application input/processing/output controls; data quality tooling; QA process",
    "legacy_dependencies": "Application input/processing/output controls; data quality tooling; QA process",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-1-entra",
@@ -5281,7 +5496,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc6-2-entra",
@@ -5311,7 +5528,9 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc6-3-entra",
@@ -5343,7 +5562,9 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc6-6-entra",
@@ -5374,7 +5595,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc7-2-entra",
@@ -5416,7 +5639,9 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-1-intune",
@@ -5461,7 +5686,9 @@
     "https://learn.microsoft.com/intune/device-security/conditional-access-integration/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-7-intune",
@@ -5500,7 +5727,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/wipe-corporate-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-8-intune",
@@ -5539,7 +5768,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-7-defender",
@@ -5581,7 +5812,9 @@
     "https://learn.microsoft.com/defender-cloud-apps/proxy-intro-aad"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-8-defender",
@@ -5621,7 +5854,9 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc7-1-defender",
@@ -5658,7 +5893,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "soc2-cc7-2-defender",
@@ -5711,7 +5948,9 @@
     "https://learn.microsoft.com/defender-xdr/investigate-incidents"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc7-3-defender",
@@ -5758,7 +5997,9 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc7-4-defender",
@@ -5803,7 +6044,9 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc7-2-sentinel",
@@ -5856,7 +6099,9 @@
     "https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc7-3-sentinel",
@@ -5901,7 +6146,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc7-4-sentinel",
@@ -5946,7 +6193,9 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc7-1-mdc",
@@ -5985,7 +6234,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-agentless-data-collection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc6-8-mdc",
@@ -6030,7 +6281,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc7-2-mdc",
@@ -6075,7 +6328,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "soc2-cc4-1-mdc",
@@ -6114,7 +6369,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/assign-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a1-a",
@@ -6147,7 +6404,9 @@
    "related_microsoft": [],
    "external_dependencies": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
    "legacy_dependencies": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a1-c",
@@ -6179,7 +6438,9 @@
    "related_microsoft": [],
    "external_dependencies": "Sanction policy document; HR disciplinary process",
    "legacy_dependencies": "Sanction policy document; HR disciplinary process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a1-d",
@@ -6211,7 +6472,9 @@
    "related_microsoft": [],
    "external_dependencies": "Review procedure and assigned reviewer; SIEM for EHR/non-M365 logs",
    "legacy_dependencies": "Review procedure and assigned reviewer; SIEM for EHR/non-M365 logs",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a4",
@@ -6249,7 +6512,9 @@
    ],
    "external_dependencies": "EHR role-based access; minimum-necessary policy",
    "legacy_dependencies": "Entra ID groups + access reviews; EHR role-based access; minimum-necessary policy",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a6",
@@ -6283,7 +6548,9 @@
    "related_microsoft": [],
    "external_dependencies": "IR plan; breach risk assessment (§164.402); OCR notification process",
    "legacy_dependencies": "IR plan; breach risk assessment (§164.402); OCR notification process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a8",
@@ -6313,7 +6580,9 @@
    "related_microsoft": [],
    "external_dependencies": "Independent security evaluation/audit; penetration testing program",
    "legacy_dependencies": "Independent security evaluation/audit; penetration testing program",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-310-d2",
@@ -6346,7 +6615,9 @@
    "related_microsoft": [],
    "external_dependencies": "Physical media sanitization + destruction certificates; device decommissioning process",
    "legacy_dependencies": "Physical media sanitization + destruction certificates; device decommissioning process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-312-a2-iv",
@@ -6378,7 +6649,9 @@
    "related_microsoft": [],
    "external_dependencies": "M365 service encryption (inherited); EHR/database encryption; key management",
    "legacy_dependencies": "M365 service encryption (inherited); EHR/database encryption; key management",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-312-b",
@@ -6407,7 +6680,9 @@
    "related_microsoft": [],
    "external_dependencies": "EHR/clinical system audit logging; SIEM aggregation",
    "legacy_dependencies": "EHR/clinical system audit logging; SIEM aggregation",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-312-c",
@@ -6439,7 +6714,9 @@
    "related_microsoft": [],
    "external_dependencies": "SharePoint versioning (platform); EHR integrity mechanisms; backup/restore validation",
    "legacy_dependencies": "SharePoint versioning (platform); EHR integrity mechanisms; backup/restore validation",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-312-e",
@@ -6471,7 +6748,9 @@
    "related_microsoft": [],
    "external_dependencies": "TLS configuration (platform-managed in M365); site-to-site VPN/interface engines for HL7/FHIR feeds",
    "legacy_dependencies": "TLS configuration (platform-managed in M365); site-to-site VPN/interface engines for HL7/FHIR feeds",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-316-b",
@@ -6503,7 +6782,9 @@
    "related_microsoft": [],
    "external_dependencies": "Policy authoring/review process; document-control ownership",
    "legacy_dependencies": "Policy authoring/review process; document-control ownership",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a3-entra",
@@ -6533,7 +6814,9 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a4-entra",
@@ -6569,7 +6852,9 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a5-entra",
@@ -6601,7 +6886,9 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-312-a1-entra",
@@ -6637,7 +6924,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-312-d-entra",
@@ -6667,7 +6956,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a5-b-intune",
@@ -6703,7 +6994,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-310-b-c-intune",
@@ -6735,7 +7028,9 @@
     "https://learn.microsoft.com/intune/device-security/compliance/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-310-d1-intune",
@@ -6772,7 +7067,9 @@
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-312-a2-iv-intune",
@@ -6812,7 +7109,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a1-a-defender",
@@ -6849,7 +7148,9 @@
     "https://learn.microsoft.com/defender-xdr/threat-analytics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a1-d-defender",
@@ -6895,7 +7196,9 @@
     "https://learn.microsoft.com/defender-xdr/advanced-hunting-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a5-b-defender",
@@ -6934,7 +7237,9 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "hipaa-308-a6-defender",
@@ -6980,7 +7285,9 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a1-d-sentinel",
@@ -7026,7 +7333,9 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-312-b-sentinel",
@@ -7065,7 +7374,9 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a6-sentinel",
@@ -7111,7 +7422,9 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a1-a-mdc",
@@ -7156,7 +7469,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-data-security-posture"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a8-mdc",
@@ -7195,7 +7510,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-312-c-mdc",
@@ -7234,7 +7551,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-introduction"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "hipaa-308-a5-b-mdc",
@@ -7279,7 +7598,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-1-3",
@@ -7312,7 +7633,9 @@
    "related_microsoft": [],
    "external_dependencies": "Network segmentation/boundary flow control; enclave architecture",
    "legacy_dependencies": "Network segmentation/boundary flow control; enclave architecture",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-1-22",
@@ -7344,7 +7667,9 @@
    "related_microsoft": [],
    "external_dependencies": "Public-posting review procedure; web CMS controls",
    "legacy_dependencies": "Public-posting review procedure; web CMS controls",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-3-1",
@@ -7380,7 +7705,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "SIEM (Sentinel) for estate-wide log aggregation and non-M365 sources",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-3-2",
@@ -7417,7 +7744,9 @@
    ],
    "external_dependencies": "prohibition of shared credentials",
    "legacy_dependencies": "Entra ID unique identities; prohibition of shared credentials",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-3-8",
@@ -7446,7 +7775,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM-side log protection; export handling procedure",
    "legacy_dependencies": "SIEM-side log protection; export handling procedure",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-6-1-2",
@@ -7479,7 +7810,9 @@
    "related_microsoft": [],
    "external_dependencies": "IR plan; DIBNet-report procedure (DFARS 7012); SIEM/SOAR",
    "legacy_dependencies": "IR plan; DIBNet-report procedure (DFARS 7012); SIEM/SOAR",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-8-4",
@@ -7510,7 +7843,9 @@
    "related_microsoft": [],
    "external_dependencies": "CUI Registry-aligned marking policy; physical media marking procedure",
    "legacy_dependencies": "CUI Registry-aligned marking policy; physical media marking procedure",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-8-7",
@@ -7552,7 +7887,9 @@
    ],
    "external_dependencies": "asset-scope definition",
    "legacy_dependencies": "Intune/Defender device control (port-level); asset-scope definition",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-9-2",
@@ -7588,7 +7925,9 @@
    ],
    "external_dependencies": "HR process feed",
    "legacy_dependencies": "Entra offboarding (account disable, session revoke); HR process feed",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-12-1-3",
@@ -7619,7 +7958,9 @@
    "related_microsoft": [],
    "external_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
    "legacy_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-13-8",
@@ -7651,7 +7992,9 @@
    "related_microsoft": [],
    "external_dependencies": "TLS/VPN configuration; FIPS 140 module validation documentation (Microsoft)",
    "legacy_dependencies": "TLS/VPN configuration; FIPS 140 module validation documentation (Microsoft)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-13-16",
@@ -7690,7 +8033,9 @@
    ],
    "external_dependencies": "M365 service encryption (inherited); non-M365 store encryption",
    "legacy_dependencies": "BitLocker on endpoints (Intune); M365 service encryption (inherited); non-M365 store encryption",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-14-7",
@@ -7735,7 +8080,9 @@
    ],
    "external_dependencies": "acceptable-use definitions",
    "legacy_dependencies": "Defender XDR/Sentinel for system-level detection; acceptable-use definitions",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-1-1-entra",
@@ -7771,7 +8118,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-1-2-entra",
@@ -7800,7 +8149,9 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "171-3-1-5-entra",
@@ -7831,7 +8182,9 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-1-7-entra",
@@ -7860,7 +8213,9 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-5-3-entra",
@@ -7890,7 +8245,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-1-11-entra",
@@ -7919,7 +8276,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-1-1-intune",
@@ -7956,7 +8315,9 @@
     "https://learn.microsoft.com/intune/device-security/conditional-access-integration/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-1-18-intune",
@@ -7996,7 +8357,9 @@
     "https://learn.microsoft.com/intune/device-security/compliance/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-1-19-intune",
@@ -8036,7 +8399,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-4-1-intune",
@@ -8068,7 +8433,9 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-4-2-intune",
@@ -8105,7 +8472,9 @@
     "https://learn.microsoft.com/intune/device-security/endpoint-security-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-8-7-intune",
@@ -8147,7 +8516,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/attack-surface-reduction"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-13-16-intune",
@@ -8186,7 +8557,9 @@
     "https://learn.microsoft.com/intune/device-management/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "171-3-1-20-defender",
@@ -8225,7 +8598,9 @@
     "https://learn.microsoft.com/defender-cloud-apps/what-is-defender-for-cloud-apps"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-6-1-2-defender",
@@ -8271,7 +8646,9 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-11-2-3-defender",
@@ -8308,7 +8685,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "171-3-14-2-defender",
@@ -8347,7 +8726,9 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-14-3-defender",
@@ -8383,7 +8764,9 @@
     "https://learn.microsoft.com/defender-xdr/threat-analytics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-14-4-5-defender",
@@ -8419,7 +8802,9 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "171-3-14-6-defender",
@@ -8465,7 +8850,9 @@
     "https://learn.microsoft.com/defender-endpoint/network-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-14-7-defender",
@@ -8511,7 +8898,9 @@
     "https://learn.microsoft.com/defender-for-identity/what-is"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "171-3-3-1-sentinel",
@@ -8550,7 +8939,9 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-3-4-sentinel",
@@ -8589,7 +8980,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-3-5-sentinel",
@@ -8634,7 +9027,9 @@
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-6-1-2-sentinel",
@@ -8679,7 +9074,9 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-14-3-sentinel",
@@ -8718,7 +9115,9 @@
     "https://learn.microsoft.com/azure/sentinel/use-matching-analytics-to-detect-threats"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-14-6-sentinel",
@@ -8763,7 +9162,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-14-7-sentinel",
@@ -8814,7 +9215,9 @@
     "https://learn.microsoft.com/azure/sentinel/hunting"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-11-2-3-mdc",
@@ -8853,7 +9256,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-12-1-3-mdc",
@@ -8892,7 +9297,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/assign-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-4-1-mdc",
@@ -8931,7 +9338,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-14-6-mdc",
@@ -8976,7 +9385,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "171-3-11-1-mdc",
@@ -9013,7 +9424,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/how-to-manage-cloud-security-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-ac-3",
@@ -9051,7 +9464,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "Entra ID authorizations, Conditional Access, application ACLs (primary)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-ac-4",
@@ -9082,7 +9497,9 @@
    "related_microsoft": [],
    "external_dependencies": "Network segmentation and boundary flow control; cross-domain solutions",
    "legacy_dependencies": "Network segmentation and boundary flow control; cross-domain solutions",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-ac-21",
@@ -9121,7 +9538,9 @@
    ],
    "external_dependencies": "Sharing-agreement process; partner vetting",
    "legacy_dependencies": "Sharing-agreement process; partner vetting; B2B collaboration configuration (Entra)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-ac-22",
@@ -9153,7 +9572,9 @@
    "related_microsoft": [],
    "external_dependencies": "Web publishing review procedure; CMS controls",
    "legacy_dependencies": "Web publishing review procedure; CMS controls",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-au-2-12",
@@ -9189,7 +9610,9 @@
    ],
    "external_dependencies": "Logging configuration on non-M365 components",
    "legacy_dependencies": "Logging configuration on non-M365 components; SIEM collection (Sentinel)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-au-6",
@@ -9222,7 +9645,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM correlation and dashboards; assigned reviewer roles",
    "legacy_dependencies": "SIEM correlation and dashboards; assigned reviewer roles",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-au-9",
@@ -9251,7 +9676,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM-side log protection; export handling procedure",
    "legacy_dependencies": "SIEM-side log protection; export handling procedure",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "53-au-11",
@@ -9280,7 +9707,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM/archive retention for non-M365 logs; records schedule approval (e.g., NARA GRS alignment)",
    "legacy_dependencies": "SIEM/archive retention for non-M365 logs; records schedule approval (e.g., NARA GRS alignment)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "53-cm-12",
@@ -9312,7 +9741,9 @@
    "related_microsoft": [],
    "external_dependencies": "Information-location documentation for non-M365 components; data-flow diagrams",
    "legacy_dependencies": "Information-location documentation for non-M365 components; data-flow diagrams",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-ir-4",
@@ -9345,7 +9776,9 @@
    "related_microsoft": [],
    "external_dependencies": "IR plan and SOC processes; SIEM/SOAR; agency reporting obligations (FISMA/US-CERT)",
    "legacy_dependencies": "IR plan and SOC processes; SIEM/SOAR; agency reporting obligations (FISMA/US-CERT)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-ir-9",
@@ -9379,7 +9812,9 @@
    "related_microsoft": [],
    "external_dependencies": "Spillage response roles and procedures; system-level sanitization where required",
    "legacy_dependencies": "Spillage response roles and procedures; system-level sanitization where required",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-mp-3",
@@ -9410,7 +9845,9 @@
    "related_microsoft": [],
    "external_dependencies": "Marking policy (e.g., CUI Registry alignment); physical media marking procedure",
    "legacy_dependencies": "Marking policy (e.g., CUI Registry alignment); physical media marking procedure",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-mp-6",
@@ -9438,7 +9875,9 @@
    "related_microsoft": [],
    "external_dependencies": "Media sanitization program per NIST SP 800-88; destruction certificates; Microsoft datacenter media handling (inherited, evidenced via FedRAMP packages)",
    "legacy_dependencies": "Media sanitization program per NIST SP 800-88; destruction certificates; Microsoft datacenter media handling (inherited, evidenced via FedRAMP packages)",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "53-mp-7",
@@ -9480,7 +9919,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "Intune/Defender device control (port/device-class level)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-ps-4",
@@ -9516,7 +9957,9 @@
    ],
    "external_dependencies": "exit process",
    "legacy_dependencies": "Entra offboarding automation (disable, revoke, session kill); exit process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-ra-3",
@@ -9548,7 +9991,9 @@
    "related_microsoft": [],
    "external_dependencies": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
    "legacy_dependencies": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-sc-8",
@@ -9580,7 +10025,9 @@
    "related_microsoft": [],
    "external_dependencies": "TLS/IPsec configuration; FIPS 140 module validation documentation (platform)",
    "legacy_dependencies": "TLS/IPsec configuration; FIPS 140 module validation documentation (platform)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-sc-28",
@@ -9619,7 +10066,9 @@
    ],
    "external_dependencies": "Platform storage encryption (inherited via FedRAMP authorization)",
    "legacy_dependencies": "Platform storage encryption (inherited via FedRAMP authorization); BitLocker on endpoints (Intune)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-si-4",
@@ -9665,7 +10114,9 @@
    ],
    "external_dependencies": "monitoring strategy",
    "legacy_dependencies": "Defender XDR/Sentinel (attack detection, network monitoring); monitoring strategy",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-si-12",
@@ -9697,7 +10148,9 @@
    "related_microsoft": [],
    "external_dependencies": "Approved records schedule (NARA GRS for federal); retention for non-M365 systems",
    "legacy_dependencies": "Approved records schedule (NARA GRS for federal); retention for non-M365 systems",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-si-19",
@@ -9727,7 +10180,9 @@
    "related_microsoft": [],
    "external_dependencies": "De-identification tooling and technique selection (SP 800-188); dataset release process",
    "legacy_dependencies": "De-identification tooling and technique selection (SP 800-188); dataset release process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-ac-2-entra",
@@ -9757,7 +10212,9 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "53-ac-3-entra",
@@ -9794,7 +10251,9 @@
     "https://learn.microsoft.com/entra/identity/role-based-access-control/custom-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-ac-6-entra",
@@ -9825,7 +10284,9 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-ac-7-entra",
@@ -9854,7 +10315,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "53-ia-2-entra",
@@ -9884,7 +10347,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-ia-5-entra",
@@ -9914,7 +10379,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-sspr-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-ac-6-intune",
@@ -9950,7 +10417,9 @@
     "https://learn.microsoft.com/intune/epm/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-ac-19-intune",
@@ -9991,7 +10460,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "53-cm-2-intune",
@@ -10020,7 +10491,9 @@
     "https://learn.microsoft.com/intune/device-security/security-baselines/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "53-cm-6-intune",
@@ -10057,7 +10530,9 @@
     "https://learn.microsoft.com/intune/device-security/endpoint-security-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "53-mp-7-intune",
@@ -10099,7 +10574,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/attack-surface-reduction"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "53-sc-28-intune",
@@ -10138,7 +10615,9 @@
     "https://learn.microsoft.com/intune/device-management/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "53-ir-4-defender",
@@ -10185,7 +10664,9 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-ra-5-defender",
@@ -10222,7 +10703,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "53-si-2-defender",
@@ -10258,7 +10741,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "53-si-3-defender",
@@ -10297,7 +10782,9 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-si-4-defender",
@@ -10351,7 +10838,9 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "53-si-8-defender",
@@ -10381,7 +10870,9 @@
     "https://learn.microsoft.com/defender-office-365/mdo-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "53-au-2-12-sentinel",
@@ -10418,7 +10909,9 @@
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-au-6-sentinel",
@@ -10463,7 +10956,9 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-au-9-sentinel",
@@ -10506,7 +11001,9 @@
     "https://learn.microsoft.com/azure/sentinel/health-audit"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-au-11-sentinel",
@@ -10545,7 +11042,9 @@
     "https://learn.microsoft.com/azure/sentinel/datalake/sentinel-lake-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-ir-4-sentinel",
@@ -10591,7 +11090,9 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-ir-5-sentinel",
@@ -10628,7 +11129,9 @@
     "https://learn.microsoft.com/azure/sentinel/manage-soc-with-incident-metrics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-si-4-sentinel",
@@ -10674,7 +11177,9 @@
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-ra-10-sentinel",
@@ -10713,7 +11218,9 @@
     "https://learn.microsoft.com/azure/sentinel/search-jobs"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-ra-5-mdc",
@@ -10752,7 +11259,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-ca-7-mdc",
@@ -10798,7 +11307,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/secure-score-security-controls"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-ca-2-mdc",
@@ -10835,7 +11346,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/assign-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-cm-8-mdc",
@@ -10872,7 +11385,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-cm-6-mdc",
@@ -10911,7 +11426,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-si-7-mdc",
@@ -10948,7 +11465,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "53-si-4-mdc",
@@ -10993,7 +11512,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-gv-oc-03",
@@ -11024,7 +11545,9 @@
    "related_microsoft": [],
    "external_dependencies": "Legal/GRC ownership of the obligations register",
    "legacy_dependencies": "Legal/GRC ownership of the obligations register",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-id-am-07",
@@ -11057,7 +11580,9 @@
    "related_microsoft": [],
    "external_dependencies": "Inventory for non-M365 data platforms; data owners assigning designations",
    "legacy_dependencies": "Inventory for non-M365 data platforms; data owners assigning designations",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-id-am-08",
@@ -11090,7 +11615,9 @@
    "related_microsoft": [],
    "external_dependencies": "ITAM/CMDB for systems and devices; SDLC processes",
    "legacy_dependencies": "ITAM/CMDB for systems and devices; SDLC processes",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-pr-ds-01",
@@ -11124,7 +11651,9 @@
    "related_microsoft": [],
    "external_dependencies": "Platform storage encryption (inherited); backup solution; database TDE",
    "legacy_dependencies": "Platform storage encryption (inherited); backup solution; database TDE",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-ds-02",
@@ -11157,7 +11686,9 @@
    "related_microsoft": [],
    "external_dependencies": "TLS/network encryption (platform); VPN for site-to-site flows",
    "legacy_dependencies": "TLS/network encryption (platform); VPN for site-to-site flows",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-pr-ds-10",
@@ -11190,7 +11721,9 @@
    "related_microsoft": [],
    "external_dependencies": "Application sandboxing/platform protections; VDI controls where used",
    "legacy_dependencies": "Application sandboxing/platform protections; VDI controls where used",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-pr-ps-04",
@@ -11227,7 +11760,9 @@
    ],
    "external_dependencies": "",
    "legacy_dependencies": "SIEM ingestion and monitoring content (Sentinel)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-de-cm-03",
@@ -11261,7 +11796,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM/UEBA for infrastructure-level activity; HR triggers",
    "legacy_dependencies": "SIEM/UEBA for infrastructure-level activity; HR triggers",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-cm-03-ai",
@@ -11301,7 +11838,9 @@
    ],
    "external_dependencies": "Managed browser/device footprint",
    "legacy_dependencies": "Managed browser/device footprint; network AI-app discovery (Defender for Cloud Apps)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "csf-de-ae-02",
@@ -11334,7 +11873,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM correlation rules; SOC triage process",
    "legacy_dependencies": "SIEM correlation rules; SOC triage process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "csf-rs-an-03",
@@ -11377,7 +11918,9 @@
    ],
    "external_dependencies": "IR analysis procedure",
    "legacy_dependencies": "Defender XDR/Sentinel forensics; IR analysis procedure",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "csf-rs-an-06-07",
@@ -11409,7 +11952,9 @@
    "related_microsoft": [],
    "external_dependencies": "Forensic imaging tooling; chain-of-custody procedure",
    "legacy_dependencies": "Forensic imaging tooling; chain-of-custody procedure",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-pr-aa-01-entra",
@@ -11441,7 +11986,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-pr-aa-02-entra",
@@ -11470,7 +12017,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-aa-03-entra",
@@ -11500,7 +12049,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "csf-pr-aa-05-entra",
@@ -11532,7 +12083,9 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-access-package-incompatible"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "csf-de-cm-03-entra",
@@ -11574,7 +12127,9 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-id-am-01-intune",
@@ -11603,7 +12158,9 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-ps-01-intune",
@@ -11635,7 +12192,9 @@
     "https://learn.microsoft.com/intune/device-configuration/settings-catalog"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-ps-02-intune",
@@ -11672,7 +12231,9 @@
     "https://learn.microsoft.com/windows/deployment/windows-autopatch/overview/windows-autopatch-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-ps-05-intune",
@@ -11710,7 +12271,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/manage-app-control"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-ds-01-intune",
@@ -11750,7 +12313,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "csf-id-ra-01-defender",
@@ -11787,7 +12352,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "csf-de-cm-01-defender",
@@ -11826,7 +12393,9 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-cm-03-defender",
@@ -11869,7 +12438,9 @@
     "https://learn.microsoft.com/defender-cloud-apps/set-up-cloud-discovery"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-cm-09-defender",
@@ -11905,7 +12476,9 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-ae-02-defender",
@@ -11952,7 +12525,9 @@
     "https://learn.microsoft.com/defender-xdr/advanced-hunting-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-rs-an-03-defender",
@@ -11997,7 +12572,9 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-rs-mi-01-02-defender",
@@ -12037,7 +12614,9 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-ps-04-sentinel",
@@ -12082,7 +12661,9 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-ae-02-sentinel",
@@ -12127,7 +12708,9 @@
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-ae-03-sentinel",
@@ -12172,7 +12755,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-cm-01-sentinel",
@@ -12211,7 +12796,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-rs-an-03-sentinel",
@@ -12256,7 +12843,9 @@
     "https://learn.microsoft.com/azure/sentinel/search-jobs"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-rs-mi-01-02-sentinel",
@@ -12295,7 +12884,9 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-id-ra-01-mdc",
@@ -12334,7 +12925,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-id-am-02-mdc",
@@ -12377,7 +12970,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-id-im-01-mdc",
@@ -12417,7 +13012,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/secure-score-security-controls"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-pr-ps-01-mdc",
@@ -12456,7 +13053,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "csf-de-cm-09-mdc",
@@ -12501,7 +13100,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-3-2-1",
@@ -12535,7 +13136,9 @@
    "related_microsoft": [],
    "external_dependencies": "CDE database retention/purge routines; tokenization strategy",
    "legacy_dependencies": "CDE database retention/purge routines; tokenization strategy",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-3-3-1",
@@ -12565,7 +13168,9 @@
    "related_microsoft": [],
    "external_dependencies": "Payment application SAD purge validation; acquirer/processor controls",
    "legacy_dependencies": "Payment application SAD purge validation; acquirer/processor controls",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "pci-3-4-2",
@@ -12595,7 +13200,9 @@
    "related_microsoft": [],
    "external_dependencies": "VDI/remote-access session policies; documented authorization workflow",
    "legacy_dependencies": "VDI/remote-access session policies; documented authorization workflow",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "pci-3-5-1",
@@ -12627,7 +13234,9 @@
    "related_microsoft": [],
    "external_dependencies": "Tokenization/DB encryption in the CDE; key management",
    "legacy_dependencies": "Tokenization/DB encryption in the CDE; key management",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "pci-4-2-1",
@@ -12656,7 +13265,9 @@
    "related_microsoft": [],
    "external_dependencies": "TLS configuration and certificate management on transmission endpoints; network architecture",
    "legacy_dependencies": "TLS configuration and certificate management on transmission endpoints; network architecture",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "pci-4-2-2",
@@ -12688,7 +13299,9 @@
    "related_microsoft": [],
    "external_dependencies": "Coverage for non-M365 messaging channels (consumer apps) via endpoint/browser controls",
    "legacy_dependencies": "Coverage for non-M365 messaging channels (consumer apps) via endpoint/browser controls",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-7-2-1",
@@ -12725,7 +13338,9 @@
    ],
    "external_dependencies": "CDE access control systems",
    "legacy_dependencies": "CDE access control systems; Entra RBAC + access reviews",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-10-5-1",
@@ -12755,7 +13370,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM retention for CDE/network logs (primary)",
    "legacy_dependencies": "SIEM retention for CDE/network logs (primary)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "pci-12-5-2",
@@ -12787,7 +13404,9 @@
    "related_microsoft": [],
    "external_dependencies": "Network/data-flow diagrams; CDE inventory; QSA scoping review",
    "legacy_dependencies": "Network/data-flow diagrams; CDE inventory; QSA scoping review",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "pci-12-10-7",
@@ -12819,7 +13438,9 @@
    "related_microsoft": [],
    "external_dependencies": "IR procedure for unexpected PAN; CDE-side detection tooling",
    "legacy_dependencies": "IR procedure for unexpected PAN; CDE-side detection tooling",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "pci-7-2-1-entra",
@@ -12850,7 +13471,9 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "pci-8-2-1-entra",
@@ -12879,7 +13502,9 @@
     "https://learn.microsoft.com/entra/fundamentals/what-is-entra"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "pci-8-3-1-entra",
@@ -12908,7 +13533,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-8-4-2-entra",
@@ -12938,7 +13565,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-1-5-1-intune",
@@ -12975,7 +13604,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/manage-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "pci-2-2-1-intune",
@@ -13005,7 +13636,9 @@
     "https://learn.microsoft.com/intune/device-security/security-baselines/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "pci-5-3-intune",
@@ -13042,7 +13675,9 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "pci-6-3-3-intune",
@@ -13080,7 +13715,9 @@
     "https://learn.microsoft.com/windows/deployment/windows-autopatch/overview/windows-autopatch-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "pci-5-2-defender",
@@ -13117,7 +13754,9 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-5-4-1-defender",
@@ -13148,7 +13787,9 @@
     "https://learn.microsoft.com/defender-office-365/attack-simulation-training-get-started"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-6-3-1-defender",
@@ -13185,7 +13826,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "pci-11-3-1-defender",
@@ -13223,7 +13866,9 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "pci-5-3-defender",
@@ -13260,7 +13905,9 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "pci-10-3-3-sentinel",
@@ -13300,7 +13947,9 @@
     "https://learn.microsoft.com/azure/sentinel/connect-data-sources"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-10-4-1-sentinel",
@@ -13346,7 +13995,9 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-10-5-1-sentinel",
@@ -13386,7 +14037,9 @@
     "https://learn.microsoft.com/azure/sentinel/search-jobs"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-10-7-2-sentinel",
@@ -13426,7 +14079,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-12-10-5-sentinel",
@@ -13467,7 +14122,9 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-11-3-1-mdc",
@@ -13507,7 +14164,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/regulatory-compliance-dashboard"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-5-2-mdc",
@@ -13553,7 +14212,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/integration-defender-for-endpoint"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "pci-2-2-1-mdc",
@@ -13594,7 +14255,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-b",
@@ -13627,7 +14290,9 @@
    "related_microsoft": [],
    "external_dependencies": "Written risk-assessment methodology; Qualified Individual ownership",
    "legacy_dependencies": "Written risk-assessment methodology; Qualified Individual ownership",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c1",
@@ -13666,7 +14331,9 @@
    ],
    "external_dependencies": "application entitlements",
    "legacy_dependencies": "Entra RBAC + access reviews (primary); application entitlements",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-c2",
@@ -13698,7 +14365,9 @@
    "related_microsoft": [],
    "external_dependencies": "CMDB/ITAM; HR systems; facilities records",
    "legacy_dependencies": "CMDB/ITAM; HR systems; facilities records",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c3",
@@ -13730,7 +14399,9 @@
    "related_microsoft": [],
    "external_dependencies": "TLS on external transmission paths; database encryption; key management",
    "legacy_dependencies": "TLS on external transmission paths; database encryption; key management",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c6",
@@ -13762,7 +14433,9 @@
    "related_microsoft": [],
    "external_dependencies": "Application-database purge routines; paper records destruction",
    "legacy_dependencies": "Application-database purge routines; paper records destruction",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-c7",
@@ -13791,7 +14464,9 @@
    "related_microsoft": [],
    "external_dependencies": "Change-management process/tooling",
    "legacy_dependencies": "Change-management process/tooling",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c8",
@@ -13824,7 +14499,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIEM for application/infrastructure logs; core-system audit trails",
    "legacy_dependencies": "SIEM for application/infrastructure logs; core-system audit trails",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-h",
@@ -13857,7 +14534,9 @@
    "related_microsoft": [],
    "external_dependencies": "Written IR plan; legal/communications; SIEM/SOAR",
    "legacy_dependencies": "Written IR plan; legal/communications; SIEM/SOAR",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-j",
@@ -13891,7 +14570,9 @@
    "related_microsoft": [],
    "external_dependencies": "Breach counsel determination; FTC filing process",
    "legacy_dependencies": "Breach counsel determination; FTC filing process",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-c1-entra",
@@ -13930,7 +14611,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-c5-entra",
@@ -13960,7 +14643,9 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-c8-entra",
@@ -14002,7 +14687,9 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c2-intune",
@@ -14038,7 +14725,9 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c3-intune",
@@ -14078,7 +14767,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c8-defender",
@@ -14124,7 +14815,9 @@
     "https://learn.microsoft.com/defender-for-identity/what-is"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-d-defender",
@@ -14167,7 +14860,9 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "glba-314-4-c8-sentinel",
@@ -14220,7 +14915,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-d-sentinel",
@@ -14259,7 +14956,9 @@
     "https://learn.microsoft.com/azure/sentinel/health-audit"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-h-sentinel",
@@ -14304,7 +15003,9 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-d-mdc",
@@ -14350,7 +15051,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "glba-314-4-c2-mdc",
@@ -14395,7 +15098,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-data-security-posture"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "ferpa-99-10",
@@ -14427,7 +15132,9 @@
    "related_microsoft": [],
    "external_dependencies": "SIS/registrar extract (primary record store); request intake and verification process; §99.12 redaction review",
    "legacy_dependencies": "SIS/registrar extract (primary record store); request intake and verification process; §99.12 redaction review",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "ferpa-99-31-a1ii",
@@ -14468,7 +15175,9 @@
    ],
    "external_dependencies": "SIS role-based access (primary); annual notification defining school-official criteria (§99.7)",
    "legacy_dependencies": "SIS role-based access (primary); annual notification defining school-official criteria (§99.7); Entra group hygiene",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "ferpa-99-30-33",
@@ -14500,7 +15209,9 @@
    "related_microsoft": [],
    "external_dependencies": "Consent workflow and records; §99.31 exception determinations; disclosure agreements binding recipients (§99.33)",
    "legacy_dependencies": "Consent workflow and records; §99.31 exception determinations; disclosure agreements binding recipients (§99.33)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "ferpa-99-32",
@@ -14533,7 +15244,9 @@
    "related_microsoft": [],
    "external_dependencies": "Registrar-maintained disclosure record (primary); SIS access logging",
    "legacy_dependencies": "Registrar-maintained disclosure record (primary); SIS access logging",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "ferpa-99-31a6-35",
@@ -14566,7 +15279,9 @@
    "related_microsoft": [],
    "external_dependencies": "Written agreements specifying destruction terms (§99.31(a)(6)(iii)); recipient-side destruction attestation",
    "legacy_dependencies": "Written agreements specifying destruction terms (§99.31(a)(6)(iii)); recipient-side destruction attestation",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "ferpa-99-31-a1ii-entra",
@@ -14605,7 +15320,9 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-5-1-c",
@@ -14637,7 +15354,9 @@
    "related_microsoft": [],
    "external_dependencies": "Collection-point design; purpose specification (privacy office)",
    "legacy_dependencies": "Collection-point design; purpose specification (privacy office)",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-5-1-e",
@@ -14668,7 +15387,9 @@
    "related_microsoft": [],
    "external_dependencies": "Approved retention schedule; application-store purges",
    "legacy_dependencies": "Approved retention schedule; application-store purges",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-5-2",
@@ -14700,7 +15421,9 @@
    "related_microsoft": [],
    "external_dependencies": "DPO function; ROPA; processor agreements",
    "legacy_dependencies": "DPO function; ROPA; processor agreements",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-15",
@@ -14738,7 +15461,9 @@
    ],
    "external_dependencies": "line-of-business system search",
    "legacy_dependencies": "Microsoft Priva Subject Rights Requests (if licensed); line-of-business system search",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-17",
@@ -14777,7 +15502,9 @@
    ],
    "external_dependencies": "application-level deletion; backup-cycle policy statement",
    "legacy_dependencies": "Priva SRR (if licensed); application-level deletion; backup-cycle policy statement",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-20",
@@ -14813,7 +15540,9 @@
    ],
    "external_dependencies": "Application-level structured exports",
    "legacy_dependencies": "Application-level structured exports; Priva",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-25",
@@ -14854,7 +15583,9 @@
    ],
    "external_dependencies": "DPIA-driven measures",
    "legacy_dependencies": "Privacy engineering in product/app design; DPIA-driven measures",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-30",
@@ -14889,7 +15620,9 @@
    ],
    "external_dependencies": "DPO ownership",
    "legacy_dependencies": "ROPA tooling/process (Priva, GRC platform, registers); DPO ownership",
-   "licensing_model": "n/a"
+   "licensing_model": "n/a",
+   "license_band": "na",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-a",
@@ -14921,7 +15654,9 @@
    "related_microsoft": [],
    "external_dependencies": "Application/database encryption; pseudonymization tooling; key management",
    "legacy_dependencies": "Application/database encryption; pseudonymization tooling; key management",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-d",
@@ -14953,7 +15688,9 @@
    "related_microsoft": [],
    "external_dependencies": "Pen-test program; audit function",
    "legacy_dependencies": "Pen-test program; audit function",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-33-34",
@@ -14986,7 +15723,9 @@
    "related_microsoft": [],
    "external_dependencies": "Breach counsel; supervisory-authority filing process; subject-communication mechanics",
    "legacy_dependencies": "Breach counsel; supervisory-authority filing process; subject-communication mechanics",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-35",
@@ -15018,7 +15757,9 @@
    "related_microsoft": [],
    "external_dependencies": "DPIA methodology and register; DPO consultation",
    "legacy_dependencies": "DPIA methodology and register; DPO consultation",
-   "licensing_model": "per_user"
+   "licensing_model": "per_user",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-32-1-b-entra",
@@ -15058,7 +15799,9 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-25-entra",
@@ -15097,7 +15840,9 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e3",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-32-1-a-intune",
@@ -15137,7 +15882,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-b-intune",
@@ -15183,7 +15930,9 @@
     "https://learn.microsoft.com/intune/app-management/protection/wipe-corporate-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "e3",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-b-defender",
@@ -15234,7 +15983,9 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-d-defender",
@@ -15273,7 +16024,9 @@
     "https://learn.microsoft.com/defender-office-365/attack-simulation-training-get-started"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": true
   },
   {
    "id": "gdpr-33-34-defender",
@@ -15319,7 +16072,9 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "e5",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-b-sentinel",
@@ -15370,7 +16125,9 @@
     "https://learn.microsoft.com/azure/sentinel/connect-data-sources"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-d-sentinel",
@@ -15415,7 +16172,9 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-33-34-sentinel",
@@ -15461,7 +16220,9 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-b-mdc",
@@ -15512,7 +16273,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/permissions-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-19",
+   "license_band": "consumption",
+   "license_band_partial": false
   },
   {
    "id": "gdpr-32-1-d-mdc",
@@ -15558,7 +16321,9 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20"
+   "last_verified": "2026-07-20",
+   "license_band": "consumption",
+   "license_band_partial": false
   }
  ]
 }

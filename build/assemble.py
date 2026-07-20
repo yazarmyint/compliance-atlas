@@ -5,7 +5,7 @@ Add a product: see docs/AUTHORING.md "Add a product" — products-map entry in c
 product=<id>, solutions registered in SOLUTIONS and the product's solutions list.
 
 Canonical file renamed 2026-07-17: purview-compliance-map.json -> compliance-atlas.json (platform generalization)."""
-import importlib, json, os, re, shutil, sys, datetime
+import collections, importlib, json, os, re, shutil, sys, datetime
 from urllib.parse import urlparse
 
 # ---- stale-bytecode guard (PR-058). MUST stay above the sibling imports below. ----
@@ -33,6 +33,7 @@ from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
                     TRIGGER_TYPES, TYPE_CADENCE, constant_dicts, lic_dicts, staleness_class,
                     REVERIFY_DATE, REVERIFY_DATE_2, REVERIFIED_LIC_KEYS, REVERIFIED_LIC_KEYS_2)
 from dependency_migration import migrate_row
+import license_bands
 
 # Order controls display order in the HTML.
 MODULES = ["rows_dpr", "rows_iso", "rows_soc2", "rows_hipaa", "rows_171", "rows_80053", "rows_csf", "rows_pci", "rows_glba", "rows_ferpa", "rows_gdpr"]
@@ -148,7 +149,7 @@ BRAND = {
     # policy's bands are written around readers, and this addition is invisible to one; the
     # discriminator that actually decides it is compatibility, and no consumer must change code
     # for an added key. Reasoning in full in CHANGELOG.md and AUDIT-FINDINGS §26.
-    "atlas_version": "2.10.1",
+    "atlas_version": "3.0.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -221,6 +222,12 @@ META = {
         "included": "Included with a platform entitlement at no separate charge.",
         "n/a": "No license claim (boundary rows).",
     },
+    # PR-015. The license-tier lens. Definitions live in build/license_bands.py beside the
+    # mapping that produces them, so the legend a reader sees and the derivation cannot
+    # drift apart. Static strings only -- nothing here is computed at build time.
+    "license_bands": license_bands.BAND_DEFS,
+    "license_band_partial": license_bands.BAND_PARTIAL_DEF,
+    "license_band_scope": license_bands.BAND_SCOPE_NOTE,
     "coverage_levels": {
         "Direct Support": "The product directly implements/enforces the control activity (within the stated scope).",
         "Partial Support": "The product implements part; a control outside it is also required.",
@@ -526,6 +533,38 @@ def main():
             assert dep["role"] in ("primary", "contributing"), f"row {r['id']} bad dependency role"
             # A row cannot depend on its own product (§11.5 item 3, after the soc2-cc6-6 bug)
             assert dep["product"] != pid, f"row {r['id']} related_microsoft self-references its own product: {pid}"
+
+    # ---- license bands (PR-015) ----
+    # Derived AFTER the integrity loop, because G3 cross-checks the band against
+    # licensing_model and that field is defaulted in the loop above.
+    #
+    # This writes two NEW fields. It does not touch license_requirement or
+    # licensing_model, which are protected: the band is a derived view of the licence
+    # string, and the string remains the authority the row renders in full.
+    license_bands.check_bands_cover(lic_dicts())                       # G1
+    license_bands.check_overrides({r["id"] for r in rows})
+    lic_index = license_bands.value_index(lic_dicts())
+    for r in rows:
+        band, partial = license_bands.derive(r, lic_index)             # G2 + G4 inside
+        r["license_band"] = band
+        r["license_band_partial"] = partial
+        # G3: the two licensing fields must agree about which family the row is in. They
+        # are derived from different sources -- licensing_model from the product's
+        # default, the band from the row's own licence string -- so agreement is a real
+        # check rather than a restatement.
+        model = r["licensing_model"]
+        assert (band == "consumption") == (model == "consumption"), (
+            f"row {r['id']}: license_band {band!r} disagrees with licensing_model {model!r} "
+            f"about consumption pricing")
+        assert (band == "na") == (model == "n/a"), (
+            f"row {r['id']}: license_band {band!r} disagrees with licensing_model {model!r} "
+            f"about being a boundary row")
+    band_counts = collections.Counter(r["license_band"] for r in rows)
+    n_partial = sum(1 for r in rows if r["license_band_partial"])
+    print("  License bands: "
+          + ", ".join(f"{b} {band_counts[b]}" for b in license_bands.BAND_ORDER if band_counts[b])
+          + f" | {n_partial} rows flagged partial"
+          + f" | {len(license_bands.ROW_OVERRIDES)} row override(s)")
 
     # ---- maintenance table: structural validation only (PR-050) ----
     # No dates are compared against today here. This block asks only "is the table
