@@ -22,6 +22,29 @@ before 2.9.0 was ever public.
 
 ---
 
+## 2.10.0 — 2026-07-20
+
+Maintenance machinery. Nothing a reader sees changes; nothing in any row changes.
+
+- **Added** a structured maintenance-trigger table to the dataset at `meta.maintenance`, replacing the
+  prose list that had grown to twenty undated bullets in `docs/MAINTENANCE.md`. Each trigger carries a
+  type, a cadence, a next-review date, the constants and rows it affects, and the date it was last
+  executed. Triggers are now defined in exactly one place.
+- **Added** build-time staleness warnings. `python build/assemble.py` reports triggers past their
+  review date and licensing constants past their volatility-class cadence, and flags retired product
+  names appearing without their "(formerly …)" gloss. Warnings go to stderr and are advisory — the
+  build still succeeds, so an unrelated fix can ship while claims are aging.
+- **Added** the re-verification runbook to `docs/MAINTENANCE.md`: how a recurring pass is scoped,
+  sourced, recorded, and gated. The project's recurring process had never been written down.
+- **Note on the version bump.** This is additive and structural: the JSON gained a key under `meta`,
+  and the row data model is untouched. The policy below sorts MINOR by what a reader gains and PATCH
+  by what a claim gains, and this is neither — it is maintainer machinery. It is filed as MINOR
+  because the discriminator that actually separates the bands is compatibility: MAJOR is reserved for
+  changes where consumers of `compliance-atlas.json` may need to change their code, and nobody needs
+  to change code for an added key.
+- No coverage level, confidence level, cited source, or `last_verified` date was touched, and the row
+  count is unchanged at 378.
+
 ## 2.9.1 — 2026-07-20
 
 - **Fixed** inconsistent spelling: the atlas mixed British and American English, sometimes within a

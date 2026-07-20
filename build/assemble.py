@@ -124,7 +124,12 @@ BRAND = {
     # industry lenses added, no data-model or product-scope change.
     # 2.9.1 is a PATCH: American English unified across rendered text. Row prose changed in 53
     # places, no claim did — no coverage, confidence, source, or last_verified field was touched.
-    "atlas_version": "2.9.1",
+    # 2.10.0 is a MINOR: META gained the maintenance-trigger table (PR-050). Additive and
+    # structural — a new key under meta, no change to the row data model, no row touched. The
+    # policy's bands are written around readers, and this addition is invisible to one; the
+    # discriminator that actually decides it is compatibility, and no consumer must change code
+    # for an added key. Reasoning in full in CHANGELOG.md and AUDIT-FINDINGS §26.
+    "atlas_version": "2.10.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }

@@ -2232,3 +2232,191 @@ so hosting is confirmed to have introduced nothing.
 - **No `og:image`.** Shared links preview with title and description but no image card. Adding one
   means either an external fetch, which would break the self-contained property the whole design rests
   on, or a large inline data URI. Deferred as a genuine trade-off, not an oversight.
+
+## 26. Maintenance mechanism and runbook (2026-07-20) — PR-050, PR-053
+
+Two findings, one session, two commits, on branch `session-8-maintenance`. Protected row fields were
+LOCKED throughout: `coverage`, `confidence`, `license_requirement`, `sources`, `last_verified`,
+`control_ref`, and product/solution assignments. The session **reads** `last_verified` and never
+writes it. Nothing in the row data was touched, and the field-level diff below proves it.
+
+### 26.1 The premise that did not survive verification
+
+The session brief stated the project's drift detector as "a rebuild with no content change produces an
+empty `git diff` on `compliance-atlas.json`". **That is not true today, and has not been since 2.9.0.**
+`assemble.py` writes `generated=datetime.datetime.now().isoformat(timespec="seconds")` into META on
+every run, so every rebuild produces a one-line diff.
+
+Verified before any file was edited, by copying `build/` into a scratch directory and rebuilding there
+against a snapshot of the committed JSON:
+
+```
+whole-doc equal: False
+  products EQUAL · related_products EQUAL · solutions EQUAL
+  frameworks EQUAL · industries EQUAL · rows EQUAL
+META DIFFERS: generated | '2026-07-20T11:17:21' -> '2026-07-20T12:06:50'
+```
+
+This is deliberate, not a defect: `template.html` renders `Built ${META.generated}`, and §23 shipped
+the content-version/build-timestamp split as a feature. The `.gitattributes` comment asserting that a
+content-free rebuild shows no diff is correct about line-ending normalization and silent about this.
+
+The drift test was therefore run against a **documented noise floor of exactly one line**. The
+constraint the session actually operated under is unchanged and stricter than the original wording:
+this session must not widen that floor by any amount. It did not.
+
+### 26.2 PR-057 (raised here) — relocate the build timestamp out of the JSON
+
+**Deferred, not implemented.** `meta.generated` is the only moving field in a content-free rebuild.
+Moving it out of `compliance-atlas.json` and injecting it into the HTML at build time in
+`build_html.py` — which is the only consumer that renders it — would restore the strict empty-diff
+property and make `git diff compliance-atlas.json` a zero-tolerance drift check rather than a
+one-line-tolerance one. The footer feature is unaffected; the value simply arrives from a different
+place. Estimated 1–2 hours including a rebuild and a `_detail` byte-equality confirmation.
+
+Raised in this document rather than appended to `PROJECT-REVIEW.md` deliberately. PROJECT-REVIEW is an
+independent end-to-end review with its own provenance, and the maintainer appending findings to it
+would muddy that. §21 set the precedent for raising PR-numbered findings here (PR-055 and PR-056 were
+raised in this document and noted as absent from PROJECT-REVIEW); PR-057 follows it.
+
+### 26.3 Trigger inventory — what the prose list actually contained
+
+**20 bullets, not the 14 PROJECT-REVIEW counted** when it raised PR-050. The list grew ~43% in the two
+weeks between the review and this session, which is corroboration of the finding rather than a
+correction to it.
+
+**Orphaned triggers: none.** Every constant, solution key, and row id named in `docs/MAINTENANCE.md`
+resolved against the live build — `LIC["dspm"]`, `LIC["dspm_ai"]`, `GOV["dspm_ai"]`,
+`SOLUTIONS["DSPM for AI"]`, `INTUNE_LIC["epm"]`, `DEFENDER_LIC["mdo_p1"]`, `DEFENDER_GOV["mdvm"]`,
+`SENTINEL_LIC["ingest"]`, `SENTINEL_LIC["retention"]`, `MDC_LIC` × 4, `MDC_GOV["gaps"]`,
+`PRODUCTS["defender-xdr"]`, and rows `csf-de-cm-03-ai`, `gdpr-35`, `171-3-12-1-3-mdc`. The bullet
+asserting `URLS["dspm_ai"]` was "already gone" is also correct. The pre-publication renames left
+nothing dangling, so PR-050 was purely additive with no remediation attached.
+
+**Two descriptions no longer matched the code, and both were corrected in the migration:**
+
+| Bullet | Defect | Correction |
+|---|---|---|
+| Sentinel E5/E7 data grant | Carried "*Not re-verified in the 2026-07-19 pass — the offer page was not fetched*". `("SENTINEL_LIC","free_benefit")` is in `REVERIFIED_LIC_KEYS_2`, whose comment names the offer page explicitly. | Caveat replaced with the 2026-07-20 completion-pass record. The caveat was closed the next day and nobody returned to the bullet — the PR-050 failure mode, caught in the act. |
+| Defender Suite naming | "*All six `DEFENDER_LIC` strings were re-derived*". §22.2 shows **eight** re-derived; **six** carry the "(formerly …)" gloss. | Both counts stated separately, plus the instruction to remove the `RETIRED_NAMES` pair when the gloss is finally dropped. |
+
+**Structural gap recorded, not closed:** the re-verification ledger covers `*_LIC` dicts and an
+explicit row-id set only. `*_GOV` and `*_URLS` constants have no ledger, yet three triggers point at
+them. Documented in `docs/MAINTENANCE.md` and assigned to the next pass in runbook Step 3.
+
+### 26.4 Prior-failure test — the brief's "two failures" is really one, one, and two
+
+The brief stated the prose list had failed silently twice. The audit trail does not support that as
+written:
+
+| | Finding | Was it a trigger failure? |
+|---|---|---|
+| A | **PR-036**, Sentinel 50 GB tier | **Yes, unambiguously.** Its own headline reads "*its own maintenance trigger has fired*". Diarised, its underlying fact changed twice (Mar 12 and Jun 26 2026), and the stated end date was ~4 months in the past when the review found it. |
+| B | **PR-035**, Defender Suite rename | **Contested.** The attribution is PR-050's; PR-035's own evidence never mentions a trigger. PR-050 files it under "Defender family renames are frequent", a bullet with **no date and no clock**, which cannot fire. It is not a trigger that was missed — it is a trigger that never had the machinery to hit. |
+| C | PR-037, under-listed SKUs | No trigger existed. |
+| D | PR-038, seven redirected URLs | No trigger existed; `tools/check_urls.py` was built in response and now covers it. |
+
+**Would the new mechanism have caught them?**
+
+- **A — yes.** `SENTINEL_LIC["ingest"]` carries an explicit `next_review` at the promo end date the
+  string itself names. The build warns every run from the day after. ~3.5 months earlier than the
+  review found it.
+- **B — no, and a cadence clock alone would have been the wrong design.** `DEFENDER_LIC` sits in a
+  120-day class; those strings were authored 2026-07-16/17 and PR-035 found the defect on 07-19, with
+  ~117 days left on the clock. It would not have fired. What catches it is that the defect was
+  **statically visible with no clock involved**: one SKU listed alongside its own former name. Hence
+  the second limb, `RETIRED_NAMES`, which runs on every build regardless of dates. Its limitation is
+  stated plainly in `common.py` and in the runbook: it is a deny-list, therefore a regression check,
+  not a discovery mechanism — it would not have caught PR-035 *before* the rename was known.
+
+### 26.5 Purview cadence — the §22.2 churn broken down by cause
+
+The 180-day `sku-stable` class was challenged on the grounds that §22.2 shows 14 of 20 `LIC` keys
+changed in a single pass, which looks like 90-day behaviour. Broken down by cause it is not:
+
+| Cause | Keys | Kind |
+|---|---|---|
+| Office 365 entitlement path missing | **12** | One systemic authoring defect. §22.4 states it outright: "the Office 365 entitlement path was missing from **12 constants, not one**". |
+| Purview Suite naming catch-up | 9 | One rename the atlas had not yet applied at authoring; overlaps the row above. |
+| **Genuine upstream movement** | **3** | `classification_analytics` (the SD "now states" an E3/A3/G3 nuance); `audit_prem` and `irm` (add-on SKU renames). |
+| Tier changes | **0** | §22.2 headline: "*every tier claim in the atlas was correct. No capability had moved tiers.*" |
+
+Two of the three genuine changes were **renames**, which the `RETIRED_NAMES` lint catches without a
+clock. The cadence therefore only has to cover ~1 key of genuine non-naming upstream drift per pass,
+and 180 days holds. `sku-stable` retained.
+
+Recorded as a caveat in `STALENESS_CLASSES` and worth repeating: this rests on a single pass over a
+dataset three days old. It is a **prior, not a measurement**. Recalibrate from `last_executed` history
+once real cycles have run.
+
+By contrast the same test applied to `DEFENDER_LIC` shows 7 of 8 keys changed with five of them
+driven by one genuine upstream rename, which is what justifies the separate 120-day `sku-volatile`
+class. The split is evidence-based, not assumed.
+
+### 26.6 Three ownership gaps the table found on its first run
+
+The assertion "every licensing constant is claimed by at least one trigger" failed immediately:
+
+| Constants | Rows behind them | Status |
+|---|---|---|
+| `ENTRA_LIC` × 7 | 48 Entra rows | No trigger in the prose list, despite §22.2 finding 2 of the 7 changed in the last pass |
+| `SENTINEL_LIC["soar"]`, `["included"]` | 10+ | No trigger |
+| `MDC_LIC["workload"]` | — | No trigger; carries the 73M-transaction threshold §22.5 had to defend |
+
+Three triggers added to close them, marked in the table as **added, not migrated**:
+`TRG-ENTRA-LICENSING`, `TRG-SENTINEL-PRICING-MODEL`, `TRG-MDC-WORKLOAD-METERS`. Table total 23.
+
+This is the clearest single argument for the mechanism: ten licensing constants governing real rows
+had nothing scheduled to re-check them, and no amount of reading the prose list would have revealed
+it.
+
+### 26.7 Design decisions worth recording
+
+**Staleness warns per constant, not per row.** `last_verified` is *derived* from the licensing
+constants by the §22 passes, so the constant is the real unit. 49 constants govern 370 of 378 rows;
+warning per row would print 370 lines carrying 49 lines of information, and a mechanism that noisy
+gets ignored, which is the failure PR-050 describes in a different form.
+
+**One deviation from the approved schema.** `cadence_days` was approved as required except on
+`retirement` triggers. Three `framework`/`watch` triggers are also fixed-date (CMMC Phase 2, and the
+two 21Vianet regional retirements), where a rolling clock adds nothing. The assertion was relaxed to
+"`cadence_days` is `None` or a positive int", with `None` meaning "fixed announced date, re-set by
+hand". Flagged rather than absorbed silently.
+
+**Warning volume.** Zero today. 16 at +3 months (5 triggers, 11 consumption constants). 70 at +6
+months, of which 49 are constants — the entire dataset was verified in two bulk passes on consecutive
+days, so everything ages in lockstep for one cycle. That is a property of the data, not the
+mechanism, and it resolves as soon as real passes land on scattered dates. 49 constant-lines at the
+point a twice-yearly full pass is genuinely due is a worklist; 370 row-lines would have been noise.
+
+### 26.8 A harness gotcha found by running the drift test, now in the gate
+
+Step 3 of the drift test — revert the edit, rebuild, expect a clean diff — **failed on first run**, and
+the failure was worth more than the test.
+
+`build/common.py` on disk was correctly reverted (`git diff` on it: empty), yet `assemble.py` still
+emitted the warning and still wrote the old date into the JSON. Cause: Python invalidates cached
+bytecode on `(mtime, size)`, and the test edit was a **same-length** substitution (`2026-10-24` →
+`2026-01-24`, ten characters either way) written within the same mtime tick as the previous build. The
+stale `__pycache__/common.cpython-314.pyc` validated as fresh. Clearing `build/__pycache__` and
+rebuilding produced the expected one-line diff immediately.
+
+This matters well beyond the test. A re-verification pass makes exactly this kind of edit — a date or
+a SKU string changed in place, rebuilt seconds later — so the build can regenerate the artifact from
+**old constants, silently, with exit 0**. Of everything in the gate it is the only failure mode that
+yields a confidently wrong artifact rather than an error. `Remove-Item -Recurse -Force
+build/__pycache__` is now the first line of runbook Step 5.
+
+### 26.9 Protected-field observations (reported, not fixed)
+
+**No defects found.** All 378 `last_verified` values are well-formed ISO dates, none in the future —
+the §22.1 assertions already cover both and passed. The two oldest cohorts (7 rows at 2026-07-16,
+1 at 2026-07-17) are the 8 rows untouched by any pass, and they are **exactly** the 8
+`licensing_model: "n/a"` boundary rows and **exactly** the 8 rows resting on no licensing constant.
+Three independently derived sets of eight, identical. That is correct behaviour, not neglect.
+
+The `RETIRED_NAMES` lint was dry-run across 18 constant dicts, `PRODUCTS`, `SOLUTIONS`, and all 378
+rows (including every `license_requirement`, `cloud_availability_note`, and `sources` entry) **before**
+it was written into the build: **zero hits**, matching the §22.1 pattern where a new assertion passes
+on first run against clean data. Had it found anything inside a protected field, this session could
+only have reported it.
