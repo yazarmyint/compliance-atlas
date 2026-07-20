@@ -74,6 +74,10 @@ def collect(atlas):
         add(prod.get("url"), f"product:{pid}")
     for name, sol in (atlas.get("solutions") or {}).items():
         add(sol.get("url"), f"solution:{name}")
+    # The project's own off-site links — repository, issue tracker, changelog — which the about page
+    # and footer render as real links. They rot exactly like citations do, so they belong in this sweep.
+    for key, url in (atlas.get("meta", {}).get("project") or {}).items():
+        add(url, f"project:{key}")
     return seen
 
 
@@ -105,7 +109,11 @@ def classify(url, status, final):
     host = urlsplit(url).netloc.lower()
     if status in (403, 406) and host in WAF_HOSTS:
         return "WAF"
-    if status != 200:
+    # Any 2xx is a successful fetch. This was `status != 200`, which reported EUR-Lex as BROKEN:
+    # eur-lex.europa.eu answers scripted clients with 202 Accepted (its bot-mitigation path) while
+    # serving the correct document at the cited URL. Treating 200 as the only success was the defect,
+    # not the citation. Found 2026-07-20.
+    if not (status and 200 <= status < 300):
         return "BROKEN"
     return "OK" if canonical(url) == canonical(final) else "REDIRECT"
 

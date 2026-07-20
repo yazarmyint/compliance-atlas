@@ -1856,3 +1856,170 @@ rewrite.
 - **Two maintenance triggers updated:** the Intune restructure (now in effect, with the single-source-citation
   caveat recorded) and, unchanged, the MDO Plan 1 E3/G3 rollout and the Defender Suite naming gloss.
 - Remaining roadmap: **PR-044 about page**.
+
+## 23. Publishing session (2026-07-20) — everything a public reader needs around the dataset
+
+Execution of PROJECT-REVIEW **PR-044** (about/methodology page), **PR-045** (changelog and versioning),
+**PR-041** (footer licence line), **PR-020** (two industry lenses) and **PR-021** (absent industries stated
+out loud), plus one authorised carve-out into `sources`. Protected row fields were otherwise locked: apart
+from the carve-out, **no `rows_*.py` row content, `license_requirement`, or `last_verified` value changed**,
+proven by the field-level diff in §23.6. Atlas total unchanged at **378 rows / 11 frameworks / 6 products**;
+industries **10 → 12**.
+
+### 23.1 Carve-out ledger — DSPM source repoint (declared edit to `sources`)
+
+The classic DSPM-for-AI article was re-fetched live on **2026-07-20** and carries a banner reading: *"This
+article is for the **classic** version of Data Security Posture Management for AI that's now replaced with a
+new version… we invite you to try the new Data Security Posture Management."* The unified article was fetched
+in the same pass and confirms the inverse relationship, naming both `dspm-for-ai` and
+`data-security-posture-management` as its superseded predecessors.
+
+| Row | Field | Before | After | Fetched |
+|---|---|---|---|---|
+| `csf-de-cm-03-ai` | `sources` | `…/purview/dspm-for-ai` **+** `…/purview/data-security-posture-management-learn-about` (4 sources) | `…/purview/data-security-posture-management-learn-about` (3 sources) | 2026-07-20 |
+| `gdpr-35` | `sources` | `…/purview/data-security-posture-management-learn-about` **+** `…/purview/dspm-for-ai` (3 sources) | `…/purview/data-security-posture-management-learn-about` (2 sources) | 2026-07-20 |
+
+**The repoint collapsed into a de-duplication, and that is the finding.** Both rows already cited the unified
+article alongside the classic one, so repointing the classic URL onto its stated replacement produced a
+duplicate rather than a substitution. Each row therefore *loses* a source instead of swapping one. This is a
+different shape of change from the one the carve-out anticipated and is recorded as such. Source composition
+still holds on both rows (≥1 official framework source, ≥1 Microsoft capability source), re-checked by the
+§22.1 assertion on the rebuild.
+
+**What was deliberately not done**, per the carve-out's boundary:
+
+- `LIC["dspm"]` / `LIC["dspm_ai"]` **not merged.** The Purview portal still lists **DSPM** and **DSPM for AI
+  (classic)** as separate solutions with separate entitlements, so two licence strings still describe two real
+  things.
+- `SOLUTIONS["DSPM for AI"]` **still points at the classic article.** That solution is literally named
+  "(classic)"; the classic article is its correct documentation, not a stale citation. Repointing it would
+  have made the solution's own link describe a different solution.
+- **No row modeling touched.** `purview_solution` on `csf-de-cm-03-ai` and the `also_involves` entry on
+  `gdpr-35` still name "DSPM for AI".
+- `URLS["dspm_ai"]` was **removed** rather than repointed — it had exactly two consumers, both above, and
+  aliasing it onto `URLS["dspm"]` would have left two identical constants as a trap.
+
+A README maintenance trigger records the conditions for revisiting the split (classic solutions leaving the
+portal) and flags that doing so is a row-modeling change needing a session authorised for protected fields.
+
+### 23.2 PR-044 — the about page
+
+New route `#/about`, reachable from the header nav (position 5) and the footer. Written for a reader who has
+never seen this repository: no section references, no build vocabulary, no internal finding IDs.
+
+**Nothing factual on the page is hand-typed.** Product names, framework and row counts, the verified date
+range, the unverified-row count, the maintainer, the licences, the version and the absent-industry list are
+all read from `META` or counted off `ROWS` at render time. The taxonomy section calls the existing
+`taxonomyLegend(false)` component from §20 rather than restating any definition, so the four coverage levels
+and three confidence levels on the about page are the same strings the row badges use — a definition cannot
+drift between this page and the data.
+
+Two new `META` keys back it: `META.project` (maintainer, repo, issues, changelog, both licence names) and
+`META.reverification_policy`. The cadence statement is deliberately a statement of intent with no service
+promise attached, and says outright that this is a single-maintainer project.
+
+### 23.3 PR-021 — the industries that are absent
+
+`ABSENT_INDUSTRIES` in `assemble.py` defines the three gated sectors **once**; the Industries index renders a
+one-line summary and the about page renders the full list, so the two cannot drift. The reasons stay honest
+about which is which: **CJIS** is recorded as a genuine gap and the strongest candidate for the next framework
+(matching PR-025), while **NERC CIP** and **21 CFR Part 11** are structural — operational technology and
+electronic-signature semantics respectively, neither of which the six products reach.
+
+### 23.4 PR-020 — two industry lenses, and one framework-list adjustment
+
+Both lenses draw only on shipped frameworks; **zero new rows**.
+
+| Lens | Frameworks | Rows reachable | Note length |
+|---|---|---|---|
+| Legal & professional services | SOC 2, ISO 27001, GDPR, HIPAA Security | 154 | 43 w |
+| Insurance | GLBA Safeguards, SOC 2, PCI DSS v4.0.1, NIST CSF 2.0 | 133 | 42 w |
+
+The sanity check on the Insurance list produced a **caveat rather than a removal**, and it is the substantive
+content finding of this session. Insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule
+at **16 CFR 314 — the text every GLBA row in the atlas cites — expressly exempts entities regulated by a state
+insurance authority.** The operative requirement for a carrier is normally the **NAIC Insurance Data Security
+Model Law** (adopted in most states) or **NY 23 NYCRR 500**. Both were modeled on the same source material and
+track 16 CFR 314 closely enough that the *control substance* reads across; the *citations* do not. Rather than
+drop GLBA from the lens (which would strip the sector's most relevant control content) or leave the mismatch
+silent (which would be exactly the kind of unstated authority-drift the atlas exists to avoid), `note_detail`
+opens with the caveat and tells the reader to take the rows for substance and cite their own state's text.
+
+**One diff beyond the stated envelope, taken deliberately:** the word "insurers" was removed from the
+**Financial services** note. PR-020's own evidence is that insurance readers currently land on the finserv
+card, whose note is written about banks and lenders; shipping a dedicated lens while leaving that word in
+place would have preserved the mis-routing the finding identifies. Enumerated here rather than absorbed
+silently.
+
+### 23.5 PR-045 and PR-041 — versioning, changelog, licence line
+
+`CHANGELOG.md` at the repository root adopts the policy **MAJOR** = data-model or product-scope change,
+**MINOR** = framework/product/feature addition, **PATCH** = row corrections and re-verifications, and
+backfills **fourteen milestones** from §1–§22, dated to when the work landed. Backfilled entries are labelled
+as reconstructions: none was ever published under a version number, and the policy was applied to them
+retroactively.
+
+**Version 2.0.0 → 2.9.0.** The reasoning, recorded because the number is otherwise unexplainable: 2.0.0 was
+set at the platform generalization (§9) and never moved through the eight milestones after it, so it was
+stale rather than correct. Under the adopted policy the recorded history yields 1.0.0 → 1.1.0 → 2.0.0 →
+2.1.0–2.5.0 (five product additions) → 2.5.1 → 2.6.0 → 2.6.1 → 2.7.0 → 2.8.0 → 2.8.1, which puts this session
+at a **MINOR** bump to **2.9.0** — features and industry lenses added, no data-model or product-scope change.
+Choosing 2.9.0 over a "first public release" 3.0.0 keeps `BRAND.atlas_version` and the changelog's version
+column in agreement, and 3.0.0 would have violated the policy in the act of adopting it.
+
+Two rendering changes follow. The footer now carries **content version prominently with the build timestamp
+demoted beneath it** and explicitly labelled as moving on every rebuild — PR-045's core point, that a rebuild
+which changed nothing must not read as an update. And a fifth footer line states the licence split (content
+CC BY 4.0, code MIT, attribution to Yazar), closing **PR-041**, whose decision was taken in §19.3 but had
+until now never reached a reader.
+
+### 23.6 Gate
+
+**Diff confinement** — field-level diff of `compliance-atlas.json` against the session baseline (commit
+`866f102`):
+
+| Change | Detail |
+|---|---|
+| Rows | **2 changed, both `sources` only** — `csf-de-cm-03-ai`, `gdpr-35` (§23.1). 378 rows, id sets identical. |
+| Industries | 2 added (`insurance`, `legal`), 1 modified (`finserv` note, §23.4) |
+| Meta | `version` 2.0.0→2.9.0, `brand`, `footer_lines`, `generated`, and 3 new keys (`project`, `absent_industries`, `reverification_policy`) |
+| Untouched | `solutions`, `frameworks`, `products`, `related_products` — byte-identical |
+
+**Zero** changes to `coverage`, `confidence`, `license_requirement`, `last_verified`, `control_intent`,
+`how_it_supports`, or any other protected field on any of the 378 rows.
+
+**Accessibility** — axe-core WCAG 2.1 A/AA over **7 routes × 2 themes = 14 combinations**, including the new
+`#/about` and the updated Industries index: **0 violation nodes**. The §21 harness was rebuilt for this
+session (puppeteer-core against installed Chrome; the original scripts lived in a session scratch directory
+and were not retained — worth committing next time).
+
+**Keyboard** — About is reached from the header nav in **7 Tab stops** from the top of the document using only
+Tab/Enter, and focus lands on the view heading on arrival. The Industries "not covered here" line reaches it
+in 13, the footer link in 4. All three in-content links on the about page have accessible names.
+
+**Print and `file://`** — unaffected. Rendered from `file://` throughout. Print-to-PDF: about page **4 A4
+pages**, landing **4**, GLBA framework view **22** with the beforeprint disclosure-expansion path intact.
+
+**URL currency** — `tools/check_urls.py` over **153 URLs: 148 OK, 2 documented WAF** (`dodcio.defense.gov`,
+`www.hhs.gov`, both long-standing per §7.2), **3 BROKEN**. All three BROKEN are the new GitHub links (repo,
+`/issues`, `/blob/main/CHANGELOG.md`), 404 solely because **the repository is still private** (`gh repo view`:
+`"visibility": "PRIVATE"`). Owner decision, taken this session: **ship the links as written and flip repository
+visibility separately.** They resolve the moment that happens; no other change is needed. §19.2 and §19.4
+already cleared the copyright precondition (45 tracked blobs, zero redistribution-restricted files, verified
+against the remote via the GitHub API).
+
+**Two defects fixed in `check_urls.py`**, both exposed by this session's new links:
+
+1. It never walked the project's own off-site URLs, so the repo, issues, and changelog links would have gone
+   unchecked forever. `collect()` now includes `meta.project`.
+2. It classified **any non-200 as BROKEN**, which reported the GDPR citation
+   `eur-lex.europa.eu/eli/reg/2016/679/oj` as a dead link. EUR-Lex answers scripted clients with **202
+   Accepted** while serving the correct document at the cited URL. Any 2xx is now a successful fetch. This was
+   a false failure in the tool, not a citation defect — and it had been latent since the tool shipped in §22.
+
+#### Carried forward
+
+- **PROJECT-REVIEW roadmap: the publish sequence is complete.** PR-044 was the final item.
+- **One owner action outstanding:** repository visibility → public, which resolves the 3 BROKEN links above.
+- **DSPM constant split:** still deliberately unmerged; trigger and exit conditions recorded in README.
+- **Harness debt:** the accessibility harness has now been rebuilt twice from scratch. It belongs in `tools/`.

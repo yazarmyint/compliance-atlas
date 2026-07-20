@@ -1,6 +1,6 @@
 # Compliance Atlas
 
-*(working title; the public name is TBD; the code parameterizes it in one place, `BRAND` in `build/assemble.py`.)*
+*(Public name settled 2026-07-19; parameterized in one place, `BRAND` in `build/assemble.py`.)*
 
 An audited, role-agnostic reference mapping compliance frameworks to Microsoft security-stack capabilities,
 built to answer: **"An organization operates in industry X and is subject to framework Y: where does the Microsoft
@@ -20,7 +20,7 @@ Open **`compliance-atlas.html`** in any browser (works offline from `file://`, z
 > now **`compliance-atlas.json`**; the output was `purview-compliance-map.html` → now **`compliance-atlas.html`**.
 > The old filenames are gone; do not look for them.
 
-## Contents (v1 2026-07-16 · Increment 1 2026-07-17 · Platform generalization v2.0.0 2026-07-17 · Entra + Intune + Defender XDR 2026-07-17 · Sentinel + Defender for Cloud 2026-07-18)
+## Contents (v2.9.0 — full version history in `CHANGELOG.md`)
 
 | Framework | Version pinned | Rows (all products) |
 |---|---|---|
@@ -58,6 +58,7 @@ M365 estate: a seam, not an overlap).
 compliance-atlas.html          ← the output (generated; never hand-edit)
 compliance-atlas.json          ← canonical dataset (generated; never hand-edit)
 AUDIT-FINDINGS.md              ← audit trail: legacy-xlsx audit, per-increment QA, generalization log
+CHANGELOG.md                   ← reader-facing version history + the MAJOR/MINOR/PATCH policy
 FRAMEWORK-SELECTION.md         ← framework scoping decisions; rejected candidates & backlog
 build/
   common.py                    ← PRODUCTS + RELATED_PRODUCTS maps, SOLUTIONS registry, LIC strings, URLs, GOV notes
@@ -237,6 +238,16 @@ Sentinel, and Defender for Cloud ran as clean clones with only the refinements i
 - **Annual (~Q1)**: SSPA DPR version refresh (v12 → v13 likely early 2027); requirement numbering can shift.
 - Microsoft renames: check the Purview service description and solution overview pages; the atlas already reflects the
   unified eDiscovery (classic retired Aug 2025), Data explorer, DSPM current version, and "Microsoft Purview Suite" SKU naming.
+- **When the classic DSPM pages retire, re-evaluate the `dspm` / `dspm_ai` constant split.** Both
+  `/purview/dspm-for-ai` and `/purview/data-security-posture-management` now carry "(classic)" banners pointing at the
+  unified `data-security-posture-management-learn-about` article. As of 2026-07-20 the split is still correct: the
+  portal shows **DSPM** and **DSPM for AI (classic)** as separate solutions with separate entitlements, so
+  `LIC["dspm"]`/`LIC["dspm_ai"]`, `GOV["dspm_ai"]`, and the two `SOLUTIONS` entries all describe real distinctions.
+  `URLS["dspm_ai"]` is already gone — the two rows that cited the classic article were repointed to the unified one
+  (AUDIT-FINDINGS §23). **The trigger:** once the classic solutions leave the portal, collapse `dspm_ai` into `dspm`,
+  fold `GOV["dspm_ai"]` into the unified GCC High note, and drop the "(classic; converging into DSPM)" gloss from
+  `SOLUTIONS["DSPM for AI"]`. That is a row-modeling change (`purview_solution` on `csf-de-cm-03-ai` and the
+  `also_involves` entry on `gdpr-35`), so it needs a session authorised to touch protected fields.
 - **Intune licensing restructure (July 2026 — in effect, documentation still catching up)**: Suite capabilities are now
   distributed into Microsoft 365 tiers (E3: Plan 2 + Remote Help + Advanced Analytics; E5/E7: adds EPM, Cloud PKI, EAM).
   Confirmed live 2026-07-20 and `INTUNE_LIC["epm"]` was rewritten to the present tense. **Still pending:** the
