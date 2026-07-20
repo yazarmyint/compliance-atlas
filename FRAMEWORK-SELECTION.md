@@ -1,6 +1,40 @@
 # FRAMEWORK-SELECTION — v1 scope decision
 
-**Date:** 2026-07-16 · **Status:** proposed, awaiting approval
+> ## Current state (2026-07-19)
+>
+> **Status: approved and shipped.** Everything below this box is the original
+> 2026-07-16 selection proposal, kept unedited as the record of what was predicted
+> versus what shipped. Where the two disagree, this box is authoritative.
+>
+> | | Proposed (2026-07-16) | Shipped (2026-07-19) |
+> |---|---|---|
+> | Rows | ≈ 140 | **378** |
+> | Frameworks | 9 | **11** |
+> | Products | 1 (Purview) | **6** |
+> | Industries | 8 | **10** |
+>
+> **Frameworks (11).** The nine proposed below, plus two promoted from the backlog
+> during Increment 1 (2026-07-17): NIST SP 800-53 Rev 5 (curated subset) and FERPA.
+> Per-framework row counts: ISO/IEC 27001:2022 57 · NIST SP 800-53 R5 54 · NIST
+> 800-171 R2 / CMMC L2 46 · SOC 2 41 · NIST CSF 2.0 40 · HIPAA Security Rule 32 ·
+> PCI DSS v4.0.1 31 · Microsoft SSPA DPR 26 · EU GDPR 24 · GLBA Safeguards Rule 21 ·
+> FERPA 6.
+>
+> **Products (6).** The atlas became multi-product after this document was written;
+> the roadmap is complete and closed as of 2026-07-18. Purview 150 · Defender XDR 53 ·
+> Entra 48 · Sentinel 46 · Intune 41 · Defender for Cloud 40. This is the main reason
+> the row count is 2.7x the projection: the projection sized a Purview-only atlas.
+>
+> **Industries (10).** The eight in the table below, plus **K-12 education** and
+> **US federal & FedRAMP-adjacent**. The table's *"(FERPA: backlog note)"* against
+> higher education is superseded: FERPA is fully mapped as its own framework
+> (see Increment 1), so both education verticals rest on real rows.
+>
+> **Deferrals still standing:** the state-privacy composite, SEC 17a-4 / FINRA,
+> NIS2, DORA, NYDFS, and ISO 27701 all remain out of scope, for the reasons
+> recorded in the backlog section and in AUDIT-FINDINGS §15.
+
+**Date:** 2026-07-16 · **Status:** proposed, awaiting approval *(superseded — see Current state above)*
 **Hard cap:** 6 new frameworks in v1 (cap fully used). Existing three (Microsoft SSPA DPR v12, ISO/IEC 27001:2022, SOC 2) carry forward after audit — v1 ships **9 frameworks**.
 
 **Selection criteria** (per brief): (1) frequency across US mid-market/enterprise consulting industries — healthcare, education, defense industrial base, finance, retail, SaaS; (2) density of *genuine* Purview relevance (rows we can defend, not rows we can write); (3) maintenance cost of keeping the mapping current.
@@ -27,7 +61,7 @@
 - **Version pinned:** CSF 2.0 (Feb 26 2024) — confirmed current, no 2.x successor.
 - **Why:** the lingua franca for security programs across every industry in scope; the framework a client most often *already speaks*. Purview maps cleanly at subcategory level: ID.AM-07 (data inventory) → Data explorer/DSPM; PR.DS-01/-02/-10 (data at rest/in transit/in use) → labels/DLP; PR.DS-11? no — curated to data-relevant subcategories only: GV (policy evidence via Compliance Manager), ID.AM, PR.DS, PR.AA (data-layer slice), DE.CM (monitoring incl. IRM), RS.AN (forensics via Audit/eDiscovery). Expected ~14–16 rows. Also the natural "translation hub" between frameworks in the HTML pivot.
 - **Official source:** https://www.nist.gov/cyberframework · https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf
-- **Compliance Manager premium template:** **Yes — "NIST CSF 2.0"** (verified; legacy "NIST CSF" 1.1 template also still listed).
+- **Compliance Manager premium template:** **Yes — "NIST CSF 2.0"** (verified; a legacy entry named simply "NIST CSF", with no version attached, is also listed — re-checked 2026-07-19).
 
 ### 4. PCI DSS v4.0.1
 - **Version pinned:** v4.0.1 (June 2024) — verified as the **only active version**: v3.2.1 retired Mar 31 2024, v4.0 retired Dec 31 2024, and all 51 future-dated requirements became mandatory Mar 31 2025. No v5 on the published horizon.
@@ -96,12 +130,16 @@
 | Healthcare & life sciences | HIPAA SR · PCI DSS · CSF 2.0 · SOC 2 · ISO 27001 |
 | Defense industrial base | 800-171 R2/CMMC L2 · CSF 2.0 · ISO 27001 |
 | Financial services | GLBA Safeguards · PCI DSS · SOC 2 · CSF 2.0 · ISO 27001 |
-| Higher education | GLBA Safeguards (Title IV) · PCI DSS · CSF 2.0 · *(FERPA: backlog note)* |
+| Higher education | GLBA Safeguards (Title IV) · PCI DSS · CSF 2.0 · *(FERPA: backlog note — superseded, FERPA shipped as a full framework)* |
 | Retail & e-commerce | PCI DSS · CSF 2.0 · SOC 2 · GDPR (as state-privacy analog, annotated) |
 | SaaS & technology | SOC 2 · ISO 27001 · GDPR · CSF 2.0 · HIPAA (if PHI) |
 | Manufacturing | CSF 2.0 · ISO 27001 · 800-171 (if DIB) · GDPR (if EU) |
 | Microsoft suppliers & partners | SSPA DPR v12 · ISO 27001 · SOC 2 |
 
 **Projected dataset size:** ~56 audited/migrated rows + ~85 new rows ≈ **140 rows** across 9 frameworks — consistent with the 12–25-rows-per-framework discipline.
+
+> *Shipped: 378 rows across 11 frameworks and 6 products. The 12–25-per-framework
+> discipline held per product; the projection assumed a single product. See the
+> Current state box at the top.*
 
 **Cloud-availability policy:** every 800-171/CMMC row gets a verified GCC High/DoD note from the Microsoft 365 US Government service descriptions; other frameworks carry notes only where a mapped feature has a known government-cloud gap. UNVERIFIED rows (if any survive Phase 3) render with a visible warning in the HTML.

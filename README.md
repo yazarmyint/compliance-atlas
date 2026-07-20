@@ -36,8 +36,10 @@ Open **`compliance-atlas.html`** in any browser (works offline from `file://`, z
 | FERPA | 34 CFR Part 99 (current; ED rulemaking watch) | 6 |
 | EU GDPR | 2016/679 | 24 |
 
-**378 rows across six products: Purview (150), Entra (48), Intune (41), Defender XDR (53), Sentinel (46), and
-Defender for Cloud (40), all `verified` against live sources.** Claim taxonomy: Coverage = Direct Support /
+**378 rows across 11 frameworks and six products: Purview (150), Entra (48), Intune (41), Defender XDR (53),
+Sentinel (46), and Defender for Cloud (40), all `verified` against live sources.** By framework: ISO/IEC 27001:2022
+(57), NIST SP 800-53 R5 subset (54), NIST 800-171 R2 / CMMC L2 (46), SOC 2 (41), NIST CSF 2.0 (40), HIPAA Security
+Rule (32), PCI DSS v4.0.1 (31), Microsoft SSPA DPR (26), EU GDPR (24), GLBA Safeguards Rule (21), FERPA (6). Claim taxonomy: Coverage = Direct Support /
 Partial Support / Evidence Support Only / Not Covered; Confidence = High / Medium / Low. Mapped products **support or
 evidence** controls; the artifact never claims a product satisfies or meets a requirement. Sentinel's mapping
 discipline: it **evidences and detects, it does not enforce**: Direct Support only where the control's namesake
@@ -240,18 +242,34 @@ Sentinel, and Defender for Cloud ran as clean clones with only the refinements i
   strings (esp. the EPM row) against the Intune licensing article once the rollout settles.
 - Intune docs migrated to `learn.microsoft.com/intune/*` (off `/mem/intune`). *(The forward `defender-xdr` links on
   Intune/Entra rows were reconciled when Defender XDR landed; see AUDIT-FINDINGS §13.4.)*
-- **MDO Plan 1 in E3 (effective July 1, 2026)**: encoded in `DEFENDER_LIC["mdo_p1"]`; re-check the service description
-  once the rollout completes across licensing docs.
+- **MDO Plan 1 in E3/G3 (effective July 1, 2026)**: encoded in `DEFENDER_LIC["mdo_p1"]`. Confirmed live 2026-07-19:
+  rollout began June 2026 and Microsoft expects completion during 2026, but the Defender service description's MDO
+  Plan 1 SKU list does **not** yet name E3/G3. Re-check that list once the rollout completes and drop the dated
+  qualifier from the string when the service description catches up.
+- **Microsoft Defender Suite naming**: the SKU formerly called Microsoft 365 E5 Security is now **Microsoft Defender
+  Suite**, with EDU/GOV/FLW variants plus Microsoft Defender + Purview Suite FLW. All six `DEFENDER_LIC` strings were
+  re-derived 2026-07-19 and carry the "(formerly Microsoft 365 E5 Security)" gloss so holders of older paperwork still
+  recognise it. Drop the gloss once the old name has fully left circulation.
 - **MDVM add-on in GCC High/DoD**: the add-on trial is unavailable there; confirm purchase availability for gov
   tenants before relying on MDVM-premium capabilities in CMMC assessments.
 - Defender family renames are frequent (MTP → M365 Defender → Defender XDR; MCAS → Defender for Cloud Apps); re-check
   `PRODUCTS["defender-xdr"]` naming and the four workload names at each maintenance pass.
 - **Mar 31, 2027: Microsoft Sentinel Azure-portal retirement** (extended from Jul 1, 2026; announced Feb 12, 2026).
   After this date Sentinel is Defender-portal only; the atlas already describes the Defender-portal experience.
-- **Sentinel pricing model watch**: the 50 GB commitment tier was public preview (Oct 2025, promo through Mar 2026):
-  confirm GA status at next pass. Data lake meters (ingestion/processing/storage/query) are new (2025); re-verify
-  `SENTINEL_LIC["retention"]` against the billing article. E5/E7 data-grant terms (5 MB/user/day, eligible SKUs incl.
-  E7) verified 2026-07-18 on the offer page; re-check annually.
+- **Dec 31, 2026 / Mar 31, 2027: Sentinel 50 GB commitment tier promo**: launched Oct 1, 2025 in public preview;
+  promotional pricing extended twice and now runs through **Dec 31, 2026**, with sign-ups in that window locking the
+  discounted rate through **Mar 31, 2027** (Partner Center announcement, Jun 26, 2026; re-verified 2026-07-19).
+  Encoded in `SENTINEL_LIC["ingest"]`. Two things to check at the next pass: whether the tier reaches GA, and whether
+  the promo is extended a third time. Note the billing article still describes commitment tiers as starting at
+  100 GB/day, so the 50 GB tier is documented only in the promo announcement and the pricing page.
+- **Sentinel data lake meters**: ingestion, processing, storage (6:1 compression), and query are encoded in
+  `SENTINEL_LIC["retention"]`. Two further meters exist on the billing article and are **not** modelled in any row,
+  deliberately, because no current row makes a claim that rests on them: **advanced data insights** (per compute hour
+  for notebook sessions/jobs and custom-graph node/edge building; pools of 12/32/80 vCores) and the **Sentinel graph**
+  meters (custom graph build/query per compute hour; embedded graphs in the Defender and Purview portals are free,
+  but MCP graph tool access is charged). Revisit if a row ever claims notebook or graph capability.
+- **Sentinel E5/E7 data grant**: 5 MB/user/day, eligible SKUs incl. E7, verified 2026-07-18 on the offer page;
+  re-check annually. *(Not re-verified in the 2026-07-19 pass — the offer page was not fetched; see AUDIT-FINDINGS §22.)*
 - **Sentinel in China (21Vianet) retires Aug 18, 2026**: irrelevant to US-focused rows; noted for completeness.
 - **Defender for Cloud in China (21Vianet) retires Oct 1, 2026**: likewise noted for completeness only.
 - **Defender for Cloud is migrating experiences into the Defender portal**: rows describe capabilities, not portal
