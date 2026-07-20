@@ -254,6 +254,9 @@ table.matrix td.z{cursor:default; color:var(--ink); opacity:.7}
 table.matrix td:hover:not(.z):not(.total):not(.corner){outline:2px solid var(--ink); outline-offset:1px}
 table.matrix td.corner{background:transparent; width:auto; height:auto; cursor:default}
 table.matrix td.total, table.matrix th.total{background:transparent; font-weight:700; color:var(--ink); cursor:default}
+/* The bottom totals row holds values, not headers, so those cells are <td>. They keep the metrics
+   they had as <th> so that correcting the semantics costs no layout change. */
+table.matrix tbody tr:last-child td.total{width:auto; height:auto; padding:6px 8px; text-align:left}
 .legendrow{display:flex; gap:16px; align-items:center; font-size:12px; color:var(--ink-2); flex-wrap:wrap; margin:6px 0 12px}
 .legendrow .sw{display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:5px}
 
@@ -677,7 +680,9 @@ function matrixTable(rowLabels, colLabels, cellFn, opts={}){
   }).join("");
   const totals = `<tr><th scope="row" class="total">${sigma}</th>${colLabels.map(c=>{
     const t = rowLabels.reduce((a,r)=>a+cellFn(r.id,c.id).count, 0); return `<td class="total">${t}</td>`; }).join("")}<td class="total">${opts.grand??""}</td></tr>`;
-  return `<div class="matrixwrap"><table class="matrix">${opts.caption?`<caption class="sr-only">${esc(opts.caption)}</caption>`:""}${head}<tbody>${body}${totals}</tbody></table></div>`;
+  /* The table is named with aria-label rather than <caption>: Chrome reserves a border-spacing
+     gap for the caption box even when it is visually hidden, which pushed the body down 2px. */
+  return `<div class="matrixwrap"><table class="matrix"${opts.caption?` aria-label="${esc(opts.caption)}"`:""}>${head}<tbody>${body}${totals}</tbody></table></div>`;
 }
 function vMatrix(){
   const fwL = FW_ORDER.map(f=>({id:f, label:FW[f].name}));
