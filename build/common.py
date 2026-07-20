@@ -216,22 +216,22 @@ SOLUTIONS = {
 # License strings — sourced ONLY from the Microsoft Purview service description per-feature rows.
 SD = "https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description"
 LIC = {
-    "labels_manual": "Manual sensitivity labeling: Microsoft 365 E3/A3/G3 or higher (also F1/F3/Business Premium)",
-    "labels_auto": "Automatic/policy-based sensitivity labeling: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Information Protection & Governance",
+    "labels_manual": "Manual sensitivity labeling: Microsoft 365 E5/A5/G5/E3/A3/G3/F1/F3 or Business Premium; also Office 365 E5/A5/E3/A3, Enterprise Mobility + Security E3/E5, OneDrive for Business (Plan 2), and Azure Information Protection Plan 1/Plan 2",
+    "labels_auto": "Automatic/policy-based sensitivity labeling: Microsoft 365 E5/A5/G5, Office 365 E5/A5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
     "label_encryption": "Label-based encryption: included with sensitivity labeling entitlements (manual E3+; automatic application E5-tier)",
-    "customer_key": "Customer Key: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Information Protection & Governance",
-    "classification_analytics": "Data classification analytics (Data/Content/Activity explorer): Microsoft 365 E5/A5/G5, E5 Compliance (Purview Suite), or E5 Information Protection & Governance",
-    "dlp_core": "DLP for Exchange/SharePoint/OneDrive: Microsoft 365 E3/A3/G3 or higher (Business Premium included)",
-    "dlp_teams": "DLP for Teams: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Information Protection & Governance",
-    "dlp_endpoint": "Endpoint DLP: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Information Protection & Governance",
-    "retention_basic": "Org/location-wide retention policies & manual retention labels: Microsoft 365 E3/A3/G3 or higher",
-    "retention_advanced": "Adaptive scopes / auto-apply retention: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Information Protection & Governance",
-    "records": "Records Management (file plan, record declaration, disposition review): Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Information Protection & Governance",
+    "customer_key": "Customer Key: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
+    "classification_analytics": "Data classification analytics (Data/Content/Activity explorer): Microsoft 365 E5/A5/G5, Office 365 E5, Microsoft 365 E5/A5/G5 Compliance (Purview Suite), or Microsoft 365 E5/A5/G5 Information Protection & Governance; E3/A3/G3 tenants keep the underlying Content explorer data aggregation without the explorer interfaces",
+    "dlp_core": "DLP for Exchange/SharePoint/OneDrive: Microsoft 365 E5/A5/G5/E3/A3/G3 or Business Premium; also Office 365 E5/A5/G5/E3/A3/G3, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, SharePoint Online Plan 2, OneDrive for Business (Plan 2), or Exchange Online Plan 2",
+    "dlp_teams": "DLP for Teams: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
+    "dlp_endpoint": "Endpoint DLP: Microsoft 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance (no Office 365 path; Endpoint DLP is Microsoft 365 only)",
+    "retention_basic": "Org/location-wide retention policies & manual retention labels: Microsoft 365 E5/A5/G5/E3/A3/G3 or Business Premium; also Office 365 E5/A5/G5/E3/A3/G3, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
+    "retention_advanced": "Adaptive scopes / auto-apply retention: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
+    "records": "Records Management (file plan, record declaration, disposition review): Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
     "audit_std": "Audit (Standard): included across Microsoft 365/Office 365 enterprise, government, and business plans (180-day retention)",
-    "audit_prem": "Audit (Premium): Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 eDiscovery & Audit add-on; 10-year retention needs the add-on license",
-    "ediscovery_std": "eDiscovery (search, cases, hold, export): Microsoft 365/Office 365 E3-tier; premium features (custodians, review sets, analytics): E5/A5/G5, Microsoft Purview Suite, or E5 eDiscovery & Audit add-on",
-    "irm": "Insider Risk Management: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Insider Risk Management add-on",
-    "cc": "Communication Compliance: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Insider Risk Management/Compliance add-ons",
+    "audit_prem": "Audit (Premium): Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/G5/F5 eDiscovery & Audit; 10-year retention needs the add-on license",
+    "ediscovery_std": "eDiscovery (search, cases, hold, export): Microsoft 365 E3 or Office 365 E3/A3/G3/F3; premium features (custodians, review sets, analytics): Microsoft 365 E5/A5/F5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, or Microsoft 365 E5/A5/F5/G5 eDiscovery & Audit",
+    "irm": "Insider Risk Management: Microsoft 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Insider Risk Management",
+    "cc": "Communication Compliance: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Insider Risk Management",
     "ib": "Information Barriers: Microsoft 365 E5/A5/G5, Microsoft Purview Suite, or E5 Insider Risk Management add-on (restricted users need licenses)",
     "cm": "Compliance Manager: baseline included with Microsoft 365/Office 365 plans; premium regulation templates licensed separately (3 premium templates included at E5/A5/G5)",
     "dspm": "DSPM: Microsoft 365 E5 or Microsoft Purview Suite (per DSPM get-started documentation; not yet a service-description row)",
@@ -586,9 +586,9 @@ PRODUCTS["defender-cloud"]["solutions"] = [k for k, v in SOLUTIONS.items() if v.
 
 # Entra licensing strings — from the Entra licensing service description (per-capability tiers).
 ENTRA_LIC = {
-    "ca": "Microsoft Entra Conditional Access: Microsoft Entra ID P1 (included in Microsoft 365 E3/E5 and Business Premium). Risk-based conditions additionally require Entra ID P2.",
+    "ca": "Microsoft Entra Conditional Access: Microsoft Entra ID P1 (included in Microsoft 365 E3/E5/E7, Microsoft 365 F1/F3, Enterprise Mobility + Security E3, and Business Premium). Risk-based conditions additionally require Entra ID P2.",
     "mfa": "Multifactor authentication & authentication methods: Microsoft Entra ID Free (basic) and P1; authentication strengths and full policy control require Entra ID P1.",
-    "id_protection": "Microsoft Entra ID Protection (risk-based policies, risky users/sign-ins): Microsoft Entra ID P2 (included in Microsoft 365 E5) or Microsoft Entra Suite.",
+    "id_protection": "Microsoft Entra ID Protection (risk-based policies, risky users/sign-ins): Microsoft Entra ID P2 (included in Microsoft 365 E5/E7, Microsoft Defender Suite (formerly Microsoft 365 E5 Security), and Enterprise Mobility + Security E5) or Microsoft Entra Suite.",
     "pim": "Privileged Identity Management: Microsoft Entra ID P2 or the Microsoft Entra ID Governance SKU.",
     "gov_core": "Access reviews & entitlement management (baseline capabilities previously GA in Entra ID P2): Microsoft Entra ID P2; advanced governance requires the Microsoft Entra ID Governance SKU or Microsoft Entra Suite.",
     "gov_lcw": "Lifecycle Workflows: Microsoft Entra ID Governance SKU or Microsoft Entra Suite (not included in standalone Entra ID P2).",
@@ -689,25 +689,36 @@ DEFENDER_LIC = {
                "protection, and manual response actions. EDR, automated investigation & remediation, vulnerability "
                "management, and threat analytics require Plan 2."),
     "mde_p2": ("Microsoft Defender for Endpoint Plan 2: standalone or included in Microsoft 365 E5/A5/G5, "
-               "Microsoft 365 E5 Security, Windows 10/11 Enterprise E5/A5, or Microsoft Defender Suite."),
+               "Windows 11/10 Enterprise E5/A5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, "
+               "or Microsoft Defender + Purview Suite FLW."),
     "mdvm": ("Defender Vulnerability Management core capabilities: included with Microsoft Defender for Endpoint Plan 2 "
-             "(Microsoft 365 E5/A5/G5, E5 Security, or standalone P2). Premium capabilities (security baselines "
-             "assessment, block vulnerable applications, browser-extension/certificate/hardware-firmware assessment) "
-             "require the Defender Vulnerability Management add-on; an MDVM standalone exists for non-P2 customers."),
-    "mdo_p1": ("Microsoft Defender for Office 365 Plan 1: standalone, Microsoft 365 Business Premium, and (effective "
-               "July 1, 2026) included in Office 365 E3 / Microsoft 365 E3."),
+             "(Microsoft 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, or "
+             "standalone P2). Premium capabilities (security baselines assessment, block vulnerable applications, "
+             "browser-extension/certificate/hardware-firmware assessment) require the Defender Vulnerability Management "
+             "add-on, available to Defender for Endpoint Plan 2, Microsoft 365 E5/A5/G5, Microsoft Defender Suite/EDU/GOV/FLW, "
+             "Microsoft Defender + Purview Suite FLW, and Windows 11/10 Enterprise E5/A5/G5 customers; an MDVM standalone "
+             "exists for non-P2 customers."),
+    "mdo_p1": ("Microsoft Defender for Office 365 Plan 1: standalone, Microsoft 365 Business Premium, Microsoft 365 E5/A5/G5, "
+               "Office 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, or Microsoft "
+               "Defender + Purview Suite FLW. Effective July 1, 2026 it is also included in Microsoft 365 E3/G3 and Office 365 "
+               "E3/G3; that rollout began June 2026 and Microsoft expects it to complete during 2026."),
     "mdo_p2": ("Microsoft Defender for Office 365 Plan 2: standalone or included in Microsoft 365 E5/A5/G5, "
-               "Office 365 E5/A5/G5, Microsoft 365 E5 Security, or Microsoft Defender Suite. Threat Explorer, automated "
-               "investigation & response, attack simulation training, campaign views, and Defender XDR integration are "
-               "Plan 2-only."),
+               "Office 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, or Microsoft "
+               "Defender + Purview Suite FLW. Threat Explorer, automated investigation & response, attack simulation training, "
+               "campaign views, and Defender XDR integration are Plan 2-only."),
     "mdi": ("Microsoft Defender for Identity: standalone or included in Enterprise Mobility + Security E5/A5, "
-            "Microsoft 365 E5/A5/G5, Microsoft 365 E5/A5/G5/F5 Security, or Microsoft Defender Suite."),
+            "Microsoft 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, Microsoft "
+            "Defender + Purview Suite FLW, or Microsoft Defender for Identity for Users."),
     "mdca": ("Microsoft Defender for Cloud Apps: standalone or included in Enterprise Mobility + Security E5, "
-             "Microsoft 365 E5/A5/G5, or Microsoft Defender Suite. Conditional Access App Control additionally requires "
-             "Microsoft Entra ID P1 licensing."),
+             "Microsoft 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, "
+             "Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/F5/G5 "
+             "Information Protection and Governance. Conditional Access App Control additionally requires Microsoft "
+             "Entra ID P1 licensing."),
     "xdr": ("Microsoft Defender XDR has no separate license; the unified portal and correlation come with any "
-            "qualifying workload license (Microsoft 365 E5/A5, Microsoft 365 E5 Security, EMS E5, Office 365 E5, or "
-            "standalone Defender workload licenses). Automatic attack disruption and threat analytics require "
+            "qualifying workload license (Microsoft 365 E5/A5; Microsoft 365 E3 with the Microsoft Defender Suite or "
+            "Enterprise Mobility + Security E5 add-on; Microsoft 365 A3 with the A5 Security add-on; Windows 11/10 "
+            "Enterprise E5/A5; Enterprise Mobility + Security E5/A5; Office 365 E5/A5; Microsoft 365 Business Premium; "
+            "or standalone Defender workload licenses). Automatic attack disruption and threat analytics require "
             "Defender for Endpoint Plan 2."),
 }
 
@@ -773,8 +784,10 @@ DEFENDER_GOV = {
 # and the retention meters (analytics-tier vs data-lake) behind multi-year retention mandates.
 SENTINEL_LIC = {
     "ingest": ("Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB "
-               "into the analytics tier, or commitment tiers from 100 GB/day (a 50 GB tier entered public preview "
-               "Oct 2025) at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters."),
+               "into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified "
+               "pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and "
+               "remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who "
+               "sign up in that window lock in the discounted rate through Mar 31, 2027."),
     "retention": ("Consumption-priced retention: analytics-tier retention beyond the included 90 days is billed per GB "
                   "(extendable to 2 years); Microsoft Sentinel data lake total retention up to 12 years is billed per "
                   "compressed GB/month (6:1 compression assumption) plus per-GB query/processing meters when archived "
