@@ -30,9 +30,9 @@ Open **`compliance-atlas.html`** in any browser. It is one self-contained file: 
 
 Live version: *(URL to be added at publish.)*
 
-## Licence
+## License
 
-| What | Licence |
+| What | License |
 |---|---|
 | **Build code** — everything in `build/` | MIT — [`LICENSE`](LICENSE) |
 | **Atlas content** — rows, taxonomies, framework/product/industry metadata, the generated `.json` and `.html`, and this documentation | CC BY 4.0 — [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md) |
