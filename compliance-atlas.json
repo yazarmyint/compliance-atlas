@@ -14,7 +14,7 @@
    "Framework and standard names are the property of their respective owners and are used for identification only.",
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it."
   ],
-  "generated": "2026-07-19T21:12:29",
+  "generated": "2026-07-20T09:25:33",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
@@ -44,7 +44,7 @@
   "disclaimer": "Mapped products support or evidence controls; they do not by themselves make an organization compliant with any framework. Control references are practical intent mappings in original words, not quotations of the standards. Licensing claims derive from each product's authoritative licensing source and can change; verify before relying on it.",
   "verified_range": {
    "earliest": "2026-07-16",
-   "latest": "2026-07-19"
+   "latest": "2026-07-20"
   },
   "description_meta": "Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
  },
@@ -1416,7 +1416,7 @@
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "dpr-j48-intune",
@@ -1459,7 +1459,7 @@
     "https://learn.microsoft.com/intune/device-management/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "dpr-j37-defender",
@@ -1663,7 +1663,7 @@
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": null,
    "sources": [
@@ -1673,7 +1673,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "dpr-j38-mdc",
@@ -1714,7 +1714,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "dpr-j40-mdc",
@@ -2842,7 +2842,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-6-7-intune",
@@ -2882,7 +2882,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-8-1-intune",
@@ -2929,7 +2929,7 @@
     "https://learn.microsoft.com/intune/device-security/endpoint-security-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-8-7-intune",
@@ -2965,7 +2965,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-8-9-intune",
@@ -2997,7 +2997,7 @@
     "https://learn.microsoft.com/intune/device-security/security-baselines/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-8-24-intune",
@@ -3036,7 +3036,7 @@
     "https://learn.microsoft.com/intune/device-configuration/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-5-7-defender",
@@ -3617,7 +3617,7 @@
    "legacy_dependencies": "",
    "coverage": "Direct Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported.",
    "sources": [
@@ -3626,7 +3626,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-8-16-sentinel",
@@ -3794,7 +3794,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-5-36-mdc",
@@ -3833,7 +3833,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "iso-a-8-7-mdc",
@@ -4791,7 +4791,7 @@
     "https://learn.microsoft.com/intune/device-security/conditional-access-integration/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "soc2-cc6-7-intune",
@@ -4830,7 +4830,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/wipe-corporate-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "soc2-cc6-8-intune",
@@ -4869,7 +4869,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "soc2-cc6-7-defender",
@@ -5176,7 +5176,7 @@
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": null,
    "sources": [
@@ -5186,7 +5186,7 @@
     "https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "soc2-cc7-3-sentinel",
@@ -5360,7 +5360,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "soc2-cc7-2-mdc",
@@ -5444,7 +5444,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/assign-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-308-a1-a",
@@ -5473,7 +5473,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
    "legacy_dependencies": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
@@ -6033,7 +6033,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-310-b-c-intune",
@@ -6065,7 +6065,7 @@
     "https://learn.microsoft.com/intune/device-security/compliance/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-310-d1-intune",
@@ -6102,7 +6102,7 @@
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-312-a2-iv-intune",
@@ -6142,7 +6142,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-308-a1-a-defender",
@@ -6347,7 +6347,7 @@
    "legacy_dependencies": "",
    "coverage": "Direct Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": null,
    "sources": [
@@ -6356,7 +6356,7 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-312-b-sentinel",
@@ -6525,7 +6525,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-312-c-mdc",
@@ -6564,7 +6564,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-introduction"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "hipaa-308-a5-b-mdc",
@@ -6609,7 +6609,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-1-3",
@@ -6670,7 +6670,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "Public-posting review procedure; web CMS controls",
    "legacy_dependencies": "Public-posting review procedure; web CMS controls",
@@ -7286,7 +7286,7 @@
     "https://learn.microsoft.com/intune/device-security/conditional-access-integration/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-1-18-intune",
@@ -7326,7 +7326,7 @@
     "https://learn.microsoft.com/intune/device-security/compliance/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-1-19-intune",
@@ -7366,7 +7366,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-4-1-intune",
@@ -7398,7 +7398,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-4-2-intune",
@@ -7435,7 +7435,7 @@
     "https://learn.microsoft.com/intune/device-security/endpoint-security-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-8-7-intune",
@@ -7477,7 +7477,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/attack-surface-reduction"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-13-16-intune",
@@ -7516,7 +7516,7 @@
     "https://learn.microsoft.com/intune/device-management/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-1-20-defender",
@@ -7955,7 +7955,7 @@
    "legacy_dependencies": "",
    "coverage": "Direct Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported. Azure Government feature gaps: summary rules, SOC optimization, SIEM migration, repositories, MDTI matching analytics, URL detonation, and TI GeoLocation/WhoIs enrichment are not available; scheduled/NRT/Fusion analytics, automation rules, playbooks, watchlists, and core UEBA are GA (peer/blast-radius enrichments commercial-only). The M365 E5/G5 Sentinel data-grant benefit includes USGOV_GCCHIGH and USGOV_DOD SKUs.",
    "sources": [
@@ -7964,7 +7964,7 @@
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-6-1-2-sentinel",
@@ -8222,7 +8222,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/assign-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-4-1-mdc",
@@ -8261,7 +8261,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-14-6-mdc",
@@ -8306,7 +8306,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "171-3-11-1-mdc",
@@ -8479,7 +8479,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "Web publishing review procedure; CMS controls",
    "legacy_dependencies": "Web publishing review procedure; CMS controls",
@@ -8638,7 +8638,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "Information-location documentation for non-M365 components; data-flow diagrams",
    "legacy_dependencies": "Information-location documentation for non-M365 components; data-flow diagrams",
@@ -8874,7 +8874,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
    "legacy_dependencies": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
@@ -9272,7 +9272,7 @@
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "High",
-   "license_requirement": "Endpoint Privilege Management: separate Intune add-on license or Microsoft Intune Suite, in addition to Intune Plan 1; from July 2026 also included in Microsoft 365 E5/E7",
+   "license_requirement": "Endpoint Privilege Management: included in Microsoft 365 E5 and E7 since July 2026, when Intune Suite capabilities were distributed across Microsoft 365 tiers; on any other plan it remains a separate Intune add-on license or the Microsoft Intune Suite, in addition to Intune Plan 1",
    "licensing_model": "per_user",
    "cloud_availability_note": "In GCC High/DoD: Endpoint Privilege Management, Advanced Analytics, Enterprise App Management, Tunnel for MAM, firmware-over-the-air updates, and specialty devices management are supported; Cloud PKI (GCC High) and Remote Help are planned/not available.",
    "sources": [
@@ -9280,7 +9280,7 @@
     "https://learn.microsoft.com/intune/epm/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-ac-19-intune",
@@ -9321,7 +9321,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-cm-2-intune",
@@ -9350,7 +9350,7 @@
     "https://learn.microsoft.com/intune/device-security/security-baselines/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-cm-6-intune",
@@ -9387,7 +9387,7 @@
     "https://learn.microsoft.com/intune/device-security/endpoint-security-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-mp-7-intune",
@@ -9429,7 +9429,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/attack-surface-reduction"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-sc-28-intune",
@@ -9468,7 +9468,7 @@
     "https://learn.microsoft.com/intune/device-management/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-ir-4-defender",
@@ -9784,7 +9784,7 @@
    "legacy_dependencies": "",
    "coverage": "Direct Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported. Azure Government feature gaps: summary rules, SOC optimization, SIEM migration, repositories, MDTI matching analytics, URL detonation, and TI GeoLocation/WhoIs enrichment are not available; scheduled/NRT/Fusion analytics, automation rules, playbooks, watchlists, and core UEBA are GA (peer/blast-radius enrichments commercial-only). The M365 E5/G5 Sentinel data-grant benefit includes USGOV_GCCHIGH and USGOV_DOD SKUs.",
    "sources": [
@@ -9793,7 +9793,7 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-au-9-sentinel",
@@ -9995,7 +9995,7 @@
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported. Azure Government feature gaps: summary rules, SOC optimization, SIEM migration, repositories, MDTI matching analytics, URL detonation, and TI GeoLocation/WhoIs enrichment are not available; scheduled/NRT/Fusion analytics, automation rules, playbooks, watchlists, and core UEBA are GA (peer/blast-radius enrichments commercial-only). The M365 E5/G5 Sentinel data-grant benefit includes USGOV_GCCHIGH and USGOV_DOD SKUs.",
    "sources": [
@@ -10004,7 +10004,7 @@
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-ra-10-sentinel",
@@ -10128,7 +10128,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/secure-score-security-controls"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-ca-2-mdc",
@@ -10165,7 +10165,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/assign-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-cm-8-mdc",
@@ -10241,7 +10241,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-si-7-mdc",
@@ -10278,7 +10278,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "53-si-4-mdc",
@@ -10323,7 +10323,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-gv-oc-03",
@@ -10383,7 +10383,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "Inventory for non-M365 data platforms; data owners assigning designations",
    "legacy_dependencies": "Inventory for non-M365 data platforms; data owners assigning designations",
@@ -10621,7 +10621,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-20",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -10934,7 +10934,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-pr-ps-01-intune",
@@ -10966,7 +10966,7 @@
     "https://learn.microsoft.com/intune/device-configuration/settings-catalog"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-pr-ps-02-intune",
@@ -11003,7 +11003,7 @@
     "https://learn.microsoft.com/windows/deployment/windows-autopatch/overview/windows-autopatch-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-pr-ps-05-intune",
@@ -11041,7 +11041,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/manage-app-control"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-pr-ds-01-intune",
@@ -11081,7 +11081,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-id-ra-01-defender",
@@ -11404,7 +11404,7 @@
    "legacy_dependencies": "",
    "coverage": "Direct Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": null,
    "sources": [
@@ -11413,7 +11413,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-de-ae-02-sentinel",
@@ -11494,7 +11494,7 @@
    "legacy_dependencies": "",
    "coverage": "Direct Support",
    "confidence": "High",
-   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and E5 Security tenants additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; raw Microsoft logs beyond the grant are paid ingestion.",
+   "license_requirement": "Microsoft Sentinel is consumption-priced on data ingestion (no per-user license): pay-as-you-go per GB into the analytics tier, or commitment tiers from 100 GB/day at discounted effective rates; simplified pricing combines Log Analytics + Sentinel meters. A 50 GB/day commitment tier launched Oct 1, 2025 and remains in public preview: its promotional pricing was extended through Dec 31, 2026, and customers who sign up in that window lock in the discounted rate through Mar 31, 2027. Free data sources: Office 365 audit activity (SharePoint/Exchange/Teams), Azure Activity, and all Microsoft Defender security alerts/incidents ingest at no charge. Microsoft 365 E7/E5/A5/F5/G5 and their Security counterparts additionally get a data grant of up to 5 MB/user/day covering Entra ID sign-in/audit logs, Defender for Cloud Apps shadow-IT discovery, Purview Information Protection logs, and Defender XDR advanced-hunting tables; the grant requires an Enterprise, Enterprise Subscription, or CSP agreement, and raw Microsoft logs beyond it are paid ingestion.",
    "licensing_model": "consumption",
    "cloud_availability_note": null,
    "sources": [
@@ -11503,7 +11503,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-de-cm-01-sentinel",
@@ -11748,7 +11748,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/secure-score-security-controls"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-pr-ps-01-mdc",
@@ -11787,7 +11787,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "csf-de-cm-09-mdc",
@@ -11832,7 +11832,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "pci-3-2-1",
@@ -12306,7 +12306,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/manage-policies"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "pci-2-2-1-intune",
@@ -12336,7 +12336,7 @@
     "https://learn.microsoft.com/intune/device-security/security-baselines/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "pci-5-3-intune",
@@ -12373,7 +12373,7 @@
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/antivirus"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "pci-6-3-3-intune",
@@ -12411,7 +12411,7 @@
     "https://learn.microsoft.com/windows/deployment/windows-autopatch/overview/windows-autopatch-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "pci-5-2-defender",
@@ -12884,7 +12884,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/integration-defender-for-endpoint"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "pci-2-2-1-mdc",
@@ -12925,7 +12925,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "glba-314-4-b",
@@ -12954,7 +12954,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "Written risk-assessment methodology; Qualified Individual ownership",
    "legacy_dependencies": "Written risk-assessment methodology; Qualified Individual ownership",
@@ -13025,7 +13025,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "CMDB/ITAM; HR systems; facilities records",
    "legacy_dependencies": "CMDB/ITAM; HR systems; facilities records",
@@ -13369,7 +13369,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-19"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "glba-314-4-c3-intune",
@@ -13409,7 +13409,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "glba-314-4-c8-defender",
@@ -14346,7 +14346,7 @@
     "https://learn.microsoft.com/purview/dspm-for-ai"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-20",
    "related_microsoft": [],
    "external_dependencies": "DPIA methodology and register; DPO consultation",
    "legacy_dependencies": "DPIA methodology and register; DPO consultation",
@@ -14469,7 +14469,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "gdpr-32-1-b-intune",
@@ -14515,7 +14515,7 @@
     "https://learn.microsoft.com/intune/app-management/protection/wipe-corporate-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-20"
   },
   {
    "id": "gdpr-32-1-b-defender",
@@ -14890,7 +14890,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-regulatory-compliance-standards"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-20"
   }
  ]
 }

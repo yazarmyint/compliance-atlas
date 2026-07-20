@@ -1725,7 +1725,134 @@ sources were not fetched this session:
 - **Next licensing pass should fetch what this one did not:** the Intune licensing and advanced-capabilities
   articles, the Defender for Servers plan-selection pages, the regulatory-compliance-dashboard prerequisites,
   the DSPM get-started docs, and the Microsoft 365 E5 Sentinel benefit offer page. Those five sources govern the
-  54 rows still carrying pre-2026-07-19 dates.
+  54 rows still carrying pre-2026-07-19 dates. *(Done on 2026-07-20 — see §22.11. All five were fetched, all
+  eight constants verified, and the held-out set fell from 54 rows to 8.)*
 - **PR-035's naming gloss is temporary.** "(formerly Microsoft 365 E5 Security)" earns its place only while the
   old name is still on customer paperwork; drop it once it is not.
 - Remaining roadmap after this session: **PR-044 about page**.
+
+### 22.11 Completion pass (2026-07-20) — the five unfetched source families, closed
+
+§22.10 carried forward five source families the 2026-07-19 pass never reached, governing eight constants and the
+54 rows still holding pre-2026-07-19 dates. All five were fetched live on **2026-07-20** under the same rules:
+licensing strings only, no coverage or confidence changes, anything structural raised as a decision rather than
+acted on. Baseline for every diff below: commit `28ab92d`.
+
+**Headline:** *every tier claim held again.* Two strings changed — one tense correction now that a documented
+restructure has taken effect, one under-listed SKU family. Nothing carried forward as unverified.
+
+| Constant | Result | Live source, fetched 2026-07-20 |
+|---|---|---|
+| `INTUNE_LIC["p1"]` | PASS | Intune licensing article: "Plan 1: the base service", bundles "such as Microsoft 365 E3, E5, or E7"; EMS path confirmed on the planning guide |
+| `INTUNE_LIC["p1_ca"]` | PASS | Planning guide step 3: enforcing compliance rules needs "Intune" + "Microsoft Entra ID P1 or P2" — P1 is the stated minimum |
+| `INTUNE_LIC["epm"]` | **CHANGED** | Planning guide step 3: "Starting July 2026, Suite capabilities are distributed across Microsoft 365 license tiers … E5 and E7 include … Endpoint Privilege Management" |
+| `MDC_LIC["servers_p1"]` | PASS | Plan-selection page (P1 = EDR via MDE integration); FAQ confirms the MDE double-billing adjustment verbatim |
+| `MDC_LIC["servers_p2"]` | PASS | `defender-for-servers-overview` plan-features table: agentless scanning, premium MDVM, FIM, JIT, OS baseline/updates, DNS alerts, 500 MB benefit all P2-only |
+| `MDC_LIC["dashboard"]` | PASS | `update-regulatory-compliance-packages` prerequisites, verbatim: "any Defender for Cloud plan, except Defender for Servers Plan 1 or Defender for API Plan 1" |
+| `SENTINEL_LIC["free_benefit"]` | **CHANGED** | Sentinel M365 benefit offer page: Security variants span all five families, not E5 alone; EA/EAS/CSP agreement gate |
+| `LIC["dspm"]` | PASS | DSPM get-started, verbatim: "you need a Microsoft 365 E5 or Microsoft Purview Suite … license" |
+| `LIC["dspm_ai"]` | PASS (partial basis) | DSPM-for-AI prerequisites confirm the Copilot-license and pay-as-you-go clauses verbatim; see the caveat below |
+
+#### The two changes
+
+**`INTUNE_LIC["epm"]` — the July 2026 restructure has taken effect.** The README diarised this as "in progress"
+and asked for the EPM string to be re-checked once the rollout settled. It has: the Intune planning guide now
+states the distribution as fact, and E5 **and E7** both carry EPM, Cloud PKI, and Enterprise Application
+Management, which is what the atlas already claimed. The defect was tense, not substance — "from July 2026 also
+included in Microsoft 365 E5/E7" reads as pending on 2026-07-20, when it is current. Rewritten to lead with the
+inclusion and keep the add-on/Suite path for every other plan.
+
+*What is still pending, and now recorded in the README trigger:* the restructure is stated in **exactly one Learn
+location**. The canonical Intune licensing article was rewritten to drop per-bundle contents altogether — it now
+names only Plan 1 / Plan 2 / Suite and defers to the commercial pricing page — and `advanced-capabilities` says
+only "select Microsoft 365 bundles" without naming them. So the planning guide is the sole first-party citation
+for which tier includes EPM. That is thin for a claim this load-bearing, and worth re-checking. (The licensing
+article also moved from `fundamentals/licenses` to `fundamentals/licensing`; the old path 404s.)
+
+**`SENTINEL_LIC["free_benefit"]` — under-listed SKUs, the §22.4 defect class again.** The atlas read "Microsoft
+365 E7/E5/A5/F5/G5 and E5 Security tenants". The offer page grants the benefit to "Microsoft 365 E7, E5, A5, F5,
+and G5 **and** Microsoft 365 E7, E5, A5, F5, and G5 Security customers" — the Security variant exists across all
+five families, so the atlas under-listed four of them, understating what a reader already owns. Corrected to
+"and their Security counterparts". The page also gates the grant on holding an Enterprise, Enterprise
+Subscription, or CSP agreement, which the string did not carry and now does.
+
+One near-miss worth recording: the offer page's free-data-sources list names only SharePoint and Exchange admin
+activity, which would have made the atlas's "(SharePoint/Exchange/Teams)" look wrong. The Sentinel billing
+article, re-checked for this, reads "Office 365 Audit Logs, including all SharePoint activity, Exchange admin
+activity, **and Teams**", and lists `OfficeActivity (Teams)` as a free data type. The atlas was right and the
+offer page is simply the less complete of the two. Left unchanged — a marketing page is not grounds to delete a
+claim the billing documentation states explicitly.
+
+#### `LIC["dspm_ai"]` — verified, with an honest note on what verified it
+
+Two of the three clauses were confirmed verbatim on the DSPM-for-AI prerequisites: monitored Copilot users need
+Microsoft 365 Copilot licenses, and AI apps other than M365 Copilot and Facilitator require pay-as-you-go
+billing. The tier clause ("Microsoft 365 E5 or Microsoft Purview Suite") is **not** stated on any DSPM-for-AI
+page; it rests on the DSPM get-started article, which states it for DSPM generally. The string is not
+contradicted anywhere and is recorded as PASS, but its tier basis is inherited rather than direct. A Microsoft
+Q&A answer asserts the same thing and was deliberately not used — §22.5 is the precedent for that.
+
+#### Decision for the owner: the DSPM documentation split (NOT acted on)
+
+Beyond a licensing string, so raised rather than changed, per the session rule:
+
+Microsoft has forked DSPM into a **current** unified version and two **classic** ones. `LIC["dspm_ai"]`'s cited
+source, `purview/dspm-for-ai`, now serves a page titled *"Learn about Data Security Posture Management for AI —
+**(classic)**"*, carrying a banner that improvements will not be added to it. The current
+`data-security-posture-management-learn-about` (already cited by `LIC["dspm"]`) now covers AI apps and agents
+itself, absorbing what DSPM for AI did, and adds AI observability, third-party SaaS/IaaS coverage, and partner
+integrations.
+
+The atlas therefore cites a deprecated page for its DSPM-for-AI rows, and its `dspm` / `dspm_ai` split may no
+longer match how Microsoft ships the product. Three options: repoint `dspm_ai` sources to the current article and
+keep both constants; merge the two constants to follow Microsoft's consolidation; or leave both as-is while the
+classic pages remain live. This touches `sources` and possibly row modelling, so it waits for a decision.
+
+#### Gate
+
+| Check | Result |
+|---|---|
+| Rebuild green | 378 rows, 11 frameworks, 10 industries, 6 products |
+| Row ids identical to baseline | PASS, zero added or removed |
+| Only `license_requirement` / `last_verified` / meta changed | **PASS** (`sources` untouched: 0 rows) |
+| Coverage and confidence distributions byte-equal | PASS |
+| `assemble.py` assertions | PASS, 0 defects |
+
+**Drift ledger.** `license_requirement` changed on **10** rows — 9 sentinel (`free_benefit`) and 1 intune
+(`epm`):
+
+> 171-3-3-5-sentinel, 53-ac-6-intune, 53-au-6-sentinel, 53-si-4-sentinel, csf-de-ae-03-sentinel,
+> csf-pr-ps-04-sentinel, dpr-j40-sentinel, hipaa-308-a1-d-sentinel, iso-a-8-15-sentinel, soc2-cc7-2-sentinel
+
+`last_verified` moved to 2026-07-20 on **82** rows (intune 41, defender-cloud 22, purview 10, sentinel 9): the
+**46** rows released from the §22.6 held-out set, plus **36** rows that already carried 2026-07-19 and rest on a
+constant this pass re-verified as well. The later date wins, which is the established rule — a row's date is when
+its facts were last checked, and for those 36 that is now 2026-07-20.
+
+**Meta:** `verified_range.latest` 2026-07-19 → 2026-07-20; `generated` timestamp. Nothing else.
+
+#### What remains at an earlier date, and why that is now permanent
+
+**8 rows**, down from 54, all `license_requirement: "n/a"`: `53-mp-6`, `dpr-j47`, `dpr-j48`, `gdpr-30`,
+`pci-4-2-1`, `soc2-a1`, `soc2-p1-p3`, `soc2-pi1`. These are boundary rows — deliberate `Not Covered` verdicts with
+no Microsoft capability and therefore no licensing constant. No licensing pass can ever move them, because there
+is nothing licensed to re-verify. Their dates are authoring dates and correctly stay that way; moving them would
+require re-testing the boundary judgement itself, which is a content review, not a licensing pass.
+`meta.default_last_verified` stays 2026-07-16, still the authoring default and still equal to the earliest
+per-row date.
+
+#### Policy encoding
+
+`common.py` now holds an ordered `REVERIFY_PASSES` list rather than a single pass, with `REVERIFY_DATE_2` and
+`REVERIFIED_LIC_KEYS_2` alongside the originals; `assemble.py` applies passes in date order. The "not
+re-verified" comment block is gone because nothing is: every constant in all six licensing dicts has now been
+checked against a live first-party source. The structure is kept general so a third pass is an append, not a
+rewrite.
+
+#### Carried forward
+
+- **No Step-1.7 flags.** No coverage level or confidence value looks wrong, was touched, or needs a decision.
+- **One decision pending:** the DSPM documentation split, above.
+- **Two maintenance triggers updated:** the Intune restructure (now in effect, with the single-source-citation
+  caveat recorded) and, unchanged, the MDO Plan 1 E3/G3 rollout and the Defender Suite naming gloss.
+- Remaining roadmap: **PR-044 about page**.
