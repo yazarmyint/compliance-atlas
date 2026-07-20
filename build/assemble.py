@@ -148,7 +148,7 @@ BRAND = {
     # policy's bands are written around readers, and this addition is invisible to one; the
     # discriminator that actually decides it is compatibility, and no consumer must change code
     # for an added key. Reasoning in full in CHANGELOG.md and AUDIT-FINDINGS §26.
-    "atlas_version": "2.10.0",
+    "atlas_version": "2.10.1",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }

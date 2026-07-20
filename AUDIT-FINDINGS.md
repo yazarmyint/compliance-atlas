@@ -2265,6 +2265,13 @@ The drift test was therefore run against a **documented noise floor of exactly o
 constraint the session actually operated under is unchanged and stricter than the original wording:
 this session must not widen that floor by any amount. It did not.
 
+> **Closing note (2026-07-20, §27.1).** The noise floor is now **zero**. PR-057 removed `generated`
+> from META, so `compliance-atlas.json` holds nothing time-derived and a content-free rebuild leaves
+> it byte-identical. The session brief's original wording — "a rebuild with no content change
+> produces an empty `git diff`" — is true as of §27, and was not true when it was written. The
+> analysis above stands as the record of why. The moving timestamp now lives in
+> `compliance-atlas.html` alone, which diffs on every rebuild by design.
+
 ### 26.2 Two deferred findings raised here — PR-057 and PR-058
 
 Both are build-integrity items, both deferred, and both **earmarked as one small build-integrity
@@ -2283,6 +2290,8 @@ Moving it out of `compliance-atlas.json` and injecting it into the HTML at build
 property and make `git diff compliance-atlas.json` a zero-tolerance drift check rather than a
 one-line-tolerance one. The footer feature is unaffected; the value simply arrives from a different
 place. Estimated 1–2 hours including a rebuild and a `_detail` byte-equality confirmation.
+
+> **CLOSED 2026-07-20 — §27.1.** Implemented as specified, on `session-9-build-integrity`.
 
 #### PR-058 · make the stale-bytecode mitigation structural, not procedural
 
@@ -2303,6 +2312,14 @@ before importing the row modules; remove `build/__pycache__` at start-up; or inv
 only import speed, which is irrelevant at this size. Whichever is chosen, the runbook line stays as
 belt-and-braces but stops being load-bearing. Estimated under an hour, including reproducing the
 original failure to confirm the fix actually closes it.
+
+> **CLOSED 2026-07-20 — §27.2.** Implemented, with one deviation from the options listed above:
+> `sys.dont_write_bytecode` was **rejected as the fix** and kept only as a tidiness measure. It
+> prevents writing new `.pyc` files; it does not prevent loading an existing stale one, which is this
+> failure exactly. The cache is removed outright instead. The original failure was reproduced first,
+> as a control, and §27.2 pastes both runs. The runbook line did not stay as belt-and-braces — it was
+> replaced, because a step that is no longer load-bearing but still reads as mandatory is how a
+> runbook rots.
 
 Ordered after PR-057 in the same session, not before: PR-057 tightens what the drift check tolerates,
 PR-058 makes sure the artifact the check runs against was built from current sources. Doing them
@@ -2453,3 +2470,195 @@ rows (including every `license_requirement`, `cloud_availability_note`, and `sou
 it was written into the build: **zero hits**, matching the §22.1 pattern where a new assertion passes
 on first run against clean data. Had it found anything inside a protected field, this session could
 only have reported it.
+
+## 27. Build integrity (2026-07-20) — PR-057, PR-058
+
+Two findings, one session, three commits, on branch `session-9-build-integrity`. Both were raised and
+deferred in §26.2 and earmarked there as one small build-integrity session. Each closes a different
+way the build could lie about what it had just produced: §27.1 makes the drift check able to detect a
+change, §27.2 makes sure the thing it checks was built from current sources.
+
+Protected row fields were LOCKED throughout — `coverage`, `confidence`, `license_requirement`,
+`sources`, `last_verified`, `control_ref`, and product/solution assignments. **No row data changed.**
+The proof is stronger here than in any previous session: after PR-057, a rebuild that changes no
+content leaves `compliance-atlas.json` byte-identical, and the commit for PR-058 does not contain the
+JSON at all because git found nothing in it to record.
+
+The one transient exception is the regression proof in §27.2, which edits `REVERIFY_DATE_2` — a
+constant that derives `last_verified` — inside **scratch copies of `build/`**, never the working tree,
+and reverts within the same run. The three-step drift test in §27.5 does edit the working tree and
+revert it; that is the test §26 established, and the final tree state is verified equal to the
+pre-test state.
+
+### 27.1 PR-057 — the build timestamp leaves the dataset
+
+`meta.generated` was the only moving field in a content-free rebuild, which is why §26.1 had to run
+the drift test against a documented one-line noise floor rather than an empty diff. It is gone from
+META. `build_html.py` now produces the timestamp itself and stamps it into a `__BUILT_AT__` marker in
+`template.html` at generation time, using the same `isoformat(timespec="seconds")` format, so the
+rendered footer string is character-for-character what it was.
+
+**The footer is unchanged as a feature.** The §23 content-version / build-timestamp split still ships;
+only the timestamp's provenance moved. Rendered lines, from the rebuilt HTML:
+
+```
+const BUILT_AT = "2026-07-20T13:44:01";
+document.getElementById("footMeta").textContent =
+  `Built ${BUILT_AT} from compliance-atlas.json. A rebuild moves this timestamp whether or not any content changed.`;
+```
+
+**The accepted consequence, recorded so a future session does not "fix" it.** `compliance-atlas.html`
+still carries a moving timestamp and therefore diffs on every rebuild. That is the design, not
+residual drift: the drift check is defined on the JSON, which is the thing held byte-stable, and the
+timestamp is a property of the page. Moving it back into the dataset to make the HTML stable would
+re-create exactly the state this finding removed. Said in three places — `.gitattributes`, runbook
+Step 5, and here.
+
+**Substitution safety.** The marker lands inside a JS string literal, so it is substituted *without*
+`html.escape` — entities would render literally there rather than decode. In exchange the value is
+asserted against `\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}` before substitution, so nothing carrying a
+quote or a backslash can reach the template. The value is machine-generated, never user-supplied.
+
+**Reference sweep.** `grep -rn "generated"` across build, template, tools, and docs, every hit
+adjudicated:
+
+| Hit | Disposition |
+|---|---|
+| `assemble.py` META `"generated": None` | **Removed**, replaced by a comment stating why nothing time-derived belongs in the JSON |
+| `assemble.py` `dict(META, generated=…)` | **Removed** |
+| `template.html` footer `Built ${META.generated}` | **Rewritten** to `${BUILT_AT}`, stamped by the builder |
+| `template.html` About, built-vs-version paragraph | **Extended** — the timestamp belongs to the page, not the dataset, and the JSON carries no timestamp at all. The one reader-visible text change in this session |
+| `.gitattributes` line-ending rationale | **Extended** — the drift check is JSON-only and now zero-tolerance; the HTML diffing every rebuild is by design |
+| `docs/MAINTENANCE.md` Step 5, "noise floor is exactly one line" | **Rewritten** — expect empty, plus a blockquote on why the HTML is excluded |
+| §26.1 noise-floor analysis | **Closing note appended**, historical entry left as written (§26.2's instruction) |
+| §26.2 PR-057 entry | **Closure note appended** |
+| `template.html` l.831 "not when this page was generated" | **Out of scope, left.** A per-row verification-date statement; the sentence is still true |
+| `template.html` l.360 "Data regenerated from compliance-atlas.json" | **Out of scope, left.** Hand-edit warning, unrelated sense |
+| `tools/axe_check.mjs` `generated:` in its JSON report | **Out of scope, left.** A QA report's own timestamp; not a shipped artifact and not covered by the drift check |
+| `docs/AUTHORING.md` ×3, `README.md` ×4, `LICENSE-CONTENT.md` ×2 | **Out of scope, left.** All the "generated output, never hand-edit" sense |
+| `AUDIT-FINDINGS.md` historical entries (§4, §16.3, §18.2, §22, §23, §24) | **Out of scope, left.** Records of past state, correct as written |
+| `PROJECT-REVIEW.md` ×2, `CONTENT-REVIEW.md` ×1 | **Out of scope, left.** Independent documents with their own provenance; §26.2's reasoning for not editing PROJECT-REVIEW applies |
+| `build/rows_csf.py` l.454 | **Out of scope, left.** Row prose about log records being generated |
+
+### 27.2 PR-058 — the stale-bytecode fix becomes structural
+
+`sys.dont_write_bytecode` alone was considered and **rejected**. It stops new `.pyc` files being
+written; it does not stop Python loading an existing stale one, which is §26.8's failure exactly. It
+is set anyway, so the purge does not re-litter the tree on every run, but it is not the fix. The fix
+is that `assemble.py` and `build_html.py` each `shutil.rmtree` `build/__pycache__` **before their
+first sibling import**.
+
+**Entry-point inventory** — every Python file with a `__main__` block:
+
+| Entry point | Imports `build/` modules? | Guard |
+|---|---|---|
+| `build/assemble.py` | **Yes** — `common`, `dependency_migration`, and 11 `rows_*` via `importlib` | **Load-bearing.** Placed above `sys.path.insert` and the `from common import …` block it protects |
+| `build/build_html.py` | No — reads the JSON and the template as files | **Preventive.** Added because the property wanted is "no build entry point can execute against stale bytecode", which has to hold for the entry point someone later adds an import to |
+| `tools/check_urls.py` | No — reads the built JSON, stdlib only | None. Nothing to protect; adding one would be cargo cult |
+| `tools/axe_check.mjs` | n/a — Node | None |
+
+**On the import-order trap, and why the guard is duplicated.** It is inline in both files rather than
+factored into a shared `build/` module. A shared module would have to be *imported* to run, and that
+import is served from the very cache the guard exists to distrust — a guard whose own correctness
+depends on the failure mode it guards against. Six duplicated lines is the cheaper problem. No file
+restructuring was needed: in `assemble.py` the guard sits between the stdlib imports and
+`sys.path.insert`, which is already above every sibling import.
+
+**Regression proof.** §26.8's failure shape, run twice: a CONTROL with the guard lines stripped out
+(pre-PR-058 `assemble.py`) and a TREATMENT with the shipped code, each in an isolated scratch copy of
+`build/`. The edit is a same-length one-digit substitution — `REVERIFY_DATE_2 = "2026-07-20"` →
+`"2026-07-10"` — which moves 82 rows' derived `last_verified`.
+
+On the same-tick condition: rather than race the clock and hope, the edit **pins `(mtime, size)` back
+to the pre-edit pair with `os.utime`** and asserts both. That is not a weaker substitute for the
+original condition — it is the deterministic form of it. Python validates cached bytecode on exactly
+that pair, with mtime truncated to whole seconds, so an unchanged pair *is* what "written inside the
+same mtime tick" means to the validator.
+
+```
+==========================================================================
+CONTROL   (guard stripped -- pre-PR-058 behaviour)
+==========================================================================
+[a] first build                     exit=0   __pycache__ after: present: 13 .pyc files
+    last_verified distribution:     {'2026-07-16': 7, '2026-07-17': 1, '2026-07-19': 288, '2026-07-20': 82}
+[b] edited common.py REVERIFY_DATE_2 = "2026-07-20" -> "2026-07-10"
+    (mtime, size) pinned unchanged: (1784568510, 121571)  <-- the 26.8 condition
+[c] rebuild, no manual cache clear   exit=0
+[d] last_verified distribution:     {'2026-07-16': 7, '2026-07-17': 1, '2026-07-19': 288, '2026-07-20': 82}
+    edited value "2026-07-10" present?  NO  -- BUILT FROM STALE BYTECODE
+[e] reverted; rebuild                exit=0
+    last_verified distribution:     {'2026-07-16': 7, '2026-07-17': 1, '2026-07-19': 288, '2026-07-20': 82}
+    revert reflected?                YES
+
+==========================================================================
+TREATMENT (current assemble.py, guard in place)
+==========================================================================
+[a] first build                     exit=0   __pycache__ after: absent
+    last_verified distribution:     {'2026-07-16': 7, '2026-07-17': 1, '2026-07-19': 288, '2026-07-20': 82}
+[b] edited common.py REVERIFY_DATE_2 = "2026-07-20" -> "2026-07-10"
+    (mtime, size) pinned unchanged: (1784568510, 121571)  <-- the 26.8 condition
+[c] rebuild, no manual cache clear   exit=0
+[d] last_verified distribution:     {'2026-07-10': 82, '2026-07-16': 7, '2026-07-17': 1, '2026-07-19': 288}
+    edited value "2026-07-10" present?  YES -- built from current source
+[e] reverted; rebuild                exit=0
+    last_verified distribution:     {'2026-07-16': 7, '2026-07-17': 1, '2026-07-19': 288, '2026-07-20': 82}
+    revert reflected?                YES
+
+==========================================================================
+VERDICT
+==========================================================================
+CONTROL   edit reflected: False   revert reflected: True
+TREATMENT edit reflected: True   revert reflected: True
+PASS
+```
+
+Reading it honestly, line by line. The CONTROL's step [c] **exits 0 and writes a confidently wrong
+artifact** — 82 rows carrying a verification date the source no longer states. Nothing in the output
+of a normal build would tell you. Its step [e] "revert reflected: YES" is trivially true and is not
+evidence of anything: the control never picked up the edit, so there was nothing to revert *from*.
+It is printed rather than suppressed because a proof that hides its own vacuous lines is not a proof.
+The TREATMENT picks up the edit at [d] and the revert at [e], from a `__pycache__` that is absent at
+[a] and stays absent.
+
+Note also that this is a **strictly harder** test than the original failure. §26.8 was hit by accident
+with an mtime that happened to land in the same second; here the pair is pinned, so the control fails
+every run rather than occasionally.
+
+### 27.3 Versioning policy — where machinery-only changes sit
+
+Deferred from §26 and settled here. The three-row table sorted by what a reader or a consumer gets,
+and had no row for work that gives them nothing — which is what both this session and the maintenance
+session actually were. The gap was resolved twice by argument in a CHANGELOG note rather than once by
+policy, so a line was added to the policy itself.
+
+It is worded to settle both cases from one rule: **machinery-only** means no reader gain, no claim
+change, **and** no change to the published dataset's shape, and it sorts PATCH. §26's release added
+`meta.maintenance` to the shipped JSON, so it was not machinery-only under this rule and 2.10.0 as a
+MINOR stands — retroactively correct rather than retroactively excused. Had that session shipped the
+runbook alone, it would have been a PATCH.
+
+### 27.4 The one live ambiguity, raised at the gate and not resolved here
+
+PR-057 **removes a published key**, `meta.generated`, from `compliance-atlas.json`. Under the policy's
+MAJOR row — "consumers of `compliance-atlas.json` may need to change their code" — a removed key is
+the textbook trigger, and the machinery-only rule in §27.3 explicitly does not cover a dataset-shape
+change. Against that: the key was a build timestamp carrying no claim, it existed publicly for two
+weeks, the artifact itself has been public for two days, and a 3.0.0 on an atlas whose content did not
+move would tell every reader that something big changed when nothing did.
+
+Recorded as an **owner decision taken at the merge gate**, with the argument put both ways and a
+recommendation attached rather than a resolution. The version shipped in this branch reflects that
+decision; see CHANGELOG for which way it went.
+
+### 27.5 Gate results
+
+Reported in full to the owner at the merge gate. Recorded here in summary:
+
+| Check | Result |
+|---|---|
+| Rebuild → `git diff compliance-atlas.json` | **Strictly empty.** Zero lines, no floor |
+| Three-step drift test (no-change / one-date edit / revert) | Empty → exactly the edited date, warning fires → empty |
+| PR-058 regression proof | PASS, both runs pasted in §27.2 |
+| Footer "Built …" line | Present, format unchanged |
+| `tools/check_urls.py` | Clean, documented §7.2 WAF pair excepted |
+| axe-core | Zero violations |

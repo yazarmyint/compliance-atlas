@@ -11,6 +11,14 @@ All notable changes to Compliance Atlas — the dataset (`compliance-atlas.json`
 | **MINOR** | A framework, product, industry lens, or reader-facing feature added. Existing rows keep their shape and their meaning. |
 | **PATCH** | Row corrections and re-verifications. Claims may change; nothing structural does. |
 
+**Machinery-only changes are PATCH.** Build code, tooling, documentation, and process — where no
+reader gains anything, no claim moves, and the shape of `compliance-atlas.json` does not change — sort
+PATCH, because the version number speaks to readers and consumers and to them nothing happened. All
+three conditions must hold: a change that alters the dataset's shape is sorted by that change, not by
+who it was for. This is why 2.10.0 was a MINOR — it added `meta.maintenance` to the published dataset,
+which is consumer-visible — while the runbook that shipped alongside it would have been a PATCH on its
+own.
+
 Two things this deliberately does **not** track. A rebuild that changes no content does not move the version —
 the footer's "built" timestamp moves instead, which is why the two are shown separately. And the per-row
 `last_verified` dates, not the version, are the authoritative currency signal for any individual claim.
@@ -19,6 +27,33 @@ the footer's "built" timestamp moves instead, which is why the two are shown sep
 kept from the first release. They are reconstructions of milestones that were never published under a version
 number, dated to when the work actually landed; the policy above was applied to them retroactively. Nothing
 before 2.9.0 was ever public.
+
+---
+
+## 2.10.1 — 2026-07-20
+
+Build integrity. Nothing a reader sees changes; nothing in any row changes.
+
+- **Removed** `meta.generated` from `compliance-atlas.json`. The dataset now contains nothing
+  time-derived, so a rebuild that changes no content leaves it byte-identical — which turns
+  `git diff compliance-atlas.json` into a strict drift check instead of one that tolerated a
+  one-line floor. The footer's **built** timestamp is unaffected as a feature: `build_html.py`
+  stamps it into the page at generation time, in the same format, rendering the same line.
+- **Changed** `compliance-atlas.html` accordingly: it now carries the moving timestamp on its own and
+  diffs on every rebuild. That is deliberate. The dataset is the artifact held byte-stable; the
+  timestamp is a property of the page.
+- **Fixed** a build defect that could produce a confidently wrong artifact. Python validates cached
+  bytecode on `(mtime, size)`, so a same-length edit — a date or a SKU string changed in place,
+  rebuilt in the same second — could leave the build importing stale code and regenerating the
+  dataset from the old values, silently and with exit 0. The build entry points now clear
+  `build/__pycache__` before importing anything. This replaces a manual step in the maintenance
+  runbook, which only worked as far as it was remembered.
+- **Note on the version bump.** Machinery only, so PATCH under the policy above — with one argument
+  against it recorded rather than buried: removing `meta.generated` removes a *published* key, and
+  the MAJOR row covers changes where consumers of the JSON may need to change their code. The key was
+  a build timestamp carrying no claim, it was public for two weeks, and a 3.0.0 on an atlas whose
+  content did not move would misinform every reader about what happened. Sorted PATCH on that
+  reasoning; the full argument both ways is in AUDIT-FINDINGS §27.4.
 
 ---
 
