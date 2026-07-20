@@ -47,17 +47,17 @@ Desktop.ini
 compliance-atlas-reference-private/
 reference-private/
 
-# AICPA Trust Services Criteria (copyright AICPA; download licence, no redistribution)
+# AICPA Trust Services Criteria (copyright AICPA; download license, no redistribution)
 AICPA-TSC-2017-2022POF.pdf
 AICPA-TSC-2017-2022POF.txt
 **/AICPA-*
 
-# Microsoft SSPA Data Protection Requirements (vendor supplier-programme document)
+# Microsoft SSPA Data Protection Requirements (vendor supplier-program document)
 DPR-v12.pdf
 DPR-v12.txt
 **/DPR-v*
 
-# PCI SSC document-library capture (licence-gated; the saved file is an HTML gate page)
+# PCI SSC document-library capture (license-gated; the saved file is an HTML gate page)
 pci-dss-401.pdf
 **/pci-dss-*.pdf
 

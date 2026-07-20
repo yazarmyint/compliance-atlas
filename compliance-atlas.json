@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "2.9.0"
+   "atlas_version": "2.9.1"
   },
   "project": {
    "maintainer": "Yazar",
@@ -33,7 +33,7 @@
     "reason": "Turns on validation and electronic-signature semantics for FDA-regulated records rather than the security controls mapped here."
    }
   ],
-  "reverification_policy": "Every row carries the date its claims were last checked against a live source. Full re-verification passes are run at least twice a year, and targeted ones whenever a diarised change lands — a framework revision, a Microsoft rename, a licensing restructure. This is a single-maintainer project, so treat those dates as the real currency signal rather than any assumption that the whole atlas is refreshed continuously.",
+  "reverification_policy": "Every row carries the date its claims were last checked against a live source. Full re-verification passes are run at least twice a year, and targeted ones whenever a diarized change lands — a framework revision, a Microsoft rename, a licensing restructure. This is a single-maintainer project, so treat those dates as the real currency signal rather than any assumption that the whole atlas is refreshed continuously.",
   "footer_lines": [
    "Informational reference only; not legal, audit, or compliance advice.",
    "Independent community project. Not affiliated with, sponsored, or endorsed by Microsoft Corporation.",
@@ -41,7 +41,7 @@
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it.",
    "Atlas content © 2026 Yazar, licensed CC BY 4.0; the build code is MIT. Reuse and adapt it freely with attribution."
   ],
-  "generated": "2026-07-20T09:51:34",
+  "generated": "2026-07-20T11:17:21",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
@@ -1019,9 +1019,9 @@
     "Data Classification"
    ],
    "capability_detail": "eDiscovery searches to locate/collect a subject's Microsoft Personal Data across Exchange/SharePoint/OneDrive/Teams; Data explorer to scope where identifiers live",
-   "how_it_supports": "Implements the locate/collect step of DSR fulfilment for M365 content and evidences the search actions taken. Request intake, decisioning, and response records are process/tooling outside core Purview.",
-   "config_evidence_example": "eDiscovery case + search configuration for DSR fulfilment",
-   "operational_evidence_example": "Per-request search/export records; DSR fulfilment log",
+   "how_it_supports": "Implements the locate/collect step of DSR fulfillment for M365 content and evidences the search actions taken. Request intake, decisioning, and response records are process/tooling outside core Purview.",
+   "config_evidence_example": "eDiscovery case + search configuration for DSR fulfillment",
+   "operational_evidence_example": "Per-request search/export records; DSR fulfillment log",
    "coverage": "Partial Support",
    "confidence": "Medium",
    "license_requirement": "eDiscovery (search, cases, hold, export): Microsoft 365 E3 or Office 365 E3/A3/G3/F3; premium features (custodians, review sets, analytics): Microsoft 365 E5/A5/F5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, or Microsoft 365 E5/A5/F5/G5 eDiscovery & Audit",
@@ -1162,7 +1162,7 @@
    "purview_solution": "Information Protection",
    "also_involves": [],
    "capability_detail": "Label-based encryption restricting who can open protected content regardless of location",
-   "how_it_supports": "Adds a content-layer access restriction on labelled Microsoft data, a narrow contributor. The requirement's substance (accounts, MFA, lockout, 48-hour deprovisioning, access reviews) is identity-platform territory.",
+   "how_it_supports": "Adds a content-layer access restriction on labeled Microsoft data, a narrow contributor. The requirement's substance (accounts, MFA, lockout, 48-hour deprovisioning, access reviews) is identity-platform territory.",
    "config_evidence_example": "Label encryption permission configuration on top-tier labels",
    "operational_evidence_example": "Encrypted-item counts; access-denied events for protected content in audit log",
    "coverage": "Partial Support",
@@ -1195,7 +1195,7 @@
    "framework_version": "v12 (March 2026)",
    "control_ref": "J #40",
    "control_domain": "J Security",
-   "control_intent": "Run a DLP program: data classified, labelled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
+   "control_intent": "Run a DLP program: data classified, labeled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
    "purview_solution": "Data Loss Prevention",
    "also_involves": [
     "Information Protection",
@@ -1311,7 +1311,7 @@
    "capability_detail": "Auto-labeling with label-based encryption targeting the enumerated categories via built-in SITs; Customer Key for the M365 at-rest encryption layer",
    "how_it_supports": "Adds item-level encryption to at-rest sensitive content in M365 and lets the tenant hold the root keys (Customer Key). Nearly every enumerated v12 category has a built-in SIT for automatic targeting. Platform storage encryption (BitLocker/DEP in Microsoft datacenters) is the inherited base layer.",
    "config_evidence_example": "Auto-labeling policies (simulation → enforce) scoped to enumerated-category SITs; label encryption settings; DEP/Customer Key configuration",
-   "operational_evidence_example": "Encrypted/labelled item counts from Data explorer; Azure RMS usage logs",
+   "operational_evidence_example": "Encrypted/labeled item counts from Data explorer; Azure RMS usage logs",
    "coverage": "Partial Support",
    "confidence": "Medium",
    "license_requirement": "Automatic/policy-based sensitivity labeling: Microsoft 365 E5/A5/G5, Office 365 E5/A5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance; Customer Key: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
@@ -1374,7 +1374,7 @@
     "Entra ID Governance"
    ],
    "capability_detail": "Conditional Access enforcing MFA and sign-in-frequency/session (auto-logoff) controls; smart lockout on failed attempts; strong authentication methods; Entra ID Governance access reviews and leaver lifecycle for least-privilege recertification and timely deactivation",
-   "how_it_supports": "Directly implements the identity core of J#36: MFA, lockout, session controls, strong credentials, and (via ID Governance) least-privilege review and deactivation. Content-layer restriction on labelled Microsoft data is the Purview seam.",
+   "how_it_supports": "Directly implements the identity core of J#36: MFA, lockout, session controls, strong credentials, and (via ID Governance) least-privilege review and deactivation. Content-layer restriction on labeled Microsoft data is the Purview seam.",
    "config_evidence_example": "Conditional Access policy set (MFA + session controls); smart-lockout thresholds; recurring access reviews; leaver lifecycle workflow",
    "operational_evidence_example": "Sign-in logs evidencing MFA; access-review completion records; deprovisioning audit within 48 hours",
    "related_microsoft": [
@@ -1382,7 +1382,7 @@
      "product": "purview",
      "solution": "Information Protection",
      "role": "contributing",
-     "note": "Sensitivity-label encryption adds a content-layer access restriction on labelled Microsoft data"
+     "note": "Sensitivity-label encryption adds a content-layer access restriction on labeled Microsoft data"
     }
    ],
    "external_dependencies": "HR termination feed and offboarding process (drives the 48-hour deprovisioning trigger)",
@@ -1592,7 +1592,7 @@
    "framework_version": "v12 (March 2026)",
    "control_ref": "J #40",
    "control_domain": "J Security",
-   "control_intent": "Run a DLP program: data classified, labelled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
+   "control_intent": "Run a DLP program: data classified, labeled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
    "purview_solution": "Defender for Endpoint",
    "also_involves": [
     "Defender for Cloud Apps"
@@ -1685,7 +1685,7 @@
    "framework_version": "v12 (March 2026)",
    "control_ref": "J #40",
    "control_domain": "J Security",
-   "control_intent": "Run a DLP program: data classified, labelled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
+   "control_intent": "Run a DLP program: data classified, labeled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
    "purview_solution": "Analytics Rules & Detections",
    "also_involves": [
     "Data Collection & Connectors"
@@ -1772,7 +1772,7 @@
    "framework_version": "v12 (March 2026)",
    "control_ref": "J #40",
    "control_domain": "J Security",
-   "control_intent": "Run a DLP program: data classified, labelled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
+   "control_intent": "Run a DLP program: data classified, labeled, and protected; monitor systems processing Microsoft data for intrusions, loss, and unauthorized activity; program must include IDS/IPS, breach analysis, and offboarding communications.",
    "purview_solution": "Workload Protection Plans",
    "also_involves": [
     "Defender for Servers"
@@ -1960,9 +1960,9 @@
    "purview_solution": "Information Protection",
    "also_involves": [],
    "capability_detail": "Sensitivity labels apply visual marking (header/footer/watermark) and embedded metadata that travels with the item",
-   "how_it_supports": "Directly implements labelling: persistent, machine-readable classification metadata plus human-readable markings on documents and emails.",
+   "how_it_supports": "Directly implements labeling: persistent, machine-readable classification metadata plus human-readable markings on documents and emails.",
    "config_evidence_example": "Content-marking configuration per label tier",
-   "operational_evidence_example": "Labelled-item counts and label-change events (Activity explorer)",
+   "operational_evidence_example": "Labeled-item counts and label-change events (Activity explorer)",
    "coverage": "Direct Support",
    "confidence": "High",
    "license_requirement": "Manual sensitivity labeling: Microsoft 365 E5/A5/G5/E3/A3/G3/F1/F3 or Business Premium; also Office 365 E5/A5/E3/A3, Enterprise Mobility + Security E3/E5, OneDrive for Business (Plan 2), and Azure Information Protection Plan 1/Plan 2",
@@ -1974,8 +1974,8 @@
    "status": "verified",
    "last_verified": "2026-07-19",
    "related_microsoft": [],
-   "external_dependencies": "Labelling procedures for physical and non-M365 digital media",
-   "legacy_dependencies": "Labelling procedures for physical and non-M365 digital media",
+   "external_dependencies": "Labeling procedures for physical and non-M365 digital media",
+   "legacy_dependencies": "Labeling procedures for physical and non-M365 digital media",
    "licensing_model": "per_user"
   },
   {
@@ -2441,7 +2441,7 @@
    "control_intent": "Produce, protect, and analyze logs of activities, exceptions, and events.",
    "purview_solution": "Audit",
    "also_involves": [],
-   "capability_detail": "Unified audit log across M365 workloads; Audit (Premium) retention (1-yr default, 10-yr add-on) and crucial events; Activity explorer for labelled-data activity",
+   "capability_detail": "Unified audit log across M365 workloads; Audit (Premium) retention (1-yr default, 10-yr add-on) and crucial events; Activity explorer for labeled-data activity",
    "how_it_supports": "Directly implements logging for M365 user/admin/data activity with tamper-resistant, exportable records. Estate-wide logging (servers, network, apps) requires the SIEM layer.",
    "config_evidence_example": "Audit enabled; audit retention policies configured",
    "operational_evidence_example": "Unified audit log extracts; retention policy inventory",
@@ -4283,7 +4283,7 @@
     "Data Classification"
    ],
    "capability_detail": "Sensitivity label taxonomy identifying/marking confidential info; SITs + trainable classifiers locating it at scale",
-   "how_it_supports": "Directly implements identification and maintenance of confidential information in M365: classified, labelled, tracked in Data explorer.",
+   "how_it_supports": "Directly implements identification and maintenance of confidential information in M365: classified, labeled, tracked in Data explorer.",
    "config_evidence_example": "Label taxonomy + auto-labeling policies for confidential categories",
    "operational_evidence_example": "Data explorer confidential-label distribution; auto-label simulation reports",
    "coverage": "Direct Support",
@@ -4477,7 +4477,7 @@
     "Data Classification"
    ],
    "capability_detail": "eDiscovery search/collection to locate a subject's data across M365; Data explorer to scope identifier locations",
-   "how_it_supports": "Implements the locate/collect step for access and correction fulfilment on M365 content; request intake, identity verification, and response are process/Priva.",
+   "how_it_supports": "Implements the locate/collect step for access and correction fulfillment on M365 content; request intake, identity verification, and response are process/Priva.",
    "config_evidence_example": "DSR search procedure using eDiscovery cases",
    "operational_evidence_example": "Per-request search and export records",
    "coverage": "Partial Support",
@@ -5572,7 +5572,7 @@
    "also_involves": [
     "Data Loss Prevention"
    ],
-   "capability_detail": "Unified audit log of access/sharing/admin activity; Audit (Premium) crucial events (MailItemsAccessed); Activity explorer for labelled/PHI data movement; DLP incident reports",
+   "capability_detail": "Unified audit log of access/sharing/admin activity; Audit (Premium) crucial events (MailItemsAccessed); Activity explorer for labeled/PHI data movement; DLP incident reports",
    "how_it_supports": "Directly produces the reviewable activity records, and the review surfaces, for ePHI held in M365. The documented review procedure and cadence, and non-M365 system logs, remain organizational.",
    "config_evidence_example": "Audit enabled with retention policy; scheduled activity-review procedure referencing Purview reports",
    "operational_evidence_example": "Dated review notes attached to audit/Activity explorer exports; DLP incident summaries",
@@ -5607,7 +5607,7 @@
    "capability_detail": "Label-based encryption restricting ePHI content access to authorized users/groups regardless of storage location; DLP preventing out-of-policy access paths",
    "how_it_supports": "Adds a data-layer enforcement of authorized access that travels with ePHI content. Access authorization workflow, RBAC, and clinical-system access are identity/application territory.",
    "config_evidence_example": "PHI label tier with encryption permissions scoped to care/claims teams",
-   "operational_evidence_example": "RMS access grants/denials for PHI-labelled content",
+   "operational_evidence_example": "RMS access grants/denials for PHI-labeled content",
    "coverage": "Partial Support",
    "confidence": "Medium",
    "license_requirement": "Label-based encryption: included with sensitivity labeling entitlements (manual E3+; automatic application E5-tier)",
@@ -9157,7 +9157,7 @@
      "product": "purview",
      "solution": "Information Protection",
      "role": "contributing",
-     "note": "Sensitivity-label encryption enforces data-layer authorization on labelled content"
+     "note": "Sensitivity-label encryption enforces data-layer authorization on labeled content"
     }
    ],
    "external_dependencies": "Access enforcement in non-Entra systems; network ACLs",
@@ -13993,15 +13993,15 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 5(1)(c)",
    "control_domain": "Art. 5 Principles",
-   "control_intent": "Data minimisation: personal data must be adequate, relevant, and limited to what the purpose requires.",
+   "control_intent": "Data minimization: personal data must be adequate, relevant, and limited to what the purpose requires.",
    "purview_solution": "Data Classification",
    "also_involves": [
     "DSPM"
    ],
    "capability_detail": "Personal-data discovery (EU-relevant SITs, Data explorer) making accumulation visible; DSPM surfacing over-retained/overshared personal data",
-   "how_it_supports": "Evidences whether minimisation is holding in collaboration estates and gives the review a concrete target list. Minimisation decisions at collection points are application/process design.",
+   "how_it_supports": "Evidences whether minimization is holding in collaboration estates and gives the review a concrete target list. Minimization decisions at collection points are application/process design.",
    "config_evidence_example": "EU personal-data SITs scoped; recurring discovery",
-   "operational_evidence_example": "Trended personal-data footprint reports feeding minimisation reviews",
+   "operational_evidence_example": "Trended personal-data footprint reports feeding minimization reviews",
    "coverage": "Evidence Support Only",
    "confidence": "Medium",
    "license_requirement": "Data classification analytics (Data/Content/Activity explorer): Microsoft 365 E5/A5/G5, Office 365 E5, Microsoft 365 E5/A5/G5 Compliance (Purview Suite), or Microsoft 365 E5/A5/G5 Information Protection & Governance; E3/A3/G3 tenants keep the underlying Content explorer data aggregation without the explorer interfaces",
@@ -14061,7 +14061,7 @@
    "also_involves": [
     "Audit"
    ],
-   "capability_detail": "GDPR premium assessment tracking technical/organisational measures; Purview policy configuration + audit trail as demonstrable-compliance artifacts",
+   "capability_detail": "GDPR premium assessment tracking technical/organizational measures; Purview policy configuration + audit trail as demonstrable-compliance artifacts",
    "how_it_supports": "Supplies a standing, exportable demonstration layer (assessments, control status, policy evidence, activity logs) for the M365 processing estate. Accountability governance (DPO, ROPA, DPIAs) is organizational.",
    "config_evidence_example": "Active EU GDPR assessment; policy exports retained",
    "operational_evidence_example": "Assessment reports; audit extracts evidencing control operation",
@@ -14094,7 +14094,7 @@
     "Data Classification"
    ],
    "capability_detail": "eDiscovery search/collection locating a subject's personal data across Exchange/SharePoint/OneDrive/Teams; export for response assembly",
-   "how_it_supports": "Implements locate/collect/export for M365 content in access-request fulfilment. Intake, identity verification, redaction of third-party data, and response are process/Priva.",
+   "how_it_supports": "Implements locate/collect/export for M365 content in access-request fulfillment. Intake, identity verification, redaction of third-party data, and response are process/Priva.",
    "config_evidence_example": "Documented DSR search procedure with eDiscovery case template",
    "operational_evidence_example": "Per-request search/export records within the one-month clock",
    "coverage": "Partial Support",
@@ -14201,16 +14201,16 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 25",
    "control_domain": "Art. 25 By design",
-   "control_intent": "Data protection by design and by default: embed technical/organisational measures (e.g., minimisation, pseudonymisation) into processing.",
+   "control_intent": "Data protection by design and by default: embed technical/organizational measures (e.g., minimization, pseudonymization) into processing.",
    "purview_solution": "Information Protection",
    "also_involves": [
     "Data Loss Prevention",
     "Data Lifecycle Management"
    ],
    "capability_detail": "Default sensitivity labels, auto-labeling, default-deny DLP posture, and default retention as by-design/by-default technical measures for the collaboration estate",
-   "how_it_supports": "Implements 'by default' concretely in M365: new content lands labelled, protected, retention-bound without user action. System/application design outside M365 is the broader obligation.",
+   "how_it_supports": "Implements 'by default' concretely in M365: new content lands labeled, protected, retention-bound without user action. System/application design outside M365 is the broader obligation.",
    "config_evidence_example": "Default label policy; auto-labeling; baseline DLP; default retention",
-   "operational_evidence_example": "Coverage metrics: % content labelled by default; policy inventory",
+   "operational_evidence_example": "Coverage metrics: % content labeled by default; policy inventory",
    "coverage": "Partial Support",
    "confidence": "Medium",
    "license_requirement": "Automatic/policy-based sensitivity labeling: Microsoft 365 E5/A5/G5, Office 365 E5/A5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance; DLP for Exchange/SharePoint/OneDrive: Microsoft 365 E5/A5/G5/E3/A3/G3 or Business Premium; also Office 365 E5/A5/G5/E3/A3/G3, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, SharePoint Online Plan 2, OneDrive for Business (Plan 2), or Exchange Online Plan 2; Org/location-wide retention policies & manual retention labels: Microsoft 365 E5/A5/G5/E3/A3/G3 or Business Premium; also Office 365 E5/A5/G5/E3/A3/G3, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
@@ -14277,13 +14277,13 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 32(1)(a)",
    "control_domain": "Art. 32 Security",
-   "control_intent": "Security of processing: pseudonymisation and encryption of personal data as risk-appropriate measures.",
+   "control_intent": "Security of processing: pseudonymization and encryption of personal data as risk-appropriate measures.",
    "purview_solution": "Information Protection",
    "also_involves": [
     "Data Classification"
    ],
-   "capability_detail": "Label-based encryption on personal-data content (auto-applied); Customer Key/DKE options; SIT detection guarding pseudonymised sets against re-identification leakage",
-   "how_it_supports": "Implements the encryption measure for personal data in M365 and evidences pseudonymisation hygiene. Database-layer crypto and pseudonymisation engineering are outside.",
+   "capability_detail": "Label-based encryption on personal-data content (auto-applied); Customer Key/DKE options; SIT detection guarding pseudonymized sets against re-identification leakage",
+   "how_it_supports": "Implements the encryption measure for personal data in M365 and evidences pseudonymization hygiene. Database-layer crypto and pseudonymization engineering are outside.",
    "config_evidence_example": "Auto-label + encrypt on personal-data tiers; Customer Key where adopted",
    "operational_evidence_example": "Encrypted personal-data item distribution; RMS logs",
    "coverage": "Partial Support",
@@ -14298,8 +14298,8 @@
    "status": "verified",
    "last_verified": "2026-07-19",
    "related_microsoft": [],
-   "external_dependencies": "Application/database encryption; pseudonymisation tooling; key management",
-   "legacy_dependencies": "Application/database encryption; pseudonymisation tooling; key management",
+   "external_dependencies": "Application/database encryption; pseudonymization tooling; key management",
+   "legacy_dependencies": "Application/database encryption; pseudonymization tooling; key management",
    "licensing_model": "per_user"
   },
   {
@@ -14309,7 +14309,7 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 32(1)(d)",
    "control_domain": "Art. 32 Security",
-   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organisational security measures.",
+   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organizational security measures.",
    "purview_solution": "Compliance Manager",
    "also_involves": [
     "Data Loss Prevention"
@@ -14413,7 +14413,7 @@
     "Entra ID Governance"
    ],
    "capability_detail": "Conditional Access, MFA, and least-privilege access governance restricting access to systems processing personal data; PIM for privileged access",
-   "how_it_supports": "Implements access control and strong authentication as Art. 32 technical measures for Entra-integrated systems processing personal data. Encryption/pseudonymisation and non-Entra systems are complementary.",
+   "how_it_supports": "Implements access control and strong authentication as Art. 32 technical measures for Entra-integrated systems processing personal data. Encryption/pseudonymization and non-Entra systems are complementary.",
    "config_evidence_example": "Conditional Access baseline; MFA; access reviews; PIM",
    "operational_evidence_example": "Sign-in grant/block evidence; access-review and PIM records",
    "related_microsoft": [
@@ -14424,7 +14424,7 @@
      "note": "Sensitivity-label encryption and DLP provide the confidentiality/encryption measures for personal data"
     }
    ],
-   "external_dependencies": "Encryption/pseudonymisation of personal data; access control in non-Entra systems",
+   "external_dependencies": "Encryption/pseudonymization of personal data; access control in non-Entra systems",
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "High",
@@ -14446,13 +14446,13 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 25",
    "control_domain": "Art. 25 By design",
-   "control_intent": "Data protection by design and by default: implement appropriate technical and organisational measures such as access minimisation into processing.",
+   "control_intent": "Data protection by design and by default: implement appropriate technical and organizational measures such as access minimization into processing.",
    "purview_solution": "Entra ID Governance",
    "also_involves": [
     "Conditional Access & Authentication"
    ],
-   "capability_detail": "Least-privilege access packages, access reviews, and default-deny Conditional Access as by-default technical measures minimising who can access personal data",
-   "how_it_supports": "Implements the access-minimisation dimension of data protection by default for Entra-governed systems: least privilege and recertification limit personal-data access. Broader privacy-by-design in app/system design is organizational.",
+   "capability_detail": "Least-privilege access packages, access reviews, and default-deny Conditional Access as by-default technical measures minimizing who can access personal data",
+   "how_it_supports": "Implements the access-minimization dimension of data protection by default for Entra-governed systems: least privilege and recertification limit personal-data access. Broader privacy-by-design in app/system design is organizational.",
    "config_evidence_example": "Least-privilege access packages; default-deny Conditional Access; recurring reviews",
    "operational_evidence_example": "Entitlement/least-privilege metrics; access-review completions",
    "related_microsoft": [
@@ -14485,14 +14485,14 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 32(1)(a)",
    "control_domain": "Art. 32 Security",
-   "control_intent": "Security of processing: pseudonymisation and encryption of personal data as risk-appropriate measures.",
+   "control_intent": "Security of processing: pseudonymization and encryption of personal data as risk-appropriate measures.",
    "purview_solution": "Endpoint Security",
    "also_involves": [
     "Device Compliance",
     "App Protection & Management"
    ],
    "capability_detail": "Disk-encryption policy enforcing BitLocker/FileVault on endpoints processing personal data, with compliance attestation; app protection policies encrypting personal data handled in managed mobile apps on corporate and BYO devices",
-   "how_it_supports": "Implements the device-layer encryption measure, a recognised technical and organisational measure (TOM) under Art. 32, for managed endpoints and mobile apps. Content-layer encryption in M365 is the Purview seam; pseudonymisation engineering and database crypto are external.",
+   "how_it_supports": "Implements the device-layer encryption measure, a recognized technical and organizational measure (TOM) under Art. 32, for managed endpoints and mobile apps. Content-layer encryption in M365 is the Purview seam; pseudonymization engineering and database crypto are external.",
    "config_evidence_example": "Disk-encryption profiles; compliance encryption requirement; app protection policies for mobile processing",
    "operational_evidence_example": "Encryption status report; compliance encryption state; app-protection delivery status: TOM evidence for Art. 30 records and processor assurances",
    "related_microsoft": [
@@ -14503,7 +14503,7 @@
      "note": "Label-based encryption with customer key options implements content-layer encryption of personal data"
     }
    ],
-   "external_dependencies": "Pseudonymisation tooling; application/database encryption; key management",
+   "external_dependencies": "Pseudonymization tooling; application/database encryption; key management",
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "High",
@@ -14622,13 +14622,13 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 32(1)(d)",
    "control_domain": "Art. 32 Security",
-   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organisational security measures.",
+   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organizational security measures.",
    "purview_solution": "Defender for Endpoint",
    "also_involves": [
     "Defender for Office 365"
    ],
    "capability_detail": "Recurring technical-measure assessment: Defender Vulnerability Management continuously assessing vulnerabilities and secure-configuration posture against baselines, Microsoft Secure Score in the Defender portal quantifying security posture and tracking improvement, attack simulation training (Defender for Office 365 Plan 2) empirically testing the phishing-resistance measure",
-   "how_it_supports": "Implements a continuously running test-assess-evaluate mechanism for the technical measures on the Microsoft estate, stacking with the Purview row's Compliance Manager evidence. Penetration testing, audits, and evaluation of organisational measures remain the broader program.",
+   "how_it_supports": "Implements a continuously running test-assess-evaluate mechanism for the technical measures on the Microsoft estate, stacking with the Purview row's Compliance Manager evidence. Penetration testing, audits, and evaluation of organizational measures remain the broader program.",
    "config_evidence_example": "MDVM secure-configuration assessment active; Secure Score review cadence; recurring attack-simulation campaigns",
    "operational_evidence_example": "Configuration-assessment and Secure Score trend exports; attack-simulation result reports as measure-effectiveness evidence",
    "related_microsoft": [
@@ -14639,7 +14639,7 @@
      "note": "Compliance Manager continuous control testing evidences the assessment process (the stacked Purview row)"
     }
    ],
-   "external_dependencies": "Penetration testing and independent audits; evaluation of organisational measures",
+   "external_dependencies": "Penetration testing and independent audits; evaluation of organizational measures",
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "Medium",
@@ -14758,13 +14758,13 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 32(1)(d)",
    "control_domain": "Art. 32 Security",
-   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organisational security measures.",
+   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organizational security measures.",
    "purview_solution": "Analytics Rules & Detections",
    "also_involves": [
     "Incident Management & Investigation"
    ],
    "capability_detail": "Effectiveness evidence for the detection-and-response measures themselves: MITRE ATT&CK coverage mapping showing which techniques the analytics estate detects and where gaps sit, analytics-rule health monitoring proving the measures run, and SOC incident metrics (detection volumes, response times, trend lines) as the recurring assessment artifact for the monitoring measure",
-   "how_it_supports": "Evidences the regular-evaluation obligation for one class of technical measures (the organisation's detection and response capability), with artifacts a DPO can put in the Art. 32 file. It does not test the measures (no simulation or scanning); the stacked Defender row carries continuous technical assessment and the Purview row the structured assessment program.",
+   "how_it_supports": "Evidences the regular-evaluation obligation for one class of technical measures (the organization's detection and response capability), with artifacts a DPO can put in the Art. 32 file. It does not test the measures (no simulation or scanning); the stacked Defender row carries continuous technical assessment and the Purview row the structured assessment program.",
    "config_evidence_example": "MITRE coverage review cadence; rule health monitoring enabled; SOC metrics workbook in the assessment procedure",
    "operational_evidence_example": "Coverage-gap review records; rule health reports; SOC metric trend exports in assessment documentation",
    "related_microsoft": [
@@ -14781,7 +14781,7 @@
      "note": "Defender Vulnerability Management and attack simulation actively test technical measures (the stacked Defender row)"
     }
    ],
-   "external_dependencies": "Penetration testing and audits; evaluation of organisational measures; assessment ownership",
+   "external_dependencies": "Penetration testing and audits; evaluation of organizational measures; assessment ownership",
    "legacy_dependencies": "",
    "coverage": "Evidence Support Only",
    "confidence": "Medium",
@@ -14900,14 +14900,14 @@
    "framework_version": "2016/679",
    "control_ref": "Art. 32(1)(d)",
    "control_domain": "Art. 32 Security",
-   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organisational security measures.",
+   "control_intent": "Regularly test, assess, and evaluate the effectiveness of technical and organizational security measures.",
    "purview_solution": "Regulatory Compliance Dashboard",
    "also_involves": [
     "Defender CSPM",
     "Foundational CSPM"
    ],
    "capability_detail": "A standing test-assess-evaluate mechanism for cloud-hosted processing systems: the regulatory compliance dashboard continuously assesses onboarded cloud resources against the EU GDPR built-in standard and MCSB with per-control pass/fail, secure score trends the effectiveness of technical measures over time, and agentless vulnerability assessment supplies the regular technical-testing input",
-   "how_it_supports": "Implements the regularly-assessing-and-evaluating activity for technical measures on the cloud slice of the processing estate. Assessment-scope boundary: it assesses onboarded cloud resources against technically-assessable criteria, not organisational measures, not M365/on-premises processing systems (the stacked Purview row's Compliance Manager and the Sentinel evidence row cover their planes), and its output demonstrates technical posture, not Art. 32 compliance as such. Penetration testing and audit remain the controller's program.",
+   "how_it_supports": "Implements the regularly-assessing-and-evaluating activity for technical measures on the cloud slice of the processing estate. Assessment-scope boundary: it assesses onboarded cloud resources against technically-assessable criteria, not organizational measures, not M365/on-premises processing systems (the stacked Purview row's Compliance Manager and the Sentinel evidence row cover their planes), and its output demonstrates technical posture, not Art. 32 compliance as such. Penetration testing and audit remain the controller's program.",
    "config_evidence_example": "EU GDPR standard assigned to processing-system subscriptions (requires a paid plan); assessment reports wired into the Art. 32(1)(d) evaluation cadence",
    "operational_evidence_example": "Per-standard compliance reports over time; secure score trend; vulnerability assessment history for the evaluation record",
    "related_microsoft": [
@@ -14924,7 +14924,7 @@
      "note": "Sentinel evidences monitoring-measure operation estate-wide (the stacked Sentinel row)"
     }
    ],
-   "external_dependencies": "Penetration testing and security audits; evaluation of organisational measures; DPO oversight and documentation",
+   "external_dependencies": "Penetration testing and security audits; evaluation of organizational measures; DPO oversight and documentation",
    "legacy_dependencies": "",
    "coverage": "Partial Support",
    "confidence": "High",

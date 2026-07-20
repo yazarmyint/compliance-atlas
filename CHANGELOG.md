@@ -22,6 +22,20 @@ before 2.9.0 was ever public.
 
 ---
 
+## 2.9.1 — 2026-07-20
+
+- **Fixed** inconsistent spelling: the atlas mixed British and American English, sometimes within a
+  single view. Rendered text is now American English throughout — 53 strings across 27 rows, plus the
+  README, changelog, license documents and authoring docs. The most visible cases were
+  `organisational`, `pseudonymisation`, `minimisation`, `labelled` and `fulfilment`.
+- **Note on the GDPR rows.** Eleven of them carried `organisational` and `minimisation` because that
+  is the spelling of the regulation's own authentic English text. They were changed anyway: these are
+  `control_intent` and `how_it_supports` fields, which this project defines as paraphrase and which
+  deliberately reproduce no source text, so nothing quoted was altered. Readers searching the
+  regulation's exact phrasing should expect the `-isation` forms there.
+- No claim changed. No coverage level, confidence level, cited source, or `last_verified` date was
+  touched, and the row count is unchanged at 378.
+
 ## 2.9.0 — 2026-07-20
 
 Everything a reader needs around the dataset, rather than in it.
@@ -36,7 +50,7 @@ Everything a reader needs around the dataset, rather than in it.
 - **Added** a statement of which industries are deliberately absent and which framework each would need —
   state & local government (CJIS), energy & utilities (NERC CIP), pharmaceuticals & medical devices
   (21 CFR Part 11) — on the Industries index and in full on the about page.
-- **Added** this changelog, and a footer licence line: content CC BY 4.0, build code MIT.
+- **Added** this changelog, and a footer license line: content CC BY 4.0, build code MIT.
 - **Changed** the footer to separate content version from build timestamp, so a rebuild that changed nothing
   no longer looks like an update.
 - **Changed** two rows' citations (`csf-de-cm-03-ai`, `gdpr-35`) off the deprecated "DSPM for AI (classic)"
@@ -56,7 +70,7 @@ Everything a reader needs around the dataset, rather than in it.
 
 - **Added** keyboard and screen-reader accessibility: reachable navigation, per-view focus management, a
   status region that announces the view a reader lands on, and a skip link that works with the hash router.
-- **Fixed** nested interactive controls inside row disclosures and several colour-contrast failures, both
+- **Fixed** nested interactive controls inside row disclosures and several color-contrast failures, both
   found by tooling rather than by review. Clean at WCAG 2.1 A/AA on every check axe can automate.
 
 ## 2.7.0 — 2026-07-19
@@ -70,7 +84,7 @@ Everything a reader needs around the dataset, rather than in it.
 
 Repository and licensing only — the built artifact is byte-identical to 2.6.0.
 
-- **Added** the licence position: MIT for the build code, CC BY 4.0 for the content, with the paraphrase-only
+- **Added** the license position: MIT for the build code, CC BY 4.0 for the content, with the paraphrase-only
   authoring rule promoted to a condition on anyone adapting the work.
 - **Removed** redistribution-restricted source documents (AICPA, PCI SSC, and vendor material) from the tree
   before any commit history existed, and recorded the provenance and re-download route for every file kept.

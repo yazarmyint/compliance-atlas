@@ -20,12 +20,12 @@ Located in `../compliance-atlas-reference-private/`. Never committed.
 
 | File | What it is | Re-download from | Why excluded |
 |---|---|---|---|
-| `AICPA-TSC-2017-2022POF.pdf` | AICPA *2017 Trust Services Criteria (With Revised Points of Focus — 2022)*, TSP Section 100. The authoritative text behind every SOC 2 `control_ref` in the atlas. | https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022 | Copyright © AICPA. Provided under a download licence for the recipient's own use; redistribution is not permitted. |
+| `AICPA-TSC-2017-2022POF.pdf` | AICPA *2017 Trust Services Criteria (With Revised Points of Focus — 2022)*, TSP Section 100. The authoritative text behind every SOC 2 `control_ref` in the atlas. | https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022 | Copyright © AICPA. Provided under a download license for the recipient's own use; redistribution is not permitted. |
 | `AICPA-TSC-2017-2022POF.txt` | Plain-text extraction of the file above, used for grep-based reference verification. | Re-extract from the PDF after downloading it. | A derivative of copyrighted text carries the same restriction as the source. |
-| `DPR-v12.pdf` | *Microsoft Supplier Data Protection Requirements, Version 12 (March 2026)* — the FY26 SSPA cycle document. Authoritative text behind every SSPA DPR `control_ref`. | https://www.microsoft.com/en-us/procurement/sspa → FY26 DPR link. Direct CDN URL recorded in AUDIT-FINDINGS §F-1. | Microsoft supplier-programme document. Published for enrolled suppliers, not licensed for redistribution by third parties. |
+| `DPR-v12.pdf` | *Microsoft Supplier Data Protection Requirements, Version 12 (March 2026)* — the FY26 SSPA cycle document. Authoritative text behind every SSPA DPR `control_ref`. | https://www.microsoft.com/en-us/procurement/sspa → FY26 DPR link. Direct CDN URL recorded in AUDIT-FINDINGS §F-1. | Microsoft supplier-program document. Published for enrolled suppliers, not licensed for redistribution by third parties. |
 | `DPR-v12.txt` | Plain-text extraction of the file above. | Re-extract from the PDF after downloading it. | Derivative of a vendor document; same restriction. |
-| `pci-dss-401.pdf` | **Misnamed.** Not the PCI DSS standard — the saved file is an HTML landing/gate page from the PCI SSC document library (confirmed: the file begins `<!DOCTYPE html>`, not `%PDF`). The genuine standard is licence-gated. This is already recorded in AUDIT-FINDINGS §14.5, which notes PCI requirement numbering was instead verified via the Azure Policy PCI DSS v4.0 initiative page. | https://www.pcisecuritystandards.org/document_library/ (registration/licence acceptance required) | Excluded on two grounds: it is a PCI SSC page, and it is useless and actively misleading under a filename implying it is the standard. **Do not re-add under this name.** |
-| `purview-service-description.md` | Saved copy of the *Microsoft Purview service description* from Microsoft Learn — the authoritative licensing source for all Purview `license_requirement` strings. | https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description | Verbatim Microsoft Learn content, governed by the Microsoft Terms of Use rather than an open licence. Excluded on the err-toward-removing rule. The live page is the citation of record in the dataset anyway, so nothing is lost. |
+| `pci-dss-401.pdf` | **Misnamed.** Not the PCI DSS standard — the saved file is an HTML landing/gate page from the PCI SSC document library (confirmed: the file begins `<!DOCTYPE html>`, not `%PDF`). The genuine standard is license-gated. This is already recorded in AUDIT-FINDINGS §14.5, which notes PCI requirement numbering was instead verified via the Azure Policy PCI DSS v4.0 initiative page. | https://www.pcisecuritystandards.org/document_library/ (registration/license acceptance required) | Excluded on two grounds: it is a PCI SSC page, and it is useless and actively misleading under a filename implying it is the standard. **Do not re-add under this name.** |
+| `purview-service-description.md` | Saved copy of the *Microsoft Purview service description* from Microsoft Learn — the authoritative licensing source for all Purview `license_requirement` strings. | https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description | Verbatim Microsoft Learn content, governed by the Microsoft Terms of Use rather than an open license. Excluded on the err-toward-removing rule. The live page is the citation of record in the dataset anyway, so nothing is lost. |
 
 > **Note on the excluded set:** none of these files is *needed* to build the atlas. `assemble.py` and
 > `build_html.py` read only `build/`. These are verification inputs consulted by a human (or an agent)
@@ -52,7 +52,7 @@ commit and redistribute.
 
 ### Generated by this project
 
-Project-owned artifacts. Covered by the atlas content licence (`LICENSE-CONTENT.md`, CC BY 4.0).
+Project-owned artifacts. Covered by the atlas content license (`LICENSE-CONTENT.md`, CC BY 4.0).
 
 | File | What it is |
 |---|---|
@@ -69,7 +69,7 @@ Before adding any file to `reference/`, ask: *may a third party redistribute thi
 
 - **US-government publication** (NIST, eCFR, CISA, NARA) → public domain, commit it.
 - **Standards body** (ISO, AICPA, PCI SSC, CSA) → licensed to the downloader, **never commit**.
-- **Vendor documentation** (Microsoft Learn, service descriptions, supplier programmes) → **do not
+- **Vendor documentation** (Microsoft Learn, service descriptions, supplier programs) → **do not
   commit**; cite the live URL in the row's `sources` instead, which the atlas already does everywhere.
 - **Uncertain** → treat as restricted. A wrongly-excluded public-domain file costs one re-download;
   a wrongly-committed licensed file is permanent in git history.

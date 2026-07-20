@@ -1,8 +1,8 @@
-# Content licence — Creative Commons Attribution 4.0 International (CC BY 4.0)
+# Content license — Creative Commons Attribution 4.0 International (CC BY 4.0)
 
 **Copyright © 2026 Yazar**
 
-## What this licence covers
+## What this license covers
 
 The **atlas content and dataset**:
 
@@ -17,12 +17,12 @@ The **atlas content and dataset**:
   `CHANGELOG.md`, `reference/SOURCES.md`
 - the project's own generated reference snapshots in `reference/`
 
-The **build code** is licensed separately under the MIT Licence; see `LICENSE`.
+The **build code** is licensed separately under the MIT License; see `LICENSE`.
 
-## The licence
+## The license
 
 This content is licensed under a
-[Creative Commons Attribution 4.0 International Licence](https://creativecommons.org/licenses/by/4.0/).
+[Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
 **You are free to:**
 
@@ -31,11 +31,11 @@ This content is licensed under a
 
 **Under the following terms:**
 
-- **Attribution** — You must give appropriate credit, provide a link to the licence, and indicate if
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if
   changes were made. You may do so in any reasonable manner, but not in any way that suggests the
   licensor endorses you or your use.
 - **No additional restrictions** — You may not apply legal terms or technological measures that
-  legally restrict others from doing anything the licence permits.
+  legally restrict others from doing anything the license permits.
 
 Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
 
@@ -46,11 +46,11 @@ Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 ---
 
-## What this licence does not and cannot cover
+## What this license does not and cannot cover
 
 **Third-party framework and standard texts.** The atlas maps to ISO/IEC 27001, the AICPA Trust
 Services Criteria, PCI DSS, NIST publications, US federal regulations, EU regulations, and the
-Microsoft SSPA Data Protection Requirements. **This licence grants no rights in any of those
+Microsoft SSPA Data Protection Requirements. **This license grants no rights in any of those
 works.** Their copyrights belong to their respective owners.
 
 This is why the atlas paraphrases rather than quotes. Every `control_intent` is an original
@@ -61,13 +61,13 @@ license this work openly at all. **Anyone adapting the atlas must preserve it.**
 verbatim standard text for the paraphrases.
 
 **Trademarks.** Framework and standard names, and Microsoft product names, are the property of
-their respective owners and are used for identification only. This licence grants no trademark
+their respective owners and are used for identification only. This license grants no trademark
 rights. This project is independent and is not affiliated with, sponsored, or endorsed by Microsoft
 Corporation, ISO, the AICPA, the PCI Security Standards Council, or NIST.
 
 **Excluded source documents.** Copyrighted and licensed source documents consulted during
 verification are deliberately **not** part of this repository — see `reference/SOURCES.md`. Nothing
-in this licence extends to them.
+in this license extends to them.
 
 ---
 

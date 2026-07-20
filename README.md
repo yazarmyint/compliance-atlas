@@ -2,7 +2,7 @@
 
 An audited, role-agnostic reference that maps compliance frameworks to Microsoft security-stack
 capabilities. It answers one question: **"An organization operates in industry X and is subject to
-framework Y: where does the Microsoft stack fit, at what claim strength, and at what licence tier?"**
+framework Y: where does the Microsoft stack fit, at what claim strength, and at what license tier?"**
 
 Every row states a coverage level (Direct Support / Partial Support / Evidence Support Only / Not
 Covered) and a confidence level, cites at least one official framework source, and carries the date it
@@ -64,7 +64,7 @@ identification only; this is an independent project, not affiliated with or endo
 | [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) | Dated maintenance triggers and the framework backlog |
 | [`FRAMEWORK-SELECTION.md`](FRAMEWORK-SELECTION.md) | Why these eleven frameworks; rejected candidates and their reasons |
 | [`AUDIT-FINDINGS.md`](AUDIT-FINDINGS.md) | Full audit trail: original source audit, per-increment QA, every declared edit |
-| [`PROJECT-REVIEW.md`](PROJECT-REVIEW.md) | Independent end-to-end review that set the publishing programme |
+| [`PROJECT-REVIEW.md`](PROJECT-REVIEW.md) | Independent end-to-end review that set the publishing program |
 | [`CONTENT-REVIEW.md`](CONTENT-REVIEW.md) | Editorial consistency review of the rendered prose |
 | [`reference/SOURCES.md`](reference/SOURCES.md) | Provenance and redistribution status of every file in `reference/` |
 | `build/` | The generator: row modules, product and solution maps, template, assembler |

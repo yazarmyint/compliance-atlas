@@ -61,7 +61,7 @@ ROWS = [
 
     row("hipaa-308-a1-d", "§164.308(a)(1)(ii)(D)", "§164.308 Administrative safeguards",
         "Information system activity review (Required): regularly review records of system activity: audit logs, access reports, incident tracking.",
-        "Audit", "Unified audit log of access/sharing/admin activity; Audit (Premium) crucial events (MailItemsAccessed); Activity explorer for labelled/PHI data movement; DLP incident reports",
+        "Audit", "Unified audit log of access/sharing/admin activity; Audit (Premium) crucial events (MailItemsAccessed); Activity explorer for labeled/PHI data movement; DLP incident reports",
         "Directly produces the reviewable activity records, and the review surfaces, for ePHI held in M365. The documented review procedure and cadence, and non-M365 system logs, remain organizational.",
         "Audit enabled with retention policy; scheduled activity-review procedure referencing Purview reports",
         "Dated review notes attached to audit/Activity explorer exports; DLP incident summaries",
@@ -74,7 +74,7 @@ ROWS = [
         "Information Protection", "Label-based encryption restricting ePHI content access to authorized users/groups regardless of storage location; DLP preventing out-of-policy access paths",
         "Adds a data-layer enforcement of authorized access that travels with ePHI content. Access authorization workflow, RBAC, and clinical-system access are identity/application territory.",
         "PHI label tier with encryption permissions scoped to care/claims teams",
-        "RMS access grants/denials for PHI-labelled content",
+        "RMS access grants/denials for PHI-labeled content",
         "Entra ID groups + access reviews; EHR role-based access; minimum-necessary policy",
         "Partial Support", "Medium", LIC["label_encryption"], None,
         [ECFR, URLS["label_encrypt"]], also=["Data Loss Prevention"]),

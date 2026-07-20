@@ -2,7 +2,7 @@ MIT License
 
 Copyright (c) 2026 Yazar
 
-This licence covers the SOFTWARE in this repository: the build pipeline and all
+This license covers the SOFTWARE in this repository: the build pipeline and all
 source code, specifically the contents of `build/` (`common.py`, `assemble.py`,
 `build_html.py`, `dependency_migration.py`, `rows_*.py` as code, and
 `template.html` as markup, styling, and script).

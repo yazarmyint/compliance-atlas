@@ -164,7 +164,7 @@ Sentinel, and Defender for Cloud ran as clean clones with only the refinements i
      `related_microsoft` list (`[rel("purview","contributing","…","Audit"), …]`) and free-text `external_dependencies`;
      `prow` sets `legacy_dependencies=""` (there is no legacy string; the free-text→structured migration was a
      one-time Purview import). Do NOT author `non_purview_dependencies` on new-product rows (that field triggers the
-     migration path, which only recognises 5 product tokens and would misparse).
+     migration path, which only recognizes 5 product tokens and would misparse).
    - **Product isolation:** the mapped capability (`purview_solution` field, a schema-stable and product-agnostic name)
      must be one of *this* product's solutions. Other products go in `related_microsoft` (role `primary`/`contributing`,
      never referencing this product itself; same-product secondary solutions go in `also_involves`).
