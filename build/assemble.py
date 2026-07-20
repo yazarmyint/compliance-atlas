@@ -9,7 +9,8 @@ import importlib, json, os, re, sys, datetime
 from urllib.parse import urlparse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE
+from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
+                    REVERIFY_DATE, REVERIFIED_SOURCE_ROWS, reverified_license_strings)
 from dependency_migration import migrate_row
 
 # Order controls display order in the HTML.
@@ -163,6 +164,27 @@ def main():
         rec = migrate_row(r)
         if rec:
             dep_log.append(rec)
+
+    # ---- last_verified: 2026-07-19 re-verification pass (see common.py, AUDIT-FINDINGS SS22) ----
+    # A row's date moves only if its licensing constant was re-fetched live this session
+    # (whether it changed or passed) or its sources changed. Rows resting on constants that
+    # were not re-checked keep their older date, which is the honest answer for them.
+    reverified_strings = reverified_license_strings()
+    reverify_basis = {}
+    for r in rows:
+        lic = r.get("license_requirement") or ""
+        by_lic = any(s in lic for s in reverified_strings)
+        by_src = r["id"] in REVERIFIED_SOURCE_ROWS
+        if by_lic or by_src:
+            reverify_basis[r["id"]] = ("licensing+sources" if by_lic and by_src
+                                       else "licensing" if by_lic else "sources")
+            r["last_verified"] = REVERIFY_DATE
+    print(f"  Re-verified {len(reverify_basis)}/{len(rows)} rows to {REVERIFY_DATE} "
+          f"({sum(1 for v in reverify_basis.values() if v != 'sources')} via licensing constants, "
+          f"{sum(1 for v in reverify_basis.values() if v != 'licensing')} via sources); "
+          f"{len(rows) - len(reverify_basis)} rows keep their earlier date.")
+    unknown = REVERIFIED_SOURCE_ROWS - {r["id"] for r in rows}
+    assert not unknown, f"REVERIFIED_SOURCE_ROWS names rows that do not exist: {sorted(unknown)}"
 
     # ---- integrity checks ----
     ids = [r["id"] for r in rows]

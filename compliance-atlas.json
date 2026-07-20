@@ -14,7 +14,7 @@
    "Framework and standard names are the property of their respective owners and are used for identification only.",
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it."
   ],
-  "generated": "2026-07-19T21:04:38",
+  "generated": "2026-07-19T21:09:50",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
@@ -44,7 +44,7 @@
   "disclaimer": "Mapped products support or evidence controls; they do not by themselves make an organization compliant with any framework. Control references are practical intent mappings in original words, not quotations of the standards. Licensing claims derive from each product's authoritative licensing source and can change; verify before relying on it.",
   "verified_range": {
    "earliest": "2026-07-16",
-   "latest": "2026-07-18"
+   "latest": "2026-07-19"
   },
   "description_meta": "Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
  },
@@ -824,7 +824,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Contract/DPA and SOW terms; policy management and document-control process",
    "legacy_dependencies": "Contract/DPA and SOW terms; policy management and document-control process",
@@ -857,7 +857,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Data-mapping exercise; collection controls in intake apps/forms",
    "legacy_dependencies": "Data-mapping exercise; collection controls in intake apps/forms",
@@ -887,7 +887,7 @@
     "https://learn.microsoft.com/purview/sit-sensitive-information-type-entity-definitions"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "De-identification/anonymization process and tooling (primary); analytics environment controls",
    "legacy_dependencies": "De-identification/anonymization process and tooling (primary); analytics environment controls",
@@ -918,7 +918,7 @@
     "https://learn.microsoft.com/purview/data-lifecycle-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Legal-approved retention schedule; retention controls for non-M365 repositories",
    "legacy_dependencies": "Legal-approved retention schedule; retention controls for non-M365 repositories",
@@ -951,7 +951,7 @@
     "https://learn.microsoft.com/purview/records-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Return-of-data procedure; physical media destruction and certificates",
    "legacy_dependencies": "Return-of-data procedure; physical media destruction and certificates",
@@ -983,7 +983,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -1023,7 +1023,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "IR plan and breach-notification process; SupplierWeb security contacts; SIEM/SOAR",
    "legacy_dependencies": "IR plan and breach-notification process; SupplierWeb security contacts; SIEM/SOAR",
@@ -1056,7 +1056,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Vulnerability scanning/pen-test program; enterprise risk assessment; change-management system",
    "legacy_dependencies": "Vulnerability scanning/pen-test program; enterprise risk assessment; change-management system",
@@ -1089,7 +1089,7 @@
     "https://learn.microsoft.com/purview/data-classification-data-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "intune",
@@ -1126,7 +1126,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -1168,7 +1168,7 @@
     "https://learn.microsoft.com/purview/insider-risk-management-adaptive-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -1275,7 +1275,7 @@
     "https://learn.microsoft.com/purview/sit-sensitive-information-type-entity-definitions"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "M365 service encryption (inherited); encryption for non-M365 stores; Azure Key Vault key ceremony for Customer Key",
    "legacy_dependencies": "M365 service encryption (inherited); encryption for non-M365 stores; Azure Key Vault key ceremony for Customer Key",
@@ -1306,7 +1306,7 @@
     "https://learn.microsoft.com/purview/sit-sensitive-information-type-entity-definitions"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Anonymization/synthetic-data tooling in the engineering pipeline (primary)",
    "legacy_dependencies": "Anonymization/synthetic-data tooling in the engineering pipeline (primary)",
@@ -1349,7 +1349,7 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j45-entra",
@@ -1379,7 +1379,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j35-intune",
@@ -1416,7 +1416,7 @@
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j48-intune",
@@ -1497,7 +1497,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j38-defender",
@@ -1534,7 +1534,7 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j40-defender",
@@ -1581,7 +1581,7 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-i30-31-sentinel",
@@ -1627,7 +1627,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-soc-with-incident-metrics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j40-sentinel",
@@ -1673,7 +1673,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j38-mdc",
@@ -1714,7 +1714,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "dpr-j40-mdc",
@@ -1766,7 +1766,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-3",
@@ -1791,7 +1791,7 @@
     "https://learn.microsoft.com/purview/information-barriers"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -1830,7 +1830,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "CMDB/asset register with owners; process to reconcile data inventory to asset owners",
    "legacy_dependencies": "CMDB/asset register with owners; process to reconcile data inventory to asset owners",
@@ -1862,7 +1862,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Acceptable-use policy; user awareness training",
    "legacy_dependencies": "Acceptable-use policy; user awareness training",
@@ -1894,7 +1894,7 @@
     "https://learn.microsoft.com/purview/information-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Classification policy document; data owners assigning classifications outside M365",
    "legacy_dependencies": "Classification policy document; data owners assigning classifications outside M365",
@@ -1923,7 +1923,7 @@
     "https://learn.microsoft.com/purview/sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Labelling procedures for physical and non-M365 digital media",
    "legacy_dependencies": "Labelling procedures for physical and non-M365 digital media",
@@ -1955,7 +1955,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -1996,7 +1996,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Incident classification procedure; SIEM/SOAR case tooling",
    "legacy_dependencies": "Incident classification procedure; SIEM/SOAR case tooling",
@@ -2025,7 +2025,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Forensic procedure and chain-of-custody policy; endpoint/network forensics tooling",
    "legacy_dependencies": "Forensic procedure and chain-of-custody policy; endpoint/network forensics tooling",
@@ -2055,7 +2055,7 @@
     "https://learn.microsoft.com/purview/compliance-manager-regulations-list"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Legal register ownership; counsel review of applicability",
    "legacy_dependencies": "Legal register ownership; counsel review of applicability",
@@ -2084,7 +2084,7 @@
     "https://learn.microsoft.com/purview/records-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Records governance policy; protection for physical/non-M365 records",
    "legacy_dependencies": "Records governance policy; protection for physical/non-M365 records",
@@ -2118,7 +2118,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -2160,7 +2160,7 @@
     "https://learn.microsoft.com/purview/compliance-manager"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Internal audit function; policy exception process",
    "legacy_dependencies": "Internal audit function; policy exception process",
@@ -2189,7 +2189,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -2225,7 +2225,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "intune",
@@ -2267,7 +2267,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -2306,7 +2306,7 @@
     "https://learn.microsoft.com/purview/disposition"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Retention schedule (legal); deletion for non-M365 stores",
    "legacy_dependencies": "Retention schedule (legal); deletion for non-M365 stores",
@@ -2336,7 +2336,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Masking/tokenization tooling in data platforms (primary); DB-level dynamic masking",
    "legacy_dependencies": "Masking/tokenization tooling in data platforms (primary); DB-level dynamic masking",
@@ -2369,7 +2369,7 @@
     "https://learn.microsoft.com/purview/insider-risk-management-adaptive-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -2405,7 +2405,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "sentinel",
@@ -2446,7 +2446,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -2489,7 +2489,7 @@
     "https://learn.microsoft.com/purview/customer-key-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Key management (Azure Key Vault/HSM), TLS management, BitLocker; crypto policy document",
    "legacy_dependencies": "Key management (Azure Key Vault/HSM), TLS management, BitLocker; crypto policy document",
@@ -2532,7 +2532,7 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-15-entra",
@@ -2571,7 +2571,7 @@
     "https://learn.microsoft.com/entra/identity/role-based-access-control/custom-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-16-entra",
@@ -2603,7 +2603,7 @@
     "https://learn.microsoft.com/entra/id-governance/identity-governance-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-17-entra",
@@ -2633,7 +2633,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-sspr-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-18-entra",
@@ -2663,7 +2663,7 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-2-entra",
@@ -2692,7 +2692,7 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-3-entra",
@@ -2728,7 +2728,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-5-entra",
@@ -2758,7 +2758,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-16-entra",
@@ -2806,7 +2806,7 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-9-intune",
@@ -2842,7 +2842,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-6-7-intune",
@@ -3073,7 +3073,7 @@
     "https://learn.microsoft.com/defender-xdr/advanced-hunting-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-23-defender",
@@ -3116,7 +3116,7 @@
     "https://learn.microsoft.com/defender-cloud-apps/set-up-cloud-discovery"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-25-defender",
@@ -3163,7 +3163,7 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-7-defender",
@@ -3202,7 +3202,7 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-8-defender",
@@ -3239,7 +3239,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-12-defender",
@@ -3282,7 +3282,7 @@
     "https://learn.microsoft.com/defender-cloud-apps/what-is-defender-for-cloud-apps"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-16-defender",
@@ -3335,7 +3335,7 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-23-defender",
@@ -3372,7 +3372,7 @@
     "https://learn.microsoft.com/defender-endpoint/web-content-filtering"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-16-mdi",
@@ -3415,7 +3415,7 @@
     "https://learn.microsoft.com/defender-for-identity/us-govt-gcc-high"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-7-sentinel",
@@ -3452,7 +3452,7 @@
     "https://learn.microsoft.com/azure/sentinel/use-matching-analytics-to-detect-threats"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-25-sentinel",
@@ -3497,7 +3497,7 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-26-sentinel",
@@ -3542,7 +3542,7 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-28-sentinel",
@@ -3581,7 +3581,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-15-sentinel",
@@ -3626,7 +3626,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-16-sentinel",
@@ -3679,7 +3679,7 @@
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-23-mdc",
@@ -3716,7 +3716,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/quickstart-onboard-aws"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-8-mdc",
@@ -3755,7 +3755,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-9-mdc",
@@ -3794,7 +3794,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-5-36-mdc",
@@ -3878,7 +3878,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "iso-a-8-16-mdc",
@@ -3923,7 +3923,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc1-1",
@@ -3948,7 +3948,7 @@
     "https://learn.microsoft.com/purview/communication-compliance-solution-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Code of conduct; HR disciplinary process; ethics training",
    "legacy_dependencies": "Code of conduct; HR disciplinary process; ethics training",
@@ -3977,7 +3977,7 @@
     "https://learn.microsoft.com/purview/compliance-manager"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Internal audit program; management review cadence",
    "legacy_dependencies": "Internal audit program; management review cadence",
@@ -4008,7 +4008,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -4046,7 +4046,7 @@
     "https://learn.microsoft.com/purview/disposition"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Media-sanitization process (NIST 800-88 aligned); asset disposal vendor certificates",
    "legacy_dependencies": "Media-sanitization process (NIST 800-88 aligned); asset disposal vendor certificates",
@@ -4078,7 +4078,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Backup media handling; TLS configuration (platform)",
    "legacy_dependencies": "Backup media handling; TLS configuration (platform)",
@@ -4111,7 +4111,7 @@
     "https://learn.microsoft.com/purview/insider-risk-management-adaptive-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -4154,7 +4154,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Incident classification procedure; SIEM case management",
    "legacy_dependencies": "Incident classification procedure; SIEM case management",
@@ -4186,7 +4186,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "IR plan and runbooks; SOAR; communications/legal",
    "legacy_dependencies": "IR plan and runbooks; SOAR; communications/legal",
@@ -4215,7 +4215,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Change-management system and approvals; testing process",
    "legacy_dependencies": "Change-management system and approvals; testing process",
@@ -4247,7 +4247,7 @@
     "https://learn.microsoft.com/purview/trainable-classifiers-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Confidentiality commitments inventory (contracts); data owners for non-M365 stores",
    "legacy_dependencies": "Confidentiality commitments inventory (contracts); data owners for non-M365 stores",
@@ -4278,7 +4278,7 @@
     "https://learn.microsoft.com/purview/disposition"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Physical document destruction; third-party data return/destruction clauses",
    "legacy_dependencies": "Physical document destruction; third-party data return/destruction clauses",
@@ -4342,7 +4342,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -4378,7 +4378,7 @@
     "https://learn.microsoft.com/purview/retention"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Retention schedule approved by legal/privacy; non-M365 store retention",
    "legacy_dependencies": "Retention schedule approved by legal/privacy; non-M365 store retention",
@@ -4409,7 +4409,7 @@
     "https://learn.microsoft.com/purview/disposition"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Disposal for non-M365/physical stores",
    "legacy_dependencies": "Disposal for non-M365/physical stores",
@@ -4440,7 +4440,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -4479,7 +4479,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Disclosure register process; breach determination (legal)",
    "legacy_dependencies": "Disclosure register process; breach determination (legal)",
@@ -4512,7 +4512,7 @@
     "https://learn.microsoft.com/purview/communication-compliance-solution-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Complaint intake and resolution process; privacy office",
    "legacy_dependencies": "Complaint intake and resolution process; privacy office",
@@ -4611,7 +4611,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc6-2-entra",
@@ -4641,7 +4641,7 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc6-3-entra",
@@ -4673,7 +4673,7 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc6-6-entra",
@@ -4704,7 +4704,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-2-entra",
@@ -4746,7 +4746,7 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc6-1-intune",
@@ -4911,7 +4911,7 @@
     "https://learn.microsoft.com/defender-cloud-apps/proxy-intro-aad"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc6-8-defender",
@@ -4951,7 +4951,7 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-1-defender",
@@ -4988,7 +4988,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-2-defender",
@@ -5041,7 +5041,7 @@
     "https://learn.microsoft.com/defender-xdr/investigate-incidents"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-3-defender",
@@ -5088,7 +5088,7 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-4-defender",
@@ -5133,7 +5133,7 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-2-sentinel",
@@ -5186,7 +5186,7 @@
     "https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-3-sentinel",
@@ -5231,7 +5231,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-4-sentinel",
@@ -5276,7 +5276,7 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-1-mdc",
@@ -5315,7 +5315,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-agentless-data-collection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc6-8-mdc",
@@ -5360,7 +5360,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc7-2-mdc",
@@ -5405,7 +5405,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "soc2-cc4-1-mdc",
@@ -5473,7 +5473,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
    "legacy_dependencies": "Enterprise risk-analysis methodology (e.g., NIST SP 800-30); non-M365 system discovery",
@@ -5505,7 +5505,7 @@
     "https://learn.microsoft.com/purview/communication-compliance-solution-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Sanction policy document; HR disciplinary process",
    "legacy_dependencies": "Sanction policy document; HR disciplinary process",
@@ -5537,7 +5537,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Review procedure and assigned reviewer; SIEM for EHR/non-M365 logs",
    "legacy_dependencies": "Review procedure and assigned reviewer; SIEM for EHR/non-M365 logs",
@@ -5568,7 +5568,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -5609,7 +5609,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "IR plan; breach risk assessment (§164.402); OCR notification process",
    "legacy_dependencies": "IR plan; breach risk assessment (§164.402); OCR notification process",
@@ -5639,7 +5639,7 @@
     "https://learn.microsoft.com/purview/compliance-manager-regulations-list"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Independent security evaluation/audit; penetration testing program",
    "legacy_dependencies": "Independent security evaluation/audit; penetration testing program",
@@ -5672,7 +5672,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Physical media sanitization + destruction certificates; device decommissioning process",
    "legacy_dependencies": "Physical media sanitization + destruction certificates; device decommissioning process",
@@ -5704,7 +5704,7 @@
     "https://learn.microsoft.com/purview/customer-key-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "M365 service encryption (inherited); EHR/database encryption; key management",
    "legacy_dependencies": "M365 service encryption (inherited); EHR/database encryption; key management",
@@ -5733,7 +5733,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "EHR/clinical system audit logging; SIEM aggregation",
    "legacy_dependencies": "EHR/clinical system audit logging; SIEM aggregation",
@@ -5765,7 +5765,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SharePoint versioning (platform); EHR integrity mechanisms; backup/restore validation",
    "legacy_dependencies": "SharePoint versioning (platform); EHR integrity mechanisms; backup/restore validation",
@@ -5797,7 +5797,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "TLS configuration (platform-managed in M365); site-to-site VPN/interface engines for HL7/FHIR feeds",
    "legacy_dependencies": "TLS configuration (platform-managed in M365); site-to-site VPN/interface engines for HL7/FHIR feeds",
@@ -5829,7 +5829,7 @@
     "https://learn.microsoft.com/purview/records-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Policy authoring/review process; document-control ownership",
    "legacy_dependencies": "Policy authoring/review process; document-control ownership",
@@ -5863,7 +5863,7 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a4-entra",
@@ -5899,7 +5899,7 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a5-entra",
@@ -5931,7 +5931,7 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-312-a1-entra",
@@ -5967,7 +5967,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-312-d-entra",
@@ -5997,7 +5997,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a5-b-intune",
@@ -6102,7 +6102,7 @@
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-312-a2-iv-intune",
@@ -6179,7 +6179,7 @@
     "https://learn.microsoft.com/defender-xdr/threat-analytics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a1-d-defender",
@@ -6225,7 +6225,7 @@
     "https://learn.microsoft.com/defender-xdr/advanced-hunting-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a5-b-defender",
@@ -6264,7 +6264,7 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a6-defender",
@@ -6310,7 +6310,7 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a1-d-sentinel",
@@ -6356,7 +6356,7 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-312-b-sentinel",
@@ -6395,7 +6395,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a6-sentinel",
@@ -6441,7 +6441,7 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a1-a-mdc",
@@ -6486,7 +6486,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-data-security-posture"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "hipaa-308-a8-mdc",
@@ -6609,7 +6609,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-1-3",
@@ -6638,7 +6638,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Network segmentation/boundary flow control; enclave architecture",
    "legacy_dependencies": "Network segmentation/boundary flow control; enclave architecture",
@@ -6670,7 +6670,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Public-posting review procedure; web CMS controls",
    "legacy_dependencies": "Public-posting review procedure; web CMS controls",
@@ -6699,7 +6699,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "sentinel",
@@ -6736,7 +6736,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -6772,7 +6772,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM-side log protection; export handling procedure",
    "legacy_dependencies": "SIEM-side log protection; export handling procedure",
@@ -6805,7 +6805,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "IR plan; DIBNet-report procedure (DFARS 7012); SIEM/SOAR",
    "legacy_dependencies": "IR plan; DIBNet-report procedure (DFARS 7012); SIEM/SOAR",
@@ -6836,7 +6836,7 @@
     "https://learn.microsoft.com/purview/sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "CUI Registry-aligned marking policy; physical media marking procedure",
    "legacy_dependencies": "CUI Registry-aligned marking policy; physical media marking procedure",
@@ -6865,7 +6865,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "intune",
@@ -6907,7 +6907,7 @@
     "https://learn.microsoft.com/purview/insider-risk-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -6945,7 +6945,7 @@
     "https://learn.microsoft.com/purview/compliance-manager-regulations-list"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
    "legacy_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
@@ -6977,7 +6977,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "TLS/VPN configuration; FIPS 140 module validation documentation (Microsoft)",
    "legacy_dependencies": "TLS/VPN configuration; FIPS 140 module validation documentation (Microsoft)",
@@ -7009,7 +7009,7 @@
     "https://learn.microsoft.com/purview/customer-key-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "intune",
@@ -7048,7 +7048,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -7101,7 +7101,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-1-2-entra",
@@ -7130,7 +7130,7 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-1-5-entra",
@@ -7161,7 +7161,7 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-1-7-entra",
@@ -7190,7 +7190,7 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-5-3-entra",
@@ -7220,7 +7220,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-1-11-entra",
@@ -7249,7 +7249,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-1-1-intune",
@@ -7398,7 +7398,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-4-2-intune",
@@ -7555,7 +7555,7 @@
     "https://learn.microsoft.com/defender-cloud-apps/what-is-defender-for-cloud-apps"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-6-1-2-defender",
@@ -7601,7 +7601,7 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-11-2-3-defender",
@@ -7638,7 +7638,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-2-defender",
@@ -7677,7 +7677,7 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-3-defender",
@@ -7713,7 +7713,7 @@
     "https://learn.microsoft.com/defender-xdr/threat-analytics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-4-5-defender",
@@ -7749,7 +7749,7 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-6-defender",
@@ -7795,7 +7795,7 @@
     "https://learn.microsoft.com/defender-endpoint/network-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-7-defender",
@@ -7841,7 +7841,7 @@
     "https://learn.microsoft.com/defender-for-identity/what-is"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-3-1-sentinel",
@@ -7880,7 +7880,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-3-4-sentinel",
@@ -7919,7 +7919,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-3-5-sentinel",
@@ -7964,7 +7964,7 @@
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-6-1-2-sentinel",
@@ -8009,7 +8009,7 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-3-sentinel",
@@ -8048,7 +8048,7 @@
     "https://learn.microsoft.com/azure/sentinel/use-matching-analytics-to-detect-threats"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-6-sentinel",
@@ -8093,7 +8093,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-7-sentinel",
@@ -8144,7 +8144,7 @@
     "https://learn.microsoft.com/azure/sentinel/hunting"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-11-2-3-mdc",
@@ -8183,7 +8183,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-12-1-3-mdc",
@@ -8261,7 +8261,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-14-6-mdc",
@@ -8306,7 +8306,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "171-3-11-1-mdc",
@@ -8343,7 +8343,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/how-to-manage-cloud-security-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ac-3",
@@ -8370,7 +8370,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -8408,7 +8408,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Network segmentation and boundary flow control; cross-domain solutions",
    "legacy_dependencies": "Network segmentation and boundary flow control; cross-domain solutions",
@@ -8440,7 +8440,7 @@
     "https://learn.microsoft.com/purview/sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -8479,7 +8479,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Web publishing review procedure; CMS controls",
    "legacy_dependencies": "Web publishing review procedure; CMS controls",
@@ -8508,7 +8508,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "sentinel",
@@ -8548,7 +8548,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM correlation and dashboards; assigned reviewer roles",
    "legacy_dependencies": "SIEM correlation and dashboards; assigned reviewer roles",
@@ -8577,7 +8577,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM-side log protection; export handling procedure",
    "legacy_dependencies": "SIEM-side log protection; export handling procedure",
@@ -8606,7 +8606,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM/archive retention for non-M365 logs; records schedule approval (e.g., NARA GRS alignment)",
    "legacy_dependencies": "SIEM/archive retention for non-M365 logs; records schedule approval (e.g., NARA GRS alignment)",
@@ -8638,7 +8638,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Information-location documentation for non-M365 components; data-flow diagrams",
    "legacy_dependencies": "Information-location documentation for non-M365 components; data-flow diagrams",
@@ -8671,7 +8671,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "IR plan and SOC processes; SIEM/SOAR; agency reporting obligations (FISMA/US-CERT)",
    "legacy_dependencies": "IR plan and SOC processes; SIEM/SOAR; agency reporting obligations (FISMA/US-CERT)",
@@ -8705,7 +8705,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Spillage response roles and procedures; system-level sanitization where required",
    "legacy_dependencies": "Spillage response roles and procedures; system-level sanitization where required",
@@ -8736,7 +8736,7 @@
     "https://learn.microsoft.com/purview/sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Marking policy (e.g., CUI Registry alignment); physical media marking procedure",
    "legacy_dependencies": "Marking policy (e.g., CUI Registry alignment); physical media marking procedure",
@@ -8793,7 +8793,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "intune",
@@ -8835,7 +8835,7 @@
     "https://learn.microsoft.com/purview/insider-risk-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -8874,7 +8874,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
    "legacy_dependencies": "Risk-assessment methodology (SP 800-30); system-level threat analysis",
@@ -8906,7 +8906,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "TLS/IPsec configuration; FIPS 140 module validation documentation (platform)",
    "legacy_dependencies": "TLS/IPsec configuration; FIPS 140 module validation documentation (platform)",
@@ -8938,7 +8938,7 @@
     "https://learn.microsoft.com/purview/customer-key-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "intune",
@@ -8978,7 +8978,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -9023,7 +9023,7 @@
     "https://learn.microsoft.com/purview/records-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Approved records schedule (NARA GRS for federal); retention for non-M365 systems",
    "legacy_dependencies": "Approved records schedule (NARA GRS for federal); retention for non-M365 systems",
@@ -9053,7 +9053,7 @@
     "https://learn.microsoft.com/purview/data-classification-data-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "De-identification tooling and technique selection (SP 800-188); dataset release process",
    "legacy_dependencies": "De-identification tooling and technique selection (SP 800-188); dataset release process",
@@ -9087,7 +9087,7 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ac-3-entra",
@@ -9124,7 +9124,7 @@
     "https://learn.microsoft.com/entra/identity/role-based-access-control/custom-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ac-6-entra",
@@ -9155,7 +9155,7 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ac-7-entra",
@@ -9184,7 +9184,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ia-2-entra",
@@ -9214,7 +9214,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ia-5-entra",
@@ -9244,7 +9244,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-sspr-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ac-6-intune",
@@ -9515,7 +9515,7 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ra-5-defender",
@@ -9552,7 +9552,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-si-2-defender",
@@ -9588,7 +9588,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-si-3-defender",
@@ -9627,7 +9627,7 @@
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-si-4-defender",
@@ -9681,7 +9681,7 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-si-8-defender",
@@ -9711,7 +9711,7 @@
     "https://learn.microsoft.com/defender-office-365/mdo-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-au-2-12-sentinel",
@@ -9748,7 +9748,7 @@
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-au-6-sentinel",
@@ -9793,7 +9793,7 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-au-9-sentinel",
@@ -9836,7 +9836,7 @@
     "https://learn.microsoft.com/azure/sentinel/health-audit"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-au-11-sentinel",
@@ -9875,7 +9875,7 @@
     "https://learn.microsoft.com/azure/sentinel/datalake/sentinel-lake-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ir-4-sentinel",
@@ -9921,7 +9921,7 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ir-5-sentinel",
@@ -9958,7 +9958,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-soc-with-incident-metrics"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-si-4-sentinel",
@@ -10004,7 +10004,7 @@
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ra-10-sentinel",
@@ -10043,7 +10043,7 @@
     "https://learn.microsoft.com/azure/sentinel/search-jobs"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ra-5-mdc",
@@ -10082,7 +10082,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-ca-7-mdc",
@@ -10202,7 +10202,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-cm-6-mdc",
@@ -10241,7 +10241,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "53-si-7-mdc",
@@ -10323,7 +10323,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-gv-oc-03",
@@ -10350,7 +10350,7 @@
     "https://learn.microsoft.com/purview/compliance-manager-regulations-list"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Legal/GRC ownership of the obligations register",
    "legacy_dependencies": "Legal/GRC ownership of the obligations register",
@@ -10383,7 +10383,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Inventory for non-M365 data platforms; data owners assigning designations",
    "legacy_dependencies": "Inventory for non-M365 data platforms; data owners assigning designations",
@@ -10416,7 +10416,7 @@
     "https://learn.microsoft.com/purview/records-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "ITAM/CMDB for systems and devices; SDLC processes",
    "legacy_dependencies": "ITAM/CMDB for systems and devices; SDLC processes",
@@ -10450,7 +10450,7 @@
     "https://learn.microsoft.com/purview/customer-key-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Platform storage encryption (inherited); backup solution; database TDE",
    "legacy_dependencies": "Platform storage encryption (inherited); backup solution; database TDE",
@@ -10483,7 +10483,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "TLS/network encryption (platform); VPN for site-to-site flows",
    "legacy_dependencies": "TLS/network encryption (platform); VPN for site-to-site flows",
@@ -10516,7 +10516,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Application sandboxing/platform protections; VDI controls where used",
    "legacy_dependencies": "Application sandboxing/platform protections; VDI controls where used",
@@ -10546,7 +10546,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "sentinel",
@@ -10587,7 +10587,7 @@
     "https://learn.microsoft.com/purview/communication-compliance-solution-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM/UEBA for infrastructure-level activity; HR triggers",
    "legacy_dependencies": "SIEM/UEBA for infrastructure-level activity; HR triggers",
@@ -10661,7 +10661,7 @@
     "https://learn.microsoft.com/purview/data-classification-activity-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM correlation rules; SOC triage process",
    "legacy_dependencies": "SIEM correlation rules; SOC triage process",
@@ -10691,7 +10691,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "defender-xdr",
@@ -10736,7 +10736,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Forensic imaging tooling; chain-of-custody procedure",
    "legacy_dependencies": "Forensic imaging tooling; chain-of-custody procedure",
@@ -10772,7 +10772,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-pr-aa-02-entra",
@@ -10801,7 +10801,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-pr-aa-03-entra",
@@ -10831,7 +10831,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-pr-aa-05-entra",
@@ -10863,7 +10863,7 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-access-package-incompatible"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-cm-03-entra",
@@ -10905,7 +10905,7 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-id-am-01-intune",
@@ -10934,7 +10934,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-pr-ps-01-intune",
@@ -11118,7 +11118,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-cm-01-defender",
@@ -11157,7 +11157,7 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-cm-03-defender",
@@ -11200,7 +11200,7 @@
     "https://learn.microsoft.com/defender-cloud-apps/set-up-cloud-discovery"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-cm-09-defender",
@@ -11236,7 +11236,7 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-ae-02-defender",
@@ -11283,7 +11283,7 @@
     "https://learn.microsoft.com/defender-xdr/advanced-hunting-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-rs-an-03-defender",
@@ -11328,7 +11328,7 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-rs-mi-01-02-defender",
@@ -11368,7 +11368,7 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-pr-ps-04-sentinel",
@@ -11413,7 +11413,7 @@
     "https://learn.microsoft.com/azure/sentinel/manage-data-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-ae-02-sentinel",
@@ -11458,7 +11458,7 @@
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-ae-03-sentinel",
@@ -11503,7 +11503,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-cm-01-sentinel",
@@ -11542,7 +11542,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-rs-an-03-sentinel",
@@ -11587,7 +11587,7 @@
     "https://learn.microsoft.com/azure/sentinel/search-jobs"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-rs-mi-01-02-sentinel",
@@ -11626,7 +11626,7 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-id-ra-01-mdc",
@@ -11665,7 +11665,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-id-am-02-mdc",
@@ -11708,7 +11708,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-id-im-01-mdc",
@@ -11748,7 +11748,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/secure-score-security-controls"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-pr-ps-01-mdc",
@@ -11787,7 +11787,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "csf-de-cm-09-mdc",
@@ -11832,7 +11832,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-3-2-1",
@@ -11862,7 +11862,7 @@
     "https://learn.microsoft.com/purview/retention"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "CDE database retention/purge routines; tokenization strategy",
    "legacy_dependencies": "CDE database retention/purge routines; tokenization strategy",
@@ -11892,7 +11892,7 @@
     "https://learn.microsoft.com/purview/sit-sensitive-information-type-entity-definitions"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Payment application SAD purge validation; acquirer/processor controls",
    "legacy_dependencies": "Payment application SAD purge validation; acquirer/processor controls",
@@ -11922,7 +11922,7 @@
     "https://learn.microsoft.com/purview/endpoint-dlp-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "VDI/remote-access session policies; documented authorization workflow",
    "legacy_dependencies": "VDI/remote-access session policies; documented authorization workflow",
@@ -11954,7 +11954,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Tokenization/DB encryption in the CDE; key management",
    "legacy_dependencies": "Tokenization/DB encryption in the CDE; key management",
@@ -12015,7 +12015,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Coverage for non-M365 messaging channels (consumer apps) via endpoint/browser controls",
    "legacy_dependencies": "Coverage for non-M365 messaging channels (consumer apps) via endpoint/browser controls",
@@ -12045,7 +12045,7 @@
     "https://learn.microsoft.com/purview/encryption-sensitivity-labels"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -12082,7 +12082,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM retention for CDE/network logs (primary)",
    "legacy_dependencies": "SIEM retention for CDE/network logs (primary)",
@@ -12114,7 +12114,7 @@
     "https://learn.microsoft.com/purview/data-classification-data-explorer"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Network/data-flow diagrams; CDE inventory; QSA scoping review",
    "legacy_dependencies": "Network/data-flow diagrams; CDE inventory; QSA scoping review",
@@ -12146,7 +12146,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "IR procedure for unexpected PAN; CDE-side detection tooling",
    "legacy_dependencies": "IR procedure for unexpected PAN; CDE-side detection tooling",
@@ -12181,7 +12181,7 @@
     "https://learn.microsoft.com/entra/id-governance/entitlement-management-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-8-2-1-entra",
@@ -12210,7 +12210,7 @@
     "https://learn.microsoft.com/entra/fundamentals/what-is-entra"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-8-3-1-entra",
@@ -12239,7 +12239,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-8-4-2-entra",
@@ -12269,7 +12269,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-1-5-1-intune",
@@ -12448,7 +12448,7 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-5-4-1-defender",
@@ -12479,7 +12479,7 @@
     "https://learn.microsoft.com/defender-office-365/attack-simulation-training-get-started"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-6-3-1-defender",
@@ -12516,7 +12516,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-11-3-1-defender",
@@ -12554,7 +12554,7 @@
     "https://learn.microsoft.com/defender-vulnerability-management/defender-vulnerability-management-capabilities"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-5-3-defender",
@@ -12591,7 +12591,7 @@
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-10-3-3-sentinel",
@@ -12631,7 +12631,7 @@
     "https://learn.microsoft.com/azure/sentinel/connect-data-sources"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-10-4-1-sentinel",
@@ -12677,7 +12677,7 @@
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-10-5-1-sentinel",
@@ -12717,7 +12717,7 @@
     "https://learn.microsoft.com/azure/sentinel/search-jobs"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-10-7-2-sentinel",
@@ -12757,7 +12757,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-12-10-5-sentinel",
@@ -12798,7 +12798,7 @@
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-11-3-1-mdc",
@@ -12838,7 +12838,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/regulatory-compliance-dashboard"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-5-2-mdc",
@@ -12884,7 +12884,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/integration-defender-for-endpoint"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "pci-2-2-1-mdc",
@@ -12925,7 +12925,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-b",
@@ -12954,7 +12954,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Written risk-assessment methodology; Qualified Individual ownership",
    "legacy_dependencies": "Written risk-assessment methodology; Qualified Individual ownership",
@@ -12986,7 +12986,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -13025,7 +13025,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "CMDB/ITAM; HR systems; facilities records",
    "legacy_dependencies": "CMDB/ITAM; HR systems; facilities records",
@@ -13057,7 +13057,7 @@
     "https://learn.microsoft.com/purview/customer-key-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "TLS on external transmission paths; database encryption; key management",
    "legacy_dependencies": "TLS on external transmission paths; database encryption; key management",
@@ -13089,7 +13089,7 @@
     "https://learn.microsoft.com/purview/disposition"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Application-database purge routines; paper records destruction",
    "legacy_dependencies": "Application-database purge routines; paper records destruction",
@@ -13118,7 +13118,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Change-management process/tooling",
    "legacy_dependencies": "Change-management process/tooling",
@@ -13151,7 +13151,7 @@
     "https://learn.microsoft.com/purview/insider-risk-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIEM for application/infrastructure logs; core-system audit trails",
    "legacy_dependencies": "SIEM for application/infrastructure logs; core-system audit trails",
@@ -13184,7 +13184,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Written IR plan; legal/communications; SIEM/SOAR",
    "legacy_dependencies": "Written IR plan; legal/communications; SIEM/SOAR",
@@ -13218,7 +13218,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Breach counsel determination; FTC filing process",
    "legacy_dependencies": "Breach counsel determination; FTC filing process",
@@ -13261,7 +13261,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-c5-entra",
@@ -13291,7 +13291,7 @@
     "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-c8-entra",
@@ -13333,7 +13333,7 @@
     "https://learn.microsoft.com/entra/id-protection/overview-identity-protection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-c2-intune",
@@ -13369,7 +13369,7 @@
     "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-c3-intune",
@@ -13455,7 +13455,7 @@
     "https://learn.microsoft.com/defender-for-identity/what-is"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-d-defender",
@@ -13498,7 +13498,7 @@
     "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-c8-sentinel",
@@ -13551,7 +13551,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-d-sentinel",
@@ -13590,7 +13590,7 @@
     "https://learn.microsoft.com/azure/sentinel/health-audit"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-h-sentinel",
@@ -13635,7 +13635,7 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-d-mdc",
@@ -13681,7 +13681,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "glba-314-4-c2-mdc",
@@ -13726,7 +13726,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-data-security-posture"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "ferpa-99-10",
@@ -13754,7 +13754,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "SIS/registrar extract (primary record store); request intake and verification process; §99.12 redaction review",
    "legacy_dependencies": "SIS/registrar extract (primary record store); request intake and verification process; §99.12 redaction review",
@@ -13788,7 +13788,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "entra",
@@ -13827,7 +13827,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Consent workflow and records; §99.31 exception determinations; disclosure agreements binding recipients (§99.33)",
    "legacy_dependencies": "Consent workflow and records; §99.31 exception determinations; disclosure agreements binding recipients (§99.33)",
@@ -13860,7 +13860,7 @@
     "https://learn.microsoft.com/purview/retention"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Registrar-maintained disclosure record (primary); SIS access logging",
    "legacy_dependencies": "Registrar-maintained disclosure record (primary); SIS access logging",
@@ -13893,7 +13893,7 @@
     "https://learn.microsoft.com/purview/disposition"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Written agreements specifying destruction terms (§99.31(a)(6)(iii)); recipient-side destruction attestation",
    "legacy_dependencies": "Written agreements specifying destruction terms (§99.31(a)(6)(iii)); recipient-side destruction attestation",
@@ -13936,7 +13936,7 @@
     "https://learn.microsoft.com/entra/id-governance/access-reviews-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-5-1-c",
@@ -13964,7 +13964,7 @@
     "https://learn.microsoft.com/purview/data-security-posture-management-learn-about"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Collection-point design; purpose specification (privacy office)",
    "legacy_dependencies": "Collection-point design; purpose specification (privacy office)",
@@ -13995,7 +13995,7 @@
     "https://learn.microsoft.com/purview/retention"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Approved retention schedule; application-store purges",
    "legacy_dependencies": "Approved retention schedule; application-store purges",
@@ -14027,7 +14027,7 @@
     "https://learn.microsoft.com/purview/audit-solutions-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "DPO function; ROPA; processor agreements",
    "legacy_dependencies": "DPO function; ROPA; processor agreements",
@@ -14058,7 +14058,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -14097,7 +14097,7 @@
     "https://learn.microsoft.com/purview/retention"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -14133,7 +14133,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -14174,7 +14174,7 @@
     "https://learn.microsoft.com/purview/retention"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [
     {
      "product": "priva",
@@ -14248,7 +14248,7 @@
     "https://learn.microsoft.com/purview/customer-key-overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Application/database encryption; pseudonymisation tooling; key management",
    "legacy_dependencies": "Application/database encryption; pseudonymisation tooling; key management",
@@ -14280,7 +14280,7 @@
     "https://learn.microsoft.com/purview/dlp-learn-about-dlp"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Pen-test program; audit function",
    "legacy_dependencies": "Pen-test program; audit function",
@@ -14313,7 +14313,7 @@
     "https://learn.microsoft.com/purview/edisc"
    ],
    "status": "verified",
-   "last_verified": "2026-07-16",
+   "last_verified": "2026-07-19",
    "related_microsoft": [],
    "external_dependencies": "Breach counsel; supervisory-authority filing process; subject-communication mechanics",
    "legacy_dependencies": "Breach counsel; supervisory-authority filing process; subject-communication mechanics",
@@ -14390,7 +14390,7 @@
     "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-25-entra",
@@ -14429,7 +14429,7 @@
     "https://learn.microsoft.com/entra/identity/conditional-access/overview"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-32-1-a-intune",
@@ -14566,7 +14566,7 @@
     "https://learn.microsoft.com/defender-xdr/automatic-attack-disruption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-32-1-d-defender",
@@ -14605,7 +14605,7 @@
     "https://learn.microsoft.com/defender-office-365/attack-simulation-training-get-started"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-33-34-defender",
@@ -14651,7 +14651,7 @@
     "https://learn.microsoft.com/defender-xdr/m365d-autoir"
    ],
    "status": "verified",
-   "last_verified": "2026-07-17"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-32-1-b-sentinel",
@@ -14702,7 +14702,7 @@
     "https://learn.microsoft.com/azure/sentinel/connect-data-sources"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-32-1-d-sentinel",
@@ -14747,7 +14747,7 @@
     "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-33-34-sentinel",
@@ -14793,7 +14793,7 @@
     "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-32-1-b-mdc",
@@ -14844,7 +14844,7 @@
     "https://learn.microsoft.com/azure/defender-for-cloud/permissions-management"
    ],
    "status": "verified",
-   "last_verified": "2026-07-18"
+   "last_verified": "2026-07-19"
   },
   {
    "id": "gdpr-32-1-d-mdc",

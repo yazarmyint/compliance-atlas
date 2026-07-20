@@ -3,6 +3,88 @@
 VERIFIED_DATE = "2026-07-16"
 
 # ---------------------------------------------------------------------------
+# Data re-verification pass, 2026-07-19 (AUDIT-FINDINGS SS22).
+#
+# last_verified is a claim about when a row's facts were last checked against an
+# authoritative source, so it is bumped only where that is true. A row earns the
+# new date on exactly one of three bases:
+#
+#   A  its license_requirement changed this session
+#   B  its sources changed this session
+#   C  the licensing constant governing it was re-fetched live this session and
+#      confirmed still correct (a PASS is a verification, not a non-event)
+#
+# A and C are both derived from REVERIFIED_LIC_KEYS below: it names every constant
+# whose governing authoritative source was actually fetched on 2026-07-19, whether
+# the string changed or passed. Constants absent from this set were NOT re-checked
+# this session, so rows resting solely on them keep their older date. That is the
+# point of the mechanism, and it is why this pass moves 324 of 378 rows rather
+# than all of them. Do not add a key here without fetching its source.
+# ---------------------------------------------------------------------------
+REVERIFY_DATE = "2026-07-19"
+
+# (dict name, key) pairs re-derived or re-confirmed against a live fetch on 2026-07-19.
+REVERIFIED_LIC_KEYS = {
+    # Purview service description per-feature tables
+    ("LIC", "labels_manual"), ("LIC", "labels_auto"), ("LIC", "label_encryption"),
+    ("LIC", "customer_key"), ("LIC", "classification_analytics"), ("LIC", "dlp_core"),
+    ("LIC", "dlp_teams"), ("LIC", "dlp_endpoint"), ("LIC", "retention_basic"),
+    ("LIC", "retention_advanced"), ("LIC", "records"), ("LIC", "audit_std"),
+    ("LIC", "audit_prem"), ("LIC", "ediscovery_std"), ("LIC", "irm"), ("LIC", "cc"),
+    ("LIC", "ib"), ("LIC", "cm"),
+    # Entra licensing article
+    ("ENTRA_LIC", "ca"), ("ENTRA_LIC", "mfa"), ("ENTRA_LIC", "id_protection"),
+    ("ENTRA_LIC", "pim"), ("ENTRA_LIC", "gov_core"), ("ENTRA_LIC", "gov_lcw"),
+    ("ENTRA_LIC", "free"),
+    # Defender service description + Defender XDR prerequisites
+    ("DEFENDER_LIC", "mde_p1"), ("DEFENDER_LIC", "mde_p2"), ("DEFENDER_LIC", "mdvm"),
+    ("DEFENDER_LIC", "mdo_p1"), ("DEFENDER_LIC", "mdo_p2"), ("DEFENDER_LIC", "mdi"),
+    ("DEFENDER_LIC", "mdca"), ("DEFENDER_LIC", "xdr"),
+    # Sentinel billing article (+ Partner Center announcement for the 50 GB tier)
+    ("SENTINEL_LIC", "ingest"), ("SENTINEL_LIC", "retention"), ("SENTINEL_LIC", "soar"),
+    ("SENTINEL_LIC", "included"),
+    # Azure pricing page for Defender for Cloud
+    ("MDC_LIC", "foundational"), ("MDC_LIC", "cspm"), ("MDC_LIC", "workload"),
+}
+
+# NOT re-verified on 2026-07-19, and deliberately so: their governing sources were not
+# fetched this session. Recorded to make the gap explicit rather than implicit.
+#   LIC dspm, dspm_ai              - DSPM get-started docs, no service-description rows
+#   INTUNE_LIC p1, p1_ca, epm      - Intune licensing + advanced-capabilities articles
+#   MDC_LIC servers_p1, servers_p2 - Defender for Servers plan-selection pages
+#   MDC_LIC dashboard              - assign-regulatory-compliance-standards prerequisites
+#   SENTINEL_LIC free_benefit      - Microsoft 365 E5 Sentinel benefit offer page
+
+# Rows whose sources array changed on 2026-07-19 (basis B, PR-038 URL currency).
+REVERIFIED_SOURCE_ROWS = {
+    "171-3-14-6-sentinel", "171-3-3-4-sentinel", "171-3-3-5-sentinel", "171-3-4-1-intune",
+    "53-au-6-sentinel", "53-ia-5-entra", "53-ir-4-sentinel", "53-si-4-sentinel",
+    "csf-de-ae-02-sentinel", "csf-de-ae-03-sentinel", "csf-de-cm-01-sentinel",
+    "csf-id-am-01-intune", "csf-pr-aa-01-entra", "csf-pr-aa-02-entra",
+    "csf-rs-mi-01-02-sentinel", "dpr-j35-intune", "dpr-j38-mdc", "dpr-j40-sentinel",
+    "gdpr-32-1-b-sentinel", "gdpr-32-1-d-sentinel", "gdpr-33-34-sentinel",
+    "glba-314-4-c2-intune", "glba-314-4-c8-sentinel", "glba-314-4-d-sentinel",
+    "glba-314-4-h-sentinel", "hipaa-308-a1-d-sentinel", "hipaa-308-a5-b-mdc",
+    "hipaa-310-d1-intune", "iso-a-5-17-entra", "iso-a-5-25-sentinel",
+    "iso-a-5-26-sentinel", "iso-a-5-9-intune", "iso-a-8-16-sentinel", "iso-a-8-7-mdc",
+    "pci-10-4-1-sentinel", "pci-10-7-2-sentinel", "pci-8-2-1-entra",
+    "soc2-cc6-8-defender", "soc2-cc6-8-mdc", "soc2-cc7-2-sentinel",
+    "soc2-cc7-3-sentinel", "soc2-cc7-4-sentinel",
+}
+
+
+def reverified_license_strings():
+    """The literal license strings governed by a constant re-verified on 2026-07-19."""
+    dicts = {"LIC": LIC, "ENTRA_LIC": ENTRA_LIC, "INTUNE_LIC": INTUNE_LIC,
+             "DEFENDER_LIC": DEFENDER_LIC, "SENTINEL_LIC": SENTINEL_LIC, "MDC_LIC": MDC_LIC}
+    out = set()
+    for dict_name, key in REVERIFIED_LIC_KEYS:
+        value = dicts[dict_name][key]
+        assert value, f"REVERIFIED_LIC_KEYS names an empty constant: {dict_name}[{key!r}]"
+        out.add(value)
+    return out
+
+# ---------------------------------------------------------------------------
 # Product dimension (platform generalization, 2026-07-17).
 # PRODUCTS = products that HAVE mapping rows in the atlas. Seeded with Purview only.
 # RELATED_PRODUCTS = Microsoft products that rows may reference as dependencies
