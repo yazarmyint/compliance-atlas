@@ -288,7 +288,7 @@ ROWS += [
        "Directly enforces approved authorizations at the identity/application layer: the primary AC-3 mechanism. Data-layer enforcement on content is the Purview seam (existing 53-ac-3 row).",
        "Conditional Access policy set; RBAC role assignments",
        "Sign-in grant/block evidence; authorization-enforcement logs",
-       [rel("purview", "contributing", "Sensitivity-label encryption enforces data-layer authorization on labelled content", "Information Protection")],
+       [rel("purview", "contributing", "Sensitivity-label encryption enforces data-layer authorization on labeled content", "Information Protection")],
        "Access enforcement in non-Entra systems; network ACLs",
        "Direct Support", "High",
        ENTRA_LIC["ca"],

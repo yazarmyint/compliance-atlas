@@ -20,7 +20,7 @@ and pending re-checks that later sessions depend on; keep their wording intact w
   (AUDIT-FINDINGS §23). **The trigger:** once the classic solutions leave the portal, collapse `dspm_ai` into `dspm`,
   fold `GOV["dspm_ai"]` into the unified GCC High note, and drop the "(classic; converging into DSPM)" gloss from
   `SOLUTIONS["DSPM for AI"]`. That is a row-modeling change (`purview_solution` on `csf-de-cm-03-ai` and the
-  `also_involves` entry on `gdpr-35`), so it needs a session authorised to touch protected fields.
+  `also_involves` entry on `gdpr-35`), so it needs a session authorized to touch protected fields.
 - **Intune licensing restructure (July 2026 — in effect, documentation still catching up)**: Suite capabilities are now
   distributed into Microsoft 365 tiers (E3: Plan 2 + Remote Help + Advanced Analytics; E5/E7: adds EPM, Cloud PKI, EAM).
   Confirmed live 2026-07-20 and `INTUNE_LIC["epm"]` was rewritten to the present tense. **Still pending:** the
@@ -39,7 +39,7 @@ and pending re-checks that later sessions depend on; keep their wording intact w
 - **Microsoft Defender Suite naming**: the SKU formerly called Microsoft 365 E5 Security is now **Microsoft Defender
   Suite**, with EDU/GOV/FLW variants plus Microsoft Defender + Purview Suite FLW. All six `DEFENDER_LIC` strings were
   re-derived 2026-07-19 and carry the "(formerly Microsoft 365 E5 Security)" gloss so holders of older paperwork still
-  recognise it. Drop the gloss once the old name has fully left circulation.
+  recognize it. Drop the gloss once the old name has fully left circulation.
 - **MDVM add-on in GCC High/DoD**: the add-on trial is unavailable there; confirm purchase availability for gov
   tenants before relying on MDVM-premium capabilities in CMMC assessments.
 - Defender family renames are frequent (MTP → M365 Defender → Defender XDR; MCAS → Defender for Cloud Apps); re-check

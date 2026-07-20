@@ -77,10 +77,10 @@ ROWS = [
     row("iso-a-5-13", "A.5.13", "A.5 Organizational",
         "Label information per the classification scheme so handling requirements are visible.",
         "Information Protection", "Sensitivity labels apply visual marking (header/footer/watermark) and embedded metadata that travels with the item",
-        "Directly implements labelling: persistent, machine-readable classification metadata plus human-readable markings on documents and emails.",
+        "Directly implements labeling: persistent, machine-readable classification metadata plus human-readable markings on documents and emails.",
         "Content-marking configuration per label tier",
-        "Labelled-item counts and label-change events (Activity explorer)",
-        "Labelling procedures for physical and non-M365 digital media",
+        "Labeled-item counts and label-change events (Activity explorer)",
+        "Labeling procedures for physical and non-M365 digital media",
         "Direct Support", "High", LIC["labels_manual"], None,
         [ISO, URLS["labels"]]),
 
@@ -216,7 +216,7 @@ ROWS = [
 
     row("iso-a-8-15", "A.8.15", "A.8 Technological",
         "Produce, protect, and analyze logs of activities, exceptions, and events.",
-        "Audit", "Unified audit log across M365 workloads; Audit (Premium) retention (1-yr default, 10-yr add-on) and crucial events; Activity explorer for labelled-data activity",
+        "Audit", "Unified audit log across M365 workloads; Audit (Premium) retention (1-yr default, 10-yr add-on) and crucial events; Activity explorer for labeled-data activity",
         "Directly implements logging for M365 user/admin/data activity with tamper-resistant, exportable records. Estate-wide logging (servers, network, apps) requires the SIEM layer.",
         "Audit enabled; audit retention policies configured",
         "Unified audit log extracts; retention policy inventory",

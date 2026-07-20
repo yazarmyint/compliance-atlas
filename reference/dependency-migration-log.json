@@ -186,11 +186,11 @@
  },
  {
   "id": "iso-a-5-13",
-  "original": "Labelling procedures for physical and non-M365 digital media",
+  "original": "Labeling procedures for physical and non-M365 digital media",
   "related": [],
-  "external": "Labelling procedures for physical and non-M365 digital media",
+  "external": "Labeling procedures for physical and non-M365 digital media",
   "flagged": [
-   "Labelling procedures for physical and non-M365 digital media"
+   "Labeling procedures for physical and non-M365 digital media"
   ]
  },
  {
@@ -1443,9 +1443,9 @@
  },
  {
   "id": "gdpr-32-1-a",
-  "original": "Application/database encryption; pseudonymisation tooling; key management",
+  "original": "Application/database encryption; pseudonymization tooling; key management",
   "related": [],
-  "external": "Application/database encryption; pseudonymisation tooling; key management",
+  "external": "Application/database encryption; pseudonymization tooling; key management",
   "flagged": []
  },
  {

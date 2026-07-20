@@ -118,9 +118,11 @@ BRAND = {
     # Bumped 2.0.0 -> 2.9.0 for the first public release (PR-045). 2.0.0 was set at the platform
     # generalization and never moved through the eight milestones after it; CHANGELOG.md backfills
     # those from the audit record and applies the versioning policy to them retroactively, which is
-    # what produces 2.9.0. This session is a MINOR bump on 2.8.1 under that policy: features and
+    # what produces 2.9.0. 2.9.0 was a MINOR bump on 2.8.1 under that policy: features and
     # industry lenses added, no data-model or product-scope change.
-    "atlas_version": "2.9.0",
+    # 2.9.1 is a PATCH: American English unified across rendered text. Row prose changed in 53
+    # places, no claim did — no coverage, confidence, source, or last_verified field was touched.
+    "atlas_version": "2.9.1",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -177,7 +179,7 @@ META = {
     # this is a one-person project and pretending otherwise would be the dishonest option.
     "reverification_policy": ("Every row carries the date its claims were last checked against a live source. "
                               "Full re-verification passes are run at least twice a year, and targeted ones whenever a "
-                              "diarised change lands — a framework revision, a Microsoft rename, a licensing restructure. "
+                              "diarized change lands — a framework revision, a Microsoft rename, a licensing restructure. "
                               "This is a single-maintainer project, so treat those dates as the real currency signal "
                               "rather than any assumption that the whole atlas is refreshed continuously."),
     "footer_lines": FOOTER_LINES,

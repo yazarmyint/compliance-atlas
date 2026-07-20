@@ -15,7 +15,7 @@ Two things this exists to catch that a plain 200-check does not:
 
 1. Redirect drift. Microsoft retires redirects eventually, and a redirect often means the
    cited page was consolidated into another article, which degrades the citation even while
-   it still resolves. Locale insertion (/en-us/) is normalised away because it is noise.
+   it still resolves. Locale insertion (/en-us/) is normalized away because it is noise.
 
 2. False failures from rate limiting. learn.microsoft.com returns 429 under parallel load;
    a naive 12-way sweep produced 40 spurious failures, all of which returned 200 on serial
