@@ -19,6 +19,14 @@ who it was for. This is why 2.10.0 was a MINOR — it added `meta.maintenance` t
 which is consumer-visible — while the runbook that shipped alongside it would have been a PATCH on its
 own.
 
+**Where a bump is argued from consequence, that argument is scoped to `meta.*`.** 2.10.1 removed a
+published key, `meta.generated`, and was sorted PATCH on the grounds that no realistic consumer was
+relying on it. That reasoning is admissible **only for the shape of the `meta.*` namespace**, whose
+keys describe the artifact rather than form part of it. Any shape change to **rows, to claims, or to
+the dataset model is MAJOR unconditionally** — no argument about how few consumers exist, how recently
+a field shipped, or how little the field mattered is admitted there. 2.10.1 is not a precedent for
+removing a row-level field, and may not be cited as one.
+
 Two things this deliberately does **not** track. A rebuild that changes no content does not move the version —
 the footer's "built" timestamp moves instead, which is why the two are shown separately. And the per-row
 `last_verified` dates, not the version, are the authoritative currency signal for any individual claim.

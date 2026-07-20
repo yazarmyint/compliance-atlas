@@ -2647,8 +2647,22 @@ weeks, the artifact itself has been public for two days, and a 3.0.0 on an atlas
 move would tell every reader that something big changed when nothing did.
 
 Recorded as an **owner decision taken at the merge gate**, with the argument put both ways and a
-recommendation attached rather than a resolution. The version shipped in this branch reflects that
-decision; see CHANGELOG for which way it went.
+recommendation attached rather than a resolution.
+
+**Decided: PATCH, 2.10.1 — and the precedent is scoped so it cannot travel.** The owner accepted the
+consequence-based reading and bounded it in the same breath. Consequence-based versioning applies to
+**`meta.*` namespace shape changes only**, where the keys describe the artifact rather than form part
+of it. Any shape change to **rows, to claims, or to the dataset model is MAJOR unconditionally**, and
+**no consumer-population argument is admitted** there — not "nobody was reading it", not "it only
+shipped last week", not "it carried no claim". Those are precisely the arguments that won here, and
+they are ruled out where the data itself is at stake.
+
+The scoping matters more than the decision it qualifies. The reasoning in this section is the kind
+that generalizes if nobody stops it: every removal looks harmless to whoever is making it, and a
+precedent that a published key can be dropped on a judgement about who was probably reading it would,
+applied to a row field, let the dataset's shape change under consumers with a PATCH to warn them. The
+rule is now in the versioning policy in `CHANGELOG.md`, not only here, because that is the document a
+future session reads before choosing a bump. **§27.4 is not citable for a row-level removal.**
 
 ### 27.5 Gate results
 
