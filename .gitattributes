@@ -16,6 +16,12 @@
 # diff. This is what makes `git diff` usable as a drift check alongside the existing
 # ledgers.
 #
+# That drift check is defined on compliance-atlas.json ONLY, and it is strict: since
+# PR-057 the dataset carries nothing time-derived, so a content-free rebuild leaves it
+# byte-identical and zero diff lines are tolerated. compliance-atlas.html is different
+# and deliberately so — build_html.py stamps a build timestamp into it, so it diffs on
+# every rebuild. That is by design, not drift; do not "fix" it.
+#
 # Note this DOES change the on-disk line endings of the generated artifacts at the
 # next checkout. That is safe: the drift gates compare parsed JSON field values, not
 # raw file bytes, and both artifacts are regenerable from build/.

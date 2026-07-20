@@ -41,7 +41,6 @@
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it.",
    "Atlas content © 2026 Yazar, licensed CC BY 4.0; the build code is MIT. Reuse and adapt it freely with attribution."
   ],
-  "generated": "2026-07-20T13:19:14",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",

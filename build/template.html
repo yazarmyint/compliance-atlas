@@ -862,7 +862,9 @@ function vAbout(){
     <p>${verifiedRange() ? esc(verifiedRange().replace(/^rows /, "Rows currently in the atlas were ")) + "." : ""}
       ${esc(META.reverification_policy || "")}</p>
     <p>The <b>built</b> timestamp in the footer is a different thing: it is when this page was last generated, and
-      it moves on every rebuild whether or not any content changed. The version number above it is what tells you
+      it moves on every rebuild whether or not any content changed. It belongs to this page rather than to the
+      data behind it — <span class="mono">compliance-atlas.json</span> carries no timestamp at all, so a rebuild
+      that changes no content leaves the dataset byte-identical. The version number above it is what tells you
       the content changed — you are reading version <b>${esc(META.brand.atlas_version)}</b>, and the
       ${P.changelog_url ? `<a href="${esc(P.changelog_url)}">changelog</a>` : "changelog"} records what moved in
       each one, including corrections made after a reader reported them.</p>
@@ -1007,8 +1009,13 @@ document.getElementById("footVersion").innerHTML =
   `Version ${esc(META.brand.atlas_version)}<span class="sep" aria-hidden="true">·</span>` +
   `<span class="facts">${ROWS.length} rows · ${Object.keys(FW).length} frameworks · ` +
   `${plural(PROD_ORDER.length, "product")} · per-row verification dates govern currency</span>`;
+/* The build timestamp is stamped in here by build_html.py at generation time, not read from the
+   dataset. compliance-atlas.json deliberately carries nothing time-derived, so a content-free
+   rebuild leaves it byte-identical (PR-057). This file is the one that moves on every rebuild —
+   by design; the drift check is defined on the JSON, not on the HTML. */
+const BUILT_AT = "__BUILT_AT__";
 document.getElementById("footMeta").textContent =
-  `Built ${META.generated} from compliance-atlas.json. A rebuild moves this timestamp whether or not any content changed.`;
+  `Built ${BUILT_AT} from compliance-atlas.json. A rebuild moves this timestamp whether or not any content changed.`;
 
 render();
 </script>

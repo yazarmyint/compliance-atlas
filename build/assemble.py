@@ -190,7 +190,10 @@ META = {
                               "This is a single-maintainer project, so treat those dates as the real currency signal "
                               "rather than any assumption that the whole atlas is refreshed continuously."),
     "footer_lines": FOOTER_LINES,
-    "generated": None,  # set at assemble time
+    # No build timestamp here, deliberately (PR-057). Nothing in compliance-atlas.json is
+    # time-derived, so a rebuild with no content change produces a strictly empty git diff on it
+    # and the diff becomes a zero-tolerance drift check. The footer's "Built …" line is unchanged
+    # as a feature; build_html.py stamps that timestamp into the HTML at generation time instead.
     "default_last_verified": VERIFIED_DATE,
     "product_scope": list(PRODUCTS.keys()),
     "licensing_models": {
@@ -519,8 +522,7 @@ def main():
     description = DESCRIPTION.format(tagline=BRAND["tagline"], rows=len(rows),
                                      frameworks=len(frameworks), products=len(PRODUCTS))
 
-    meta = dict(META, generated=datetime.datetime.now().isoformat(timespec="seconds"),
-                verified_range=verified_range, description_meta=description)
+    meta = dict(META, verified_range=verified_range, description_meta=description)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
