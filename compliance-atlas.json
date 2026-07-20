@@ -14,7 +14,7 @@
    "Framework and standard names are the property of their respective owners and are used for identification only.",
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it."
   ],
-  "generated": "2026-07-19T20:58:55",
+  "generated": "2026-07-19T20:59:28",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
@@ -573,7 +573,7 @@
    "compliance_manager_template": {
     "exists": true,
     "name": "NIST CSF 2.0 (premium)",
-    "note": "Verified on the Compliance Manager regulations list 2026-07-16 (legacy NIST CSF 1.1 template also listed).",
+    "note": "Verified on the Compliance Manager regulations list 2026-07-19 (a legacy entry named simply \"NIST CSF\", without a version, is also listed).",
     "source": "https://learn.microsoft.com/purview/compliance-manager-regulations-list"
    },
    "domains": [
