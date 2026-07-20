@@ -3002,3 +3002,29 @@ non-empty JSON diff — it is not a text edit to the template.** Owner concurred
 `<summary>` is focusable and toggles on Enter and Space with no JS, and it inherits the existing
 focus-ring and print-expansion CSS. axe was run over both the standard and filtered route suites with
 the new disclosures present — results in §29.4.
+
+### 29.2 The error-report invitation
+
+**Repo state checked first, because one outcome was a stop condition.** The item required the GitHub
+Issues tab to be enabled; if it 404'd, that is a repo setting only the owner can flip and the work
+would have halted. It is enabled: `gh repo view` reports `hasIssuesEnabled: true`, `visibility:
+PUBLIC`; the Pages deployment is `status: built`; and a live fetch of
+`https://github.com/yazarmyint/compliance-atlas/issues` returns **200**. So the invitation proceeds and
+its link resolves.
+
+**Footer — one line added, one nav link removed, net one issue link.** A feedback invitation now sits
+just beneath the footer nav: *"Spotted an error? **Open an issue** — corrections are recorded."* It is
+rendered from `META.project.issues_url` (never hand-typed) and worded to match the about page's
+corrections section, so the atlas asks for feedback in one voice. The footer nav previously carried a
+`Report a correction` link to the same URL; it was **removed from the nav** so the footer has exactly
+one issue link, presented as a call to action rather than a bare reference item. The nav keeps its
+three reference links (About, Source, Changelog). Verified in light and dark.
+
+**About — already satisfied, left unchanged, and this is deliberate.** The about page's "Who maintains
+it, and how to correct it" section already ends in a substantive, in-voice invitation (PR-044): *"If
+you find a mis-mapped control, a licensing claim that no longer holds, or a dead citation, please open
+an issue — fixes are recorded so you can see that a report landed."* That **is** the "one in About."
+Adding a second, shorter invitation to the same page would duplicate it and read worse, so nothing was
+added there. The item's About requirement is met by existing content; the wording was checked against
+the new footer line for voice consistency. Recorded so it is clear the omission is a decision, not a
+miss.
