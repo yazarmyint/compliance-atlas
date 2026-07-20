@@ -3,15 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Compliance Atlas / Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source. are substituted from meta.brand.title and
-     meta.description_meta by build_html.py, so crawlers see them without running the script.
-     og:image is deliberately omitted: it would require an absolute hosted URL and break the
-     zero-external-asset property that makes the file:// copy fully self-contained. -->
+<!-- The title, description and canonical URL below are substituted by build_html.py from
+     meta.brand.title, meta.description_meta and build_html.CANONICAL_URL, so crawlers see them
+     without running the script. (Deliberately not naming the substitution tokens here: the
+     replacement is a plain string swap and would rewrite them inside this comment too.)
+     og:image is deliberately omitted: it would require fetching a hosted asset and break the
+     zero-external-asset property that makes the file:// copy fully self-contained. The canonical
+     URL is an absolute string in the markup, not a fetch, so it costs the offline copy nothing —
+     a file:// reader simply carries a pointer back to the hosted original. -->
 <title>Compliance Atlas</title>
 <meta name="description" content="Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source.">
+<link rel="canonical" href="https://yazarmyint.github.io/compliance-atlas/compliance-atlas.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Compliance Atlas">
 <meta property="og:description" content="Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source.">
+<meta property="og:url" content="https://yazarmyint.github.io/compliance-atlas/compliance-atlas.html">
 <!-- Favicon: the ¶ brand glyph (%C2%B6) in the accent ink on paper, inline so nothing is fetched. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%23faf7f0'/%3E%3Ctext x='32' y='48' text-anchor='middle' font-family='Georgia,serif' font-size='46' font-weight='600' fill='%237c2d12'%3E%C2%B6%3C/text%3E%3C/svg%3E">
 <style>
