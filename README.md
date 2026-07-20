@@ -36,9 +36,9 @@ identically to the hosted copy — which makes it usable inside an air-gapped or
 restricted-egress environment. `compliance-atlas.json` ships alongside it for anyone consuming the
 dataset directly.
 
-## Licence
+## License
 
-| What | Licence |
+| What | License |
 |---|---|
 | **Build code** — everything in `build/` | MIT — [`LICENSE`](LICENSE) |
 | **Atlas content** — rows, taxonomies, framework/product/industry metadata, the generated `.json` and `.html`, and this documentation | CC BY 4.0 — [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md) |
