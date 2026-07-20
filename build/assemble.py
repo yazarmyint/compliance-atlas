@@ -5,8 +5,27 @@ Add a product: see docs/AUTHORING.md "Add a product" — products-map entry in c
 product=<id>, solutions registered in SOLUTIONS and the product's solutions list.
 
 Canonical file renamed 2026-07-17: purview-compliance-map.json -> compliance-atlas.json (platform generalization)."""
-import importlib, json, os, re, sys, datetime
+import importlib, json, os, re, shutil, sys, datetime
 from urllib.parse import urlparse
+
+# ---- stale-bytecode guard (PR-058). MUST stay above the sibling imports below. ----
+# Python validates cached bytecode on (source mtime truncated to whole seconds, source size), so a
+# same-length edit written in the same second as the previous build leaves a .pyc that validates as
+# fresh. The build then regenerates the artifact from OLD constants -- silently, with exit 0. That
+# is not hypothetical: it was hit and reproduced against a date edit in common.py (AUDIT-FINDINGS
+# §26.8), and a re-verification pass makes exactly that kind of edit.
+#
+# The cache is therefore removed outright, before the first sibling import. Setting
+# sys.dont_write_bytecode alone would NOT close this: it stops new .pyc files being written, not
+# existing stale ones being loaded, which is the failure above exactly. It is set as well so the
+# purge does not simply re-litter the tree each run.
+#
+# Deliberately inline rather than factored into a shared build/ module: any such module would have
+# to be imported to run, and that import is itself served from the cache this code exists to
+# distrust. Six duplicated lines beat a guard that depends on what it is guarding against.
+sys.dont_write_bytecode = True
+shutil.rmtree(os.path.join(os.path.dirname(os.path.abspath(__file__)), "__pycache__"),
+              ignore_errors=True)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
@@ -129,7 +148,7 @@ BRAND = {
     # policy's bands are written around readers, and this addition is invisible to one; the
     # discriminator that actually decides it is compatibility, and no consumer must change code
     # for an added key. Reasoning in full in CHANGELOG.md and AUDIT-FINDINGS §26.
-    "atlas_version": "2.10.0",
+    "atlas_version": "2.10.1",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -190,7 +209,10 @@ META = {
                               "This is a single-maintainer project, so treat those dates as the real currency signal "
                               "rather than any assumption that the whole atlas is refreshed continuously."),
     "footer_lines": FOOTER_LINES,
-    "generated": None,  # set at assemble time
+    # No build timestamp here, deliberately (PR-057). Nothing in compliance-atlas.json is
+    # time-derived, so a rebuild with no content change produces a strictly empty git diff on it
+    # and the diff becomes a zero-tolerance drift check. The footer's "Built …" line is unchanged
+    # as a feature; build_html.py stamps that timestamp into the HTML at generation time instead.
     "default_last_verified": VERIFIED_DATE,
     "product_scope": list(PRODUCTS.keys()),
     "licensing_models": {
@@ -519,8 +541,7 @@ def main():
     description = DESCRIPTION.format(tagline=BRAND["tagline"], rows=len(rows),
                                      frameworks=len(frameworks), products=len(PRODUCTS))
 
-    meta = dict(META, generated=datetime.datetime.now().isoformat(timespec="seconds"),
-                verified_range=verified_range, description_meta=description)
+    meta = dict(META, verified_range=verified_range, description_meta=description)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

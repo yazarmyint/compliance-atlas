@@ -4,7 +4,17 @@ Never hand-edit the output file — edit template.html or the row modules, then 
 
 Renamed 2026-07-17 (platform generalization): reads compliance-atlas.json (was
 purview-compliance-map.json) and writes compliance-atlas.html (was purview-compliance-map.html)."""
-import html, json, os, re
+import datetime, html, json, os, re, shutil, sys
+
+# ---- stale-bytecode guard (PR-058). MUST stay above any future sibling import. ----
+# This entry point imports no build/ module today -- it reads the JSON and the template as files --
+# so the guard is preventive here, not load-bearing. It is present because the constraint the
+# project wants is "no build entry point can execute against stale cached bytecode", and that has
+# to hold for the entry point someone later adds a `from common import ...` to. See the full
+# explanation in assemble.py and AUDIT-FINDINGS §26.8.
+sys.dont_write_bytecode = True
+shutil.rmtree(os.path.join(os.path.dirname(os.path.abspath(__file__)), "__pycache__"),
+              ignore_errors=True)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON_PATH = os.path.join(ROOT, "compliance-atlas.json")
@@ -78,16 +88,31 @@ def main():
     # island at runtime, so crawlers that do not execute the script still see it. Substituted before
     # the payload goes in, so dataset content can never be mistaken for a marker.
     meta = data["meta"]
+    # The footer's build timestamp is produced here, not read from the dataset (PR-057). It used to
+    # arrive as meta.generated, which made compliance-atlas.json move on every rebuild and cost the
+    # project a strict empty-diff drift check. Same format as before — isoformat to the second — so
+    # the rendered footer line is unchanged. Consequence, and it is intended: compliance-atlas.html
+    # still carries a moving timestamp and diffs on every rebuild. The drift check is defined on the
+    # JSON, not the HTML.
+    built_at = datetime.datetime.now().isoformat(timespec="seconds")
+    # Substituted into a JS string literal in template.html, so the format is asserted rather than
+    # escaped: an ISO timestamp cannot carry a quote or a backslash out of the assertion.
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", built_at), built_at
     for token, value in (("__BRAND_TITLE__", meta["brand"]["title"]),
                          ("__META_DESCRIPTION__", meta["description_meta"]),
                          ("__CANONICAL_URL__", CANONICAL_URL)):
         assert token in tpl, f"template is missing the {token} marker"
         tpl = tpl.replace(token, html.escape(value, quote=True))
+    # Substituted unescaped: this one lands inside a script, where HTML entities would render
+    # literally rather than decode.
+    assert "__BUILT_AT__" in tpl, "template is missing the __BUILT_AT__ marker"
+    tpl = tpl.replace("__BUILT_AT__", built_at)
     doc = tpl.replace(marker, payload)
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(doc)
     print(f"Wrote {OUT}")
     print(f"  rows embedded: {len(data['rows'])} | frameworks: {len(data['frameworks'])} | products: {len(data.get('products',{}))} | size: {len(doc)/1024:.0f} KB")
+    print(f"  built at: {built_at} (stamped into the HTML; the JSON carries no timestamp)")
     write_index(meta)
 
 def write_index(meta):
