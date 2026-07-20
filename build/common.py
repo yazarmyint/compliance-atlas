@@ -32,7 +32,7 @@ PRODUCTS = {
         # Family name is "Microsoft Entra"; the core directory is "Microsoft Entra ID" (formerly Azure AD — retired). Verified 2026-07-17.
         "official_name": "Microsoft Entra",
         "short_name": "Entra",
-        "naming_source": "https://learn.microsoft.com/entra/fundamentals/whatis",
+        "naming_source": "https://learn.microsoft.com/entra/fundamentals/what-is-entra",
         "solutions": [],  # derived at import bottom from SOLUTIONS entries tagged product="entra"
         "licensing_source": "https://learn.microsoft.com/entra/fundamentals/licensing",
         "default_licensing_model": "per_user",
@@ -441,7 +441,7 @@ SENTINEL_SOLUTIONS = {
                   "correlation, ML anomaly detections, MITRE ATT&CK mapping, and event-to-incident promotion across every "
                   "connected source. Boundary: coverage follows the connector estate, and Defender XDR remains the native "
                   "detection engine inside Microsoft workloads"),
-        "url": "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+        "url": "https://learn.microsoft.com/azure/sentinel/threat-detection",
     },
     "Incident Management & Investigation": {
         "product": "sentinel",
@@ -596,10 +596,10 @@ ENTRA_LIC = {
 }
 
 ENTRA_URLS = {
-    "entra_id": "https://learn.microsoft.com/entra/fundamentals/whatis",
+    "entra_id": "https://learn.microsoft.com/entra/fundamentals/what-is-entra",
     "ca": "https://learn.microsoft.com/entra/identity/conditional-access/overview",
     "mfa": "https://learn.microsoft.com/entra/identity/authentication/concept-mfa-howitworks",
-    "auth_methods": "https://learn.microsoft.com/entra/identity/authentication/concept-authentication-methods",
+    "auth_methods": "https://learn.microsoft.com/entra/identity/authentication/overview-authentication",
     "auth_strengths": "https://learn.microsoft.com/entra/identity/authentication/concept-authentication-strengths",
     "id_protection": "https://learn.microsoft.com/entra/id-protection/overview-identity-protection",
     "pim": "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure",
@@ -661,7 +661,7 @@ INTUNE_URLS = {
     "app_dp_framework": "https://learn.microsoft.com/intune/app-management/protection/data-protection-framework",
     "update_rings": "https://learn.microsoft.com/intune/device-updates/windows/manage-update-rings",
     "windows_updates": "https://learn.microsoft.com/intune/device-updates/windows/",
-    "manage_devices": "https://learn.microsoft.com/intune/fundamentals/manage-devices",
+    "manage_devices": "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details",
     "autopatch": "https://learn.microsoft.com/windows/deployment/windows-autopatch/overview/windows-autopatch-overview",
     "licensing": "https://learn.microsoft.com/intune/fundamentals/licensing",
     "gov": "https://learn.microsoft.com/intune/fundamentals/government-service",
@@ -735,7 +735,7 @@ DEFENDER_URLS = {
     "mde_p1": "https://learn.microsoft.com/defender-endpoint/defender-endpoint-plan-1",
     "ngav": "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows",
     "edr": "https://learn.microsoft.com/defender-endpoint/overview-endpoint-detection-response",
-    "asr": "https://learn.microsoft.com/defender-endpoint/overview-attack-surface-reduction",
+    "asr": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-overview",
     "device_control": "https://learn.microsoft.com/defender-endpoint/device-control-overview",
     "network_protection": "https://learn.microsoft.com/defender-endpoint/network-protection",
     "web_content_filtering": "https://learn.microsoft.com/defender-endpoint/web-content-filtering",
@@ -816,7 +816,7 @@ SENTINEL_URLS = {
     "cef_syslog": "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama",
     "xdr_connector": "https://learn.microsoft.com/azure/sentinel/connect-microsoft-365-defender",
     "o365_connector": "https://learn.microsoft.com/azure/sentinel/connect-services-api-based",
-    "analytics": "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "analytics": "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "nrt": "https://learn.microsoft.com/azure/sentinel/near-real-time-rules",
     "fusion": "https://learn.microsoft.com/azure/sentinel/fusion",
     "anomalies": "https://learn.microsoft.com/azure/sentinel/soc-ml-anomalies",
@@ -824,7 +824,7 @@ SENTINEL_URLS = {
     "incident_tasks": "https://learn.microsoft.com/azure/sentinel/incident-tasks",
     "soc_metrics": "https://learn.microsoft.com/azure/sentinel/manage-soc-with-incident-metrics",
     "automation_rules": "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules",
-    "playbooks": "https://learn.microsoft.com/azure/sentinel/automate-responses-with-playbooks",
+    "playbooks": "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks",
     "ueba": "https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics",
     "hunting": "https://learn.microsoft.com/azure/sentinel/hunting",
     "search": "https://learn.microsoft.com/azure/sentinel/search-jobs",
@@ -923,7 +923,7 @@ MDC_URLS = {
     "os_misconfig": "https://learn.microsoft.com/azure/defender-for-cloud/operating-system-misconfiguration",
     "storage": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-introduction",
     "storage_sensitivity": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-data-sensitivity",
-    "malware_scan": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-malware-scan",
+    "malware_scan": "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning",
     "containers": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-containers-introduction",
     "databases": "https://learn.microsoft.com/azure/defender-for-cloud/tutorial-enable-databases-plan",
     "sql": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-sql-introduction",

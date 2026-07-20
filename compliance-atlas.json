@@ -14,7 +14,7 @@
    "Framework and standard names are the property of their respective owners and are used for identification only.",
    "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it."
   ],
-  "generated": "2026-07-19T20:59:28",
+  "generated": "2026-07-19T21:04:38",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",
@@ -78,7 +78,7 @@
    "id": "entra",
    "official_name": "Microsoft Entra",
    "short_name": "Entra",
-   "naming_source": "https://learn.microsoft.com/entra/fundamentals/whatis",
+   "naming_source": "https://learn.microsoft.com/entra/fundamentals/what-is-entra",
    "solutions": [
     "Conditional Access & Authentication",
     "Entra ID Protection",
@@ -330,7 +330,7 @@
    "product": "sentinel",
    "full_name": "Microsoft Sentinel analytics (scheduled/NRT rules, Fusion correlation, ML anomalies)",
    "scope": "KQL scheduled and near-real-time analytics rules, Microsoft security rules, Fusion multistage correlation, ML anomaly detections, MITRE ATT&CK mapping, and event-to-incident promotion across every connected source. Boundary: coverage follows the connector estate, and Defender XDR remains the native detection engine inside Microsoft workloads",
-   "url": "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+   "url": "https://learn.microsoft.com/azure/sentinel/threat-detection"
   },
   "Incident Management & Investigation": {
    "product": "sentinel",
@@ -1412,7 +1412,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.microsoft.com/en-us/procurement/sspa",
-    "https://learn.microsoft.com/intune/fundamentals/manage-devices",
+    "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details",
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
@@ -1670,7 +1670,7 @@
     "https://www.microsoft.com/en-us/procurement/sspa",
     "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -1711,7 +1711,7 @@
     "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview",
     "https://learn.microsoft.com/azure/defender-for-cloud/integration-defender-for-endpoint",
-    "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-malware-scan"
+    "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -2629,7 +2629,7 @@
    "cloud_availability_note": "MFA and authentication methods (incl. passwordless/FIDO2, certificate-based auth): available in Azure Government (GCC/GCC High/DoD).",
    "sources": [
     "https://www.iso.org/standard/27001",
-    "https://learn.microsoft.com/entra/identity/authentication/concept-authentication-methods",
+    "https://learn.microsoft.com/entra/identity/authentication/overview-authentication",
     "https://learn.microsoft.com/entra/identity/authentication/concept-sspr-howitworks"
    ],
    "status": "verified",
@@ -2839,7 +2839,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.iso.org/standard/27001",
-    "https://learn.microsoft.com/intune/fundamentals/manage-devices"
+    "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
    "last_verified": "2026-07-17"
@@ -3493,7 +3493,7 @@
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported.",
    "sources": [
     "https://www.iso.org/standard/27001",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
@@ -3539,7 +3539,7 @@
    "sources": [
     "https://www.iso.org/standard/27001",
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules",
-    "https://learn.microsoft.com/azure/sentinel/automate-responses-with-playbooks"
+    "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -3674,7 +3674,7 @@
    "cloud_availability_note": "Azure Government feature gaps: summary rules, SOC optimization, SIEM migration, repositories, MDTI matching analytics, URL detonation, and TI GeoLocation/WhoIs enrichment are not available; scheduled/NRT/Fusion analytics, automation rules, playbooks, watchlists, and core UEBA are GA (peer/blast-radius enrichments commercial-only). The M365 E5/G5 Sentinel data-grant benefit includes USGOV_GCCHIGH and USGOV_DOD SKUs.",
    "sources": [
     "https://www.iso.org/standard/27001",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics",
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
@@ -3874,7 +3874,7 @@
    "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.iso.org/standard/27001",
-    "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-malware-scan",
+    "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning",
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview"
    ],
    "status": "verified",
@@ -4947,7 +4947,7 @@
    "sources": [
     "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022",
     "https://learn.microsoft.com/defender-endpoint/microsoft-defender-antivirus-windows",
-    "https://learn.microsoft.com/defender-endpoint/overview-attack-surface-reduction",
+    "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-overview",
     "https://learn.microsoft.com/defender-office-365/safe-attachments-about"
    ],
    "status": "verified",
@@ -5181,7 +5181,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/soc-ml-anomalies",
     "https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics"
    ],
@@ -5228,7 +5228,7 @@
    "sources": [
     "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022",
     "https://learn.microsoft.com/azure/sentinel/investigate-cases",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -5273,7 +5273,7 @@
    "sources": [
     "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022",
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules",
-    "https://learn.microsoft.com/azure/sentinel/automate-responses-with-playbooks"
+    "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -5357,7 +5357,7 @@
    "sources": [
     "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022",
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview",
-    "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-malware-scan"
+    "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -6098,7 +6098,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C",
-    "https://learn.microsoft.com/intune/fundamentals/manage-devices",
+    "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details",
     "https://learn.microsoft.com/intune/device-management/actions/"
    ],
    "status": "verified",
@@ -6352,7 +6352,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
@@ -6606,7 +6606,7 @@
    "sources": [
     "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C",
     "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-servers-overview",
-    "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-storage-malware-scan"
+    "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -7395,7 +7395,7 @@
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
     "https://learn.microsoft.com/intune/device-security/security-baselines/overview",
-    "https://learn.microsoft.com/intune/fundamentals/manage-devices"
+    "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
    "last_verified": "2026-07-17"
@@ -7916,7 +7916,7 @@
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
     "https://learn.microsoft.com/azure/sentinel/health-audit",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -7960,7 +7960,7 @@
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported. Azure Government feature gaps: summary rules, SOC optimization, SIEM migration, repositories, MDTI matching analytics, URL detonation, and TI GeoLocation/WhoIs enrichment are not available; scheduled/NRT/Fusion analytics, automation rules, playbooks, watchlists, and core UEBA are GA (peer/blast-radius enrichments commercial-only). The M365 E5/G5 Sentinel data-grant benefit includes USGOV_GCCHIGH and USGOV_DOD SKUs.",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
@@ -8090,7 +8090,7 @@
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -9240,7 +9240,7 @@
    "cloud_availability_note": "MFA and authentication methods (incl. passwordless/FIDO2, certificate-based auth): available in Azure Government (GCC/GCC High/DoD). Access reviews, entitlement management, PIM, and Lifecycle Workflows (Microsoft Entra ID Governance): available in GCC, GCC High, and DoD.",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
-    "https://learn.microsoft.com/entra/identity/authentication/concept-authentication-methods",
+    "https://learn.microsoft.com/entra/identity/authentication/overview-authentication",
     "https://learn.microsoft.com/entra/identity/authentication/concept-sspr-howitworks"
    ],
    "status": "verified",
@@ -9789,7 +9789,7 @@
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported. Azure Government feature gaps: summary rules, SOC optimization, SIEM migration, repositories, MDTI matching analytics, URL detonation, and TI GeoLocation/WhoIs enrichment are not available; scheduled/NRT/Fusion analytics, automation rules, playbooks, watchlists, and core UEBA are GA (peer/blast-radius enrichments commercial-only). The M365 E5/G5 Sentinel data-grant benefit includes USGOV_GCCHIGH and USGOV_DOD SKUs.",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
@@ -9918,7 +9918,7 @@
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules",
-    "https://learn.microsoft.com/azure/sentinel/automate-responses-with-playbooks"
+    "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -10000,7 +10000,7 @@
    "cloud_availability_note": "Sentinel in the Defender portal: all generally-available unified-SecOps features are supported in GCC, GCC High, and DoD (portal URLs security.microsoft.us / security.apps.mil); preview features are commercial-cloud only; in GCC, advanced-hunting queries spanning both Sentinel and Defender XDR tables are not supported. Azure Government feature gaps: summary rules, SOC optimization, SIEM migration, repositories, MDTI matching analytics, URL detonation, and TI GeoLocation/WhoIs enrichment are not available; scheduled/NRT/Fusion analytics, automation rules, playbooks, watchlists, and core UEBA are GA (peer/blast-radius enrichments commercial-only). The M365 E5/G5 Sentinel data-grant benefit includes USGOV_GCCHIGH and USGOV_DOD SKUs.",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama"
    ],
    "status": "verified",
@@ -10769,7 +10769,7 @@
    "sources": [
     "https://www.nist.gov/cyberframework",
     "https://learn.microsoft.com/entra/id-governance/identity-governance-overview",
-    "https://learn.microsoft.com/entra/identity/authentication/concept-authentication-methods"
+    "https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
    ],
    "status": "verified",
    "last_verified": "2026-07-17"
@@ -10798,7 +10798,7 @@
    "cloud_availability_note": "MFA and authentication methods (incl. passwordless/FIDO2, certificate-based auth): available in Azure Government (GCC/GCC High/DoD).",
    "sources": [
     "https://www.nist.gov/cyberframework",
-    "https://learn.microsoft.com/entra/identity/authentication/concept-authentication-methods"
+    "https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
    ],
    "status": "verified",
    "last_verified": "2026-07-17"
@@ -10931,7 +10931,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.nist.gov/cyberframework",
-    "https://learn.microsoft.com/intune/fundamentals/manage-devices"
+    "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
    "last_verified": "2026-07-17"
@@ -11454,7 +11454,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.nist.gov/cyberframework",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/fusion"
    ],
    "status": "verified",
@@ -11500,7 +11500,7 @@
    "sources": [
     "https://www.nist.gov/cyberframework",
     "https://learn.microsoft.com/azure/sentinel/fusion",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -11539,7 +11539,7 @@
    "sources": [
     "https://www.nist.gov/cyberframework",
     "https://learn.microsoft.com/azure/sentinel/connect-cef-syslog-ama",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -11622,7 +11622,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.nist.gov/cyberframework",
-    "https://learn.microsoft.com/azure/sentinel/automate-responses-with-playbooks",
+    "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks",
     "https://learn.microsoft.com/azure/sentinel/automate-incident-handling-with-automation-rules"
    ],
    "status": "verified",
@@ -12207,7 +12207,7 @@
    "cloud_availability_note": "MFA and authentication methods (incl. passwordless/FIDO2, certificate-based auth): available in Azure Government (GCC/GCC High/DoD).",
    "sources": [
     "https://www.pcisecuritystandards.org/document_library/",
-    "https://learn.microsoft.com/entra/fundamentals/whatis"
+    "https://learn.microsoft.com/entra/fundamentals/what-is-entra"
    ],
    "status": "verified",
    "last_verified": "2026-07-17"
@@ -12673,7 +12673,7 @@
    "sources": [
     "https://www.pcisecuritystandards.org/document_library/",
     "https://learn.microsoft.com/azure/governance/policy/samples/pci-dss-4-0",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/monitor-your-data"
    ],
    "status": "verified",
@@ -12754,7 +12754,7 @@
     "https://www.pcisecuritystandards.org/document_library/",
     "https://learn.microsoft.com/azure/governance/policy/samples/pci-dss-4-0",
     "https://learn.microsoft.com/azure/sentinel/health-audit",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -13366,7 +13366,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-C/part-314",
-    "https://learn.microsoft.com/intune/fundamentals/manage-devices"
+    "https://learn.microsoft.com/intune/device-management/inventory-and-status/device-details"
    ],
    "status": "verified",
    "last_verified": "2026-07-17"
@@ -13548,7 +13548,7 @@
     "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-C/part-314",
     "https://learn.microsoft.com/azure/sentinel/connect-data-sources",
     "https://learn.microsoft.com/azure/sentinel/identify-threats-with-entity-behavior-analytics",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -13586,7 +13586,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-C/part-314",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/health-audit"
    ],
    "status": "verified",
@@ -13632,7 +13632,7 @@
    "sources": [
     "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-C/part-314",
     "https://learn.microsoft.com/azure/sentinel/investigate-cases",
-    "https://learn.microsoft.com/azure/sentinel/automate-responses-with-playbooks"
+    "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -14698,7 +14698,7 @@
    "cloud_availability_note": null,
    "sources": [
     "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in",
+    "https://learn.microsoft.com/azure/sentinel/threat-detection",
     "https://learn.microsoft.com/azure/sentinel/connect-data-sources"
    ],
    "status": "verified",
@@ -14744,7 +14744,7 @@
    "sources": [
     "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
     "https://learn.microsoft.com/azure/sentinel/manage-soc-with-incident-metrics",
-    "https://learn.microsoft.com/azure/sentinel/detect-threats-built-in"
+    "https://learn.microsoft.com/azure/sentinel/threat-detection"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
@@ -14790,7 +14790,7 @@
    "sources": [
     "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
     "https://learn.microsoft.com/azure/sentinel/investigate-cases",
-    "https://learn.microsoft.com/azure/sentinel/automate-responses-with-playbooks"
+    "https://learn.microsoft.com/azure/sentinel/automation/automate-responses-with-playbooks"
    ],
    "status": "verified",
    "last_verified": "2026-07-18"
