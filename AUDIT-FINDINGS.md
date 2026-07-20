@@ -1296,3 +1296,194 @@ data island parses to an object equal to `compliance-atlas.json`, 378 rows.
 **Verdict: COMPLETE.** PR-043, PR-012, PR-010, PR-003, PR-014(a)(b), PR-006, PR-007 and PR-046 are resolved.
 With PR-043 cleared, **PR-001 (keyboard and screen-reader navigation) is the last remaining pre-publish
 blocker**.
+
+## 21. Keyboard and screen-reader accessibility (2026-07-19)
+
+Execution of PROJECT-REVIEW roadmap item 2 (**PR-001** navigation is inaccessible, **PR-002** the whole
+`<main>` is an `aria-live` region), plus two findings this session's tooling discovered that the review had
+missed (**PR-055** nested interactive controls, **PR-056** colour contrast). **All work is in
+`build/template.html`. No `rows_*.py` module was opened, `assemble.py` and `build_html.py` were not modified,
+and no row field changed**, proven mechanically in §21.7. With this section closed, the atlas has no
+remaining pre-publish accessibility blocker.
+
+### 21.1 Tooling established
+
+Prior sessions verified rendering with a Node DOM stub and ad-hoc headless Chrome runs. This session needed
+repeatable assertions about focus, so a harness was built on **puppeteer-core driving the installed Chrome**
+(no bundled browser download) with **axe-core 4.x**, plus `pixelmatch`/`pngjs` for render comparison and
+`pdf-lib` for real page counts. Five scripts, all run from `file://`:
+
+| Script | What it proves |
+|---|---|
+| `axe-run.mjs` | WCAG 2.1 A/AA sweep over 11 routes x 2 themes = 22 combinations |
+| `keywalk.mjs` | The seven required journeys using only Tab/Shift+Tab/Enter/Space key events |
+| `mouse.mjs` | Card and cell hit areas, hover styles, row disclosure by real mouse events |
+| `shots.mjs` + `compare.mjs` | Full-page renders and element geometry, before vs after |
+| `print.mjs` + `pages.mjs` | The beforeprint/afterprint path and A4 page counts |
+
+### 21.2 The baseline was worse than PROJECT-REVIEW recorded
+
+Running axe **before** editing anything produced **1,567 violation nodes** in two rules. PR-001 predicted the
+keyboard problem correctly, but the review, written without running a browser, could not see either of these:
+
+| Rule | Nodes | Cause |
+|---|---|---|
+| `color-contrast` (1.4.3 AA) | 907 | Six palette tokens under 4.5:1, **not flagged anywhere in PROJECT-REVIEW** |
+| `nested-interactive` (4.1.2 A) | 660 | Every row `<summary>` carried the solution chip as a link |
+
+Both were put to the owner as scoped decisions rather than absorbed silently, because each carried a real
+cost: the nesting fix removes a click affordance, and the contrast fix moves a deliberately tuned palette.
+Both were authorised. This is why the section covers four findings, not two.
+
+### 21.3 PR-001 - real, focusable, activatable navigation
+
+Every click-only navigation element is now a true link. A sweep of `onclick` across the template audited all
+eleven hits; after the change the only survivors are button behaviour (`window.print()`, expand/collapse,
+`setFwFilter`), and **zero** contain `location.hash`.
+
+- **Cards** (industry, framework on two views, product, solution) are `<a class="card">` with `display:block`.
+  The whole card remains the click target, verified by clicking **nine points** across a card including all
+  four corners and the minibar, all navigating. Each card carries an `aria-label` of its heading, so tabbing a
+  link list reads as headings rather than whole card bodies.
+- **Matrix cells** are `<td><a>` with the anchor filling the cell (measured 54x38 link in a 54x38 cell).
+  Cell links are named "row x column: n row(s)"; a bare "12" carries nothing out of context. Empty cells keep
+  the decorative dot and expose a plain "0".
+- **Table semantics**: the corner cell is a `<td>` (it heads nothing), every `<th>` carries `scope`, bottom
+  totals are `<td>`, and each table is named with `aria-label`. A visually-hidden `<caption>` was tried first
+  and rejected: Chrome reserves a border-spacing gap for the caption box even when it is absolutely positioned,
+  which pushed the table body down 2px.
+- **Brand** is an `<a href="#/">`.
+- **Skip link** is the first focusable element, revealed on focus, `position:fixed` so it cannot shift layout.
+  It moves focus itself rather than letting the browser navigate to `#app`, because **the hash router would
+  otherwise parse `app` as a route and render "not found"**. Confirmed: after activation the route is still `#/`.
+- **Focus visibility** uses the search field's focus ink on every interactive element. `--link` clears 4.5:1
+  against paper in both themes, so the ring is visible in each. It is drawn **inset** on row summaries, which
+  `details.row` would otherwise clip via its `overflow:hidden`.
+- **Non-navigation controls audited**: theme and print buttons gained accessible names with their glyphs
+  marked `aria-hidden`, and the theme button's name states what activating it will do and follows the state;
+  coverage filters gained `aria-pressed`; all buttons are `type="button"`; `<details>` summaries were already
+  native and keyboard-operable. Tabs mark the active route with `aria-current="page"`.
+
+### 21.4 PR-002 - screen-reader announcement model
+
+`aria-live` is removed from `<main>`. In its place:
+
+- Focus moves to the view's `<h1>` (`tabindex="-1"`, no visible ring) after each render, which is what actually
+  relocates a screen reader's reading cursor into the new view.
+- **Except on first paint**, where focus stays at the top of the document so the skip link is the first Tab
+  stop and nothing talks over the browser's own page-load announcement. Verified: on a fresh load the status
+  region is empty and one Tab lands on the skip link.
+- A visually-hidden `role="status" aria-live="polite"` region announces view plus content, for example
+  "NIST CSF 2.0 - 40 mappings". Row-listing views count the **rendered DOM**, so the number announced is the
+  number on screen; index views count what they list.
+- The coverage filter re-render restores focus to the button that was pressed instead of dropping it to
+  `<body>`, and re-announces: "NIST CSF 2.0 - 12 mappings, filtered to Direct Support".
+- **Loading placeholder sanity-check (requested explicitly):** it sits outside any live region and is replaced
+  before the first announcement, so it cannot be announced at all.
+
+### 21.5 PR-055 (new) - no interactive controls nested in row summaries
+
+Chips rendered inside a `<summary>` are now plain spans; the same destinations are real links in the expanded
+row body's foot line via a new `solLinks()` helper, beside the framework link already there. Collapsed rows are
+visually unchanged, because `.chip.sol` and `.chip` already set their own colour, so the anchor contributed
+nothing but a hover underline.
+
+**Accepted behaviour change:** a mouse user can no longer jump to a solution from a *collapsed* row and must
+expand it first. Chosen over restructuring `<details>`/`<summary>` into a div plus an `aria-expanded` button,
+which would have cost click-to-expand on the row body and the native `beforeprint` expansion path.
+
+### 21.6 PR-056 (new) - colour contrast meets WCAG 1.4.3 AA
+
+907 nodes reduced to six root causes, all near-misses. Each value was solved against **every** surface the
+token is actually used on (card, paper, paper-2, heat-0), not just one:
+
+| Token | Was | Now | Worst ratio after |
+|---|---|---|---|
+| `--ink-3` light | `#8a8f99` (3.03) | `#656870` | 4.59 |
+| `--ink-3` dark | `#7c818c` (3.97) | `#8a8f99` | 4.54 |
+| `--evidence` light | `#96690f` (4.13) | `#8d630e` | 4.57 |
+| `--evidence` dark | `#b3861f` (4.27) | `#b68b28` | 4.52 |
+| `--direct` dark | `#35a370` (4.30) | `#3da776` | 4.52 |
+| `--nocover` light | `#6e6a63` (4.47) | `#6d6962` | 4.55 |
+
+The **matrix heat ramp** needed more than a nudge and is the one genuine design change in this session. Its
+figures flipped from `--ink` to `--heat-txt-hi` above 55% of max, and both sides of that flip failed. Solving
+it showed **no threshold can work at the old 86% ramp top**: past roughly 62% the mixed background lands in a
+luminance band where neither a near-black nor a near-white figure reaches 4.5:1. The ramp is therefore capped
+at **55% `--partial`** and every cell keeps a single `--ink` figure; `--heat-txt-hi` is deleted as dead. The
+`.6` exponent is unchanged so the low end still separates. Worst case across the whole ramp is 5.53 light and
+4.70 dark, and 55% is the ceiling: 58% already fails at 4.48. Empty cells move from `--ink-3` at 0.55 opacity
+(1.66:1) to `--ink` at 0.7 (5.29 light / 6.32 dark) and stay recessive.
+
+### 21.7 Gate
+
+**1. Dataset did not move.** `git diff` on `compliance-atlas.json` against the pre-session commit shows
+**one changed line, `meta.generated`**. Parsed deep-equality confirms `rows` identical (378 == 378), and
+`products`, `related_products`, `solutions`, `frameworks` and `industries` identical, with no `meta` key added
+or removed. JSON to HTML reconcile: the embedded data island parses to an object equal to the JSON, 378 rows.
+
+**2. axe-core, WCAG 2.1 A/AA.** All four view types plus the ISO 27001 framework page (57 rows, 16 controls
+carrying stacked multi-product cards, max stack 5), the Audit solution page, and the product, matrix-drill,
+cell and search views. 11 routes x light and dark:
+
+```
+ZERO violations at WCAG 2.1 A/AA across 22 page/theme combinations.
+   baseline:  color-contrast      907 nodes  ->  0
+              nested-interactive  660 nodes  ->  0
+```
+
+**No violations were suppressed and none are being reported as false positives.** The sweep is a true zero.
+
+**3. Keyboard walk**, fresh load, only Tab/Shift+Tab/Enter/Space, focus logged at every step:
+
+```
+[ 1] fresh load                    (document body)
+[ 2] Tab #1                        a[href="#app"]  "Skip to main content"      <- (a) first stop
+[ 3] Enter on skip link            main            (route still #/, not hijacked)
+[ 4] +1 Tab                        a[href="#/industry/healthcare"]             <- (b)
+[ 5] Enter                         h1 "Healthcare & life sciences"   announced "... - 5 frameworks"
+[ 6] +2 Tab                        a[href="#/framework/hipaa-security"]        <- (c)
+[ 7] Enter                         h1 "HIPAA Security Rule"          announced "... - 32 mappings"
+[ 8] +10 Tab                       summary "Purview Data Classification + DSPM ..."   <- (d)
+[ 9] Enter                         row open; Enter collapses; Space also toggles
+[10] +6 Tab                        button[aria-pressed=false] "Direct Support (7)"    <- (e)
+[11] Enter                         32 -> 7 rows; focus stayed on the pressed button;
+                                   announced "HIPAA Security Rule - 7 mappings, filtered to Direct Support"
+[12] Shift+Tab                     button "All (32)"; Space restores all 32 rows
+[13] +46 Tab                       button "Switch to light theme"                     <- (f)
+[14] Enter                         dark -> light; name follows state; Space toggles back
+[15] +1 Tab (on #/matrix)          a "Microsoft SSPA DPR x Purview: 15 row(s)"        <- (g)
+[16] Enter                         h1 "Microsoft Purview density"    announced "... - 150 mappings"
+[17] +1 Tab                        a "Microsoft SSPA DPR x Information Protection: 2 row(s)"
+[18] Enter                         h1; announced "... - 2 mappings"
+```
+
+All seven required journeys were reached and activated by keyboard alone, with no JS errors.
+
+**4. Mouse behaviour unchanged, no layout shift.** Nine points across a card all navigate; the card still
+lifts on hover (`translateY(-2px)`), is not underlined, and keeps body ink rather than link blue; the matrix
+link fills its cell exactly and clicks land at all three probe points; the cell keeps its hover outline
+(none -> solid); clicking a row body still expands it with no stray route change.
+
+Geometry across all 16 page/theme render combinations: **identical document height, and identical position and
+size for every card, mapping row, matrix cell, page heading, badge and summary**. On the matrix specifically,
+the 66 data cells and 11 row headers are geometrically identical and table width is unchanged. Pixel diffs are
+therefore ink shade only: 0.00 to 0.01% on dark non-matrix pages, 0.09 to 0.44% light, and 1.97% light /
+0.54% dark on the matrix, which is the intended heat-ramp and figure-colour change from §21.6.
+
+**5. Print and `file://`.** Header, search and icon buttons are still hidden in print; `beforeprint` still
+expands every row (21/21, 40/40) and `afterprint` still restores them; the skip link stays off-screen when
+unfocused. Zero JS errors from `file://` before or after. A4 page counts: FERPA 8 = 8, NIST CSF 2.0 46 = 46,
+matrix 2 = 2, landing 3 = 3, **GLBA Safeguards 22 -> 23**. The single extra page is the `solLinks()` foot line
+from §21.5 wrapping on GLBA's longer solution names; it affects the expanded and print state only, never the
+collapsed row.
+
+**Verdict: COMPLETE.** PR-001, PR-002, PR-055 and PR-056 are resolved. **The atlas is fully navigable by
+keyboard and usable with a screen reader, at a clean zero on WCAG 2.1 A/AA for every check axe can run, in
+both themes, across every view type.** The last pre-publish blocker is cleared. Remaining roadmap: PR-044
+about page, PR-035/036/037 licensing re-verification, and the §15.7 consistency pass.
+
+**Note for the next session:** PROJECT-REVIEW.md does not yet carry PR-055 or PR-056; they were raised here.
+Nothing in axe's automated coverage substitutes for a pass with a real screen reader (NVDA or JAWS), which
+remains unperformed. axe checks roughly a third of WCAG success criteria and cannot judge whether the
+announcements read *well*, only that the machinery is correct.
