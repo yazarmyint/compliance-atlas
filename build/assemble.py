@@ -5,14 +5,23 @@ Add a product: see README.md "Add a product" — products-map entry in common.py
 product=<id>, solutions registered in SOLUTIONS and the product's solutions list.
 
 Canonical file renamed 2026-07-17: purview-compliance-map.json -> compliance-atlas.json (platform generalization)."""
-import importlib, json, os, sys, datetime
+import importlib, json, os, re, sys, datetime
+from urllib.parse import urlparse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE
+from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
+                    REVERIFY_DATE, REVERIFIED_SOURCE_ROWS, reverified_license_strings)
 from dependency_migration import migrate_row
 
 # Order controls display order in the HTML.
 MODULES = ["rows_dpr", "rows_iso", "rows_soc2", "rows_hipaa", "rows_171", "rows_80053", "rows_csf", "rows_pci", "rows_glba", "rows_ferpa", "rows_gdpr"]
+
+# Hosts that count as *Microsoft capability documentation* for the source-composition rule.
+# Anything else in a row's sources counts as the official framework authority — which is why
+# microsoft.com/procurement/sspa is correctly an official source on the DPR rows (Microsoft is
+# the framework author there) while learn.microsoft.com never is.
+MS_DOC_HOSTS = {"learn.microsoft.com", "docs.microsoft.com", "azure.microsoft.com", "techcommunity.microsoft.com"}
+ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 INDUSTRIES = {
     "healthcare": {"name": "Healthcare & life sciences",
@@ -156,6 +165,27 @@ def main():
         if rec:
             dep_log.append(rec)
 
+    # ---- last_verified: 2026-07-19 re-verification pass (see common.py, AUDIT-FINDINGS SS22) ----
+    # A row's date moves only if its licensing constant was re-fetched live this session
+    # (whether it changed or passed) or its sources changed. Rows resting on constants that
+    # were not re-checked keep their older date, which is the honest answer for them.
+    reverified_strings = reverified_license_strings()
+    reverify_basis = {}
+    for r in rows:
+        lic = r.get("license_requirement") or ""
+        by_lic = any(s in lic for s in reverified_strings)
+        by_src = r["id"] in REVERIFIED_SOURCE_ROWS
+        if by_lic or by_src:
+            reverify_basis[r["id"]] = ("licensing+sources" if by_lic and by_src
+                                       else "licensing" if by_lic else "sources")
+            r["last_verified"] = REVERIFY_DATE
+    print(f"  Re-verified {len(reverify_basis)}/{len(rows)} rows to {REVERIFY_DATE} "
+          f"({sum(1 for v in reverify_basis.values() if v != 'sources')} via licensing constants, "
+          f"{sum(1 for v in reverify_basis.values() if v != 'licensing')} via sources); "
+          f"{len(rows) - len(reverify_basis)} rows keep their earlier date.")
+    unknown = REVERIFIED_SOURCE_ROWS - {r["id"] for r in rows}
+    assert not unknown, f"REVERIFIED_SOURCE_ROWS names rows that do not exist: {sorted(unknown)}"
+
     # ---- integrity checks ----
     ids = [r["id"] for r in rows]
     assert len(ids) == len(set(ids)), "duplicate row ids: " + str({i for i in ids if ids.count(i) > 1})
@@ -165,12 +195,34 @@ def main():
         assert r["confidence"] in META["confidence_levels"], f"row {r['id']} bad confidence"
         assert r["status"] in ("verified", "UNVERIFIED"), f"row {r['id']} bad status"
         assert r["sources"], f"row {r['id']} has no sources"
+        assert (r.get("control_ref") or "").strip(), f"row {r['id']} has empty control_ref"
+        # last_verified: well-formed ISO date, and never in the future (PR-051)
+        lv = r.get("last_verified") or ""
+        assert ISO_DATE.fullmatch(lv), f"row {r['id']} last_verified not an ISO date: {lv!r}"
+        try:
+            lv_date = datetime.date.fromisoformat(lv)
+        except ValueError as exc:
+            raise AssertionError(f"row {r['id']} last_verified is not a real date: {lv}") from exc
+        assert lv_date <= datetime.date.today(), f"row {r['id']} last_verified is in the future: {lv}"
+        # source composition (PR-039). A covered row must cite both the framework authority and
+        # Microsoft's own documentation. Boundary rows are exempt from the Microsoft half: a
+        # "Not Covered" verdict has no Microsoft capability to cite, which is the point.
+        src_hosts = [urlparse(s).netloc for s in r["sources"]]
+        assert any(h not in MS_DOC_HOSTS for h in src_hosts), f"row {r['id']} has no official framework source"
+        if r["coverage"] != "Not Covered":
+            assert any(h in MS_DOC_HOSTS for h in src_hosts), f"row {r['id']} ({r['coverage']}) has no Microsoft source"
         # product dimension
         pid = r.get("product")
         assert pid in PRODUCTS, f"row {r['id']} product not in products map: {pid}"
         prod = PRODUCTS[pid]
         sol = r["purview_solution"]
         assert sol in prod["solutions"] or sol == "None (boundary row)", f"row {r['id']} non-canonical solution: {sol}"
+        # also_involves must name real solutions belonging to this row's own product (PR-045/PR-051)
+        for extra in r.get("also_involves") or []:
+            assert extra in SOLUTIONS, f"row {r['id']} also_involves unknown solution: {extra}"
+            assert SOLUTIONS[extra].get("product") == pid, (
+                f"row {r['id']} also_involves {extra!r}, which belongs to product "
+                f"{SOLUTIONS[extra].get('product')!r}, not {pid!r}")
         # licensing model discriminator (row override allowed; derived default otherwise)
         r.setdefault("licensing_model", "n/a" if r["license_requirement"] == "n/a" else prod["default_licensing_model"])
         assert r["licensing_model"] in LICENSING_MODELS, f"row {r['id']} bad licensing_model"
@@ -179,6 +231,8 @@ def main():
         for dep in r["related_microsoft"]:
             assert dep["product"] in RELATED_PRODUCTS or dep["product"] in PRODUCTS, f"row {r['id']} unknown related product {dep['product']}"
             assert dep["role"] in ("primary", "contributing"), f"row {r['id']} bad dependency role"
+            # A row cannot depend on its own product (§11.5 item 3, after the soc2-cc6-6 bug)
+            assert dep["product"] != pid, f"row {r['id']} related_microsoft self-references its own product: {pid}"
 
     # Verification currency, derived from the rows rather than declared by hand (PR-014b).
     # default_last_verified and every row's last_verified are read-only here.

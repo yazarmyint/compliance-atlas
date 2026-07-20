@@ -1487,3 +1487,245 @@ about page, PR-035/036/037 licensing re-verification, and the §15.7 consistency
 Nothing in axe's automated coverage substitutes for a pass with a real screen reader (NVDA or JAWS), which
 remains unperformed. axe checks roughly a third of WCAG success criteria and cannot judge whether the
 announcements read *well*, only that the machinery is correct.
+
+---
+
+## 22. Data re-verification pass (2026-07-19) — declared edit to protected fields
+
+The one session in the publish sequence authorised to modify `license_requirement`, `sources`, and
+`last_verified`. Every change below was verified against an authoritative source **fetched live on
+2026-07-19**; PROJECT-REVIEW's findings were treated as leads to re-test, not as facts, and one of them did
+not survive re-testing (§22.5). Baseline for every diff in this section: commit `e601e0a`.
+
+**Scope executed:** PR-039, PR-051 (build hardening), PR-035, PR-036, PR-037 (licensing), PR-038 (URL
+currency), PR-028 (cross-document reconciliation), PROJECT-REVIEW §4.4 and §4.5, and §15.7 items 5 and 7.
+
+### 22.1 Build hardening first (PR-039, PR-051)
+
+Five assertions added to `assemble.py` **before** any data was touched, so the rest of the session ran under
+them. All five passed on the first run against unmodified data, confirming PROJECT-REVIEW's prediction of zero
+defects:
+
+| Assertion | Result on current data |
+|---|---|
+| `also_involves` entries exist in `SOLUTIONS` and belong to the row's own product | 0 defects |
+| Source composition: >=1 official framework source always; >=1 Microsoft doc source when coverage is not `Not Covered` | 0 defects |
+| `last_verified` is a well-formed ISO date and not in the future | 0 defects |
+| `control_ref` non-empty | 0 defects |
+| `related_microsoft` never self-references the row's own product (§11.5 item 3) | 0 defects |
+
+Source composition treats `learn.microsoft.com`, `docs.microsoft.com`, `azure.microsoft.com`, and
+`techcommunity.microsoft.com` as Microsoft *capability documentation*; anything else counts as the framework
+authority. That is why `microsoft.com/procurement/sspa` is correctly an official source on the DPR rows
+(Microsoft authors that framework) while `learn.microsoft.com` never is.
+
+README rule 2 was wrong as written and is corrected: six boundary rows (`dpr-j48`, `soc2-p1-p3`, `soc2-a1`,
+`soc2-pi1`, `53-mp-6`, `gdpr-30`) carry no Microsoft source, which is correct behaviour for a `Not Covered`
+verdict, not a violation.
+
+### 22.2 Licensing re-verification — per-constant results
+
+Sources fetched live 2026-07-19: the Microsoft Defender service description; Defender XDR prerequisites; the
+Microsoft Entra licensing article; the Microsoft Purview service description; the Sentinel billing article;
+Partner Center announcements (June 2026); the Compliance Manager regulations list; the Purview
+audit-solutions-overview; and the Azure pricing page for Defender for Cloud.
+
+**Headline:** *every tier claim in the atlas was correct.* No capability had moved tiers, and nothing changed
+any row's coverage or confidence. The defects were naming drift and under-listed entitlements.
+
+| Constant | Result | Basis |
+|---|---|---|
+| `LIC["labels_manual"]` | **CHANGED** | SD lists EMS E3/E5, Office 365 E5/A5/E3/A3, OneDrive P2, AIP P1/P2 paths the atlas omitted |
+| `LIC["labels_auto"]` | **CHANGED** | Office 365 E5/A5 path; Suite variant naming |
+| `LIC["label_encryption"]` | PASS | Derived from labels entitlements, both re-verified |
+| `LIC["customer_key"]` | **CHANGED** | Office 365 E5/A5/G5 path; Suite variant naming |
+| `LIC["classification_analytics"]` | **CHANGED** | Office 365 E5 path; added the E3/A3/G3 data-aggregation nuance the SD now states |
+| `LIC["dlp_core"]` | **CHANGED** | Office 365 E5/A5/G5/E3/A3/G3, SPO P2, ODB P2, EXO P2 paths |
+| `LIC["dlp_teams"]` | **CHANGED** | Office 365 E5/A5/G5 path; Suite variant naming |
+| `LIC["dlp_endpoint"]` | **CHANGED** | Suite variant naming; states explicitly that there is no Office 365 path |
+| `LIC["retention_basic"]` | **CHANGED** | Office 365 E5/A5/G5/E3/A3/G3 path; Suite variant naming |
+| `LIC["retention_advanced"]` | **CHANGED** | Office 365 E5/A5/G5 path; Suite variant naming |
+| `LIC["records"]` | **CHANGED** | Office 365 E5/A5/G5 path; Suite variant naming |
+| `LIC["audit_std"]` | PASS | 180-day default confirmed, incl. the Oct 17 2023 change from 90 days |
+| `LIC["audit_prem"]` | **CHANGED** | Office 365 E5/A5/G5 confirmed present (PR-037b); add-on renamed to M365 E5/G5/F5 eDiscovery & Audit |
+| `LIC["ediscovery_std"]` | **CHANGED** | Precise E3-tier and E5-tier SKU lists from the live table |
+| `LIC["irm"]` | **CHANGED** | Suite variant naming; add-on renamed to M365 E5/A5/F5/G5 Insider Risk Management |
+| `LIC["cc"]` | **CHANGED** | Office 365 E5/A5/G5 path; Suite variant naming |
+| `LIC["ib"]` | PASS | SD section carries no SKU table; nothing contradicts the string |
+| `LIC["cm"]` | PASS | "any three premium regulations free" at A5/E5/G5 confirmed verbatim |
+| `LIC["dspm"]`, `LIC["dspm_ai"]` | **not re-verified** | No service-description section; DSPM get-started docs not fetched |
+| `ENTRA_LIC["ca"]` | **CHANGED** | E7, F1/F3 and EMS E3 confirmed missing (PR-037a) |
+| `ENTRA_LIC["id_protection"]` | **CHANGED** | E7, Microsoft Defender Suite, EMS E5 missing (scope extension, user-approved) |
+| `ENTRA_LIC["mfa"]` | PASS | Matches the live authentication feature table |
+| `ENTRA_LIC["pim"]` | PASS | "either Microsoft Entra ID Governance licenses or Microsoft Entra ID P2", exactly as claimed |
+| `ENTRA_LIC["gov_core"]` | PASS | Matches the "capabilities previously generally available in Entra ID P2" rows |
+| `ENTRA_LIC["gov_lcw"]` | PASS | LCW blank for P1/P2 in the live table, as claimed |
+| `ENTRA_LIC["free"]` | PASS | Confirmed |
+| `DEFENDER_LIC["mde_p1"]` | PASS | Standalone + M365 E3/A3/G3, and the P1/P2 capability split, both confirmed |
+| `DEFENDER_LIC["mde_p2"]` | **CHANGED** | PR-035: E5 Security no longer listed; Defender Suite/EDU/GOV/FLW is |
+| `DEFENDER_LIC["mdvm"]` | **CHANGED** | PR-035 naming; premium add-on eligibility list re-derived |
+| `DEFENDER_LIC["mdo_p1"]` | **CHANGED** | Full SKU list added; E3 inclusion extended to G3 (scope extension, user-approved) |
+| `DEFENDER_LIC["mdo_p2"]` | **CHANGED** | PR-035 naming |
+| `DEFENDER_LIC["mdi"]` | **CHANGED** | PR-035 naming; F5 Security dropped (not in live list), MDI for Users added |
+| `DEFENDER_LIC["mdca"]` | **CHANGED** | PR-035 naming; Purview Suite and IP&G paths added |
+| `DEFENDER_LIC["xdr"]` | **CHANGED** | Qualifying-licence list re-derived from XDR prerequisites |
+| `SENTINEL_LIC["ingest"]` | **CHANGED** | PR-036, see §22.3 |
+| `SENTINEL_LIC["retention"]` | PASS | All data-lake meters and the 6:1 compression assumption confirmed |
+| `SENTINEL_LIC["soar"]` | PASS | Automation rules included; Logic Apps billed separately |
+| `SENTINEL_LIC["included"]` | PASS | Consumption model confirmed |
+| `SENTINEL_LIC["free_benefit"]` | **not re-verified** | Free data sources confirmed on the billing article, but the 5 MB/user/day grant lives on the offer page, not fetched |
+| `INTUNE_LIC["p1"]`, `["p1_ca"]`, `["epm"]` | **not re-verified** | Intune licensing article not fetched this session |
+| `MDC_LIC["foundational"]`, `["cspm"]`, `["workload"]` | PASS | Azure pricing page confirms every meter, incl. the 73M figure (§22.5) |
+| `MDC_LIC["servers_p1"]`, `["servers_p2"]`, `["dashboard"]` | **not re-verified** | Servers plan-selection and dashboard-prerequisite pages not fetched |
+
+The "not re-verified" rows are recorded deliberately. They are the honest boundary of this pass and they drive
+the `last_verified` policy in §22.6.
+
+### 22.3 PR-036 — Sentinel 50 GB tier, confirmed against a first-party source
+
+The atlas said "a 50 GB tier entered public preview Oct 2025" with a promo window through Mar 2026, four months
+expired. Confirmed live on the Partner Center announcement of **June 26, 2026**: the tier launched Oct 1, 2025 in
+public preview, its promotional pricing was extended (first to Jun 30, 2026, then) **through Dec 31, 2026**, and
+customers signing up in that window **lock the discounted rate through Mar 31, 2027**.
+
+Two cautions recorded in the README trigger: the Sentinel **billing article still describes commitment tiers as
+starting at 100 GB/day** and does not mention the 50 GB tier at all, so the tier is documented only in the promo
+announcement and on the pricing page; and the Mar 31, 2027 date coincidentally matches the unrelated Sentinel
+Azure-portal retirement date, which is a trap for a future reader.
+
+Two data-lake meters were confirmed present on the billing article and are **deliberately not modelled in any
+row**, because no current row makes a claim resting on them: **advanced data insights** (per compute hour) and
+the **Sentinel graph** meters. Both were added to the README maintenance-trigger list only, per the session
+brief. No new rows were authored and no row content was expanded.
+
+### 22.4 §15.7 item 5 — the shared-constant structure paid off
+
+The checklist item asked for a *sample* of Purview licensing strings to be re-verified, Purview rows being the
+oldest content in the atlas at 2026-07-16. Because Purview licensing is held in one shared `LIC` dict rather
+than repeated per row, the whole cohort's licensing exposure was coverable in a single pass, and it was.
+
+Doing so turned PR-037's single-constant finding into a systemic one: the Office 365 entitlement path was
+missing from **12 constants, not one**, alongside superseded Suite naming throughout. Under-listing entitlements
+causes exactly the failure the atlas exists to prevent, a reader concluding they must buy something they already
+own, so the full sweep was applied on the user's explicit approval rather than deferred.
+
+### 22.5 PROJECT-REVIEW findings that did not survive re-testing
+
+**§4.4, the MDC "73 million transactions" figure — review WRONG, atlas correct.** PROJECT-REVIEW flagged this as
+"corroborated only in a Microsoft Q&A answer, not in first-party pricing documentation" and asked for re-sourcing.
+It is in fact stated in first-party pricing documentation: footnote 6 of the Azure pricing page for Defender for
+Cloud reads *"Storage accounts that exceed 73 million monthly transactions will be charged $- for every 1 million
+transactions that exceed the threshold."* `MDC_LIC["workload"]` was left **unchanged**; only its evidence improved.
+This is the case that justifies the session rule against trusting the review on faith.
+
+**§4.5, the CSF template note — review right.** The atlas claimed a "legacy NIST CSF 1.1 template". The live
+regulations list shows exactly two CSF entries: `NIST CSF 2.0`, and a legacy entry named simply **`NIST CSF`**
+with no version. The "1.1" was an inference in a field whose whole value is that it quotes Microsoft's naming
+verbatim. Corrected in `rows_csf.py` and in FRAMEWORK-SELECTION.md, which carried the same claim.
+
+### 22.6 `last_verified` policy — 324 of 378 bumped, 54 deliberately not
+
+`last_verified` asserts that a row's facts were checked against an authoritative source on that date. A blanket
+bump would be a false statement about every row this session never examined. Policy applied:
+
+| Basis | Meaning | Rows |
+|---|---|---|
+| A | `license_requirement` changed this session | 235 |
+| B | `sources` changed this session | 42 |
+| C | governing licensing constant re-fetched live and confirmed still correct | 137 (76 on this basis alone) |
+| | **Qualifying (A or B or C)** | **324** |
+| | **Not qualifying, date unchanged** | **54** |
+
+A PASS counts as a verification: re-fetching the Purview service description and confirming `LIC["cm"]` still
+reads correctly *is* a check, and pretending otherwise would understate the atlas's currency as badly as a
+blanket bump would overstate it.
+
+The 54 rows that keep their earlier date are precisely those resting only on constants marked "not re-verified"
+in §22.2 — **35 Intune** (the Intune licensing article was not fetched), **9 Defender for Cloud** (Servers and
+dashboard pages not fetched), **10 Purview** (DSPM docs not fetched, plus boundary rows carrying `n/a`
+licensing). This is the mechanism working as intended, and it is the visible proof the policy is not cosmetic.
+
+The policy is encoded declaratively in `common.py` (`REVERIFY_DATE`, `REVERIFIED_LIC_KEYS`,
+`REVERIFIED_SOURCE_ROWS`) and applied in `assemble.py`, rather than hand-edited into row modules, so a future
+reader can see the rule rather than only its result. `assemble.py` asserts that `REVERIFIED_SOURCE_ROWS` names
+only rows that exist, so the ledger cannot rot silently. `meta.verified_range` recomputes from the rows as
+before: **earliest 2026-07-16, latest 2026-07-19**. `meta.default_last_verified` stays 2026-07-16, still correct
+as the authoring default for new Purview rows and still equal to the earliest per-row date.
+
+### 22.7 PR-038 — URL currency, re-detected rather than copied
+
+`tools/check_urls.py` was written first and used to re-detect drift live; all seven redirects in
+PROJECT-REVIEW's table reproduced exactly.
+
+| Cited (before) | Now points to |
+|---|---|
+| `entra/fundamentals/whatis` | `entra/fundamentals/what-is-entra` |
+| `entra/identity/authentication/concept-authentication-methods` | `entra/identity/authentication/overview-authentication` |
+| `defender-endpoint/overview-attack-surface-reduction` | `defender-endpoint/attack-surface-reduction-overview` |
+| `azure/sentinel/detect-threats-built-in` | `azure/sentinel/threat-detection` |
+| `azure/sentinel/automate-responses-with-playbooks` | `azure/sentinel/automation/automate-responses-with-playbooks` |
+| `azure/defender-for-cloud/defender-for-storage-malware-scan` | `azure/defender-for-cloud/introduction-malware-scanning` |
+| `intune/fundamentals/manage-devices` | `intune/device-management/inventory-and-status/device-details` |
+
+The first also served as the Entra product's `naming_source`; the fourth also served as a `SOLUTIONS` entry URL.
+
+The last was **not** taken to its redirect target. Microsoft consolidated that page into
+`fundamentals/core-concepts#devices`, a generic anchor, and it was the sole Microsoft source on
+`glba-314-4-c2-intune`. Re-selected against what that row actually claims (device inventory: enrolled endpoints
+with ownership, user, and configuration state) and repointed the shared constant to the device-details page,
+verified canonical because the `remote-actions/device-inventory` variant redirects to it. All six citing rows
+improve; five carry Enrollment & Device Lifecycle claims.
+
+`tools/check_urls.py` is now standing QA. It normalises `/en-us/` locale insertion so only genuine content moves
+report, serialises requests to `learn.microsoft.com` and other throttled hosts at ~1.1s with 429 backoff, and
+classifies the two documented WAF 403s rather than failing them. PROJECT-REVIEW's 12-way parallel sweep produced
+40 false 429 failures; this run produced none.
+
+**Final run: 150 URLs, 148 OK, 2 WAF (documented), 0 redirects, 0 broken.**
+
+### 22.8 Drift ledger — every changed row
+
+Baseline `e601e0a`. **378 rows, id sets identical, zero rows added or removed.**
+
+**Fields changed, whole dataset:** `license_requirement` 235 · `sources` 42 · `last_verified` 324.
+**Fields changed outside that set: none.** `cloud_availability_note` required no correction, so the session
+brief's flag condition did not arise. Coverage and confidence distributions are byte-equal to the baseline.
+
+`license_requirement` changed on 235 rows — purview 116, defender-xdr 48, sentinel 42, entra 29:
+
+> 171-3-1-1-entra, 171-3-1-11-entra, 171-3-1-20-defender, 171-3-1-22, 171-3-1-3, 171-3-11-2-3-defender, 171-3-13-16, 171-3-13-8, 171-3-14-2-defender, 171-3-14-3-defender, 171-3-14-3-sentinel, 171-3-14-6-defender, 171-3-14-6-sentinel, 171-3-14-7, 171-3-14-7-defender, 171-3-14-7-sentinel, 171-3-3-1, 171-3-3-1-sentinel, 171-3-3-4-sentinel, 171-3-3-5-sentinel, 171-3-5-3-entra, 171-3-6-1-2, 171-3-6-1-2-defender, 171-3-6-1-2-sentinel, 171-3-8-4, 171-3-8-7, 171-3-9-2, 53-ac-21, 53-ac-22, 53-ac-3-entra, 53-ac-4, 53-au-11, 53-au-2-12, 53-au-2-12-sentinel, 53-au-6, 53-au-6-sentinel, 53-au-9-sentinel, 53-cm-12, 53-ia-2-entra, 53-ia-5-entra, 53-ir-4, 53-ir-4-defender, 53-ir-4-sentinel, 53-ir-5-sentinel, 53-ir-9, 53-mp-3, 53-mp-7, 53-ps-4, 53-ra-3, 53-ra-5-defender, 53-sc-28, 53-sc-8, 53-si-12, 53-si-19, 53-si-2-defender, 53-si-3-defender, 53-si-4, 53-si-4-defender, 53-si-4-sentinel, 53-si-8-defender, csf-de-ae-02-defender, csf-de-ae-02-sentinel, csf-de-ae-03-sentinel, csf-de-cm-01-defender, csf-de-cm-01-sentinel, csf-de-cm-03, csf-de-cm-03-defender, csf-de-cm-03-entra, csf-de-cm-09-defender, csf-id-am-07, csf-id-am-08, csf-id-ra-01-defender, csf-pr-aa-03-entra, csf-pr-ds-01, csf-pr-ds-02, csf-pr-ds-10, csf-pr-ps-04, csf-pr-ps-04-sentinel, csf-rs-an-03, csf-rs-an-03-defender, csf-rs-an-03-sentinel, csf-rs-an-06-07, csf-rs-mi-01-02-defender, csf-rs-mi-01-02-sentinel, dpr-d11, dpr-d9, dpr-e12, dpr-e13, dpr-f14-22, dpr-i30-31, dpr-i30-31-sentinel, dpr-j35, dpr-j36-entra, dpr-j37-defender, dpr-j40, dpr-j40-defender, dpr-j40-sentinel, dpr-j45-entra, dpr-j49, dpr-j50, ferpa-99-10, ferpa-99-30-33, ferpa-99-31-a1ii, ferpa-99-31-a1ii-entra, ferpa-99-31a6-35, ferpa-99-32, gdpr-15, gdpr-17, gdpr-20, gdpr-25, gdpr-25-entra, gdpr-32-1-a, gdpr-32-1-b-defender, gdpr-32-1-b-entra, gdpr-32-1-b-sentinel, gdpr-32-1-d-defender, gdpr-32-1-d-sentinel, gdpr-33-34, gdpr-33-34-defender, gdpr-33-34-sentinel, gdpr-5-1-c, gdpr-5-1-e, glba-314-4-b, glba-314-4-c1-entra, glba-314-4-c2, glba-314-4-c3, glba-314-4-c5-entra, glba-314-4-c6, glba-314-4-c8, glba-314-4-c8-defender, glba-314-4-c8-entra, glba-314-4-c8-sentinel, glba-314-4-d-defender, glba-314-4-d-sentinel, glba-314-4-h, glba-314-4-h-sentinel, glba-314-4-j, hipaa-308-a1-a, hipaa-308-a1-a-defender, hipaa-308-a1-c, hipaa-308-a1-d, hipaa-308-a1-d-defender, hipaa-308-a1-d-sentinel, hipaa-308-a5-b-defender, hipaa-308-a5-entra, hipaa-308-a6, hipaa-308-a6-defender, hipaa-308-a6-sentinel, hipaa-310-d2, hipaa-312-a1-entra, hipaa-312-a2-iv, hipaa-312-b, hipaa-312-b-sentinel, hipaa-312-c, hipaa-312-d-entra, hipaa-312-e, hipaa-316-b, iso-a-5-10, iso-a-5-12, iso-a-5-13, iso-a-5-14, iso-a-5-15-entra, iso-a-5-17-entra, iso-a-5-23-defender, iso-a-5-25, iso-a-5-25-defender, iso-a-5-25-sentinel, iso-a-5-26-sentinel, iso-a-5-28, iso-a-5-33, iso-a-5-34, iso-a-5-7-defender, iso-a-5-7-sentinel, iso-a-5-9, iso-a-7-10, iso-a-8-1, iso-a-8-10, iso-a-8-11, iso-a-8-12, iso-a-8-12-defender, iso-a-8-15, iso-a-8-15-sentinel, iso-a-8-16, iso-a-8-16-defender, iso-a-8-16-entra, iso-a-8-16-mdi, iso-a-8-16-sentinel, iso-a-8-24, iso-a-8-3-entra, iso-a-8-5-entra, iso-a-8-7-defender, iso-a-8-8-defender, pci-10-3-3-sentinel, pci-10-4-1-sentinel, pci-10-5-1, pci-10-7-2-sentinel, pci-11-3-1-defender, pci-12-10-5-sentinel, pci-12-10-7, pci-12-5-2, pci-3-2-1, pci-3-3-1, pci-3-4-2, pci-3-5-1, pci-4-2-2, pci-5-4-1-defender, pci-6-3-1-defender, pci-8-3-1-entra, pci-8-4-2-entra, soc2-c1-1, soc2-c1-2, soc2-cc1-1, soc2-cc6-1-entra, soc2-cc6-5, soc2-cc6-6-entra, soc2-cc6-7, soc2-cc6-7-defender, soc2-cc6-8-defender, soc2-cc7-1-defender, soc2-cc7-2, soc2-cc7-2-defender, soc2-cc7-2-entra, soc2-cc7-2-sentinel, soc2-cc7-3, soc2-cc7-3-defender, soc2-cc7-3-sentinel, soc2-cc7-4, soc2-cc7-4-defender, soc2-cc7-4-sentinel, soc2-p4-1, soc2-p4-2, soc2-p4-3, soc2-p5, soc2-p6-2-3, soc2-p8-1
+
+`sources` changed on 42 rows (all PR-038 URL repoints):
+
+> 171-3-14-6-sentinel, 171-3-3-4-sentinel, 171-3-3-5-sentinel, 171-3-4-1-intune, 53-au-6-sentinel, 53-ia-5-entra, 53-ir-4-sentinel, 53-si-4-sentinel, csf-de-ae-02-sentinel, csf-de-ae-03-sentinel, csf-de-cm-01-sentinel, csf-id-am-01-intune, csf-pr-aa-01-entra, csf-pr-aa-02-entra, csf-rs-mi-01-02-sentinel, dpr-j35-intune, dpr-j38-mdc, dpr-j40-sentinel, gdpr-32-1-b-sentinel, gdpr-32-1-d-sentinel, gdpr-33-34-sentinel, glba-314-4-c2-intune, glba-314-4-c8-sentinel, glba-314-4-d-sentinel, glba-314-4-h-sentinel, hipaa-308-a1-d-sentinel, hipaa-308-a5-b-mdc, hipaa-310-d1-intune, iso-a-5-17-entra, iso-a-5-25-sentinel, iso-a-5-26-sentinel, iso-a-5-9-intune, iso-a-8-16-sentinel, iso-a-8-7-mdc, pci-10-4-1-sentinel, pci-10-7-2-sentinel, pci-8-2-1-entra, soc2-cc6-8-defender, soc2-cc6-8-mdc, soc2-cc7-2-sentinel, soc2-cc7-3-sentinel, soc2-cc7-4-sentinel
+
+`last_verified` **unchanged** on these 54 rows (intune 35, defender-cloud 9, purview 10). Their governing
+sources were not fetched this session:
+
+> 171-3-1-1-intune, 171-3-1-18-intune, 171-3-1-19-intune, 171-3-12-1-3-mdc, 171-3-13-16-intune, 171-3-4-2-intune, 171-3-8-7-intune, 53-ac-19-intune, 53-ac-6-intune, 53-ca-2-mdc, 53-ca-7-mdc, 53-cm-2-intune, 53-cm-6-intune, 53-mp-6, 53-mp-7-intune, 53-sc-28-intune, 53-si-7-mdc, csf-de-cm-03-ai, csf-pr-ds-01-intune, csf-pr-ps-01-intune, csf-pr-ps-02-intune, csf-pr-ps-05-intune, dpr-j47, dpr-j48, dpr-j48-intune, gdpr-30, gdpr-32-1-a-intune, gdpr-32-1-b-intune, gdpr-32-1-d-mdc, gdpr-35, glba-314-4-c3-intune, hipaa-308-a5-b-intune, hipaa-308-a8-mdc, hipaa-310-b-c-intune, hipaa-312-a2-iv-intune, hipaa-312-c-mdc, iso-a-5-36-mdc, iso-a-6-7-intune, iso-a-8-1-intune, iso-a-8-24-intune, iso-a-8-7-intune, iso-a-8-9-intune, pci-1-5-1-intune, pci-2-2-1-intune, pci-4-2-1, pci-5-3-intune, pci-6-3-3-intune, soc2-a1, soc2-cc4-1-mdc, soc2-cc6-1-intune, soc2-cc6-7-intune, soc2-cc6-8-intune, soc2-p1-p3, soc2-pi1
+
+**Meta changes:** `verified_range.latest` 2026-07-18 to 2026-07-19; `generated` timestamp. Nothing else.
+
+### 22.9 Gate
+
+| Check | Result |
+|---|---|
+| Rebuild green | 378 rows, 11 frameworks, 10 industries, 6 products |
+| Row ids identical to baseline | PASS, zero added or removed |
+| Only `license_requirement` / `sources` / `last_verified` / meta changed | **PASS** |
+| Coverage and confidence distributions byte-equal | PASS |
+| Five new `assemble.py` assertions | PASS on first run, 0 defects |
+| `tools/check_urls.py` full run | 148 OK, 2 documented WAF, 0 redirects, 0 broken |
+
+### 22.10 Carried forward
+
+- **No Step-1.7 flags.** Nothing in the re-verification revealed a coverage level that now looks wrong or a
+  capability that moved tiers in a way that changes a row's claim. Every tier the atlas asserts was confirmed.
+  No coverage or confidence value was touched, considered for change, or needs a decision.
+- **Next licensing pass should fetch what this one did not:** the Intune licensing and advanced-capabilities
+  articles, the Defender for Servers plan-selection pages, the regulatory-compliance-dashboard prerequisites,
+  the DSPM get-started docs, and the Microsoft 365 E5 Sentinel benefit offer page. Those five sources govern the
+  54 rows still carrying pre-2026-07-19 dates.
+- **PR-035's naming gloss is temporary.** "(formerly Microsoft 365 E5 Security)" earns its place only while the
+  old name is still on customer paperwork; drop it once it is not.
+- Remaining roadmap after this session: **PR-044 about page**.

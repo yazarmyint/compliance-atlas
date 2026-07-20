@@ -14,7 +14,7 @@ FRAMEWORK = {
     "official_source": CSF,
     "document_url": CSF_PDF,
     "compliance_manager_template": {"exists": True, "name": "NIST CSF 2.0 (premium)",
-        "note": "Verified on the Compliance Manager regulations list 2026-07-16 (legacy NIST CSF 1.1 template also listed).",
+        "note": "Verified on the Compliance Manager regulations list 2026-07-19 (a legacy entry named simply \"NIST CSF\", without a version, is also listed).",
         "source": URLS["cm_regs"]},
     "domains": ["GV Govern", "ID Identify", "PR Protect", "DE Detect", "RS Respond"],
     "applies_to": "Any organization using CSF 2.0 as its security program taxonomy (voluntary framework; outcome-based)",
