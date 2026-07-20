@@ -42,11 +42,22 @@ INDUSTRIES = {
                 "Defender for Cloud assesses CUI cloud enclaves for 3.11.2–3.11.3 and 3.12, cloud-resource scope only, with CIEM and several CSPM features absent in Azure Government."},
     "finserv": {"name": "Financial services",
         "frameworks": ["glba-safeguards", "pci-dss-4", "soc-2", "nist-csf-2", "iso-27001-2022"],
-        "note": "For banks, lenders, insurers, and fintechs under the GLBA Safeguards Rule, with PCI reaching card data and SOC 2 covering service commitments. The stack fits best on continuous vulnerability monitoring, institution-wide audit trails, and extending both to cloud-hosted banking workloads.",
+        # "insurers" removed from this note when the dedicated Insurance lens shipped (PR-020): insurers
+        # are GLBA financial institutions, but their operative rule is a state one, and this note is
+        # written about banks and lenders. See INDUSTRIES["insurance"].
+        "note": "For banks, lenders, and fintechs under the GLBA Safeguards Rule, with PCI reaching card data and SOC 2 covering service commitments. The stack fits best on continuous vulnerability monitoring, institution-wide audit trails, and extending both to cloud-hosted banking workloads.",
         "note_detail": "SEC 17a-4 / FINRA supervision (strong Records Management + Communication Compliance stories) on v2 backlog. "
                 "For the amended Safeguards Rule, Defender Vulnerability Management supplies the §314.4(d)(2) continuous-monitoring alternative to annual pen tests plus biannual vulnerability assessments, a cheaper path for smaller institutions. "
                 "Sentinel completes §314.4(c)(8) institution-wide by ingesting the banking/CRM audit trails the workload products cannot see, and carries the PCI Req 10 retention/review story for the CDE. "
                 "Defender for Cloud extends the §314.4(d)(2) election to cloud-hosted banking workloads (agentless assessment well beyond the biannual floor) and joins cloud systems to the customer information they hold for §314.4(c)(2)."},
+    "insurance": {"name": "Insurance",
+        "frameworks": ["glba-safeguards", "soc-2", "pci-dss-4", "nist-csf-2"],
+        "note": "For carriers, brokers, and managing general agents: financial institutions under GLBA, card handlers under PCI, and SOC 2 respondents to their distribution partners, with NIST CSF 2.0 as the program frame examiners increasingly expect. One caveat on GLBA applies to insurers specifically.",
+        "note_detail": "The GLBA caveat: insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule at 16 CFR 314 — the text these rows cite — exempts entities regulated by a state insurance authority. The operative requirement is usually the NAIC Insurance Data Security Model Law, adopted in most states, or New York's 23 NYCRR 500. Both track 16 CFR 314 closely enough that the control mappings read across; the citations do not. Take these rows for the control substance and cite your own state's text. "
+                "PCI reaches premium and claims payments wherever cards are accepted, directly or through a portal, and SOC 2 arrives from the other direction: MGAs, third-party administrators, and insurtech vendors are asked for it by the carriers they distribute for. "
+                "Purview is Audit-heavy here (13 of 51 rows): the record-keeping and retention obligations across policy, claims, and underwriting files are the densest part of the sector's data layer, with classification and DLP over policyholder information. "
+                "Sentinel carries the institution-wide audit and detection story the workload products cannot see — policy administration, claims, and underwriting systems are typically third-party or mainframe-adjacent and reach the security program through connectors rather than native integration. "
+                "Defender for Cloud's 14 rows cover the cloud-hosted side of that estate, which is where modern quoting and claims platforms increasingly sit."},
     "higher-ed": {"name": "Higher education",
         "frameworks": ["ferpa", "glba-safeguards", "pci-dss-4", "nist-csf-2"],
         "note": "For colleges and universities, which answer to FERPA for education records and, as Title IV institutions, to the GLBA Safeguards Rule as well, with PCI reaching campus payments. The stack mostly protects and locates student records and supplies the Safeguards Rule's continuous-monitoring path.",
@@ -71,6 +82,14 @@ INDUSTRIES = {
         "note": "For software and technology providers running on cloud infrastructure, typically examined under SOC 2 and ISO 27001, with HIPAA or PCI applying when they touch health or payment data. Because production lives in the cloud, Defender for Cloud is the anchor, including free multicloud coverage for AWS and GCP.",
         "note_detail": "HIPAA applies when handling PHI as a business associate; PCI when in the payment path. "
                 "For SaaS providers the product runs on cloud infrastructure, so Defender for Cloud is the production-posture anchor: CC7.1 configuration/vulnerability detection rated Direct, the SOC 2 dashboard standard for cloud resources, and ISO A.5.23/A.8.9 cloud-service posture, with AWS/GCP multicloud coverage included via the free connectors."},
+    "legal": {"name": "Legal & professional services",
+        "frameworks": ["soc-2", "iso-27001-2022", "gdpr", "hipaa-security"],
+        "note": "For law firms, accountancies, and consultancies, where client assurance drives SOC 2 and ISO 27001, client personal data pulls in GDPR, and health-sector engagements bring HIPAA obligations. The stack concentrates on matter confidentiality, need-to-know access, and a persistently targeted endpoint and mailbox estate.",
+        "note_detail": "SOC 2 is the client-assurance ask; ISO 27001 certification often accompanies it at firms with international clients. GDPR binds the firm both as controller of its own client data and as processor acting on client instructions, while HIPAA applies only when the firm is a business associate — health-sector litigation, benefits counsel, life-sciences advisory — so treat those rows as conditional on handling PHI. "
+                "Purview carries the confidentiality core: sensitivity labels and label-based encryption for matter material, DLP on the outbound path, retention and records management for engagement-file destruction schedules, and eDiscovery for the firm's own holds rather than its clients'. "
+                "Entra carries need-to-know, with Conditional Access over the unmanaged and personal devices common in partner-heavy firms and ID Governance access packages for matter- and client-scoped teams. Information Barriers appears once (A.5.3) and is the nearest thing here to an ethical wall, though the wall itself is a matter-intake decision rather than a product setting. "
+                "Defender XDR is 22 rows, 18 of them Defender for Endpoint: legal is a standing target for business email compromise and departing-partner data theft, and the endpoint and mail surface is where that lands. "
+                "Defender for Cloud's 16 rows apply only where a firm runs its own cloud estate; most buy practice-management SaaS instead, in which case the vendor's own SOC 2 report is the relevant artifact."},
     "manufacturing": {"name": "Manufacturing",
         "frameworks": ["nist-csf-2", "iso-27001-2022", "nist-800-171", "gdpr"],
         "note": "For manufacturers, who juggle general security baselines (CSF 2.0, ISO 27001), the defense-supply-chain rules that apply to some of them (NIST 800-171 and CMMC), and GDPR for any EU operations. The stack's heaviest fit is on the defense-industrial-base control families.",
