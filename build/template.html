@@ -310,7 +310,13 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
 
 <!-- The placeholder is the whole of <main> until render() replaces it; on a slow connection the
      ~1 MB single-file payload would otherwise paint a blank page. -->
-<main id="app" class="wrap" tabindex="-1" aria-live="polite"><p class="loading">Loading the atlas…</p></main>
+<main id="app" class="wrap" tabindex="-1"><p class="loading">Loading the atlas…</p></main>
+
+<!-- Route-change announcements. <main> is deliberately NOT a live region: render() replaces it
+     wholesale, which would queue the entire view (up to 57 mapping cards) for reading. This
+     states just the view and what it holds. The loading placeholder above sits outside any live
+     region, so it is never announced. -->
+<div id="srstatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <footer class="site"><div class="wrap">
   <ul class="legal" id="footLegal"></ul>
@@ -538,7 +544,7 @@ function vFrameworks(){
       ${minibar(rows)}</a>`; }).join("")}</div>`;
 }
 let fwFilter = null;
-function setFwFilter(c){ fwFilter = c; render(); }
+function setFwFilter(c){ fwFilter = c; render({focus:"filter", filter:c}); }
 function vFramework(id){
   const f = FW[id]; if(!f) return vMissing("framework", id);
   let rows = byFw(id);
@@ -719,25 +725,36 @@ function vMissing(kind, id){ return `<div class="pagehead"><h1>Not found</h1><di
 
 /* ---------------- router ---------------- */
 const dec = s => { try { return decodeURIComponent(s||""); } catch(e){ return s||""; } };
-function render(){
+const srStatus = document.getElementById("srstatus");
+const plural = (k, w) => `${k} ${w}${k===1?"":"s"}`;
+let booted = false;
+function render(opts){
+  opts = opts || {};
   const h = location.hash.replace(/^#\/?/, "");
   const [p1, p2, p3, p4] = h.split("/");
   const app = document.getElementById("app");
-  /* view: the page name for document.title. Empty on the landing page, which takes the bare brand. */
-  let tab = "home", html, view = "";
-  if(!p1) html = vHome();
-  else if(p1==="industry") { html = vIndustry(p2); tab="home"; view = IND[p2]?.name || "Not found"; }
-  else if(p1==="frameworks"){ html = vFrameworks(); tab="frameworks"; view = "Frameworks"; }
-  else if(p1==="framework"){ html = vFramework(p2); tab="frameworks"; view = FW[p2]?.name || "Not found"; }
-  else if(p1==="products"){ html = vProducts(); tab="products"; view = PROD_ORDER.length===1 ? prodFull(PROD_ORDER[0]) : "Products"; }
-  else if(p1==="product" && p3==="solution"){ html = vSolution(p2, p4); tab="products"; view = SOL[dec(p4)] ? `${dec(p4)} · ${prodName(p2)}` : "Not found"; }
-  else if(p1==="product"){ html = vProduct(p2); tab="products"; view = PRODUCTS[p2] ? prodFull(p2) : "Not found"; }
+  /* view: the page name for document.title. Empty on the landing page, which takes the bare brand.
+     note: what the view holds, for the status announcement. Index views count what they list;
+     row-listing views are counted off the rendered DOM below, so the number announced is the
+     number actually on screen (the coverage filter included). */
+  let tab = "home", html, view = "", note = "", countRows = false;
+  if(!p1){ html = vHome(); note = plural(ROWS.length, "mapping"); }
+  else if(p1==="industry") { html = vIndustry(p2); tab="home"; view = IND[p2]?.name || "Not found";
+    note = plural((IND[p2]?.frameworks||[]).length, "framework"); }
+  else if(p1==="frameworks"){ html = vFrameworks(); tab="frameworks"; view = "Frameworks"; note = plural(FW_ORDER.length, "framework"); }
+  else if(p1==="framework"){ html = vFramework(p2); tab="frameworks"; view = FW[p2]?.name || "Not found"; countRows = true; }
+  else if(p1==="products"){ html = vProducts(); tab="products"; view = PROD_ORDER.length===1 ? prodFull(PROD_ORDER[0]) : "Products";
+    note = plural(PROD_ORDER.length, "product"); }
+  else if(p1==="product" && p3==="solution"){ html = vSolution(p2, p4); tab="products"; view = SOL[dec(p4)] ? `${dec(p4)} · ${prodName(p2)}` : "Not found"; countRows = true; }
+  else if(p1==="product"){ html = vProduct(p2); tab="products"; view = PRODUCTS[p2] ? prodFull(p2) : "Not found";
+    note = PRODUCTS[p2] ? plural(PRODUCTS[p2].solutions.length, "solution") : ""; }
   else if(p1==="solutions"){ location.hash = "#/products"; return; }               /* legacy route */
   else if(p1==="solution"){ location.hash = `#/product/${PROD_ORDER[0]}/solution/${p2}`; return; }  /* legacy route */
-  else if(p1==="matrix" && p2){ html = vMatrixProduct(p2); tab="matrix"; view = PRODUCTS[p2] ? `${prodName(p2)} density` : "Not found"; }
-  else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; view = "Density matrix"; }
-  else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; view = FW[p3] ? `${FW[p3].name} × ${dec(p4)}` : "Not found"; }
-  else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; }
+  else if(p1==="matrix" && p2){ html = vMatrixProduct(p2); tab="matrix"; view = PRODUCTS[p2] ? `${prodName(p2)} density` : "Not found";
+    note = PRODUCTS[p2] ? plural(byProd(p2).length, "mapping") : ""; }
+  else if(p1==="matrix"){ html = vMatrix(); tab="matrix"; view = "Density matrix"; note = plural(ROWS.length, "mapping"); }
+  else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; view = FW[p3] ? `${FW[p3].name} × ${dec(p4)}` : "Not found"; countRows = true; }
+  else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; countRows = true; }
   else { html = vMissing("page", p1); view = "Not found"; }
   app.innerHTML = html;
   document.querySelectorAll("#tabs a").forEach(a=>{
@@ -749,8 +766,30 @@ function render(){
   window.scrollTo(0,0);
   /* Per-route title: bookmarks, browser history and pasted links now identify the view (PR-003). */
   document.title = view ? `${view} · ${META.brand.title}` : META.brand.title;
+
+  /* ---- PR-002 announcement model ----
+     Focus moves to the view's heading, which is what actually relocates a screen reader's
+     reading cursor into the new view; the status region then states where the user landed.
+     On the very first paint focus stays at the top of the document, so the skip link is the
+     first Tab stop and nothing talks over the browser's own page-load announcement. */
+  const first = !booted; booted = true;
+  const h1 = app.querySelector("h1");
+  if(h1) h1.setAttribute("tabindex", "-1");
+  if(countRows) note = plural(app.querySelectorAll("details.row").length, "mapping");
+  if(fwFilter) note += `, filtered to ${fwFilter}`;
+  if(first){
+    /* leave focus where it is */
+  } else if(opts.focus === "filter"){
+    /* Re-rendering destroys the button that was just pressed; put focus back on its replacement
+       so a keyboard user stays in the filter row. No preventScroll: let it scroll back into view. */
+    const b = app.querySelector(`.fbtn[data-cov="${opts.filter || ""}"]`);
+    if(b) b.focus(); else if(h1) h1.focus({preventScroll:true});
+  } else if(h1){
+    h1.focus({preventScroll:true});
+  }
+  if(!first) srStatus.textContent = note ? `${view || META.brand.title} — ${note}` : (view || META.brand.title);
 }
-window.addEventListener("hashchange", render);
+window.addEventListener("hashchange", () => render());
 
 /* ---------------- skip link ---------------- */
 /* The router owns the hash, so the skip link moves focus itself rather than letting the browser
