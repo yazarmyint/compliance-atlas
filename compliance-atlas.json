@@ -12,9 +12,10 @@
    "Informational reference only; not legal, audit, or compliance advice.",
    "Independent community project. Not affiliated with, sponsored, or endorsed by Microsoft Corporation.",
    "Framework and standard names are the property of their respective owners and are used for identification only.",
-   "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it."
+   "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it.",
+   "Atlas content © 2026 Yazar, licensed CC BY 4.0; the build code is MIT. Reuse and adapt it freely with attribution."
   ],
-  "generated": "2026-07-20T09:37:51",
+  "generated": "2026-07-20T09:38:35",
   "default_last_verified": "2026-07-16",
   "product_scope": [
    "purview",

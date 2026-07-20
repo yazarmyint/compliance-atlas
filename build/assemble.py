@@ -125,6 +125,10 @@ FOOTER_LINES = [
     "Independent community project. Not affiliated with, sponsored, or endorsed by Microsoft Corporation.",
     "Framework and standard names are the property of their respective owners and are used for identification only.",
     "Currency is governed by each row's last-verified date; product capabilities and licensing change frequently, so verify before relying on it.",
+    # PR-041. Plain text, no markup: footer_lines are escaped on render. The reasoning behind the
+    # split — that open licensing is only safe because the atlas paraphrases rather than quotes
+    # standards text — lives on the about page and in LICENSE-CONTENT.md, not here.
+    "Atlas content © 2026 Yazar, licensed CC BY 4.0; the build code is MIT. Reuse and adapt it freely with attribution.",
 ]
 
 LICENSING_MODELS = ("per_user", "consumption", "included", "n/a")
