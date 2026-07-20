@@ -10,7 +10,9 @@ from urllib.parse import urlparse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
-                    reverify_passes)
+                    reverify_passes, MAINTENANCE, RETIRED_NAMES, STALENESS_CLASSES,
+                    TRIGGER_TYPES, TYPE_CADENCE, constant_dicts, lic_dicts, staleness_class,
+                    REVERIFY_DATE, REVERIFY_DATE_2, REVERIFIED_LIC_KEYS, REVERIFIED_LIC_KEYS_2)
 from dependency_migration import migrate_row
 
 # Order controls display order in the HTML.
@@ -207,7 +209,204 @@ META = {
                    "compliant with any framework. Control references are practical intent mappings in original words, "
                    "not quotations of the standards. Licensing claims derive from each product's authoritative "
                    "licensing source and can change; verify before relying on it."),
+    # PR-050. The maintenance-trigger table, shipped so the dataset carries its own
+    # re-verification schedule rather than leaving it in prose nobody executes.
+    #
+    # DECLARATIVE ONLY, and this is load-bearing: every value here is a static date,
+    # a static string, or a static integer copied straight out of common.py. Nothing
+    # time-derived is serialized. Staleness is evaluated in maintenance_report() and
+    # written to stderr, never to this dict -- because a computed field here would make
+    # a content-free rebuild produce a non-empty git diff, which is the drift check the
+    # whole QA method rests on.
+    "maintenance": {
+        "triggers": MAINTENANCE,
+        "trigger_types": {t: TYPE_CADENCE[t] for t in TRIGGER_TYPES},
+        "staleness_classes": STALENESS_CLASSES,
+        "retired_names": RETIRED_NAMES,
+    },
 }
+
+# Retired names are flagged only when they appear UN-GLOSSED. The atlas deliberately
+# writes "Microsoft Defender Suite (formerly Microsoft 365 E5 Security)" and
+# "Defender for Cloud Apps (MDCA; formerly Microsoft Cloud App Security)", so the
+# suppression window has to reach back past an abbreviation and separator, not just
+# past a bare "(".
+GLOSS = re.compile(r"formerly[^)]{0,4}$", re.IGNORECASE)
+
+def check_maintenance_table(row_ids):
+    """Structural validation of MAINTENANCE. Pure assertions, no dates evaluated.
+
+    The point of these is that an orphaned trigger becomes impossible: a coordinate
+    that no longer resolves, or a constant nobody is scheduled to re-check, fails the
+    build the moment it appears rather than sitting in prose for months.
+    """
+    dicts = constant_dicts()
+    seen = set()
+    for t in MAINTENANCE:
+        tid = t["id"]
+        assert tid not in seen, f"duplicate trigger id: {tid}"
+        seen.add(tid)
+        assert t["type"] in TRIGGER_TYPES, f"trigger {tid} bad type: {t['type']}"
+        assert t["title"] and t["note"], f"trigger {tid} missing title or note"
+        # cadence_days is None for a fixed-date trigger (an announced retirement, a
+        # regulatory milestone), where a rolling clock would add nothing.
+        cad = t["cadence_days"]
+        assert cad is None or (isinstance(cad, int) and cad > 0), f"trigger {tid} bad cadence_days: {cad}"
+        for field in ("next_review", "last_executed"):
+            val = t[field]
+            if val is None:
+                continue
+            assert ISO_DATE.fullmatch(val), f"trigger {tid} {field} not an ISO date: {val!r}"
+            datetime.date.fromisoformat(val)  # raises on an impossible date
+        assert t["last_executed"] is None or \
+            datetime.date.fromisoformat(t["last_executed"]) <= datetime.date.today(), \
+            f"trigger {tid} last_executed is in the future: {t['last_executed']}"
+        for dict_name, key in t["affects"]:
+            assert dict_name in dicts, f"trigger {tid} names unknown dict: {dict_name}"
+            assert key in dicts[dict_name], f"trigger {tid} names missing key {dict_name}[{key!r}]"
+        for rid in t["rows"]:
+            assert rid in row_ids, f"trigger {tid} names a row that does not exist: {rid}"
+
+    # Every licensing constant must be claimed by at least one trigger. This is the
+    # assertion that found the three ownership gaps the prose list had (ENTRA_LIC's
+    # seven keys, SENTINEL_LIC soar/included, MDC_LIC workload) on its first run.
+    owned = {(d, k) for t in MAINTENANCE for d, k in t["affects"]}
+    unowned = sorted({(d, k) for d, keys in lic_dicts().items() for k in keys} - owned)
+    assert not unowned, ("licensing constants with no maintenance trigger: "
+                         + ", ".join(f"{d}[{k!r}]" for d, k in unowned))
+
+
+def retired_name_hits():
+    """Un-glossed retired names across the constant registries and the assembled rows.
+
+    Clock-free by design. A cadence check would not have caught PR-035 -- the rename
+    landed days after those strings were authored, long inside any sane cadence -- but
+    the defect was statically visible: one SKU and its own former name presented as
+    two alternatives. This is the limb that sees that.
+    """
+    hits = []
+
+    def scan(label, text):
+        if not isinstance(text, str) or not text:
+            return
+        for pair in RETIRED_NAMES:
+            for old in pair["retired"]:
+                for m in re.finditer(r"(?<!\w)" + re.escape(old) + r"(?!\w)", text):
+                    if GLOSS.search(text[max(0, m.start() - 24):m.start()]):
+                        continue
+                    hits.append((label, old, pair["current"]))
+
+    for name, d in constant_dicts().items():
+        for key, val in d.items():
+            if isinstance(val, str):
+                scan(f"{name}[{key!r}]", val)
+            elif isinstance(val, dict):
+                for f in ("official_name", "short_name", "notes", "full_name", "scope"):
+                    scan(f"{name}[{key!r}].{f}", val.get(f, ""))
+                if name == "SOLUTIONS":
+                    scan(f"{name} key {key!r}", key)
+    return hits
+
+
+def maintenance_report(rows, today, stream, limit=12):
+    """Evaluate staleness and emit it. Returns the number of warnings emitted.
+
+    Deliberately returns a count and nothing else: no caller can write any of this
+    back into the dataset, because there is nothing to write. Every value below is
+    computed here, printed, and discarded.
+    """
+    lines, counts = [], {"trigger": 0, "stale": 0, "naming": 0}
+
+    # --- limb 1a: triggers past their next_review -------------------------------
+    due = []
+    for t in MAINTENANCE:
+        if not t["next_review"]:
+            continue
+        overdue = (today - datetime.date.fromisoformat(t["next_review"])).days
+        if overdue > 0:
+            due.append((overdue, t))
+    counts["trigger"] = len(due)
+    for overdue, t in sorted(due, key=lambda x: -x[0])[:limit]:
+        aff = ", ".join(f"{d}[{k!r}]" for d, k in t["affects"]) or "no constants"
+        n_rows = len({r["id"] for r in rows for d, k in t["affects"]
+                      if d in lic_dicts() and lic_dicts()[d][k] in (r.get("license_requirement") or "")})
+        lines.append(f"  TRIGGER  {t['id']} [{t['type']}] next_review {t['next_review']} "
+                     f"-- {overdue} days overdue")
+        lines.append(f"           {t['title']}")
+        lines.append(f"           affects {aff}"
+                     + (f" ({n_rows} rows)" if n_rows else "")
+                     + f" | last executed {t['last_executed'] or 'never'}")
+        lines.append(f"           runbook: docs/MAINTENANCE.md#{t['type']}")
+        lines.append("")
+
+    # --- limb 1b: licensing constants past their class cadence ------------------
+    # A constant's verification date is the latest pass that re-fetched it. That is
+    # read from the same declarative ledger last_verified is derived from, so the two
+    # can never disagree.
+    verified_on = {}
+    for date, keys in ((REVERIFY_DATE, REVERIFIED_LIC_KEYS), (REVERIFY_DATE_2, REVERIFIED_LIC_KEYS_2)):
+        for coord in keys:
+            verified_on[coord] = date
+
+    stale = []
+    for dict_name, d in lic_dicts().items():
+        cls = staleness_class(dict_name)
+        if not cls:
+            continue
+        cls_name, cadence = cls
+        for key, value in d.items():
+            date = verified_on.get((dict_name, key))
+            if not date:
+                continue
+            age = (today - datetime.date.fromisoformat(date)).days
+            if age > cadence:
+                n_rows = sum(1 for r in rows if value in (r.get("license_requirement") or ""))
+                stale.append((age, dict_name, key, cls_name, cadence, date, n_rows))
+    counts["stale"] = len(stale)
+    for age, dict_name, key, cls_name, cadence, date, n_rows in sorted(stale, key=lambda x: -x[0])[:limit]:
+        lines.append(f"  STALE    {dict_name}[{key!r}] [{cls_name}, {cadence}d] "
+                     f"verified {date} -- {age} days old")
+        lines.append(f"           governs {n_rows} rows")
+        lines.append("")
+
+    # Boundary rows carry no licensing constant, so they are named individually.
+    # There are eight of them; a list that short is clearer than an aggregate.
+    b_cadence = STALENESS_CLASSES["boundary"]["cadence_days"]
+    boundary = [r for r in rows if r.get("licensing_model") == "n/a"
+                and (today - datetime.date.fromisoformat(r["last_verified"])).days > b_cadence]
+    if boundary:
+        oldest = min(r["last_verified"] for r in boundary)
+        counts["stale"] += 1
+        lines.append(f"  STALE    {len(boundary)} boundary rows [boundary, {b_cadence}d] "
+                     f"oldest {oldest} -- {(today - datetime.date.fromisoformat(oldest)).days} days old")
+        lines.append("           " + ", ".join(sorted(r["id"] for r in boundary)))
+        lines.append("")
+
+    # --- limb 2: the clock-free naming lint -------------------------------------
+    hits = retired_name_hits()
+    counts["naming"] = len(hits)
+    for label, old, current in hits[:limit]:
+        lines.append(f"  NAMING   {label} contains retired name {old!r} un-glossed; "
+                     f"current name is {current!r}")
+        lines.append("")
+
+    total = counts["trigger"] + counts["stale"] + counts["naming"]
+    if not total:
+        return 0
+
+    print("\nbuild/assemble.py: maintenance warnings (non-fatal; build succeeded)\n", file=stream)
+    for line in lines:
+        print(line, file=stream)
+    hidden = max(0, counts["trigger"] - limit) + max(0, counts["stale"] - limit) + max(0, counts["naming"] - limit)
+    if hidden:
+        print(f"  ... and {hidden} more; run with --maintenance-report for the full list\n", file=stream)
+    governed = sum(1 for r in rows if r.get("licensing_model") != "n/a")
+    print(f"  {counts['trigger']} triggers due | {counts['stale']} constants past cadence "
+          f"({governed} of {len(rows)} rows governed) | {counts['naming']} naming defects", file=stream)
+    print("  These are advisory. Re-run with --strict-maintenance to fail the build instead.\n",
+          file=stream)
+    return total
+
 
 def main():
     frameworks, rows, dep_log = {}, [], []
@@ -301,6 +500,12 @@ def main():
             # A row cannot depend on its own product (§11.5 item 3, after the soc2-cc6-6 bug)
             assert dep["product"] != pid, f"row {r['id']} related_microsoft self-references its own product: {pid}"
 
+    # ---- maintenance table: structural validation only (PR-050) ----
+    # No dates are compared against today here. This block asks only "is the table
+    # internally coherent and does every coordinate still resolve", which is what
+    # makes an orphaned trigger impossible.
+    check_maintenance_table(set(ids))
+
     # Verification currency, derived from the rows rather than declared by hand (PR-014b).
     # default_last_verified and every row's last_verified are read-only here.
     vdates = sorted(r["last_verified"] for r in rows if r.get("last_verified"))
@@ -324,6 +529,18 @@ def main():
     n_flag = sum(1 for rec in dep_log if rec["flagged"])
     print(f"Wrote {path}: {len(rows)} rows, {len(frameworks)} frameworks, {len(INDUSTRIES)} industries, {len(PRODUCTS)} product(s)")
     print(f"Dependency migration: {len(dep_log)} rows migrated; {n_rel} rows with related_microsoft entries; {n_flag} rows with flagged (platform-token) external segments -> {logpath}")
+
+    # ---- maintenance warnings (PR-050) ----
+    # Deliberately AFTER the write. There is no code path by which a computed
+    # staleness value can reach the serializer, because the serializer has already
+    # run. Warnings go to stderr so stdout stays the build record; the build exits 0
+    # regardless, so an unrelated fix can ship while rows are aging.
+    full = "--maintenance-report" in sys.argv
+    n = maintenance_report(rows, datetime.date.today(), sys.stderr, limit=10**6 if full else 12)
+    if n and "--strict-maintenance" in sys.argv:
+        print(f"assemble.py: --strict-maintenance set and {n} maintenance warning(s) present; failing.",
+              file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
