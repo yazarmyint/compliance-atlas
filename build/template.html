@@ -42,7 +42,9 @@
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+/* scroll-padding keeps a focused element clear of the sticky header when the browser
+   scrolls it into view (Tab traversal, skip link, per-route focus move). */
+html{scroll-behavior:smooth; scroll-padding-top:76px}
 body{
   margin:0; background:var(--paper); color:var(--ink);
   font:15px/1.55 var(--font-body);
@@ -50,6 +52,27 @@ body{
 }
 [data-theme="dark"] body{background-image:repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,.012) 2px 4px)}
 a{color:var(--link); text-decoration:none} a:hover{text-decoration:underline}
+
+/* ---------- accessibility utilities ---------- */
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0}
+/* Skip link: position:fixed so revealing it cannot shift the layout. */
+.skip{position:fixed; left:10px; top:-64px; z-index:100; padding:10px 16px; border-radius:8px;
+  background:var(--card); color:var(--link); border:1px solid var(--rule-2); box-shadow:var(--shadow);
+  font:600 13.5px var(--font-body); text-decoration:none; transition:top .12s ease}
+.skip:focus{top:10px}
+/* Focus visibility: the search field's focus ink applied to every interactive element.
+   --link clears 4.5:1 against paper in both themes, so the ring is visible in each. */
+a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
+  outline:2px solid var(--link); outline-offset:2px;
+  box-shadow:0 0 0 4px color-mix(in srgb, var(--link) 18%, transparent)}
+/* details.row sets overflow:hidden, which would clip an outset ring on its summary. */
+details.row>summary:focus-visible, details.disclose>summary:focus-visible{
+  outline-offset:-3px; box-shadow:none}
+/* Programmatic focus targets (skip-link landing, per-route heading) take no visible ring:
+   they are containers the user was moved to, not controls they navigated onto. */
+main#app:focus, main#app:focus-visible,
+h1[tabindex="-1"]:focus, h1[tabindex="-1"]:focus-visible{outline:none; box-shadow:none}
 h1,h2,h3,.serif{font-family:var(--font-display); font-weight:600; letter-spacing:.01em}
 mark{background:var(--warn-bg); color:inherit; padding:0 2px; border-radius:2px}
 .mono{font-family:var(--font-mono)}
@@ -60,7 +83,9 @@ mark{background:var(--warn-bg); color:inherit; padding:0 2px; border-radius:2px}
 /* ---------- header ---------- */
 header.site{position:sticky; top:0; z-index:50; background:var(--paper); border-bottom:1px solid var(--rule-2)}
 header.site .bar{display:flex; align-items:center; gap:18px; padding:12px 0}
-.brand{display:flex; align-items:baseline; gap:10px; white-space:nowrap; cursor:pointer}
+.brand{display:flex; align-items:baseline; gap:10px; white-space:nowrap; cursor:pointer;
+  color:inherit; text-decoration:none}
+a.brand:hover{text-decoration:none}
 .brand .glyph{font-family:var(--font-display); font-size:22px; color:var(--accent-ink)}
 .brand b{font-family:var(--font-display); font-size:18px; font-weight:600}
 .brand span{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
@@ -110,9 +135,12 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .stat span{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
 .grid{display:grid; gap:14px}
 .grid.cards{grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); margin:20px 0 44px}
-.card{background:var(--card); border:1px solid var(--rule-2); border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
+/* Cards are <a> elements: the whole card is the link, so the mouse hit area is the full
+   card exactly as before, and keyboard users get one stop per card. */
+.card{display:block; color:var(--ink); text-decoration:none;
+  background:var(--card); border:1px solid var(--rule-2); border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
   cursor:pointer; transition:transform .12s ease, border-color .12s ease; position:relative; overflow:hidden}
-.card:hover{transform:translateY(-2px); border-color:var(--rule-2)}
+.card:hover{transform:translateY(-2px); border-color:var(--rule-2); text-decoration:none}
 .card::after{content:"→"; position:absolute; right:16px; top:14px; color:var(--ink-3); font-size:15px; transition:transform .12s}
 .card:hover::after{transform:translateX(3px); color:var(--accent-ink)}
 .card h3{margin:2px 0 6px; font-size:19px}
@@ -212,9 +240,15 @@ table.matrix thead th{height:132px; position:relative; min-width:54px; padding:0
 table.matrix thead th .rot{position:absolute; bottom:8px; left:50%; transform-origin:bottom left; transform:rotate(-52deg); white-space:nowrap; display:block; line-height:1}
 table.matrix tbody th{white-space:nowrap; padding-right:12px}
 table.matrix td{width:52px; height:38px; text-align:center; border-radius:6px; background:var(--heat-0);
-  font:600 12px var(--font-mono); color:var(--ink-2); cursor:pointer; position:relative}
+  font:600 12px var(--font-mono); color:var(--ink-2); cursor:pointer; position:relative; padding:0}
+/* The cell's link fills the cell, so the click target is the whole cell as before. */
+table.matrix td a{display:flex; align-items:center; justify-content:center; width:100%; height:100%;
+  color:inherit; text-decoration:none; border-radius:6px}
+table.matrix td a:hover{text-decoration:none}
+table.matrix td a:focus-visible{outline-offset:-3px; box-shadow:none}
 table.matrix td.z{cursor:default; color:var(--ink-3); opacity:.55}
-table.matrix td:hover:not(.z){outline:2px solid var(--ink); outline-offset:1px}
+table.matrix td:hover:not(.z):not(.total):not(.corner){outline:2px solid var(--ink); outline-offset:1px}
+table.matrix td.corner{background:transparent; width:auto; height:auto; cursor:default}
 table.matrix td.total, table.matrix th.total{background:transparent; font-weight:700; color:var(--ink); cursor:default}
 .legendrow{display:flex; gap:16px; align-items:center; font-size:12px; color:var(--ink-2); flex-wrap:wrap; margin:6px 0 12px}
 .legendrow .sw{display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:5px}
@@ -252,13 +286,14 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
 </style>
 </head>
 <body>
+<a class="skip" href="#app">Skip to main content</a>
 <script id="pcm-data" type="application/json">/*__DATA__*/</script>
 
 <header class="site"><div class="wrap bar">
-  <div class="brand" onclick="location.hash='#/'" title="Home" id="brandBox">
-    <span class="glyph">¶</span><b id="brandTitle"></b><span id="brandVer"></span>
-  </div>
-  <nav class="tabs" id="tabs">
+  <a class="brand" href="#/" title="Home" id="brandBox">
+    <span class="glyph" aria-hidden="true">¶</span><b id="brandTitle"></b><span id="brandVer"></span>
+  </a>
+  <nav class="tabs" id="tabs" aria-label="Primary">
     <a href="#/" data-tab="home">Industries</a>
     <a href="#/frameworks" data-tab="frameworks">Frameworks</a>
     <a href="#/products" data-tab="products">Product Pivot</a>
@@ -266,16 +301,16 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
   </nav>
   <div class="spacer"></div>
   <div class="searchbox">
-    <span class="icon">⌕</span>
+    <span class="icon" aria-hidden="true">⌕</span>
     <input id="q" type="search" placeholder="Search controls, refs, products…  ( / )" autocomplete="off" aria-label="Global search">
   </div>
-  <button class="iconbtn" id="themeBtn" title="Toggle light/dark">◐</button>
-  <button class="iconbtn" onclick="window.print()" title="Print current view">⎙</button>
+  <button class="iconbtn" id="themeBtn" type="button" title="Toggle light/dark"><span aria-hidden="true">◐</span></button>
+  <button class="iconbtn" type="button" onclick="window.print()" aria-label="Print current view" title="Print current view"><span aria-hidden="true">⎙</span></button>
 </div></header>
 
 <!-- The placeholder is the whole of <main> until render() replaces it; on a slow connection the
      ~1 MB single-file payload would otherwise paint a blank page. -->
-<main id="app" class="wrap" aria-live="polite"><p class="loading">Loading the atlas…</p></main>
+<main id="app" class="wrap" tabindex="-1" aria-live="polite"><p class="loading">Loading the atlas…</p></main>
 
 <footer class="site"><div class="wrap">
   <ul class="legal" id="footLegal"></ul>
@@ -381,7 +416,7 @@ function rowCard(r, opts={}){
         ${r.cloud_availability_note?`<span class="chip gov" title="US Government cloud caveat; expand for detail">GOV ⚠</span>`:""}
         ${unv?`<span class="chip unv">UNVERIFIED</span>`:""}
         ${r.last_verified?`<span class="chip ver" title="Last verified against its sources on ${esc(r.last_verified)}">✓ ${esc(r.last_verified)}</span>`:""}
-        <span class="flip">›</span></span>
+        <span class="flip" aria-hidden="true">›</span></span>
     </summary>
     <div class="body">
       ${unv?`<div class="rowunv">UNVERIFIED: this row could not be confirmed against a live source; do not present without independent verification.</div>`:""}
@@ -439,7 +474,7 @@ function detailToggle(detail, label){
   /* Progressive disclosure: collapsed <details> holding the verbatim long-form note/scope.
      Native element (no JS to toggle), works offline; joins the print-expansion path below. */
   if(!detail) return "";
-  return `<details class="disclose"><summary>${esc(label)} <span class="flip">›</span></summary>`
+  return `<details class="disclose"><summary>${esc(label)} <span class="flip" aria-hidden="true">›</span></summary>`
     + `<div class="disc-body">${esc(detail)}</div></details>`;
 }
 function cmChip(fw){
@@ -469,10 +504,10 @@ function vHome(){
   <section class="block"><div class="overline">Industry lens</div><h2>Start from an industry</h2>
   <div class="grid cards">${inds.map(([id,i])=>{
     const rows = ROWS.filter(r => i.frameworks.includes(r.framework));
-    return `<div class="card" onclick="location.hash='#/industry/${id}'">
+    return `<a class="card" href="#/industry/${esc(id)}" aria-label="${esc(i.name)}">
       <h3>${esc(i.name)}</h3><div class="desc">${esc(i.note)}</div>
       <div class="meta">${i.frameworks.map(f=>`<span class="chip">${esc(FW[f]?.name||f)}</span>`).join("")}</div>
-      ${minibar(rows)}</div>`; }).join("")}
+      ${minibar(rows)}</a>`; }).join("")}
   </div></section>`;
 }
 function vIndustry(id){
@@ -484,11 +519,11 @@ function vIndustry(id){
   <section class="block"><h2>Applicable frameworks</h2>
   <div class="grid cards">${i.frameworks.map(fid=>{
     const f = FW[fid], rows = byFw(fid);
-    return `<div class="card" onclick="location.hash='#/framework/${fid}'">
+    return `<a class="card" href="#/framework/${esc(fid)}" aria-label="${esc(f.name)}">
       <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
       <div class="desc">${esc(f.applies_to)}</div>
       <div class="meta"><span class="count-pill">${rows.length} mapped controls</span>${f.compliance_manager_template?.exists?`<span class="chip">CM template ✓</span>`:""}</div>
-      ${minibar(rows)}</div>`; }).join("")}
+      ${minibar(rows)}</a>`; }).join("")}
   </div></section>`;
 }
 function vFrameworks(){
@@ -496,13 +531,14 @@ function vFrameworks(){
     <div class="full">Every mapped control, grouped by framework. Each row is verified against a live official source; per-row dates govern currency.</div></div>
   <div class="grid cards" style="margin-top:22px">${FW_ORDER.map(fid=>{
     const f = FW[fid], rows = byFw(fid);
-    return `<div class="card" onclick="location.hash='#/framework/${fid}'">
+    return `<a class="card" href="#/framework/${esc(fid)}" aria-label="${esc(f.name)}">
       <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
       <div class="desc">${esc(f.applies_to)}</div>
       <div class="meta"><span class="count-pill">${rows.length} controls</span>${cmChip(f)}</div>
-      ${minibar(rows)}</div>`; }).join("")}</div>`;
+      ${minibar(rows)}</a>`; }).join("")}</div>`;
 }
 let fwFilter = null;
+function setFwFilter(c){ fwFilter = c; render(); }
 function vFramework(id){
   const f = FW[id]; if(!f) return vMissing("framework", id);
   let rows = byFw(id);
@@ -521,11 +557,11 @@ function vFramework(id){
     ${detailToggle(f.notes_detail, "Full framework notes")}
   </div>
   <div class="toolrow"><span class="lbl">Coverage filter</span>
-    <button class="fbtn ${!fwFilter?"on":""}" onclick="fwFilter=null;render()">All (${byFw(id).length})</button>
-    ${filters.map(c=>`<button class="fbtn ${fwFilter===c?"on":""}" onclick="fwFilter='${c}';render()">${c} (${byFw(id).filter(r=>r.coverage===c).length})</button>`).join("")}
+    <button type="button" class="fbtn ${!fwFilter?"on":""}" data-cov="" aria-pressed="${!fwFilter}" onclick="setFwFilter(null)">All (${byFw(id).length})</button>
+    ${filters.map(c=>`<button type="button" class="fbtn ${fwFilter===c?"on":""}" data-cov="${esc(c)}" aria-pressed="${fwFilter===c}" onclick="setFwFilter('${esc(c)}')">${esc(c)} (${byFw(id).filter(r=>r.coverage===c).length})</button>`).join("")}
     <span class="spacer"></span>
-    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
-    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
+    <button type="button" class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
+    <button type="button" class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
   </div>
   ${taxonomyLegend(true)}
   ${renderControlGroups(rows)}`;
@@ -536,10 +572,10 @@ function vProducts(){
     <div class="full">${esc(PIVOT_EXPLAINER)}</div></div>
   <div class="grid cards" style="margin-top:22px">${PROD_ORDER.map(pid=>{
     const rows = byProd(pid);
-    return `<div class="card" onclick="location.hash='#/product/${pid}'">
+    return `<a class="card" href="#/product/${esc(pid)}" aria-label="${esc(prodFull(pid))}">
       <h3>${esc(prodFull(pid))}</h3><div class="desc">${esc(PRODUCTS[pid].notes||"")}</div>
       <div class="meta"><span class="count-pill">${rows.length} mappings</span><span class="count-pill">${PRODUCTS[pid].solutions.length} solutions</span></div>
-      ${minibar(rows)}</div>`; }).join("")}</div>`;
+      ${minibar(rows)}</a>`; }).join("")}</div>`;
 }
 function vProduct(pid){
   const p = PRODUCTS[pid]; if(!p) return vMissing("product", pid);
@@ -557,10 +593,10 @@ function vProduct(pid){
   <div class="grid cards" style="margin-top:22px">${p.solutions.map(key=>{
     const s = SOL[key]||{}, prim = bySolP(pid,key), also = byAlsoP(pid,key);
     const fwids = [...new Set(prim.concat(also).map(r=>r.framework))];
-    return `<div class="card" onclick="location.hash='#/product/${pid}/solution/${encodeURIComponent(key)}'">
+    return `<a class="card" href="#/product/${esc(pid)}/solution/${esc(encodeURIComponent(key))}" aria-label="${esc(key)}">
       <h3>${esc(key)}</h3><div class="desc">${esc(s.scope||"")}</div>
       <div class="meta"><span class="count-pill">${prim.length} primary</span><span class="count-pill">${also.length} contributing</span><span class="count-pill">${fwids.length} frameworks</span></div>
-      ${minibar(prim)}</div>`; }).join("")}
+      ${minibar(prim)}</a>`; }).join("")}
   </div>
   ${refs.length?`<section class="block"><h2>Referenced by other products' mappings</h2>
     <p class="subtitle muted small">Rows mapped to another product that name ${esc(p.official_name)} as a related product.</p>
@@ -582,8 +618,8 @@ function vSolution(pid, key){
     ${detailToggle(s.scope_detail, "Full scope")}
   </div>
   <div class="toolrow">
-    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
-    <button class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
+    <button type="button" class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=true)">Expand all</button>
+    <button type="button" class="fbtn" onclick="document.querySelectorAll('details.row').forEach(d=>d.open=false)">Collapse all</button>
   </div>
   ${prim.length?`<section class="block"><h2>Primary mappings</h2>${groupFw(prim)}</section>`:""}
   ${also.length?`<section class="block"><h2>Contributing mappings</h2><p class="subtitle muted small">Rows where ${esc(key)} strengthens a control mapped primarily to another solution.</p>${groupFw(also)}</section>`:""}`;
@@ -594,30 +630,36 @@ function heatColor(v, max){
   return `color-mix(in srgb, var(--partial) ${Math.round(14+72*t)}%, var(--heat-0))`;
 }
 function matrixTable(rowLabels, colLabels, cellFn, opts={}){
-  /* Generic heat table. rowLabels/colLabels: [{id,label}]. cellFn(rid,cid) -> {count, href} */
+  /* Generic heat table. rowLabels/colLabels: [{id,label}]. cellFn(rid,cid) -> {count, href}
+     Every populated cell holds a link filling the cell, named "<row> × <column>: n row(s)" so it
+     carries its meaning out of context; a bare "12" would not. Empty cells keep the decorative
+     dot for sighted readers and expose a plain "0" to assistive tech. The corner cell is a <td>
+     (it heads nothing) and the bottom totals are <td> so no <th> is left without data cells. */
   let max = 1;
   rowLabels.forEach(r=>colLabels.forEach(c=>{ max = Math.max(max, cellFn(r.id,c.id).count); }));
-  const head = `<thead><tr><th></th>${colLabels.map(c=>`<th><span class="rot">${esc(c.label)}</span></th>`).join("")}<th class="total" style="vertical-align:bottom">Σ</th></tr></thead>`;
+  const sigma = `<span aria-hidden="true">Σ</span><span class="sr-only">Total</span>`;
+  const head = `<thead><tr><td class="corner"></td>${colLabels.map(c=>`<th scope="col"><span class="rot">${esc(c.label)}</span></th>`).join("")}<th scope="col" class="total" style="vertical-align:bottom">${sigma}</th></tr></thead>`;
   const body = rowLabels.map(r=>{
     let rowTotal = 0;
     const tds = colLabels.map(c=>{
       const {count, href} = cellFn(r.id, c.id); rowTotal += count;
-      if(!count) return `<td class="z">·</td>`;
+      if(!count) return `<td class="z"><span aria-hidden="true">·</span><span class="sr-only">0</span></td>`;
       const bg = heatColor(count, max), dark = count/max > .55;
-      return `<td style="background:${bg};${dark?"color:var(--heat-txt-hi);":""}" title="${esc(r.label)} × ${esc(c.label)}: ${count} row(s)" onclick="location.hash='${href}'">${count}</td>`;
+      const name = `${r.label} × ${c.label}: ${count} row(s)`;
+      return `<td style="background:${bg};${dark?"color:var(--heat-txt-hi);":""}"><a href="${esc(href)}" title="${esc(name)}" aria-label="${esc(name)}">${count}</a></td>`;
     }).join("");
-    return `<tr><th>${esc(r.label)}</th>${tds}<td class="total">${rowTotal}</td></tr>`;
+    return `<tr><th scope="row">${esc(r.label)}</th>${tds}<td class="total">${rowTotal}</td></tr>`;
   }).join("");
-  const totals = `<tr><th class="total">Σ</th>${colLabels.map(c=>{
-    const t = rowLabels.reduce((a,r)=>a+cellFn(r.id,c.id).count, 0); return `<th class="total">${t}</th>`; }).join("")}<th class="total">${opts.grand??""}</th></tr>`;
-  return `<div class="matrixwrap"><table class="matrix">${head}<tbody>${body}${totals}</tbody></table></div>`;
+  const totals = `<tr><th scope="row" class="total">${sigma}</th>${colLabels.map(c=>{
+    const t = rowLabels.reduce((a,r)=>a+cellFn(r.id,c.id).count, 0); return `<td class="total">${t}</td>`; }).join("")}<td class="total">${opts.grand??""}</td></tr>`;
+  return `<div class="matrixwrap"><table class="matrix">${opts.caption?`<caption class="sr-only">${esc(opts.caption)}</caption>`:""}${head}<tbody>${body}${totals}</tbody></table></div>`;
 }
 function vMatrix(){
   const fwL = FW_ORDER.map(f=>({id:f, label:FW[f].name}));
   const prodL = PROD_ORDER.map(p=>({id:p, label:prodName(p)}));
   const top = matrixTable(fwL, prodL,
     (fid,pid)=>({count: byFw(fid).filter(r=>r.product===pid).length, href:`#/matrix/${pid}`}),
-    {grand: ROWS.length});
+    {grand: ROWS.length, caption: "Mapped controls per framework and product. Each populated cell links to that product's density detail."});
   /* Single-product convenience: embed the per-product drill below, via the same generalized body. */
   const drills = PROD_ORDER.length===1 ? matrixProductSection(PROD_ORDER[0])
     : `<p class="subtitle muted small" style="margin-top:6px">Click a product column cell to drill into its frameworks × solutions matrix.</p>`;
@@ -632,7 +674,7 @@ function matrixProductSection(pid){
   const inner = matrixTable(fwL, solL,
     (fid,skey)=>({count: byFw(fid).filter(r=>r.product===pid && rowSolution(r)===skey).length,
                   href:`#/cell/${pid}/${fid}/${encodeURIComponent(skey)}`}),
-    {grand: byProd(pid).length});
+    {grand: byProd(pid).length, caption: `${prodFull(pid)}: primary mappings per framework and solution. Each populated cell links to that cell's rows.`});
   return `<section class="block"><h2>${esc(prodFull(pid))}: frameworks × solutions</h2>
     <div class="legendrow"><span class="muted">cells are primary-solution counts; contributing solutions are listed on each row · click a cell to open its rows</span></div>
     ${inner}</section>`;
@@ -698,13 +740,25 @@ function render(){
   else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; }
   else { html = vMissing("page", p1); view = "Not found"; }
   app.innerHTML = html;
-  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on", a.dataset.tab===tab));
+  document.querySelectorAll("#tabs a").forEach(a=>{
+    const on = a.dataset.tab===tab;
+    a.classList.toggle("on", on);
+    if(on) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+  });
   if(!["framework"].includes(p1)) fwFilter = null;
   window.scrollTo(0,0);
   /* Per-route title: bookmarks, browser history and pasted links now identify the view (PR-003). */
   document.title = view ? `${view} · ${META.brand.title}` : META.brand.title;
 }
 window.addEventListener("hashchange", render);
+
+/* ---------------- skip link ---------------- */
+/* The router owns the hash, so the skip link moves focus itself rather than letting the browser
+   navigate to "#app" — that would be parsed as a route and render the "not found" view. */
+document.querySelector("a.skip").addEventListener("click", e => {
+  e.preventDefault();
+  document.getElementById("app").focus();
+});
 
 /* ---------------- search box ---------------- */
 const q = document.getElementById("q");
@@ -716,7 +770,12 @@ document.addEventListener("keydown", e => {
 
 /* ---------------- theme ---------------- */
 const themeBtn = document.getElementById("themeBtn");
-function setTheme(t){ document.documentElement.dataset.theme = t; try{localStorage.setItem("pcm-theme", t);}catch(e){} }
+function setTheme(t){
+  document.documentElement.dataset.theme = t;
+  /* The button's name states what activating it will do, so it is meaningful without the glyph. */
+  themeBtn.setAttribute("aria-label", t==="dark" ? "Switch to light theme" : "Switch to dark theme");
+  try{localStorage.setItem("pcm-theme", t);}catch(e){}
+}
 themeBtn.addEventListener("click", ()=> setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
 (function(){ let t = new URLSearchParams(location.search).get("theme");
   if(!t){ try{t=localStorage.getItem("pcm-theme");}catch(e){} }
