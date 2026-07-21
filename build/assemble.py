@@ -211,7 +211,14 @@ BRAND = {
     # artifact is a PATCH, because one version must identify exactly one artifact and two different JSON
     # files may never both claim 3.1.1. The docs-only decision records that shipped alongside touch no
     # artifact and take no bump (the versioning policy gained a line saying so). Reasoning in §31.
-    "atlas_version": "3.1.2",
+    # 3.2.0 is a MINOR: row deep links (PR-004) -- the #/row/<id> route and a per-row copy-link button.
+    # A reader gains a feature (any row is now citable on its own), which the policy's MINOR band names.
+    # Not MAJOR: compliance-atlas.json is byte-identical to 3.1.2 apart from this version field -- no row
+    # key added or removed, no schema or product/framework scope change; the new reference/row-ids.txt and
+    # build/update_row_ids.py are build machinery and an id inventory, not the data model. Not PATCH: this
+    # is a new capability, not a correction or re-verification. The change lives in the built HTML, whose
+    # bytes moved, so a bump is required (§31). Reasoning in AUDIT-FINDINGS §32.
+    "atlas_version": "3.2.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }

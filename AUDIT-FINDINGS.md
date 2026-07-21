@@ -3350,3 +3350,95 @@ maintenance-table validation passed, no triggers due; BANNED_SPELLINGS lint clea
 153 / 151 OK / 2 documented WAF / 0 BROKEN; axe 0 violations across 13 routes x 2 themes. Deploy
 verification (Pages green, deployed sha256 == repo, deployed meta.version 3.1.2, both CJIS triggers
 present in deployed `meta.maintenance`) is performed post-merge and recorded in the session log.
+
+## 32. Row deep links (2026-07-21) — PR-004, v3.2.0
+
+A template-and-build-tooling session. `compliance-atlas.json` did not change except the two version
+fields; the feature's bytes live entirely in `compliance-atlas.html`. The goal from PR-004: make any
+single mapping row linkable, resolvable from a cold load, with a copy-link affordance on every row.
+
+### 32.1 Destination — a dedicated single-row view
+
+`#/row/<id>` renders its own view (`vRow`), not a filtered framework view with a row expanded. This was
+the binding choice from the Session 10 §8 URL scheme, which reserved `#/row/<id>` as its own route
+precisely so a row link resolves identically regardless of the filter active when it was copied — a
+fragment on a filtered view could land on a row the inherited filter hides. `vRow` shows a breadcrumb
+(`Frameworks / <framework> / <control_ref>`, one leading link then plain text, matching every other
+crumb), a pagehead with framework chip + product chip + coverage badge, an explicit "Open `<framework>`"
+lede link, and the row rendered expanded via `rowCard(r, {open:true})` — a new `opts.open` that sets the
+native `<details open>` with no script, so it works on a cold `file://` load. The full row detail,
+including the verbatim license string, is present. An unknown id renders `vRowMissing`, which names the
+id in monospace and links back to the framework index; the router never falls through to a blank view or
+throws. Stray query keys on the route are ignored (scheme rule 2), verified in the walk.
+
+### 32.2 Copy affordance and the file:// honesty problem
+
+Each row's expanded footer carries a **Copy link** button. The URL it copies is built from the baked
+`<link rel="canonical">` href, not from `location`: that link is an absolute string fixed at build time
+(`SITE_URL + ATLAS_FILENAME`), so the copied URL is the public hosted link to the row even from a
+`file://` copy — which is the honest answer, because a local path was never shareable and the row id is
+identical across copies. Clipboard access degrades in three tiers, because `navigator.clipboard` needs a
+secure context a `file://` page may lack: async `writeText`, then `execCommand("copy")` inside the click
+gesture, then a selected read-only field the reader copies by hand. The tier-3 note states plainly that
+the shown link points to the hosted site, so a `file://` reader does not mistake it for a local
+reference. Confirmation is visible (button text swaps to "Copied", with a tick added in CSS — text and
+glyph, never color alone) and announced through the same `#srstatus` region the router uses.
+
+### 32.3 Row-id permanence and the manual-bless guard
+
+Deep links make every published row id a permanent public identifier. Two rules, now in
+`docs/AUTHORING.md`: an id is never renamed in place or reused for a different row; retiring a row removes
+its line from the inventory in the same commit, and the route then serves its not-found state for that id.
+`reference/row-ids.txt` is the committed roster of all 378 ids; `assemble.py` (`check_row_id_inventory`)
+hard-fails if a rostered id disappears (an accidental rename or deletion that would 404 inbound links) or
+if a new id is not yet blessed. Blessing is a deliberate manual act — `python build/update_row_ids.py
+--write` — and no build or gate script ever runs it, so a new permanent identifier is only ever created
+on purpose. The guard and inventory touch neither `compliance-atlas.json` nor the HTML, so the empty JSON
+diff holds. A pointer-to-replacement tombstone is the intended treatment for a genuine rename-to-
+replacement and is built when the first such retirement happens; until then the graceful not-found state
+is the committed floor, needed for mistyped ids regardless.
+
+### 32.4 An axe coverage boundary, made concrete
+
+The single-row view is the first place in the atlas where a row renders open by default. That exposed a
+state the axe harness had never crawled: it audits each route in its default rendering, and rows are
+collapsed everywhere else, so the row footer's inline links (framework, solutions) had never been
+evaluated. On the open row they tripped `link-in-text-block` — links distinguishable from surrounding
+muted text by color only. The fix is a persistent underline on `.row .foot a` (WCAG 1.4.1), a non-color
+cue that shows only on an expanded row. Worth recording as a boundary of what the harness sees: axe zero
+is zero for the default state of each route, and a feature that changes a default rendering can surface
+controls the crawl had not reached. The two new routes `#/row/iso-a-5-10` (valid) and `#/row/no-such-row`
+(invalid) were added to the harness route list.
+
+### 32.5 Reader-facing prose
+
+The new prose (not-found text, copy confirmations, the manual-tier note, the single-row lede) ran through
+the humanizer before the gate. One string changed: the not-found explanation lost a negative-parallelism
+construction and a "genuinely gone" flourish, and now reads "Published row ids are never renamed, so a
+link that worked before still points to the same row; if nothing loads, that row is no longer in the
+atlas." The rest passed clean.
+
+### 32.6 Version — 3.2.0, MINOR
+
+A reader-facing feature added, existing rows unchanged in shape and meaning: the MINOR band. Not MAJOR —
+`compliance-atlas.json` is byte-identical to 3.1.2 apart from the two version fields, no row key added or
+removed, no schema or product/framework scope change; `reference/row-ids.txt` and
+`build/update_row_ids.py` are build machinery and an id inventory, not the data model. Not PATCH — readers
+gain a capability, not a correction. The feature's bytes moved in `compliance-atlas.html`, so a bump is
+required (§31's rule that anything changing the published bytes bumps).
+
+### 32.7 Structure and gate
+
+Two commits on `session-14-row-deep-links`, per the standing "version bumps ride their own commit"
+discipline: (1) the PR-004 feature (template.html, rebuilt compliance-atlas.html, assemble.py guard,
+update_row_ids.py, reference/row-ids.txt, tools/axe_check.mjs routes, docs/AUTHORING.md) with an **empty**
+compliance-atlas.json diff; (2) the version bump to 3.2.0 (assemble.py), CHANGELOG 3.2.0 entry, this §32,
+rebuilt artifacts, with a compliance-atlas.json diff of the two version fields only. Gate: rebuild exit 0,
+378 rows, id-inventory guard passed; empty JSON diff on the feature commit; axe **0** violations across
+15 routes x 2 themes, including both new row routes; BANNED_SPELLINGS clean; check_urls 153 / 151 OK /
+2 documented WAF / 0 BROKEN; a scripted keyboard/behavior walk of the four gate scenarios (cold arrival
+silent with focus at top, navigate-to-context, copy with canonical URL + confirmation, invalid id) plus
+the in-session announcement and the file:// tier-3 fallback, 26/26 assertions, 0 JS errors. Deploy
+verification (Pages green, deployed sha256 == repo, deployed meta.version 3.2.0, live cold round-trip on
+`#/row/iso-a-5-10`, invalid id, and a copy-link round-trip) is performed post-merge and recorded in the
+session log.
