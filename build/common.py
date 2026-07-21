@@ -539,6 +539,35 @@ MAINTENANCE = [
              "(including the 73M-transaction Storage threshold that PROJECT-REVIEW SS4.4 challenged and "
              "SS22.5 confirmed against pricing-page footnote 6) and had no trigger owner in the prose "
              "list. Consumption clock, re-derived from the Azure pricing page."},
+
+    # ---- CJIS (evaluated and deferred, Session 13 / PR-025) ----------------
+    # CJIS Security Policy v6.0 was evaluated live on 2026-07-21 and DEFERRED, not
+    # declined and not mapped. Two dated triggers carry the two conditions under which
+    # it gets reconsidered. Full rationale, both drafted entries, and the demand
+    # thresholds live in FRAMEWORK-SELECTION.md (Session 13); these notes stay compact
+    # and point there so the criteria are recorded in one place, not two.
+    {"id": "TRG-CJIS-DEMAND", "type": "watch", "cadence_days": None,
+     "title": "CJIS demand-criterion check: does sustained interest justify the framework increment?",
+     "next_review": "2026-08-20", "last_executed": "2026-07-21",
+     "affects": [], "rows": [],
+     "note": "CJIS v6.0 was evaluated and deferred in Session 13 (2026-07-21); the full go/no-go "
+             "thresholds and rationale are in FRAMEWORK-SELECTION.md. When this fires, judge demand over "
+             "a post-bot-wave 4-week window using repo-side and inbound signals only (no page "
+             "instrumentation is added, by design): GitHub stars/forks, substantive issues, engagement "
+             "requests, and the repo unique-visitor trend. A concrete state/local-government engagement "
+             "satisfies the criterion immediately and overrides the wait. If unmet, re-defer and advance "
+             "next_review; if met, promote CJIS to a framework increment (about 22-28 h)."},
+    {"id": "TRG-CJIS-V6-REVISIT", "type": "framework", "cadence_days": None,
+     "title": "CJIS Security Policy v6.0: P2-P4 controls become fully auditable",
+     "next_review": "2027-10-01", "last_executed": "2026-07-21",
+     "affects": [], "rows": [],
+     "note": "Oct 1, 2027: CJIS Security Policy v6.0 P2-P4 controls become fully auditable and "
+             "sanctionable (P1 already are; FBI v6.0 audits began Oct 1, 2025). This is the point at "
+             "which mapping CJIS stops risking rework against a still-phasing control set. The "
+             "evaluation, the NIST 800-53 Rev 5 moderate-baseline rebasing discount (roughly 18-20 of "
+             "the atlas's 22 mapped 800-53 controls fall inside the moderate baseline that CJIS v6.0 now "
+             "incorporates), and the cross-reference authoring technique are recorded in "
+             "FRAMEWORK-SELECTION.md, so a future pass starts from the research, not from scratch."},
 ]
 
 

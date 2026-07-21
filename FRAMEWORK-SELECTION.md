@@ -143,3 +143,163 @@
 > Current state box at the top.*
 
 **Cloud-availability policy:** every 800-171/CMMC row gets a verified GCC High/DoD note from the Microsoft 365 US Government service descriptions; other frameworks carry notes only where a mapped feature has a known government-cloud gap. UNVERIFIED rows (if any survive Phase 3) render with a visible warning in the HTML.
+
+---
+
+## Session 13 — framework-backlog decisions (2026-07-21)
+
+A decisions-only session: no rows, no template, no build logic changed, and
+`compliance-atlas.json` moved only by the two maintenance triggers recorded below.
+Everything here was verified live on 2026-07-21 (standing rule: no training knowledge).
+This section is appended, not merged into the frozen 2026-07-16 proposal above.
+
+### PR-025 — CJIS Security Policy v6.0: **DEFERRED with two dated triggers**
+
+**Decision: defer.** Not declined, not mapped now. CJIS is reconsidered when a demand
+criterion is met or, at the latest, when the policy is fully auditable. Both drafted
+entries are recorded below per the document's own rubric — the case for mapping and the
+case for declining — followed by the recorded decision and its machinery.
+
+**The finding that sizes the effort:** v6.0 (FBI, dated 2024-12-27) rebased the entire
+policy onto **NIST SP 800-53 Rev 5 at the moderate baseline** — 20 policy areas, 180+
+primary controls / 1,300+ subcontrols, every control traceable to 800-53. P1 controls are
+auditable and sanctionable now; **P2–P4 become fully auditable Oct 1, 2027**; FBI v6.0
+audits began Oct 1, 2025. Because the atlas already ships a 21-row / 22-control 800-53
+Rev 5 data-protection subset, **roughly 18–20 of those 22 mapped controls fall inside the
+moderate baseline CJIS v6.0 now incorporates** — the Purview derivations already exist and
+CJIS rows would cross-reference them rather than re-derive, exactly as the 800-53 subset
+cross-references 800-171. That is a genuine discount on the expensive part of the work.
+
+#### The case for mapping (selected-framework rubric)
+
+- **Version pinned:** FBI CJIS Security Policy **v6.0** (dated 2024-12-27).
+- **Status verified (2026-07-21):** v6.0 rebased the policy onto NIST SP 800-53 Rev 5 at
+  the moderate baseline (20 policy areas, 180+ primary controls / 1,300+ subcontrols).
+  Phased by priority: P1 auditable and sanctionable now; P2–P4 fully auditable Oct 1, 2027.
+  FBI v6.0 audits began Oct 1, 2025; v5.9.5 retired as the audit standard.
+- **Why:** the only one of the three deliberately-absent industries the six-product atlas
+  can serve well. CJIS maps densely across every product: Audit & Accountability → Purview
+  Audit + Sentinel; Identification & Authentication (advanced-authentication mandate) →
+  Entra; the Mobile Devices policy area → Intune; Malicious Code Protection → Defender XDR;
+  posture and continuous assessment → Defender for Cloud; Access Control and Media
+  Protection at the data layer → labels/DLP/retention. The 800-53 rebasing means the
+  Purview story for ~18–20 of our 22 mapped 800-53 controls already exists and is reused.
+  Expected ~24–30 rows across all six products; effort ~22–28 h (lower-middle of the
+  20–30 h roadmap band, calibrated against the Increment 1 authoring rate of 26 rows in one
+  session and the 21-row GLBA / 26-row SSPA DPR end-state sizes).
+- **Cloud policy:** every row carries a verified government-cloud note. Microsoft attests
+  in the **Government clouds** (Azure Government, Office 365 GCC, Dynamics 365 US Gov);
+  state and local agencies deploy into GCC, not GCC High. v6.0's moderate / FedRAMP
+  alignment is opening an Azure Commercial path Microsoft now markets — recorded as
+  direction-of-travel, never as the mapped baseline.
+- **Official source:** https://le.fbi.gov/file-repository/cjis_security_policy_v6-0_20241227.pdf
+  · Microsoft position: https://learn.microsoft.com/compliance/regulatory/offering-cjis
+- **Compliance Manager premium template:** **Yes** — "Criminal Justice Information Services
+  (CJIS) Security Policy" (confirmed on the regulations list; the offering page confirms a
+  premium assessment template exists).
+- **Caveat on record:** Microsoft's offering page (updated 2026-06-11) still describes the
+  pre-v6.0 "13 areas" structure and gives a state-coverage list dated Sept 27 2024 (47
+  states + DC) that already disagrees with a 2026 figure of 45 (missing DE/LA/OH/SD/WY).
+  Per-state agreement status is a moving target and a real maintenance cost.
+
+#### The case for declining (rejection rubric)
+
+| Candidate | Decision & rationale | Backlog disposition |
+|---|---|---|
+| **CJIS Security Policy v6.0** | Evaluated 2026-07-21, not selected *now*, on the document's own criteria. (1) **Moving target / maintenance cost:** v6.0 is mid-rollout — P2–P4 are not fully auditable until Oct 1 2027, so mapping today pins to a control set whose enforcement and interpretation are still settling, and Microsoft's attestation surface (clouds, per-state agreements) is drifting (47+DC in 2024 → 45 in 2026). (2) **Derivative density:** because v6.0 now traces to 800-53 Rev 5 moderate, ~18–20 of the Purview-relevant controls are near-duplicates of rows the atlas already ships in its 800-53 subset — the same near-duplication objection that defers the state-privacy composite. (3) **No demonstrated demand:** one day post-publication there is zero human-traffic signal (see the demand criterion below), and CJIS is a ~22–28 h increment. | Deferred with dated triggers, not rejected. |
+
+#### Recorded decision
+
+**Defer, and instrument the deferral so it is a criterion, not a vibe.** The map-now case
+is real — the 800-53 rebasing makes the marginal cost unusually low while the research is
+fresh, and CJIS is the highest-value *industry* unlock available (state and local
+government, currently an absent-industry the atlas cannot serve). Its strongest form:
+waiting forgoes a cheap, high-differentiation increment and lets the research decay, so
+that by Oct 2027 the ramp-up is re-paid. Weighed against that: this is a decisions-only
+posture with no demonstrated demand, P2–P4 do not fully bite until Oct 2027, and the honest
+move is to hold against a stated threshold. Deferral wins, with two conditions recorded as
+triggers rather than prose:
+
+- **`TRG-CJIS-DEMAND`** (type `watch`, `next_review` 2026-08-20) — the demand-criterion
+  check, evaluated against a post-bot-wave 4-week window. **Thresholds (authoritative here):**
+  a ~22–30 h increment is justified if, over a rolling 4-week window after the publication
+  bot-wave settles, **any one** holds: (a) **≥ 3 GitHub stars OR ≥ 1 fork by a non-bot
+  account**; (b) **≥ 1 substantive inbound** — an Issue, a `cjis@`-style question, or an
+  engagement request that *names a gap the increment fills* (for CJIS: anything from the
+  state/local-government audience); (c) **repo unique visitors ≥ ~10/week for 3 of 4 weeks**
+  (a sustained trend, not a single spike). Numbers are deliberately modest: a niche B2B
+  compliance reference never trends, so the test is direction and specificity — a real
+  human, ideally in the target vertical — not volume.
+- **`TRG-CJIS-V6-REVISIT`** (type `framework`, `next_review` 2027-10-01) — the backstop:
+  P2–P4 fully auditable. The trigger note records that the 800-53 rebasing discount and the
+  cross-reference authoring technique are captured in this section, so a future pass starts
+  from the research, not from scratch.
+
+**Standing override (recorded so it is not re-litigated):** a concrete state or local
+government engagement satisfies the criterion immediately and overrides the wait. The demand
+thresholds are the *floor* for speculative work, not a gate on a real client need.
+
+**No-instrumentation decision (recorded so it is not re-proposed):** the demand thresholds
+are **repo-side and inbound signals only** — GitHub stars, forks, issues, engagement
+requests, and repo unique-visitor counts. **No analytics or telemetry will be added to the
+published page.** The atlas is a single, self-contained, zero-dependency artifact that phones
+home to nothing; that posture is a deliberate feature (privacy, portability, longevity, and
+"no gate-invisible artifact" discipline), not an oversight. A page-side counter was
+considered as the one measurement that would see actual readership — the GitHub traffic API
+sees only the source repo, not the GitHub Pages site — and **rejected** on the
+no-phoning-home principle. Demand is therefore measured with a coarser but honest
+repo-side proxy, and that trade is accepted on purpose.
+
+### PR-026 — SEC 17a-4 / FINRA re-ranked above the state-privacy composite: **confirmed**
+
+**17a-4 verified current (2026-07-21):** the Oct 12, 2022 amendments (SEC Release 34-96034)
+that retained WORM as an option and added the audit-trail alternative remain the current
+state; no further amendment to 17a-4's electronic-recordkeeping provisions has been adopted
+since, and the WORM / audit-trail landscape is settled.
+
+The backlog originally listed the state-privacy composite as the lead v2 item and
+17a-4/FINRA as a lower "observed during verification" note. That ordering is reversed here,
+on this document's own three criteria plus one the original memo never weighed:
+
+1. **Maintenance cost (criterion 3).** The composite's own rejection rationale is that it is
+   "~20 divergent, still-churning state laws = highest maintenance cost of any candidate."
+   17a-4 is the opposite: a single-regulator rule whose last substantive change (the 2022
+   electronic-recordkeeping modernization) is settled and verified unchanged as of
+   2026-07-21. Promoting the cheapest-to-maintain candidate over the most expensive follows
+   the memo's own logic.
+2. **Density of genuine relevance (criterion 2).** The memo already concedes 17a-4 is "the
+   strongest untapped Purview story in finance." The composite concedes the reverse — its
+   "Purview stories are near-duplicates of the GDPR rows" — which is exactly what the
+   12–25-rows-per-framework curation discipline exists to prevent.
+3. **Portfolio balance (not weighed originally).** Records Management and Communication
+   Compliance are the two thinnest Purview solutions in the shipped atlas by primary-row
+   count; Communication Compliance carries essentially one narrow primary mapping (SOC 2
+   CC1.1, Evidence/Low). 17a-4's WORM/immutability requirement and FINRA 3110 supervision
+   are the *namesake* activities of Records Management and Communication Compliance
+   respectively — this framework is the one addition that makes both Direct on their home
+   turf. It corrects a coverage imbalance, not just adds rows.
+
+**Decision: confirmed.** SEC 17a-4 / FINRA is the **lead v2 framework candidate**; the
+state-privacy composite remains deferred with the GDPR rows as the annotated interim analog.
+Effort to map: ~18–24 h. The MAINTENANCE backlog ranking is updated to match.
+
+### PR-027 — NIS2 / DORA / ISO 27701 rejection rationales: **recorded**
+
+Each was considered and not selected; the reasoning was never written down, which reads to
+an outside reader as "never considered." Each verified live and dated 2026-07-21.
+
+| Candidate | Decision & rationale | Backlog disposition |
+|---|---|---|
+| **NIS2 (Directive (EU) 2022/2555)** | Considered, not selected. In force — transposition was due Oct 17 2024, applies from Oct 18 2024 — but transposition is still uneven (≈22–23 of 27 member states transposed as of mid-2026; FR/IE/LU/NL/ES still in legislative procedure), so a mapping would chase 27 divergent national implementations. More decisively, NIS2 is weighted toward governance, incident-reporting, and ICT-risk-management obligations on the entity, not data-layer or endpoint controls; an honest Purview mapping yields a thin, Evidence-heavy row set. | Deferred. ISO 27001 and CSF rows carry the transferable security-of-processing story in the interim. |
+| **DORA (Regulation (EU) 2022/2554)** | Considered, not selected. In application since **Jan 17 2025**, so currency is not the issue. Declined for the same substance reason as NIS2, more sharply: DORA is operational-resilience law — ICT third-party risk, resilience testing, incident classification, register-of-information obligations — with almost no data-classification or data-protection surface Purview implements. The defensible row count is very low and mostly Evidence. | Deferred. A finance-vertical framework need is better served by 17a-4/FINRA (PR-026), which is Purview-dense. |
+| **ISO/IEC 27701** | Considered, not selected. The **2025 revision (released Oct 14 2025) makes it a standalone privacy standard** rather than the 2019 extension to ISO 27001 — but this does not change the disposition. 27701 is a privacy information-management system whose tooled layer in the Microsoft estate is **Priva**, which the atlas has permanently and deliberately declined to map (§15 roadmap closure; priva is reference-only). Mapping 27701 would produce a framework whose best answer is a product the atlas will not author. | Deferred, effectively permanent while the Priva boundary stands. GDPR rows carry the transferable privacy-control story. |
+
+### Versioning of this session
+
+**PATCH bump to 3.1.2.** The two `meta.maintenance` triggers change the published bytes of
+`compliance-atlas.json`, so under the existing machinery-only rule they take a PATCH — the
+version must uniquely identify one artifact, and two different JSON files may never both
+claim 3.1.1. The docs-only records that shipped alongside (this file, docs/MAINTENANCE.md,
+and the CHANGELOG clarifying line) touch no artifact and take no bump on their own. The full
+reasoning is recorded in AUDIT-FINDINGS §31; the CHANGELOG versioning policy gained a line
+stating the docs-only carve-out.

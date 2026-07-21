@@ -19,6 +19,16 @@ who it was for. This is why 2.10.0 was a MINOR — it added `meta.maintenance` t
 which is consumer-visible — while the runbook that shipped alongside it would have been a PATCH on its
 own.
 
+**A change that never touches the built artifact takes no version bump at all — not even PATCH.** Editing
+documentation that ships outside `compliance-atlas.json` (this changelog, `FRAMEWORK-SELECTION.md`, the
+maintenance runbook, the READMEs) leaves the artifact byte-identical, so there is nothing to version: the
+version number identifies the artifact, and a bump whose only effect would be to rewrite `meta.version`
+would tell every consumer the artifact moved when it did not. The converse is the harder half, and it is
+absolute: anything that *does* change the published bytes takes a bump, machinery included, down to PATCH —
+because one version must identify exactly one artifact, and two different `compliance-atlas.json` files may
+never both claim the same number. That is why the two `meta.maintenance` triggers added in 3.1.2 are a
+PATCH, not a free ride, even though they are pure backlog bookkeeping.
+
 **Where a bump is argued from consequence, that argument is scoped to `meta.*`.** 2.10.1 removed a
 published key, `meta.generated`, and was sorted PATCH on the grounds that no realistic consumer was
 relying on it. That reasoning is admissible **only for the shape of the `meta.*` namespace**, whose
@@ -37,6 +47,31 @@ number, dated to when the work actually landed; the policy above was applied to 
 before 2.9.0 was ever public.
 
 ---
+
+## 3.1.2 — 2026-07-21
+
+Framework-backlog decisions (Session 13). CJIS Security Policy v6.0 was evaluated and **deferred** —
+not declined, not mapped — and two dated maintenance triggers were added to record the conditions under
+which it is reconsidered. The rest of the session is docs-only decision records that do not touch the
+artifact.
+
+**For consumers of `compliance-atlas.json`.** `meta.maintenance.triggers` gains two entries:
+`TRG-CJIS-DEMAND` (a demand-criterion check, next review 2026-08-20) and `TRG-CJIS-V6-REVISIT` (CJIS v6.0
+P2-P4 controls fully auditable, next review 2027-10-01). No row, no claim, and no other `meta` value moved.
+
+**For readers.** Nothing visible changes: the maintenance table is maintainer metadata carried in the
+dataset, not rendered in the page.
+
+**Recorded elsewhere.** The full evaluation (both drafted entries, the demand thresholds, and the
+no-page-instrumentation ruling), the SEC 17a-4/FINRA re-ranking, and the NIS2 / DORA / ISO 27701:2025
+rejection rationales are in `FRAMEWORK-SELECTION.md` and AUDIT-FINDINGS §31; the framework backlog in
+`docs/MAINTENANCE.md` is re-ranked to match.
+
+**Why PATCH.** The two triggers change the published bytes of `compliance-atlas.json`, so the
+machinery-only rule applies: machinery that alters the artifact is a PATCH. The version must uniquely
+identify one artifact — two different JSON files may never both claim 3.1.1 — so bookkeeping that changes
+the bytes still bumps. The docs-only records that shipped alongside touch no artifact and take no bump,
+per the clarifying line added to the versioning policy this session.
 
 ## 3.1.1 — 2026-07-21
 

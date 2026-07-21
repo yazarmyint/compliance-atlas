@@ -160,7 +160,12 @@ BRAND = {
     # AUDIT-FINDINGS §30.1).
     # The §27.4 "row shape change is MAJOR" fence does not bite: no key added/removed, no row field
     # touched. Corrections, so PATCH. Reasoning and drift ledger in AUDIT-FINDINGS §30.
-    "atlas_version": "3.1.1",
+    # 3.1.2 is a PATCH: Session 13 added two meta.maintenance backlog triggers (CJIS deferral, PR-025).
+    # They change the published bytes, so the machinery-only rule applies -- machinery that alters the
+    # artifact is a PATCH, because one version must identify exactly one artifact and two different JSON
+    # files may never both claim 3.1.1. The docs-only decision records that shipped alongside touch no
+    # artifact and take no bump (the versioning policy gained a line saying so). Reasoning in §31.
+    "atlas_version": "3.1.2",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
