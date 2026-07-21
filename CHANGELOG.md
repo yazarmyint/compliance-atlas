@@ -38,6 +38,29 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.1.1 — 2026-07-21
+
+Spelling unification. A manual edit had left the British spelling of "license" mixed in with the
+American spelling the atlas uses everywhere else, and the mix had become reader-visible — most
+obviously in the license-tier legend, where a boundary row's definition carried the British form.
+Every occurrence in shipped text is now American "license" (noun and verb).
+
+**For readers.** The four license-tier legend/definition strings read "license" consistently. Nothing
+else visible changes.
+
+**For consumers of `compliance-atlas.json`.** Four `meta.license_band*` definition strings change by a
+single letter each; the four values are otherwise byte-identical. No row, no claim, no
+`license_requirement`, no source, and no `last_verified` moved — spelling is not verification, so live
+source re-verification was waived (drift ledger and the three-way protected-field check in
+AUDIT-FINDINGS §30).
+
+**Guardrail.** A build-failing spelling lint (`BANNED_SPELLINGS`) now scans the outputs and shippable
+docs on every build, so the British spelling cannot creep back in — including into this changelog,
+which is why the before-form is recorded only in the §30 ledger (a dated record the lint excludes).
+
+**Why PATCH.** Corrections, not features: no claim moved, no row shape changed, and the §27.4
+row-shape-is-MAJOR fence does not apply (nothing at row level was touched). Squarely a PATCH.
+
 ## 3.1.0 — 2026-07-20
 
 Reader-facing polish: a legend that fits again, an invitation to report errors, and a social card
