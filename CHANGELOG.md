@@ -38,6 +38,36 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.1.0 — 2026-07-20
+
+Reader-facing polish: a legend that fits again, an invitation to report errors, and a social card
+for shared links. No row changed — `compliance-atlas.json` is byte-identical to 3.0.0 apart from the
+version field itself.
+
+**For readers.**
+
+- **The "How to read a mapping" legend is compact again (PR-059).** Its four taxonomies had spilled
+  onto two rows with the License tier column running more than twice the height of its neighbours;
+  the legend now lays out in balanced columns whose width drives the column count, and the long
+  commercial-licensing scope note moved into a collapsed **"scope & limitations"** disclosure beneath
+  it. The taxonomy definitions themselves stay visible by default, and the commercial-only caveat
+  stays in the always-visible summary. The legend block is 30–47% shorter at desktop widths.
+- **A way to say something's wrong.** The footer now carries *"Spotted an error? Open an issue,"*
+  and the about page's existing corrections invitation is unchanged. Corrections are recorded.
+- **A social card.** Sharing an atlas link now previews a card with the atlas name and subtitle in
+  the site's own visual language, instead of a bare URL.
+
+**For consumers of `compliance-atlas.json`.** Nothing. The dataset is unchanged; the additions are
+in the page template, the docs, and a committed image asset. The only JSON movement is
+`meta.version` / `meta.brand.atlas_version`, this bump itself.
+
+**Why MINOR.** The policy sorts a bump by what a reader gains, and a reader gains a link-preview card
+and a clearer error-report path — "reader-facing feature added," the MINOR trigger. Existing rows
+keep their shape and meaning (not MAJOR), and nothing here is a row correction (PATCH would undersell
+it). The counter-argument — that every prior MINOR coincided with a *dataset* addition and this one
+leaves the JSON byte-identical — was weighed and set aside: the policy says *reader*, not *JSON
+consumer*. Full reasoning in AUDIT-FINDINGS §29.5.
+
 ## 3.0.0 — 2026-07-20
 
 The license-tier lens (PR-015). Both stated user stories end "…and at what license tier?", and

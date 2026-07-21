@@ -3066,3 +3066,69 @@ them: **no gate-invisible artifact should carry a claim that ages.**
 README's `*(URL to be added at publish)*` placeholder. It was already filled at publication (§25):
 `README.md` line 34 opens the "Use it" section with the live hosted link. Verified no placeholder
 remains anywhere in the docs. Noted so the no-op is visible rather than silent.
+
+### 29.4 Gate results
+
+| Check | Result |
+|---|---|
+| `python build/assemble.py` | Passes. Integrity assertions clean; band summary and row/framework/product counts unchanged |
+| `python build/build_html.py` | Passes; footer "Built …" line present, format unchanged |
+| `git diff compliance-atlas.json` | **Zero content lines.** Working tree byte-identical to `HEAD` after a full rebuild (confirmed by CRLF-normalized `cmp`). The strictest gate the project has run, and it held across all three item commits |
+| axe-core, **standard** suite — 13 routes × 2 themes = **26 combinations** | **0 violation nodes**, both themes. Includes `#/` and `#/about` (full legend, new disclosure) and every framework/product/matrix/cell view (compact legend, new disclosure) |
+| axe-core, **filtered** suite — `?tier=e3`, `?tier=e5&meter=exclude`, `?tier=addon`, `?meter=exclude`, FERPA, HIPAA, GDPR = 7 routes × 2 themes = **14 combinations** | **0 violation nodes**, both themes |
+| axe-core, **disclosure forced OPEN** — `#/`, `#/about`, `#/framework/iso-27001-2022` × 2 themes = **6 combinations** | **0 violation nodes.** Run so the expanded scope-note text (its contrast in both themes) is in the crawl, not only the closed summary |
+| **Keyboard operability of the new disclosure** | **Pass, driven headlessly, not assumed.** In all three legend contexts × both themes: the `<details class="disclose"> > summary` is focusable (`document.activeElement === summary`) and a dispatched **Enter** toggles `open`. 0 failures. It is a native `<summary>`, so Space works by the same path and no `tabindex`/`role` was added |
+| `tools/check_urls.py` full sweep | **153 cited URLs: 151 OK, 2 WAF, 0 BROKEN, 0 REDIRECT.** The 2 WAF are the documented §7.2 pair (`dodcio.defense.gov`, `www.hhs.gov`). Exit 0 |
+| — the issue link inside that sweep | `project:issues_url` → **OK 200**; `repo_url` and `changelog_url` also OK 200 |
+| **Live domain checks** (current deployed site) | `compliance-atlas.html` **200**, `/issues` **200**, repo **200**, changelog **200**. `og-image.png` **404 — expected pre-deploy** (new asset on this branch, not yet merged/pushed); it resolves 200 once GitHub Pages redeploys from `main`, per the owner's own framing |
+| Legend heights vs the checkpoint | Match exactly: landing **1087→571** @1440, **1177→809** @1024; About **1200→954**; compact **181→131** @1440, **270→202** @1024. No build shift |
+
+**On the check_urls baseline.** The owner's expected "153 URLs, 151 OK / 2 WAF / 0 BROKEN" is not a
+*change* this session introduces — it is already the documented baseline. §25 (line ~2206) and §28.8
+(line ~2845) both record 151 OK / 0 BROKEN, because the repository went public at publication (§25),
+which is what resolved the three GitHub links that were BROKEN-by-design while it was private. This
+session adds no URL to `compliance-atlas.json` (the JSON is byte-identical), so the sweep is still 153
+URLs and the baseline holds unchanged. Nothing in the docs still asserts a stale "3 BROKEN" as the
+current state; no baseline edit was required. The result is recorded here so the confirmation is on
+record.
+
+**Why the og:image URL is not in the check_urls sweep, by design.** `check_urls.py` reads
+`compliance-atlas.json`; the `og:image` URL lives in the HTML head (from `build_html.py`), not the
+dataset, and adding it to the JSON would break the empty-diff gate. It is verified instead by the live
+domain check above — which correctly reports 404 until the asset is deployed. Baking a not-yet-deployed
+URL into check_urls would have made the tool report BROKEN and exit 1 pre-merge, which is why the owner
+separated it as a post-deploy check in the first place.
+
+### 29.5 Version bump — the argument, for the owner's decision
+
+The policy (`CHANGELOG.md`): **MINOR** = "a framework, product, industry lens, or **reader-facing
+feature** added; existing rows keep their shape and their meaning." **PATCH** = "row corrections and
+re-verifications." **Machinery-only = PATCH**, but only when **all three** hold: *no reader gains
+anything*, no claim moves, and the shape of `compliance-atlas.json` does not change.
+
+Two of the three machinery-only conditions hold cleanly: no claim moved, and the JSON is byte-identical.
+The third does **not**: readers gain something. Item 3 ships a **social-preview capability** the atlas
+did not have, and item 2 adds a **feedback affordance**. Those are "reader-facing features added,"
+which is the MINOR trigger stated verbatim. Item 1 on its own is a presentation *fix* (PATCH-shaped),
+but it rides along with the two additions.
+
+**Recommendation: MINOR — 3.0.0 → 3.1.0.** The policy sorts MINOR by what a reader gains, and a reader
+gains a link-preview card and a clearer way to report errors. Existing rows keep their shape and
+meaning, so it is not MAJOR, and nothing here is a row correction, so PATCH undersells it.
+
+**The honest counter-argument for PATCH (3.0.1),** so the decision is made with both in view: every
+prior MINOR bump coincided with a *dataset* addition (a framework, a product, a lens, or `meta.maintenance`
+shipped into the JSON), whereas this session leaves `compliance-atlas.json` byte-identical — a
+consumer of the JSON sees literally nothing new. The two rendered-text-only precedents (2.9.1 American
+English, 2.10.1 build integrity) were both PATCH. If "reader-facing feature" is read narrowly as
+"something visible in the dataset a consumer pulls," this is PATCH. I think that reading is too narrow —
+the policy says *reader*, not *JSON consumer*, and the social card is unambiguously reader-facing — but
+it is a defensible call and it is the owner's to make.
+
+> **Owner decision: MINOR — 3.1.0.** Applied in the final commit (bumped `BRAND["atlas_version"]` in
+> `assemble.py`, `CHANGELOG.md` 3.1.0 entry, rebuild). That commit carries the **one intended JSON
+> change** — `meta.version` / `meta.brand.atlas_version` moving `3.0.0` → `3.1.0` — which is a named
+> change, not drift, exactly as the §28.7 framing allows, and is deliberately kept out of the three
+> empty-diff item commits. Verified after the bump: the JSON diff against `HEAD` is **exactly the two
+> version fields** (`meta.version` and `meta.brand.atlas_version`, both `3.0.0` → `3.1.0`) and nothing
+> else moved.
