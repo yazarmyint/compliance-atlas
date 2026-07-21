@@ -48,6 +48,32 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.2.0 — 2026-07-21
+
+Row deep links (PR-004, Session 14). Any single mapping row is now citable on its own. `#/row/<id>`
+resolves to a dedicated view of that row, rendered expanded, with a breadcrumb and product chip so the
+reader can see which framework, control, and product it is and reach the surrounding framework in one
+click. Every row's expanded footer gains a **Copy link** button.
+
+**For readers.** Paste `#/row/<id>` and you land on that one row, the same way regardless of any filter
+active when the link was made. A copy button on each row hands you the public link to it. An unknown id
+shows a not-found state that names the id and points back to the framework index, rather than a blank
+page. The copied link is always the hosted `compliance-atlas.html` address, even when you are reading a
+downloaded `file://` copy, because a local path was never shareable and the row id is the same in both.
+
+**For consumers of `compliance-atlas.json`.** Nothing changes but the version. The dataset is
+byte-identical to 3.1.2 apart from `meta.version` and `meta.brand.atlas_version`: no row key added or
+removed, no schema or scope change. Row ids, always present, are now also **permanent public
+identifiers** — a published id is never renamed or reused, so a link minted today keeps resolving. A new
+committed inventory, `reference/row-ids.txt`, and a build check enforce that; both live in the repo, not
+the dataset.
+
+**Why MINOR.** A reader-facing feature was added and existing rows kept their shape and meaning, which is
+the MINOR band. It is not MAJOR: no data-model or scope change, and the id inventory and its build guard
+are machinery, not part of the dataset. It is not PATCH: readers gain a capability, not a correction. The
+feature's bytes live in `compliance-atlas.html`, which moved, so a bump is required. Full record in
+AUDIT-FINDINGS §32.
+
 ## 3.1.2 — 2026-07-21
 
 Framework-backlog decisions (Session 13). CJIS Security Policy v6.0 was evaluated and **deferred** —

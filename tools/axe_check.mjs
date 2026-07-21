@@ -48,6 +48,8 @@ const ALL_ROUTES = [
   "#/search/retention",
   "#/industry/legal",
   "#/industry/insurance",
+  "#/row/iso-a-5-10",                                 // PR-004 row deep link, valid id (single-row view)
+  "#/row/no-such-row",                               // PR-004 row deep link, invalid id (not-found state)
 ];
 
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];

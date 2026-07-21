@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "3.1.2",
+  "version": "3.2.0",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "3.1.2"
+   "atlas_version": "3.2.0"
   },
   "project": {
    "maintainer": "Yazar",
