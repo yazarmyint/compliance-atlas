@@ -3228,3 +3228,125 @@ Proven both directions at the gate: clean on the real tree (exit 0), and a seede
 scratch copy is caught with its file, line, and correction (exit 1) — via the same
 `scan_banned_spellings` function the build calls, and confirmed end-to-end by seeding one violation
 into `README.md` and watching `python build/build_html.py` itself exit 1 before the seed was reverted.
+
+---
+
+## 31. Framework-backlog decisions — CJIS, 17a-4 re-rank, NIS2/DORA/27701 (2026-07-21) — PR-025, PR-026, PR-027
+
+A decisions-only session. No rows, no template, no build logic changed; `compliance-atlas.json` moved
+only by two `meta.maintenance` triggers. Every framework fact below was verified live on 2026-07-21 under
+the standing no-training-knowledge rule. The decisions and both drafted CJIS entries live in
+FRAMEWORK-SELECTION.md (Session 13 section); this section records the reasoning, the evidence, and the
+rulings for the audit trail.
+
+### 31.1 PR-025 — CJIS Security Policy v6.0: evaluated and deferred
+
+**Live findings.** CJIS Security Policy v6.0 (FBI, dated 2024-12-27) rebased the entire policy onto NIST
+SP 800-53 Rev 5 at the moderate baseline: 20 policy areas, 180+ primary controls / 1,300+ subcontrols,
+every control traceable to 800-53. Enforcement is phased by priority — P1 auditable and sanctionable now;
+P2-P4 fully auditable Oct 1, 2027; FBI v6.0 audits began Oct 1, 2025. Microsoft attests in the government
+clouds (Azure Government, Office 365 GCC, Dynamics 365 US Gov) and signs the CJIS Security Addendum in
+states with CJIS Information Agreements; a Compliance Manager premium template exists. The offering page
+(updated 2026-06-11) still describes the pre-v6.0 "13 areas" structure and a Sept-2024 state list (47 +
+DC) that already disagrees with a 2026 figure of 45 (missing DE/LA/OH/SD/WY), which is itself a
+maintenance-cost signal. Sources: le.fbi.gov/file-repository/cjis_security_policy_v6-0_20241227.pdf,
+learn.microsoft.com/compliance/regulatory/offering-cjis.
+
+**Overlap with the existing 800-53 subset (the finding that sizes the work).** The atlas ships a 21-row /
+22-control 800-53 Rev 5 data-protection subset. Roughly 18-20 of those 22 controls fall inside the
+moderate baseline CJIS v6.0 now incorporates, so a CJIS map would cross-reference existing rows for most
+of its Purview prose rather than re-derive it — the same technique the 800-53 subset uses against 800-171.
+Estimated ~24-30 rows across all six products; effort ~22-28 h, the lower-middle of the earlier 20-30 h
+estimate, calibrated against the Increment 1 rate (26 rows in one session) and the 21-row GLBA / 26-row
+SSPA DPR end-state sizes.
+
+**Decision: DEFER, instrumented — not declined and not mapped.** The map-now case is real (the rebasing
+makes the marginal cost low while the research is fresh, and CJIS is the highest-value absent-industry
+unlock — state and local government). It was outweighed by a decisions-only posture, zero demonstrated
+demand, and P2-P4 not fully auditable until Oct 2027. Two dated triggers carry the revisit conditions:
+`TRG-CJIS-DEMAND` (watch, next_review 2026-08-20) is the demand-criterion check; `TRG-CJIS-V6-REVISIT`
+(framework, next_review 2027-10-01) is the P2-P4 backstop, whose note records that the rebasing discount
+and cross-reference technique are captured so a future pass starts from research, not from scratch.
+
+**Standing override:** a concrete state or local government engagement satisfies the criterion immediately
+and overrides the wait. The demand thresholds are the floor for speculative work, not a gate on a real
+client need.
+
+### 31.2 Demand criteria and the no-instrumentation ruling
+
+The demand trigger evaluates repo-side and inbound signals only, over a rolling 4-week window after the
+publication bot-wave settles. A ~22-30 h increment is justified if any one holds: (a) >= 3 GitHub stars
+OR >= 1 non-bot fork; (b) >= 1 substantive inbound — an Issue, a cjis@-style question, or an engagement
+request that names a gap the increment fills (for CJIS, anything from the state/local-government
+audience); (c) repo unique visitors >= ~10/week for 3 of 4 weeks (a sustained trend, not a spike). The
+numbers are deliberately modest: a niche B2B compliance reference never trends, so the test is direction
+and specificity, not volume.
+
+**No-instrumentation ruling (recorded so it is not re-proposed).** No analytics or telemetry will be
+added to the published page. The atlas is a single, self-contained, zero-dependency artifact that phones
+home to nothing; that posture is a deliberate feature — privacy, portability, longevity, and the
+no-gate-invisible-artifact discipline — not an oversight. A page-side counter was considered as the one
+measurement that would see actual readership — the GitHub traffic API sees only the source repo, not the
+Pages site — and rejected on the no-phoning-home principle. Demand is therefore measured with a coarser
+but honest repo-side proxy, and that trade is accepted on purpose.
+
+### 31.3 Demand evidence — the traffic snapshot that informed the deferral
+
+GitHub traffic API, pulled 2026-07-21 (14-day window Jul 7-20): repo-page **views 0 / 0 unique** every
+day; **clones 74 / 44 unique, all on Jul 20** (the publication day); popular paths and referrers both
+empty. The honest read: the API measures the github.com source repo, not the Pages site where the atlas
+is read, so it cannot see readership at all; views of 0 (owner views are excluded) means no human browsed
+the source; and the 44-unique clone spike on publication day is the automated bot wave (mirrors, archives,
+scanners) that hits any newly public repo, not human interest — humans view before they clone. One day
+post-publication is anecdote, not signal, which is exactly why the deferral is instrumented against a
+stated threshold rather than a vibe.
+
+### 31.4 PR-026 — SEC 17a-4/FINRA re-ranked above the state-privacy composite: confirmed
+
+17a-4 verified current (2026-07-21): the Oct 12, 2022 amendments (SEC Release 34-96034) that retained WORM
+as an option and added the audit-trail alternative remain the current state; nothing has moved since. The
+re-rank follows the document's own criteria — 17a-4 is the cheapest to maintain (a settled single-regulator
+rule) against the composite's own "highest maintenance cost" admission; it is Purview-dense where the
+composite concedes near-duplication of the GDPR rows; and, the point the original memo never weighed, it
+is the one framework that makes Records Management and Communication Compliance (the two thinnest Purview
+solutions by primary-row count) Direct on their namesake activity. Recorded as the lead v2 candidate; the
+state-privacy composite stays deferred with GDPR as the annotated analog.
+
+### 31.5 PR-027 — NIS2 / DORA / ISO 27701 rejection rationales recorded
+
+Each verified current 2026-07-21 and recorded in FRAMEWORK-SELECTION.md. NIS2 (Directive (EU) 2022/2555):
+in force, transposition still uneven (~22-23 of 27 as of mid-2026), and weighted toward governance and
+incident-reporting obligations rather than data-layer controls, so an honest map is thin and
+Evidence-heavy. DORA (Regulation (EU) 2022/2554): in application since Jan 17 2025, operational-resilience
+law with almost no data-protection surface Purview implements. ISO/IEC 27701: the 2025 revision (released
+Oct 14 2025) makes it a standalone privacy PIMS rather than the 2019 27001 extension, but its tooled layer
+is Priva, which the atlas has permanently declined (§15) — mapping it would yield a framework whose best
+answer is a product the atlas will not author.
+
+### 31.6 Versioning — one version, one artifact
+
+The ruling for the record: **the version number must uniquely identify the published JSON bytes — one
+version, one artifact, no exceptions — because every byte-identity check the project runs assumes it.**
+Two different `compliance-atlas.json` files both claiming 3.1.1 would break that property for
+bookkeeping's sake. So the two `meta.maintenance` triggers, though pure backlog bookkeeping that gives a
+reader no new claim or capability, change the artifact bytes and take a PATCH: **3.1.2**. The docs-only
+records that shipped alongside (FRAMEWORK-SELECTION.md, docs/MAINTENANCE.md, and the CHANGELOG clarifying
+line) touch no artifact and take no bump. The CHANGELOG versioning policy gained one line stating the
+docs-only carve-out; the machinery-only rule already in the policy governs the triggers.
+
+This corrected an earlier proposal in the same session to ship the triggers with no bump at all. That
+proposal optimized for a clean "docs-only" story at the cost of the uniqueness property — and the
+uniqueness property is load-bearing, because the empty/exact-diff drift gate depends on a version naming
+exactly one set of bytes.
+
+### 31.7 Structure and gate
+
+Two commits on `session-13-framework-decisions`, matching the standing "version bumps ride their own
+commit" discipline: (1) triggers + docs decisions (common.py, FRAMEWORK-SELECTION.md, docs/MAINTENANCE.md,
+rebuilt artifacts at 3.1.1) with a compliance-atlas.json diff of the two triggers only; (2) version bump
+to 3.1.2 (assemble.py), CHANGELOG (clarifying line + 3.1.2 entry), this §31, rebuilt artifacts, with a
+compliance-atlas.json diff of the two version fields only. Gate on the content: rebuild exit 0, 378 rows,
+maintenance-table validation passed, no triggers due; BANNED_SPELLINGS lint clean; check_urls
+153 / 151 OK / 2 documented WAF / 0 BROKEN; axe 0 violations across 13 routes x 2 themes. Deploy
+verification (Pages green, deployed sha256 == repo, deployed meta.version 3.1.2, both CJIS triggers
+present in deployed `meta.maintenance`) is performed post-merge and recorded in the session log.
