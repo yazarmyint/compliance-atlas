@@ -149,7 +149,12 @@ BRAND = {
     # policy's bands are written around readers, and this addition is invisible to one; the
     # discriminator that actually decides it is compatibility, and no consumer must change code
     # for an added key. Reasoning in full in CHANGELOG.md and AUDIT-FINDINGS §26.
-    "atlas_version": "3.0.0",
+    # 3.1.0 is a MINOR: reader-facing polish — the legend layout fix (PR-059), a footer feedback
+    # link, and an og:image social card. No row changed; compliance-atlas.json is byte-identical to
+    # 3.0.0 apart from this version field. Sorted MINOR because a reader gains features (a link
+    # preview, an error-report path), which the policy's MINOR band names; the counter-argument that
+    # no *dataset* addition occurred was weighed and set aside. Reasoning in AUDIT-FINDINGS §29.5.
+    "atlas_version": "3.1.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }

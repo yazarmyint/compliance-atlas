@@ -2924,3 +2924,211 @@ scoped to `details.row > summary .badges`, with a comment saying why. The genera
 this project already applies to the dataset: a count derived from the DOM has to be scoped to the
 place the thing is rendered *once*, and the way to find out is to run the interaction and read the
 output rather than to reason about it.
+
+## 29. Reader-facing polish (2026-07-20) — legend layout (PR-059), feedback link, social card
+
+Three small reader-facing items on one branch, one commit each, owner-approved after a lightweight
+checkpoint. No row touched: `compliance-atlas.json` diffs zero lines across all three, the strictest
+gate the project has run. These are template, docs, and asset changes only.
+
+### 29.1 PR-059 · the taxonomy legend regained its height (owner-reported)
+
+**Finding.** On the landing page the "How to read a mapping" legend had grown several times taller
+than intended: the License tier column rendered at roughly 2.2x the height of Coverage, Confidence,
+and Licensing model, and sat on a second grid row beneath them. The owner reported it as the six tier
+definitions plus the scope paragraph being "stacked under the Coverage column."
+
+**Root cause — not what the report assumed, and worth recording.** License tier was *already* its own
+fourth column in `taxonomyLegend()`; it had been since PR-015. It never *fit*. The grid was
+`repeat(auto-fit, minmax(280px, 1fr))` with a 24–28px gap, so four columns needed
+4×280 + 3×28 = **1204px** against a landing-page inner width of ~**1082px**. `auto-fit` therefore laid
+out **three** columns at every landing viewport and wrapped the fourth under Coverage. What looked
+like authoring ("stacked under column 1") was a wrap artifact. The scope paragraph then piled on top:
+it lived *inside* the tier column as a `<p>`, and being an order of magnitude longer than any single
+definition, it set the whole block's height. The fix is layout arithmetic, not restructuring.
+
+**What was built.**
+
+- **Explicit column counts via `@container`, not `@media`.** This distinction is load-bearing and the
+  first attempt got it wrong. The same `taxonomyLegend(false)` renders full-bleed on the landing page
+  (~1082px) *and* inside the About page's 78ch prose column (~589px measured). A viewport media query
+  cannot tell those two apart, so a `@media (min-width:1000px)` four-column rule fired on the About
+  legend too and squeezed it into four ~110px tracks — taller and worse than before (measured 1200px,
+  unchanged). Switching the legend to `container-type: inline-size` and querying container width fixes
+  it: four columns only when the legend itself is wide. Pure CSS, no new page-load dependency. The
+  default (no container-query support) is a single readable column, so an old engine degrades to
+  readable rather than to four shredded columns.
+- **The scope note moved out of the column grid into the atlas's existing `detailToggle()` helper** —
+  a `<details class="disclose">`, the same native disclosure used for long-form notes elsewhere in the
+  atlas (it already carries the `:focus-visible` ring and the print-expansion path). It is *not* a new
+  pattern. The compact legend on the framework view had the same bloat — it rendered the entire scope
+  note as a `<p>` — and got the same treatment.
+- **Commercial-only signal preserved without opening the disclosure.** The hard constraint was that a
+  reader filtering by tier must be told what the bands do not cover. The `<summary>` label states it in
+  the always-visible line: *"License tier bands cover Microsoft 365 commercial licensing only — scope
+  and limitations"*. The full note (verbatim, every clause: commercial-only, no G/F/Business-Premium
+  dimension, consumption-has-no-tier, the "+n" toggle semantics, derived-not-replacement,
+  related-products exclusion) sits inside. Definitions stay visible by default in all three contexts;
+  only the long scope note collapses.
+
+**Measured legend-block height (headless Chrome, px):**
+
+| Context | Viewport / column width | Before | After | Δ |
+|---|---|---|---|---|
+| Landing legend | 1440px | 1087 | 571 | −47% |
+| Landing legend | 1024px | 1177 | 809 | −31% |
+| About-page legend | 631px prose column (both viewports) | 1200 | 954 | −21% |
+| Framework compact legend | 1440px | 181 | 131 | −28% |
+| Framework compact legend | 1024px | 270 | 202 | −25% |
+
+Column balance at 1440px went from `311 / 311 / 311 / 697` (tier column 2.2x its neighbours, on a
+second row) to `460 / 460 / 460 / 460` (one row, four columns; the tier track is widened to `1.35fr`
+so its six entries end at roughly the depth of the others' four). At the two-column step it is
+`275 / 275` then `406 / 406`.
+
+**The constraint conflict, and the choice — recorded so the next person does not "just tidy that long
+definition."** The checkpoint direction asked to trim the six tier definitions (the `partial`
+definition is the outlier at 232 chars vs ~90 for the others) to Confidence's per-entry length
+discipline. That was **declined, deliberately, and the conflict was surfaced rather than resolved
+silently.** Every legend definition string — `license_bands`, `license_band_partial`,
+`license_band_scope` — lives in `META`, generated from `build/license_bands.py` so the legend a reader
+sees cannot drift from the derivation that produces the bands. Editing any of those strings changes
+`compliance-atlas.json`, which violates this session's empty-JSON-diff constraint. **The empty diff
+outranks a cosmetic trim.** The height problem was solved with layout alone; the definition text is
+byte-unchanged. **Trimming the `partial` definition is a data change and a separate commit with a
+non-empty JSON diff — it is not a text edit to the template.** Owner concurred at the checkpoint.
+
+**Accessibility / keyboard.** The new `details.disclose` is the atlas's standard native disclosure:
+`<summary>` is focusable and toggles on Enter and Space with no JS, and it inherits the existing
+focus-ring and print-expansion CSS. axe was run over both the standard and filtered route suites with
+the new disclosures present — results in §29.4.
+
+### 29.2 The error-report invitation
+
+**Repo state checked first, because one outcome was a stop condition.** The item required the GitHub
+Issues tab to be enabled; if it 404'd, that is a repo setting only the owner can flip and the work
+would have halted. It is enabled: `gh repo view` reports `hasIssuesEnabled: true`, `visibility:
+PUBLIC`; the Pages deployment is `status: built`; and a live fetch of
+`https://github.com/yazarmyint/compliance-atlas/issues` returns **200**. So the invitation proceeds and
+its link resolves.
+
+**Footer — one line added, one nav link removed, net one issue link.** A feedback invitation now sits
+just beneath the footer nav: *"Spotted an error? **Open an issue** — corrections are recorded."* It is
+rendered from `META.project.issues_url` (never hand-typed) and worded to match the about page's
+corrections section, so the atlas asks for feedback in one voice. The footer nav previously carried a
+`Report a correction` link to the same URL; it was **removed from the nav** so the footer has exactly
+one issue link, presented as a call to action rather than a bare reference item. The nav keeps its
+three reference links (About, Source, Changelog). Verified in light and dark.
+
+**About — already satisfied, left unchanged, and this is deliberate.** The about page's "Who maintains
+it, and how to correct it" section already ends in a substantive, in-voice invitation (PR-044): *"If
+you find a mis-mapped control, a licensing claim that no longer holds, or a dead citation, please open
+an issue — fixes are recorded so you can see that a report landed."* That **is** the "one in About."
+Adding a second, shorter invitation to the same page would duplicate it and read worse, so nothing was
+added there. The item's About requirement is met by existing content; the wording was checked against
+the new footer line for voice consistency. Recorded so it is clear the omission is a decision, not a
+miss.
+
+### 29.3 The social card, and why it carries no counts
+
+**What shipped.** A 1200×630 PNG (`og-image.png` at the repo root) previewed when the atlas URL is
+shared, plus the `og:image`/`twitter:card` tags that point at it. The card uses the site's folio
+visual language — paper ground, accent overline with the paragraph-mark glyph, serif display title,
+accent rule, muted tagline, mono host line, the oversized `¶` watermark — so a link preview reads as
+the same publication as the page it opens. It is generated by `tools/make_og_image.mjs` (headless
+Chrome, same puppeteer-core as the axe harness), which reads the name and tagline from
+`compliance-atlas.json` so the card cannot drift from the brand. The PNG is a **committed asset**;
+`build_html.py` does not run the generator.
+
+**Tags, in both heads.** `compliance-atlas.html` (via `template.html`) and the root redirect stub
+`index.html` (via `build_html.INDEX_TEMPLATE`) each gained `og:image` + `og:image:width/height/alt`
+and `twitter:card=summary_large_image` + `twitter:title/description/image`. The image URL is
+**absolute** — `SITE_URL + "og-image.png"`, one constant in `build_html.py` — exactly like the
+canonical link. That is the whole reason it does not break the offline copy: it is a string pointer in
+the markup, never a fetch, so a `file://` reader carries an inert pointer and only a link-preview
+crawler resolving the *hosted* page ever requests the PNG. **The `file://` caveat is documented where
+page metadata is documented** — the `template.html` head comment and `build_html.py` — stated as
+by-design, not a bug: opened from `file://` the og/twitter tags are inert and no preview is produced.
+
+**Counts: none in the image, by decision — and the reason is a reusable principle.** The brief offered
+a choice: bake counts into the card and add a maintenance trigger to refresh them, or ship a countless
+card and kill the staleness at birth. The countless card was chosen. The argument, recorded because it
+generalises: **a binary asset is invisible to every gate this project runs.** No
+`git diff compliance-atlas.json`, no `check_urls.py`, no `axe_check.mjs` will ever catch a stale "378"
+baked into a PNG — it is the one artifact class where a wrong number produces no gate signal at all. So
+the live counts stay in `og:description`, which is text, built from the dataset, and cannot drift; the
+image carries the name and tagline only. **No maintenance trigger was added, deliberately** — a
+countless asset has nothing to age. The principle, now also written into `docs/MAINTENANCE.md` under
+*Committed assets* so a future maintainer does not "helpfully" add counts and then a trigger to manage
+them: **no gate-invisible artifact should carry a claim that ages.**
+
+**README live-URL placeholder — already resolved, nothing to fill.** The item approved filling the
+README's `*(URL to be added at publish)*` placeholder. It was already filled at publication (§25):
+`README.md` line 34 opens the "Use it" section with the live hosted link. Verified no placeholder
+remains anywhere in the docs. Noted so the no-op is visible rather than silent.
+
+### 29.4 Gate results
+
+| Check | Result |
+|---|---|
+| `python build/assemble.py` | Passes. Integrity assertions clean; band summary and row/framework/product counts unchanged |
+| `python build/build_html.py` | Passes; footer "Built …" line present, format unchanged |
+| `git diff compliance-atlas.json` | **Zero content lines.** Working tree byte-identical to `HEAD` after a full rebuild (confirmed by CRLF-normalized `cmp`). The strictest gate the project has run, and it held across all three item commits |
+| axe-core, **standard** suite — 13 routes × 2 themes = **26 combinations** | **0 violation nodes**, both themes. Includes `#/` and `#/about` (full legend, new disclosure) and every framework/product/matrix/cell view (compact legend, new disclosure) |
+| axe-core, **filtered** suite — `?tier=e3`, `?tier=e5&meter=exclude`, `?tier=addon`, `?meter=exclude`, FERPA, HIPAA, GDPR = 7 routes × 2 themes = **14 combinations** | **0 violation nodes**, both themes |
+| axe-core, **disclosure forced OPEN** — `#/`, `#/about`, `#/framework/iso-27001-2022` × 2 themes = **6 combinations** | **0 violation nodes.** Run so the expanded scope-note text (its contrast in both themes) is in the crawl, not only the closed summary |
+| **Keyboard operability of the new disclosure** | **Pass, driven headlessly, not assumed.** In all three legend contexts × both themes: the `<details class="disclose"> > summary` is focusable (`document.activeElement === summary`) and a dispatched **Enter** toggles `open`. 0 failures. It is a native `<summary>`, so Space works by the same path and no `tabindex`/`role` was added |
+| `tools/check_urls.py` full sweep | **153 cited URLs: 151 OK, 2 WAF, 0 BROKEN, 0 REDIRECT.** The 2 WAF are the documented §7.2 pair (`dodcio.defense.gov`, `www.hhs.gov`). Exit 0 |
+| — the issue link inside that sweep | `project:issues_url` → **OK 200**; `repo_url` and `changelog_url` also OK 200 |
+| **Live domain checks** (current deployed site) | `compliance-atlas.html` **200**, `/issues` **200**, repo **200**, changelog **200**. `og-image.png` **404 — expected pre-deploy** (new asset on this branch, not yet merged/pushed); it resolves 200 once GitHub Pages redeploys from `main`, per the owner's own framing |
+| Legend heights vs the checkpoint | Match exactly: landing **1087→571** @1440, **1177→809** @1024; About **1200→954**; compact **181→131** @1440, **270→202** @1024. No build shift |
+
+**On the check_urls baseline.** The owner's expected "153 URLs, 151 OK / 2 WAF / 0 BROKEN" is not a
+*change* this session introduces — it is already the documented baseline. §25 (line ~2206) and §28.8
+(line ~2845) both record 151 OK / 0 BROKEN, because the repository went public at publication (§25),
+which is what resolved the three GitHub links that were BROKEN-by-design while it was private. This
+session adds no URL to `compliance-atlas.json` (the JSON is byte-identical), so the sweep is still 153
+URLs and the baseline holds unchanged. Nothing in the docs still asserts a stale "3 BROKEN" as the
+current state; no baseline edit was required. The result is recorded here so the confirmation is on
+record.
+
+**Why the og:image URL is not in the check_urls sweep, by design.** `check_urls.py` reads
+`compliance-atlas.json`; the `og:image` URL lives in the HTML head (from `build_html.py`), not the
+dataset, and adding it to the JSON would break the empty-diff gate. It is verified instead by the live
+domain check above — which correctly reports 404 until the asset is deployed. Baking a not-yet-deployed
+URL into check_urls would have made the tool report BROKEN and exit 1 pre-merge, which is why the owner
+separated it as a post-deploy check in the first place.
+
+### 29.5 Version bump — the argument, for the owner's decision
+
+The policy (`CHANGELOG.md`): **MINOR** = "a framework, product, industry lens, or **reader-facing
+feature** added; existing rows keep their shape and their meaning." **PATCH** = "row corrections and
+re-verifications." **Machinery-only = PATCH**, but only when **all three** hold: *no reader gains
+anything*, no claim moves, and the shape of `compliance-atlas.json` does not change.
+
+Two of the three machinery-only conditions hold cleanly: no claim moved, and the JSON is byte-identical.
+The third does **not**: readers gain something. Item 3 ships a **social-preview capability** the atlas
+did not have, and item 2 adds a **feedback affordance**. Those are "reader-facing features added,"
+which is the MINOR trigger stated verbatim. Item 1 on its own is a presentation *fix* (PATCH-shaped),
+but it rides along with the two additions.
+
+**Recommendation: MINOR — 3.0.0 → 3.1.0.** The policy sorts MINOR by what a reader gains, and a reader
+gains a link-preview card and a clearer way to report errors. Existing rows keep their shape and
+meaning, so it is not MAJOR, and nothing here is a row correction, so PATCH undersells it.
+
+**The honest counter-argument for PATCH (3.0.1),** so the decision is made with both in view: every
+prior MINOR bump coincided with a *dataset* addition (a framework, a product, a lens, or `meta.maintenance`
+shipped into the JSON), whereas this session leaves `compliance-atlas.json` byte-identical — a
+consumer of the JSON sees literally nothing new. The two rendered-text-only precedents (2.9.1 American
+English, 2.10.1 build integrity) were both PATCH. If "reader-facing feature" is read narrowly as
+"something visible in the dataset a consumer pulls," this is PATCH. I think that reading is too narrow —
+the policy says *reader*, not *JSON consumer*, and the social card is unambiguously reader-facing — but
+it is a defensible call and it is the owner's to make.
+
+> **Owner decision: MINOR — 3.1.0.** Applied in the final commit (bumped `BRAND["atlas_version"]` in
+> `assemble.py`, `CHANGELOG.md` 3.1.0 entry, rebuild). That commit carries the **one intended JSON
+> change** — `meta.version` / `meta.brand.atlas_version` moving `3.0.0` → `3.1.0` — which is a named
+> change, not drift, exactly as the §28.7 framing allows, and is deliberately kept out of the three
+> empty-diff item commits. Verified after the bump: the JSON diff against `HEAD` is **exactly the two
+> version fields** (`meta.version` and `meta.brand.atlas_version`, both `3.0.0` → `3.1.0`) and nothing
+> else moved.

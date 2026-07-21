@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The title, description and canonical URL below are substituted by build_html.py from
-     meta.brand.title, meta.description_meta and build_html.CANONICAL_URL, so crawlers see them
-     without running the script. (Deliberately not naming the substitution tokens here: the
-     replacement is a plain string swap and would rewrite them inside this comment too.)
-     og:image is deliberately omitted: it would require fetching a hosted asset and break the
-     zero-external-asset property that makes the file:// copy fully self-contained. The canonical
-     URL is an absolute string in the markup, not a fetch, so it costs the offline copy nothing —
-     a file:// reader simply carries a pointer back to the hosted original. -->
+<!-- The title, description, canonical URL and social-card image below are substituted by
+     build_html.py from the dataset meta and build_html's URL constants, so crawlers see them
+     without running the script. (Deliberately not naming the substitution tokens in this comment:
+     the replacement is a plain string swap and would rewrite them here too.)
+     og:image points at the hosted PNG by ABSOLUTE URL — a string pointer, not a fetch, exactly like
+     the canonical link above it — so it costs the offline file:// copy nothing and keeps the
+     zero-external-asset property intact. CAVEAT, BY DESIGN: the social card resolves only when the
+     page is loaded from its hosted URL. Opened from file:// the og/twitter tags are inert and no
+     preview is produced; that is expected, not a bug. The description carries the live counts (built
+     from the dataset); the image deliberately carries none, so nothing in the card can go stale. -->
 <title>__BRAND_TITLE__</title>
 <meta name="description" content="__META_DESCRIPTION__">
 <link rel="canonical" href="__CANONICAL_URL__">
@@ -18,6 +20,14 @@
 <meta property="og:title" content="__BRAND_TITLE__">
 <meta property="og:description" content="__META_DESCRIPTION__">
 <meta property="og:url" content="__CANONICAL_URL__">
+<meta property="og:image" content="__OG_IMAGE_URL__">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="__OG_IMAGE_ALT__">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="__BRAND_TITLE__">
+<meta name="twitter:description" content="__META_DESCRIPTION__">
+<meta name="twitter:image" content="__OG_IMAGE_URL__">
 <!-- Favicon: the ¶ brand glyph (%C2%B6) in the accent ink on paper, inline so nothing is fetched. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%23faf7f0'/%3E%3Ctext x='32' y='48' text-anchor='middle' font-family='Georgia,serif' font-size='46' font-weight='600' fill='%237c2d12'%3E%C2%B6%3C/text%3E%3C/svg%3E">
 <style>
@@ -172,16 +182,37 @@ section.block h2{font-size:24px; margin:4px 0 4px}
 section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
 
 /* ---------- taxonomy legend (definitions rendered from META, never duplicated here) ---------- */
+/* container-type so the column count below can respond to the legend's own width. The same
+   legend renders full-bleed on the landing page (~1082px) and inside the about page's 78ch
+   prose column (~589px); a viewport media query cannot tell those apart and would give the
+   narrow one four 110px columns. Pure CSS, no dependency. */
 .legend{border:1px solid var(--rule-2); border-radius:12px; background:var(--card); box-shadow:var(--shadow);
-  padding:18px 20px; margin:0 0 34px}
+  padding:18px 20px; margin:0 0 34px; container-type:inline-size}
 .legend>.overline{display:block; margin-bottom:12px}
-.legend .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px 28px}
+/* Explicit column counts, not auto-fit. auto-fit with minmax(280px,1fr) could never fit the
+   fourth taxonomy (4x280 + 3 gaps = 1204px against a 1082px inner width), so License tier
+   silently wrapped under Coverage and column 1 rendered several times the height of its
+   neighbours. License tier carries six entries to the others' four, so at the four-column
+   step its track is widened: the extra width buys back wrapped lines and the columns end at
+   roughly the same depth. Default is the narrow case, so a browser without container-query
+   support degrades to one readable column rather than to four unreadable ones. */
+.legend .cols{display:grid; grid-template-columns:minmax(0,1fr); gap:18px 24px}
+@container (min-width:520px){ .legend .cols{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@container (min-width:1000px){ .legend .cols{grid-template-columns:1fr 1fr 1fr 1.35fr} }
+/* The scope note sits below the grid, not inside a column: it qualifies one taxonomy but is
+   an order of magnitude longer than any definition, and in-column it set the block's height. */
+.legend>details.disclose{margin:16px 0 0}
 .legend h4{margin:0 0 9px; font:700 11px var(--font-body); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
 .legend dl{margin:0}
 .legend dl>div+div{margin-top:11px}
 .legend dt{margin:0 0 4px}
 .legend dd{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
 .legend.compact{padding:12px 16px; margin:16px 0 0}
+/* The compact legend holds one taxonomy, so its .cols is a single full-width track and the
+   coverage <dl> inside does its own across-the-width grid. Without this it would inherit the
+   four-column rule above and be squeezed into the first of four tracks. */
+.legend.compact .cols{grid-template-columns:minmax(0,1fr)}
+.legend.compact>details.disclose{margin:10px 0 0}
 .legend.compact dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px 24px}
 .legend.compact dl>div+div{margin-top:0}
 .legend.compact dd{font-size:12px}
@@ -305,6 +336,9 @@ footer.site #footVersion{margin-top:10px; font-size:13.5px; color:var(--ink-1); 
 footer.site #footVersion .sep{color:var(--ink-3); font-weight:400; margin:0 7px}
 footer.site #footVersion .facts{font-weight:400; color:var(--ink-2)}
 footer.site #footMeta{margin-top:3px; font-size:11.5px; color:var(--ink-3)}
+/* The feedback invitation is a call to action, not a reference link, so it reads at --ink-2 (one
+   step up from the muted nav/meta) and sits just under the nav rather than among it. */
+footer.site #footFeedback{margin-top:8px; font-size:12px; color:var(--ink-2)}
 footer.site .legal{max-width:100ch; margin:0 0 12px; padding:0 0 0 16px; line-height:1.7}
 footer.site .legal li{margin:0}
 kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-width:2px; border-radius:4px; padding:1px 5px; background:var(--paper-2); color:var(--ink-2)}
@@ -365,6 +399,7 @@ kbd{font:11px var(--font-mono); border:1px solid var(--rule-2); border-bottom-wi
   <ul class="legal" id="footLegal"></ul>
   <div class="disc" id="footDisc"></div>
   <nav id="footLinks" aria-label="About this atlas"></nav>
+  <div id="footFeedback"></div>
   <div id="footVersion"></div>
   <div id="footMeta"></div>
   <div class="kbdhint" style="margin-top:8px">Press <kbd>/</kbd> to search · Data regenerated from <span class="mono">compliance-atlas.json</span>; do not hand-edit this file.</div>
@@ -405,6 +440,10 @@ const COV_DEF = META.coverage_levels || {}, CONF_DEF = META.confidence_levels ||
 const BAND_DEF = META.license_bands || {}, BAND_PARTIAL_DEF = META.license_band_partial || "",
       BAND_SCOPE = META.license_band_scope || "";
 const BAND_ORDER = ["e3","e5","addon","consumption","na"];
+/* Chrome, not data: the summary label for the collapsed scope note. It states the commercial-only
+   limit in the always-visible summary, so a reader who never opens the disclosure still cannot
+   mistake a band for a G/F/Business-Premium claim; the full note is verbatim inside. */
+const BAND_SCOPE_LABEL = "License tier bands cover Microsoft 365 commercial licensing only — scope and limitations";
 const withDef = (label, def) => def ? `${label} — ${def}` : label;
 /* Dataset currency, derived at build time from the rows' own last_verified values. */
 function verifiedRange(){
@@ -442,7 +481,7 @@ function taxonomyLegend(compact){
      lives -- so it carries the scope limitation even though it drops the other
      taxonomies. A reader filtering by tier must be told what the bands do not cover. */
   if(compact) return `<div class="legend compact"><div class="cols">${defList(cov)}</div>
-    <p class="tiny muted">${esc(BAND_SCOPE)}</p></div>`;
+    ${detailToggle(BAND_SCOPE, BAND_SCOPE_LABEL)}</div>`;
   const conf = Object.keys(CONF_DOTS).filter(c => CONF_DEF[c]).map(c => [confMeter(c), CONF_DEF[c]]);
   const lic = Object.entries(LIC_DEF).map(([k,v]) => [`<span class="chip">${esc(k)}</span>`, v]);
   const band = BAND_ORDER.filter(b => BAND_DEF[b])
@@ -452,9 +491,9 @@ function taxonomyLegend(compact){
     <div><h4>Coverage · what the claim means</h4>${defList(cov)}</div>
     <div><h4>Confidence · how far it stretches</h4>${defList(conf)}</div>
     <div><h4>Licensing model</h4>${defList(lic)}</div>
-    <div><h4>License tier · what you need to own</h4>${defList(band)}
-      <p class="tiny muted">${esc(BAND_SCOPE)}</p></div>
-  </div></div>`;
+    <div><h4>License tier · what you need to own</h4>${defList(band)}</div>
+  </div>
+  ${detailToggle(BAND_SCOPE, BAND_SCOPE_LABEL)}</div>`;
 }
 function minibar(rows){
   const n = rows.length || 1;
@@ -1162,14 +1201,19 @@ document.getElementById("brandVer").textContent = "v" + META.brand.atlas_version
 document.getElementById("footLegal").innerHTML = (META.footer_lines||[]).map(l=>`<li>${esc(l)}</li>`).join("");
 document.getElementById("footDisc").textContent = META.disclaimer;
 /* Footer links: the about route plus the off-site repository. Kept out of footer_lines, which are
-   escaped plain text by design. */
+   escaped plain text by design. The issue link is deliberately NOT in this nav — it lives one line
+   below as a feedback invitation (footFeedback), so the footer carries one issue link, presented as
+   a call to action rather than a bare nav item. */
 (function(){
   const P = META.project || {};
   const links = [`<a href="#/about">About &amp; methodology</a>`];
   if(P.repo_url) links.push(`<a href="${esc(P.repo_url)}">Source &amp; data on GitHub</a>`);
   if(P.changelog_url) links.push(`<a href="${esc(P.changelog_url)}">Changelog</a>`);
-  if(P.issues_url) links.push(`<a href="${esc(P.issues_url)}">Report a correction</a>`);
   document.getElementById("footLinks").innerHTML = links.join(`<span aria-hidden="true"> · </span>`);
+  /* Error-report invitation, worded to match the about page's "Corrections are wanted" section so
+     the atlas asks for feedback in one consistent voice. */
+  if(P.issues_url) document.getElementById("footFeedback").innerHTML =
+    `Spotted an error? <a href="${esc(P.issues_url)}">Open an issue</a> &mdash; corrections are recorded.`;
 })();
 /* Content version, then the build timestamp beneath it. These are different facts: the version moves
    when the dataset changes, the timestamp moves on every rebuild. */
