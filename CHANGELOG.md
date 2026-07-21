@@ -75,14 +75,14 @@ until now the artifact could not answer it: the entitlement string was on every 
 only by expanding rows one at a time.
 
 **For readers.** Every row now carries a coarse **license tier band** — `E3`, `E5`, `Add-on`,
-`Consumption`, or `n/a` — shown as a chip in the row summary and explained in the row's licence
+`Consumption`, or `n/a` — shown as a chip in the row summary and explained in the row's license
 block. The framework view gains a **tier filter**, so you can ask "what does ISO 27001 look like
 if I only own E3?" and get an answer. Rows where the band is the *floor* rather than the whole
-story carry a **partial** badge meaning "reduced capability at this tier — read the licence
+story carry a **partial** badge meaning "reduced capability at this tier — read the license
 requirement". That badge is not decoration: **114 of the 175 E3-band rows carry it**, so "E3"
 alone would systematically over-promise without it.
 
-The band never replaces the verbatim licence string, which stays rendered in full on every row.
+The band never replaces the verbatim license string, which stays rendered in full on every row.
 It is a coarse signpost derived from that string, and where the two seem to disagree the string
 is the authority.
 
@@ -117,7 +117,7 @@ change that would benefit from it.
   the **constant coordinate**, not on the 110 distinct prose strings those constants compose into
   and not on substring heuristics over prose — so it is a reviewed table, not a pile of guesses.
 - **Added** four build guards, all hard failures: a licensing constant with no band (G1), a row
-  whose licence string matches no constant and is not the `n/a` literal (G2), a band that
+  whose license string matches no constant and is not the `n/a` literal (G2), a band that
   disagrees with `licensing_model` about consumption or boundary status (G3), and a tier claim
   written into row prose where the mapping cannot see it (G4). There is no silent default band.
 - **Added** URL state for the tier filter and consumption toggle: `#/framework/<id>?tier=e3`,

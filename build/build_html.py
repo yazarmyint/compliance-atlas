@@ -16,6 +16,11 @@ sys.dont_write_bytecode = True
 shutil.rmtree(os.path.join(os.path.dirname(os.path.abspath(__file__)), "__pycache__"),
               ignore_errors=True)
 
+# Sibling import, below the guard by the rule above. This is the entry point the guard's comment
+# anticipated: it now imports a build/ module (the spelling lint), so the cache purge is load-bearing.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from common import scan_banned_spellings, SPELLING_LINT_TARGETS
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON_PATH = os.path.join(ROOT, "compliance-atlas.json")
 TEMPLATE = os.path.join(ROOT, "build", "template.html")
@@ -134,6 +139,17 @@ def main():
     print(f"  rows embedded: {len(data['rows'])} | frameworks: {len(data['frameworks'])} | products: {len(data.get('products',{}))} | size: {len(doc)/1024:.0f} KB")
     print(f"  built at: {built_at} (stamped into the HTML; the JSON carries no timestamp)")
     write_index(meta)
+    # Spelling lint (session 12), build-failing: American English in everything that ships. Runs on
+    # the outputs just written plus the shippable docs; a banned spelling is a defect, not a warning,
+    # so the build exits non-zero. Data and scan logic live beside RETIRED_NAMES in common.py.
+    violations = scan_banned_spellings(ROOT)
+    if violations:
+        print(f"\nbuild_html.py: {len(violations)} banned-spelling violation(s) in shipped files "
+              f"— American English required:", file=sys.stderr)
+        for rel, lineno, line, banned, correct in violations:
+            print(f"  {rel}:{lineno}: {banned!r} -> {correct!r}  |  {line.strip()[:90]}", file=sys.stderr)
+        sys.exit(1)
+    print(f"  spelling lint: clean ({len(SPELLING_LINT_TARGETS)} shippable targets scanned)")
 
 def write_index(meta):
     """Emit the root redirect stub. Generated, not hand-written, so its title, description and

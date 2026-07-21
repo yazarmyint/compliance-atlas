@@ -544,7 +544,7 @@ def main():
     # licensing_model and that field is defaulted in the loop above.
     #
     # This writes two NEW fields. It does not touch license_requirement or
-    # licensing_model, which are protected: the band is a derived view of the licence
+    # licensing_model, which are protected: the band is a derived view of the license
     # string, and the string remains the authority the row renders in full.
     license_bands.check_bands_cover(lic_dicts())                       # G1
     license_bands.check_overrides({r["id"] for r in rows})
@@ -555,7 +555,7 @@ def main():
         r["license_band_partial"] = partial
         # G3: the two licensing fields must agree about which family the row is in. They
         # are derived from different sources -- licensing_model from the product's
-        # default, the band from the row's own licence string -- so agreement is a real
+        # default, the band from the row's own license string -- so agreement is a real
         # check rather than a restatement.
         model = r["licensing_model"]
         assert (band == "consumption") == (model == "consumption"), (
