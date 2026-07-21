@@ -38,6 +38,29 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.1.1 — 2026-07-21
+
+Spelling unification. A manual edit had left the British spelling of "license" mixed in with the
+American spelling the atlas uses everywhere else, and the mix had become reader-visible — most
+obviously in the license-tier legend, where a boundary row's definition carried the British form.
+Every occurrence in shipped text is now American "license" (noun and verb).
+
+**For readers.** The four license-tier legend/definition strings read "license" consistently. Nothing
+else visible changes.
+
+**For consumers of `compliance-atlas.json`.** Four `meta.license_band*` definition strings change by a
+single letter each; the four values are otherwise byte-identical. No row, no claim, no
+`license_requirement`, no source, and no `last_verified` moved — spelling is not verification, so live
+source re-verification was waived (drift ledger and the three-way protected-field check in
+AUDIT-FINDINGS §30).
+
+**Guardrail.** A build-failing spelling lint (`BANNED_SPELLINGS`) now scans the outputs and shippable
+docs on every build, so the British spelling cannot creep back in — including into this changelog,
+which is why the before-form is recorded only in the §30 ledger (a dated record the lint excludes).
+
+**Why PATCH.** Corrections, not features: no claim moved, no row shape changed, and the §27.4
+row-shape-is-MAJOR fence does not apply (nothing at row level was touched). Squarely a PATCH.
+
 ## 3.1.0 — 2026-07-20
 
 Reader-facing polish: a legend that fits again, an invitation to report errors, and a social card
@@ -75,14 +98,14 @@ until now the artifact could not answer it: the entitlement string was on every 
 only by expanding rows one at a time.
 
 **For readers.** Every row now carries a coarse **license tier band** — `E3`, `E5`, `Add-on`,
-`Consumption`, or `n/a` — shown as a chip in the row summary and explained in the row's licence
+`Consumption`, or `n/a` — shown as a chip in the row summary and explained in the row's license
 block. The framework view gains a **tier filter**, so you can ask "what does ISO 27001 look like
 if I only own E3?" and get an answer. Rows where the band is the *floor* rather than the whole
-story carry a **partial** badge meaning "reduced capability at this tier — read the licence
+story carry a **partial** badge meaning "reduced capability at this tier — read the license
 requirement". That badge is not decoration: **114 of the 175 E3-band rows carry it**, so "E3"
 alone would systematically over-promise without it.
 
-The band never replaces the verbatim licence string, which stays rendered in full on every row.
+The band never replaces the verbatim license string, which stays rendered in full on every row.
 It is a coarse signpost derived from that string, and where the two seem to disagree the string
 is the authority.
 
@@ -117,7 +140,7 @@ change that would benefit from it.
   the **constant coordinate**, not on the 110 distinct prose strings those constants compose into
   and not on substring heuristics over prose — so it is a reviewed table, not a pile of guesses.
 - **Added** four build guards, all hard failures: a licensing constant with no band (G1), a row
-  whose licence string matches no constant and is not the `n/a` literal (G2), a band that
+  whose license string matches no constant and is not the `n/a` literal (G2), a band that
   disagrees with `licensing_model` about consumption or boundary status (G3), and a tier claim
   written into row prose where the mapping cannot see it (G4). There is no silent default band.
 - **Added** URL state for the tier filter and consumption toggle: `#/framework/<id>?tier=e3`,

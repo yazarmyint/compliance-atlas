@@ -24,7 +24,7 @@ THE TAXONOMY (five bands, fixed)
   e3           included at Microsoft 365 E3 or below
   e5           requires Microsoft 365 E5 or the relevant E5 step-up
   addon        requires an add-on or standalone SKU (E5 Compliance, E5 Security,
-               Intune Suite, per-product standalone licences)
+               Intune Suite, per-product standalone licenses)
   consumption  consumption/meter-billed (Sentinel, Defender for Cloud); no seat tier
   na           the `licensing_model: "n/a"` boundary rows
 
@@ -128,7 +128,7 @@ BANDS = {
     ("LIC", "dspm"): ("e5", False),
     # "M365 E5 or Purview Suite; monitored Copilot users need Microsoft 365 Copilot
     # licenses; some non-M365 sources are pay-as-you-go" — an e5 floor that carries both
-    # a further per-seat licence and consumption meters. partial, not a band change:
+    # a further per-seat license and consumption meters. partial, not a band change:
     # the seat floor is real and the extras are qualifications on top of it.
     ("LIC", "dspm_ai"): ("e5", True),
 
@@ -159,7 +159,7 @@ BANDS = {
     # Intune P1 + Entra ID P1. Both are present at E3, so nothing is reduced there — F4.
     ("INTUNE_LIC", "p1_ca"): ("e3", False),
     # "included in Microsoft 365 E5 and E7 since July 2026 ...; on any other plan it
-    # remains a separate Intune add-on licence or the Intune Suite" — F1: e5 and addon
+    # remains a separate Intune add-on license or the Intune Suite" — F1: e5 and addon
     # are two routes, floor is e5.
     ("INTUNE_LIC", "epm"): ("e5", False),
 
@@ -394,13 +394,13 @@ def derive(row, index):
 BAND_DEFS = {
     "e3": "Included at Microsoft 365 E3 or below.",
     "e5": "Requires Microsoft 365 E5 or the relevant E5 step-up.",
-    "addon": "Requires an add-on or standalone SKU beyond the base seat licence.",
+    "addon": "Requires an add-on or standalone SKU beyond the base seat license.",
     "consumption": "Consumption/meter-billed (Sentinel, Defender for Cloud). No seat tier applies.",
-    "na": "No licence claim — boundary rows, where the verdict is that the product does not cover the control.",
+    "na": "No license claim — boundary rows, where the verdict is that the product does not cover the control.",
 }
 
 BAND_PARTIAL_DEF = ("Reduced capability at this tier — the band is the lowest tier where something "
-                    "mapped here works, and part of the mapping needs a higher tier. Read the licence "
+                    "mapped here works, and part of the mapping needs a higher tier. Read the license "
                     "requirement on the row for what is and is not included.")
 
 BAND_SCOPE_NOTE = ("Bands describe Microsoft 365 COMMERCIAL licensing only: there is no G3/G5, F-series, "
@@ -409,6 +409,6 @@ BAND_SCOPE_NOTE = ("Bands describe Microsoft 365 COMMERCIAL licensing only: ther
                    "Defender for Cloud) have no seat tier at all, so they appear under every tier filter "
                    "unless you exclude them with the No seat tier toggle — which is what the \"+n\" on each "
                    "tier button counts: rows at that tier, plus rows that have no tier at all. The band is derived from each "
-                   "row's licence requirement and is a coarse signpost to it, never a replacement — the "
+                   "row's license requirement and is a coarse signpost to it, never a replacement — the "
                    "full entitlement string stays on every row. Related-product mentions marked "
                    "\"(if licensed)\" are pointers to adjacent products, not banded or audited claims.")

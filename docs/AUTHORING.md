@@ -131,7 +131,7 @@ per-row `cloud_availability_note`. Related-product "(if licensed)" mentions are 
 | Guard | Fires when | Fix |
 |---|---|---|
 | G1 | a licensing constant has no `BANDS` entry | add the entry, citing the constant's own text |
-| G2 | a row's licence string matches no constant and is not the literal `n/a` | compose it from a constant, or set `n/a` if it is genuinely a boundary row |
+| G2 | a row's license string matches no constant and is not the literal `n/a` | compose it from a constant, or set `n/a` if it is genuinely a boundary row |
 | G3 | the band disagrees with `licensing_model` about consumption or boundary status | one of the two is wrong; find out which |
 | G4 | a tier token (`E5`, `Plan 2`, `add-on`, …) appears in row prose *outside* any constant | move the claim into a constant, or add a `ROW_OVERRIDES` entry **with a stated reason** |
 

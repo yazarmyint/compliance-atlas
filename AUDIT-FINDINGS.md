@@ -3132,3 +3132,99 @@ it is a defensible call and it is the owner's to make.
 > empty-diff item commits. Verified after the bump: the JSON diff against `HEAD` is **exactly the two
 > version fields** (`meta.version` and `meta.brand.atlas_version`, both `3.0.0` → `3.1.0`) and nothing
 > else moved.
+
+## 30. Spelling unification — licence → license (2026-07-21) — drift ledger + spelling lint
+
+Closes the pre-publish open item flagged since §25: a mid-session manual edit had introduced British
+**"licence"** alongside the American **"license"** the atlas uses everywhere else, and the mix had
+become reader-visible — most conspicuously the license-tier legend's *"No licence claim."* The
+standard is American English, "license" for both noun and verb. This session substitutes every
+non-exception occurrence and adds a build-failing lint so it cannot recur.
+
+### 30.1 What was NOT touched — the protected-field check, three ways
+
+**No protected field changed. Zero.** The Phase-1 sweep established this before any edit, and it is the
+premise the whole session rests on, so it is recorded with its evidence:
+
+1. `build/common.py` — every licensing constant (`LIC`, `ENTRA_LIC`, `INTUNE_LIC`, `DEFENDER_LIC`,
+   `SENTINEL_LIC`, `MDC_LIC`, the `*_GOV`/`*_URLS` registries): **0** occurrences of "licence".
+2. All eleven `build/rows_*.py`: **0** occurrences.
+3. A parse of `compliance-atlas.json` walking every row: **0** row-level hits. All four hits in the
+   JSON sit in `meta.license_band*` — reader-facing *definitions*, not `license_requirement`,
+   `licensing_model`, `sources`, or any other protected row field.
+
+So the British spelling never reached a protected field, a licensing constant, or a cited source. The
+two-commit split proposed in the original brief (isolating protected-field corrections) had nothing to
+isolate and was collapsed to one commit by owner decision.
+
+**`last_verified` does not move, and live source re-verification is WAIVED for this session — stated
+explicitly.** A spelling substitution changes no factual claim: not a tier, not an entitlement, not a
+source, not a coverage or confidence verdict. Re-fetching licensing sources would verify nothing that
+changed, because nothing factual changed. Spelling is not verification, so no row's `last_verified`
+advances. This waiver is admissible **only** because §30.1 proves no protected field was touched; it
+must not be cited by any session that changes claim content.
+
+### 30.2 The four JSON-affecting substitutions — full before/after
+
+These are the only changes that alter `compliance-atlas.json`. All four are `meta.license_band*`
+definition strings authored in `build/license_bands.py`. **Orthographic substitution exclusively — no
+rewording, no punctuation, no style edit** (those are deferred to the end-of-backlog style pass); every
+changed byte is `licence` → `license`.
+
+| Field | Before (only the changed token shown in **bold**) → after |
+|---|---|
+| `meta.license_bands.addon` | …beyond the base seat **licence**. → …base seat **license**. |
+| `meta.license_bands.na` | **No licence claim** — boundary rows, where the verdict is that the product does not cover the control. → **No license claim** — … |
+| `meta.license_band_partial` | …Read the **licence** requirement on the row for what is and is not included. → …Read the **license** requirement… |
+| `meta.license_band_scope` | …the band is derived from each row's **licence** requirement and is a coarse signpost… → …each row's **license** requirement… |
+
+The gate `git diff compliance-atlas.json` for the corrections commit is exactly these four value
+changes and nothing else (pasted in the session's gate report). Note `license_band_scope` retains
+"COMMERCIAL **licensing** only" and the "(if **licensed**)" clause unchanged: those are already
+American verb/gerund forms, and only the noun "licence" moved.
+
+### 30.3 Everything else corrected (no JSON impact)
+
+- **`build/template.html`** — four code comments (incl. the L460 comment on the band chip, the one
+  that leaked into the shipped HTML). Not rendered prose; corrected so the output HTML carries zero
+  "licence".
+- **`build/license_bands.py`** three comments, **`build/assemble.py`** two comments. Not shipped. The
+  `license_bands.py` L162 comment paraphrases Microsoft licensing text; Microsoft's own wording is
+  American, so its "licence" was a transcription slip, not a faithful British quotation — corrected
+  (owner-approved judgment call).
+- **`docs/AUTHORING.md`** one line (G2 guard description); **`CHANGELOG.md`** four lines, all in the
+  3.0.0 entry prose. Orthographic-only; no changelog claim altered.
+
+### 30.4 Exceptions — deliberately left in British spelling
+
+- **`AUDIT-FINDINGS.md` (20 occurrences)** and **`PROJECT-REVIEW.md` (1)** — dated records. Their
+  history is not retro-edited, and this very ledger quotes the British before-strings, so editing them
+  would be both a discipline violation and self-contradiction. Both are excluded from the lint's scan
+  set for the same reason (see §30.5).
+- `LICENSE`, `LICENSE-CONTENT.md`, the CC BY 4.0 / MIT license texts and their filenames already use
+  American "License"; `README.md` was already clean. No URL or cited source title carries British
+  spelling. Nothing in this group needed changing; listed for completeness.
+
+### 30.5 The lint — `BANNED_SPELLINGS`, build-failing
+
+`BANNED_SPELLINGS = [("licence", "license")]` plus `SPELLING_LINT_TARGETS`, `SPELLING_ALLOW`, and
+`scan_banned_spellings(root)` live in `build/common.py` beside `RETIRED_NAMES`. `build/build_html.py`
+calls the scan after writing the outputs and **exits non-zero** on any hit — a hard failure, unlike the
+advisory `NAMING` warnings `RETIRED_NAMES` produces.
+
+- **Scans:** the two build outputs (`compliance-atlas.json`, `compliance-atlas.html`) and the
+  reader-reachable docs (`README.md`, `CHANGELOG.md`, `LICENSE-CONTENT.md`, `docs/AUTHORING.md`,
+  `docs/MAINTENANCE.md`, `tools/README.md`).
+- **Deliberately does not scan:** `build/*.py` source (comments are not shipped output — the outputs
+  they generate are scanned instead), and the dated records `AUDIT-FINDINGS.md`, `PROJECT-REVIEW.md`,
+  `CONTENT-REVIEW.md`, `FRAMEWORK-SELECTION.md`. The exclusion rationale is a comment on the target
+  list, so a future maintainer does not "helpfully" widen the scan and start flagging history.
+- **Exception mechanism:** `SPELLING_ALLOW`, an exact-substring allowlist for a future verbatim
+  external quotation whose source uses British spelling. Empty today; nothing shippable needs it.
+- **Matching:** case-insensitive substring, so the plural (`licences` → `licenses`) and any casing are
+  caught by the single entry.
+
+Proven both directions at the gate: clean on the real tree (exit 0), and a seeded "licence" in a
+scratch copy is caught with its file, line, and correction (exit 1) — via the same
+`scan_banned_spellings` function the build calls, and confirmed end-to-end by seeding one violation
+into `README.md` and watching `python build/build_html.py` itself exit 1 before the seed was reverted.

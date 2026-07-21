@@ -141,7 +141,7 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .chip.unv{color:var(--danger); background:var(--danger-bg); box-shadow:inset 0 0 0 1px var(--danger)}
 .chip.ver{font-weight:400; color:var(--ink-3); background:transparent; box-shadow:inset 0 0 0 1px var(--rule)}
 /* PR-015 license bands. The tier chip is deliberately quiet -- it is a signpost to the
-   licence string, not a claim in its own right. The partial badge is NOT quiet: two
+   license string, not a claim in its own right. The partial badge is NOT quiet: two
    thirds of the e3 band carries it, so "E3" alone would systematically over-promise if
    the qualifier were easy to miss. Both carry their meaning in TEXT; colour only
    reinforces (WCAG 1.4.1). */
@@ -457,7 +457,7 @@ function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}" title=
 function confMeter(c){ return `<span class="conf" title="${esc(withDef("Confidence: "+c, CONF_DEF[c]))}"><span class="dots">${CONF_DOTS[c]||""}</span>${esc(c)}</span>`; }
 function licChip(model){ return `<span class="chip" style="margin-left:4px" title="${esc(withDef(model, LIC_DEF[model]))}">${esc(model)}</span>`; }
 /* PR-015. Band label and partial badge.
-   The band NEVER replaces the licence string -- both the summary chip and the detail
+   The band NEVER replaces the license string -- both the summary chip and the detail
    block sit alongside the verbatim requirement, which stays rendered in full. */
 const BAND_LABEL = {e3:"E3", e5:"E5", addon:"Add-on", consumption:"Consumption", na:"n/a"};
 function bandChip(r){
@@ -690,7 +690,7 @@ function setFwFilter(c){ fwFilter = c; render({focus:"filter", filter:c}); }
    scale. Modelling them as a fifth tier would have made "E3" mean two different things.
 
    So: the tier buttons select a SEAT band (e3/e5/addon), and rows with no seat tier --
-   consumption-priced rows and the boundary rows that make no licence claim at all --
+   consumption-priced rows and the boundary rows that make no license claim at all --
    are governed by a separate include/exclude toggle that defaults to INCLUDE. A reader
    who never touches the toggle sees every no-seat-tier row under every tier, which is
    the truthful default: those rows really are available on E3, for money.
@@ -1134,7 +1134,7 @@ function render(opts){
     const t = tierOf();
     const shown = app.querySelectorAll("details.row").length;
     /* Scoped to the summary badge deliberately: the band chip also renders inside the row's
-       licence block, so an unscoped selector counts every row twice. */
+       license block, so an unscoped selector counts every row twice. */
     const noSeat = app.querySelectorAll("details.row > summary .badges .chip.tier-consumption, "
                                       + "details.row > summary .badges .chip.tier-na").length;
     if(t){

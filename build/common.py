@@ -219,6 +219,60 @@ RETIRED_NAMES = [
 ]
 
 # ---------------------------------------------------------------------------
+# Spelling lint (session 12). Beside RETIRED_NAMES because both are un-glossed-token guards, but this
+# one is BUILD-FAILING, not advisory: RETIRED_NAMES emits a NAMING warning you can ship past unless
+# --strict-maintenance is set; a banned spelling in shipped bytes is a plain defect and fails the
+# build outright (build_html.py exits non-zero). The atlas standard is American English -- "license"
+# for both noun and verb -- and a mid-session manual edit had leaked British "licence" into the
+# reader-facing band definitions (AUDIT-FINDINGS §30).
+#
+# Each pair is (banned_substring, correct); matched case-insensitively, so one entry also catches the
+# plural (licences -> licenses) and any casing.
+BANNED_SPELLINGS = [("licence", "license")]
+
+# What the lint scans: the two build OUTPUTS plus the docs a reader can actually reach.
+#
+# What it deliberately does NOT scan, and why:
+#   - build/*.py source -- comments are not shipped output; the outputs they generate are scanned.
+#   - AUDIT-FINDINGS.md, PROJECT-REVIEW.md, CONTENT-REVIEW.md, FRAMEWORK-SELECTION.md -- DATED
+#     RECORDS. Their history is not retro-edited, and §30's own drift ledger quotes the British
+#     before-strings into AUDIT-FINDINGS, which a lint scanning it would flag as a violation of the
+#     very fix it documents.
+# Paths are repo-root-relative; a target that does not exist is skipped, not an error.
+SPELLING_LINT_TARGETS = [
+    "compliance-atlas.json", "compliance-atlas.html",
+    "README.md", "CHANGELOG.md", "LICENSE-CONTENT.md",
+    "docs/AUTHORING.md", "docs/MAINTENANCE.md", "tools/README.md",
+]
+
+# Exact substrings allowed to carry a banned spelling -- reserved for a future verbatim external
+# quotation whose source uses British spelling. Empty today: nothing shippable legitimately needs it.
+# A line containing any allow-substring is skipped whole (coarse by design; revisit if it ever holds
+# more than a handful of entries).
+SPELLING_ALLOW = []
+
+
+def scan_banned_spellings(root, targets=None):
+    """Return [(relpath, lineno, line, banned, correct), ...] for every banned spelling in the
+    shippable files under `root`. Pure and root-parameterized so it can be pointed at a scratch copy
+    to prove it fires (see the session-12 gate). Skips any line matching a SPELLING_ALLOW entry."""
+    import os as _os, re as _re
+    targets = SPELLING_LINT_TARGETS if targets is None else targets
+    hits = []
+    for rel in targets:
+        path = _os.path.join(root, rel)
+        if not _os.path.exists(path):
+            continue
+        with open(path, encoding="utf-8") as fh:
+            for lineno, line in enumerate(fh, 1):
+                if any(a in line for a in SPELLING_ALLOW):
+                    continue
+                for banned, correct in BANNED_SPELLINGS:
+                    if _re.search(banned, line, _re.IGNORECASE):
+                        hits.append((rel, lineno, line.rstrip("\n"), banned, correct))
+    return hits
+
+# ---------------------------------------------------------------------------
 # The trigger table.
 #
 # 20 entries migrated from the prose list in docs/MAINTENANCE.md, verbatim except

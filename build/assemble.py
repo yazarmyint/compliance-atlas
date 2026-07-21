@@ -154,7 +154,13 @@ BRAND = {
     # 3.0.0 apart from this version field. Sorted MINOR because a reader gains features (a link
     # preview, an error-report path), which the policy's MINOR band names; the counter-argument that
     # no *dataset* addition occurred was weighed and set aside. Reasoning in AUDIT-FINDINGS §29.5.
-    "atlas_version": "3.1.0",
+    # 3.1.1 is a PATCH: spelling unification -- the British spelling of "license" is corrected to the
+    # American form across all shipped text. The only JSON change is four meta.license_band* definition
+    # strings (orthographic only); no row, no claim, no protected field moved (verified three ways,
+    # AUDIT-FINDINGS §30.1).
+    # The §27.4 "row shape change is MAJOR" fence does not bite: no key added/removed, no row field
+    # touched. Corrections, so PATCH. Reasoning and drift ledger in AUDIT-FINDINGS §30.
+    "atlas_version": "3.1.1",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -544,7 +550,7 @@ def main():
     # licensing_model and that field is defaulted in the loop above.
     #
     # This writes two NEW fields. It does not touch license_requirement or
-    # licensing_model, which are protected: the band is a derived view of the licence
+    # licensing_model, which are protected: the band is a derived view of the license
     # string, and the string remains the authority the row renders in full.
     license_bands.check_bands_cover(lic_dicts())                       # G1
     license_bands.check_overrides({r["id"] for r in rows})
@@ -555,7 +561,7 @@ def main():
         r["license_band_partial"] = partial
         # G3: the two licensing fields must agree about which family the row is in. They
         # are derived from different sources -- licensing_model from the product's
-        # default, the band from the row's own licence string -- so agreement is a real
+        # default, the band from the row's own license string -- so agreement is a real
         # check rather than a restatement.
         model = r["licensing_model"]
         assert (band == "consumption") == (model == "consumption"), (
