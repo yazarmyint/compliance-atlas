@@ -164,9 +164,15 @@ and every link minted before it is still valid.
 | `cov` | a `COV_ORDER` value, URL-encoded | coverage filter | **reserved, not implemented** — the filter is still module state |
 | `q` | search terms | search | **not migrating**; search stays on the path as `#/search/<q>` |
 
-`#/row/<id>` is **reserved for PR-004** (row deep links). It is deliberately its own route rather than a fragment on
-a filtered view: a row link must resolve identically regardless of what filter was active when someone copied it,
-or a shared link could land on a row the inherited filter hides.
+`#/row/<id>` is the **row deep link** (PR-004, **implemented**). It is deliberately its own route rather than a
+fragment on a filtered view: a row link must resolve identically regardless of what filter was active when someone
+copied it, or a shared link could land on a row the inherited filter hides. It reads only the id, so it inherits no
+filter and ignores any stray query key (rule 2). It renders the row expanded with a breadcrumb and a product chip;
+an unknown id renders a not-found state that names the id and links back to the framework index (rule 3), never a
+blank view. Each row's expanded footer carries a **Copy link** button that copies the absolute hosted URL — built
+from the baked `<link rel="canonical">` href, not from `location`, so the copied link is the public one even from a
+`file://` copy. Clipboard access degrades in three tiers (async clipboard, then `execCommand`, then a selected
+read-only field the reader copies by hand); the manual tier states plainly that the shown link is the hosted one.
 
 Four rules any new key must obey:
 
@@ -181,6 +187,33 @@ Four rules any new key must obey:
 Focus management: each filter row carries its **own** data attribute (`data-cov`, `data-tier`, `data-meter`) and its
 own `opts.focus` value. The router restores focus to the replacement of the button that was just pressed; keying
 more than one row off the same attribute would bounce focus into the wrong row.
+
+## Row id permanence
+
+Deep links (`#/row/<id>`) make every published row id a **permanent public identifier**: it is a URL people paste
+into tickets and messages, and it must keep resolving. Two rules follow.
+
+1. **A published id is never renamed in place, and never reused for a different row.** Change a row's control
+   coverage, prose, license, or product all you like; the id stays. If you rename an id, every inbound link to that
+   row silently 404s with no way to tell it apart from a typo.
+2. **Retiring a row removes its line from `reference/row-ids.txt` in the same commit that deletes the row.** The
+   `#/row/<id>` route then serves its not-found state for that id — which names the id and points back to the
+   framework index — and the id is never handed to a new row. A pointer-to-replacement tombstone is the intended
+   treatment for a genuine rename-to-replacement, and gets built when the first such retirement actually happens;
+   until then the graceful not-found state is the committed floor (it is needed for mistyped ids regardless).
+
+**Build assertion.** `reference/row-ids.txt` is the committed roster of every published id, and `assemble.py`
+(`check_row_id_inventory`) checks the built rows against it on every build:
+
+- An id in the roster that **no longer exists** in the rows is a **hard failure** — an accidental rename or deletion
+  that would break inbound links, caught loudly instead of shipping silently.
+- An id in the rows that is **not yet in the roster** is also a failure, with a one-line instruction to bless it.
+
+**Blessing a new id is a manual act, always.** Run `python build/update_row_ids.py --write` yourself to add new
+ids to the roster (dry-run with no flag to preview). **No build or gate script ever invokes it** — that is the
+whole point: a new id enters permanence only when a human deliberately commits it, so the guard cannot be satisfied
+by accident. Adding a framework or product therefore has one extra step: after the rows are written, bless their
+ids, then commit `reference/row-ids.txt` alongside the row module.
 
 ## Add a framework
 
@@ -205,7 +238,10 @@ more than one row off the same attribute would bounce focus into the wrong row.
      other Microsoft products (Entra/Defender/Intune/Priva/Sentinel) belong in the free-text
      `non_purview_dependencies`, where the migration lifts them into `related_microsoft`.
 3. Add the module name to `MODULES` in `assemble.py`; wire the framework id into `INDUSTRIES`.
-4. Rebuild (both commands above), then QA: re-verify a random row sample, run the URL check
+4. **Bless the new row ids** into the permanent roster: `python build/update_row_ids.py --write`, then commit
+   `reference/row-ids.txt` with the module. The build fails until you do (see *Row id permanence*); this step is
+   deliberately manual, so a new permanent public id is only ever created on purpose.
+5. Rebuild (both commands above), then QA: re-verify a random row sample, run the URL check
    (see AUDIT-FINDINGS §7 for the pattern), and confirm JSON↔HTML row counts reconcile.
 ## Add a product
 

@@ -245,6 +245,17 @@ section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
 .fbtn{border:1px solid var(--rule-2); background:var(--card); border-radius:999px; padding:5px 12px; cursor:pointer;
   font:600 12px var(--font-body); color:var(--ink-2)}
 .fbtn.on{color:var(--ink); border-color:var(--ink-3); background:var(--paper-2)}
+/* Row deep-link copy button (PR-004), sits in the muted row footer. */
+.rowlink{border:1px solid var(--rule-2); background:var(--card); color:var(--link); border-radius:999px;
+  padding:2px 11px; margin-left:6px; font:600 11px var(--font-body); cursor:pointer; white-space:nowrap}
+.rowlink:hover{border-color:var(--link)}
+.rowlink.copied{color:var(--direct); border-color:var(--direct)}
+.rowlink.copied::after{content:" ✓"}
+.rowlink-fallback{display:flex; flex-direction:column; gap:5px; flex-basis:100%; margin-top:8px}
+.rowlink-note{color:var(--ink-2)}
+.rowlink-url{padding:5px 8px; border:1px solid var(--rule-2); border-radius:7px; background:var(--paper-2);
+  color:var(--ink); font-size:12px; width:100%; max-width:560px}
+@media print{ .rowlink, .rowlink-fallback{display:none !important} }
 .domain{margin:26px 0 8px}
 .domain h3{font-size:14px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2);
   border-bottom:1px solid var(--rule); padding-bottom:8px; margin:0 0 12px; font-family:var(--font-body); font-weight:700}
@@ -278,6 +289,10 @@ details[open] .flip{transform:rotate(90deg)}
 .row .relms .rel{font-size:12.5px; color:var(--ink-2); margin:0 0 6px; line-height:1.45}
 .row .relms .rel b{color:var(--ink); font-weight:600}
 .row .foot{grid-column:1 / -1; display:flex; gap:10px; align-items:center; flex-wrap:wrap; border-top:1px dashed var(--rule); padding-top:12px}
+/* Foot links (framework, solutions) sit inline inside muted metadata text, so they need a non-color
+   cue to be distinguishable (WCAG 1.4.1). Collapsed rows hide the foot, so this shows only on an
+   expanded row -- including the PR-004 single-row view, the first place a row renders open by default. */
+.row .foot a{text-decoration:underline}
 .rowcaveat{grid-column:1 / -1; border:1px solid var(--warn-rule); background:var(--warn-bg); color:var(--warn-ink);
   padding:10px 12px; border-radius:8px; font-size:12.5px}
 .rowunv{grid-column:1 / -1; border:1px solid var(--danger); background:var(--danger-bg); color:var(--danger);
@@ -411,6 +426,7 @@ const DATA = JSON.parse(document.getElementById("pcm-data").textContent);
 const ROWS = DATA.rows, FW = DATA.frameworks, SOL = DATA.solutions, IND = DATA.industries, META = DATA.meta;
 const PRODUCTS = DATA.products, RELPROD = DATA.related_products || {};
 const FW_ORDER = Object.keys(FW), PROD_ORDER = Object.keys(PRODUCTS);
+const ROW_BY_ID = Object.fromEntries(ROWS.map(r => [r.id, r]));  /* PR-004: #/row/<id> lookup */
 const COV_CLASS = {"Direct Support":"b-direct","Partial Support":"b-partial","Evidence Support Only":"b-evidence","Not Covered":"b-nocover"};
 const COV_VAR = {"Direct Support":"--direct","Partial Support":"--partial","Evidence Support Only":"--evidence","Not Covered":"--nocover"};
 const COV_ORDER = ["Direct Support","Partial Support","Evidence Support Only","Not Covered"];
@@ -537,7 +553,7 @@ function rowCard(r, opts={}){
   const intentLine = grouped ? `<span class="intent">${variant}<span class="solline">${solChip(r)}${opts.showFw?` <span class="chip">${esc(fw.name)}</span>`:""}</span></span>`
     : `<span class="intent">${esc(r.control_intent)}
         <span class="solline">${prodChip(r)} ${solChip(r)}${opts.showFw?` <span class="chip">${esc(fw.name)}</span>`:""}</span></span>`;
-  return `<details class="row ${unv?"unvrow":""}" id="${esc(r.id)}">
+  return `<details class="row ${unv?"unvrow":""}"${opts.open?" open":""} id="${esc(r.id)}">
     <summary>
       ${col1}
       ${intentLine}
@@ -572,6 +588,8 @@ function rowCard(r, opts={}){
         ${solLinks(r)}
         <span>· Framework: <a href="#/framework/${esc(r.framework)}">${esc(fw.name)}</a> · ${esc(r.framework_version)}</span>
         <span>· Status: <b>${esc(r.status)}</b></span><span>· Last verified: ${esc(r.last_verified)}</span><span>· ID: <span class="mono">${esc(r.id)}</span></span>
+        <button type="button" class="rowlink" data-rowid="${esc(r.id)}">Copy link</button>
+        <span class="rowlink-fallback" hidden></span>
       </div>
     </div>
   </details>`;
@@ -934,6 +952,46 @@ function vSearch(q){
     : `<div class="callout gray">No rows match. Try a control ref (e.g. <span class="mono">3.13.16</span>, <span class="mono">A.8.12</span>, <span class="mono">CC6.7</span>), a product (<span class="mono">purview</span>), or a keyword (<span class="mono">retention</span>, <span class="mono">CUI</span>).</div>`}`;
 }
 function vMissing(kind, id){ return `<div class="pagehead"><h1>Not found</h1><div class="full">No ${esc(kind)} “${esc(id)}”.</div></div>`; }
+/* PR-004 row deep links. #/row/<id> is its own route (AUTHORING.md "URL state scheme"): it resolves
+   the same regardless of any filter that was active when the link was copied, because it carries no
+   filter state to inherit. The row renders expanded, with a breadcrumb and a product chip so the
+   reader can see which framework, which control and which product this is, and reach the surrounding
+   framework in one click. Works from a cold load on both the hosted copy and a file:// copy: the whole
+   view is built from the data island, and <details open> needs no script to stay open. */
+function vRow(id){
+  const r = ROW_BY_ID[id];
+  if(!r) return vRowMissing(id);
+  const fw = FW[r.framework], pid = r.product;
+  return `<div class="pagehead">
+    ${/* One leading link, rest plain text: matches every other crumb in the app and keeps axe's
+         link-in-text-block heuristic satisfied (a link surrounded by text on both sides, and colored
+         like that text, is not distinguishable without color). The framework is reachable in one
+         action from the lede link and the row foot below. */""}
+    <div class="crumb"><a href="#/frameworks">Frameworks</a> / ${esc(fw.name)} / ${esc(r.control_ref)}</div>
+    <h1>${esc(r.control_ref)}</h1>
+    <div class="full">${esc(r.control_intent)}</div>
+    <div class="metaline">
+      <span class="chip">${esc(fw.name)} ${esc(r.framework_version)}</span>
+      ${prodChip(r)}
+      ${covBadge(r.coverage)}
+    </div>
+    <p class="small muted">A single control mapping, linkable on its own.
+      <a href="#/framework/${esc(r.framework)}">Open ${esc(fw.name)} to read it beside the framework's other controls.</a></p>
+  </div>
+  ${rowCard(r, {showFw:false, open:true})}`;
+}
+function vRowMissing(id){
+  return `<div class="pagehead">
+    <div class="crumb"><a href="#/frameworks">Frameworks</a> / Not found</div>
+    <h1>Row not found</h1>
+    <div class="full">This atlas has no mapping row with the id <span class="mono">${esc(id)}</span>.</div>
+    <p class="small">The id may be mistyped, or the row it named has been retired. Published row ids
+      are never renamed, so a link that worked before still points to the same row; if nothing loads,
+      that row is no longer in the atlas.</p>
+    <p class="small"><a href="#/frameworks">Browse the frameworks</a> to find the control you were after,
+      or <a href="#/">start from an industry</a>.</p>
+  </div>`;
+}
 
 /* ---------------- about / methodology (PR-044, absorbing PR-021) ---------------- */
 /* Written for someone who has never seen the repository: no section references, no build jargon.
@@ -1103,6 +1161,12 @@ function render(opts){
   else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; view = FW[p3] ? `${FW[p3].name} × ${dec(p4)}` : "Not found"; countRows = true; }
   else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; countRows = true; }
   else if(p1==="about"){ html = vAbout(); tab="about"; view = "About"; }
+  else if(p1==="row"){ html = vRow(p2); tab="";
+    /* Own route, filter-independent: reads only the id, so any stray query key is ignored (scheme
+       rule 2) and no filter is inherited. An unknown id renders vRowMissing, never a blank view. */
+    const r = ROW_BY_ID[p2];
+    view = r ? `${r.control_ref} · ${FW[r.framework].name}` : "Row not found";
+    note = r ? `${prodFull(r.product)}, ${r.coverage}` : ""; }
   else { html = vMissing("page", p1); view = "Not found"; }
   app.innerHTML = html;
   document.querySelectorAll("#tabs a").forEach(a=>{
@@ -1176,6 +1240,69 @@ document.addEventListener("keydown", e => {
   if(e.key==="Escape") q.blur();
 });
 
+/* ---------------- row deep-link copy (PR-004) ----------------
+   The copy button lives in every row's expanded footer. What it copies is built from the baked
+   <link rel="canonical"> href, NOT from location: that link is an absolute string fixed at build
+   time, so the copied URL is always the public hosted link to the row, even from a file:// copy
+   (where a local path was never shareable and the row id is identical across copies anyway).
+   Clipboard access degrades honestly, because navigator.clipboard needs a secure context and a
+   file:// copy may not be one: async clipboard first, then execCommand inside the click gesture,
+   then a selected read-only field the reader copies by hand. Confirmation is both visible (the
+   button reads "Copied", with a tick added by CSS so it is text-and-glyph, never colour alone) and
+   announced through the same #srstatus live region the router uses. */
+function rowLinkURL(id){
+  const canon = document.querySelector('link[rel="canonical"]');
+  const base = (canon ? canon.href : location.href).split("#")[0];
+  return base + "#/row/" + id;
+}
+function flashCopied(btn){
+  btn.dataset.label = btn.dataset.label || btn.textContent;
+  btn.textContent = "Copied";
+  btn.classList.add("copied");
+  srStatus.textContent = "Link copied.";
+  clearTimeout(btn._copyTimer);
+  btn._copyTimer = setTimeout(() => { btn.textContent = btn.dataset.label; btn.classList.remove("copied"); }, 2200);
+}
+function manualCopy(btn, url){
+  /* Tier 3: neither clipboard path worked. Show the URL for a manual copy, and say plainly that it
+     is the public hosted link so a file:// reader does not think they grabbed a local reference. */
+  const box = btn.parentNode.querySelector(".rowlink-fallback");
+  box.innerHTML = "";
+  const note = document.createElement("span");
+  note.className = "rowlink-note";
+  note.textContent = "Copy could not run here. This is the row's public link on the hosted atlas; select it and press Ctrl+C.";
+  const field = document.createElement("input");
+  field.type = "text"; field.readOnly = true; field.value = url; field.className = "rowlink-url mono";
+  field.setAttribute("aria-label", "Public link to this row");
+  box.append(note, field);
+  box.hidden = false;
+  field.focus(); field.select();
+  srStatus.textContent = "Copy could not run here. The row's public link is shown below; select it and press Control C to copy.";
+}
+function execCopy(btn, url){
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = url; ta.readOnly = true;
+    ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    if(ok){ flashCopied(btn); return; }
+  } catch(e){ /* fall through to manual */ }
+  manualCopy(btn, url);
+}
+document.getElementById("app").addEventListener("click", e => {
+  const btn = e.target.closest(".rowlink");
+  if(!btn) return;
+  e.preventDefault();
+  const url = rowLinkURL(btn.dataset.rowid);
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(() => flashCopied(btn), () => execCopy(btn, url));
+  } else {
+    execCopy(btn, url);
+  }
+});
+
 /* ---------------- theme ---------------- */
 const themeBtn = document.getElementById("themeBtn");
 function setTheme(t){
@@ -1225,7 +1352,7 @@ document.getElementById("footVersion").innerHTML =
    dataset. compliance-atlas.json deliberately carries nothing time-derived, so a content-free
    rebuild leaves it byte-identical (PR-057). This file is the one that moves on every rebuild —
    by design; the drift check is defined on the JSON, not on the HTML. */
-const BUILT_AT = "2026-07-21T12:14:11";
+const BUILT_AT = "2026-07-21T17:22:29";
 document.getElementById("footMeta").textContent =
   `Built ${BUILT_AT} from compliance-atlas.json. A rebuild moves this timestamp whether or not any content changed.`;
 

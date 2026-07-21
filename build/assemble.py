@@ -45,6 +45,52 @@ MODULES = ["rows_dpr", "rows_iso", "rows_soc2", "rows_hipaa", "rows_171", "rows_
 MS_DOC_HOSTS = {"learn.microsoft.com", "docs.microsoft.com", "azure.microsoft.com", "techcommunity.microsoft.com"}
 ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
+# ---- row-id inventory (PR-004: row deep links) ----
+# Deep links make every published row id a PERMANENT public identifier: #/row/<id> is a URL people
+# paste into tickets and messages, and it must keep resolving. reference/row-ids.txt is the committed
+# roster of those ids. The guard below turns an accidental rename or deletion -- which would silently
+# 404 every inbound link to that row -- into a hard build failure. Blessing a NEW id into the roster
+# is a deliberate MANUAL act (python build/update_row_ids.py --write); no build or gate script ever
+# writes the inventory. See docs/AUTHORING.md "Row id permanence".
+INVENTORY_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                              "reference", "row-ids.txt")
+
+def collect_row_ids():
+    """Every published row id, read straight from the row modules -- independent of the generated
+    JSON, so it is still correct on a build that the inventory guard is currently failing."""
+    ids = []
+    for m in MODULES:
+        try:
+            mod = importlib.import_module(m)
+        except ModuleNotFoundError:
+            continue
+        ids.extend(r["id"] for r in mod.ROWS)
+    return ids
+
+def read_inventory():
+    """The published id roster, skipping the comment header and blank lines."""
+    with open(INVENTORY_PATH, encoding="utf-8") as f:
+        return [ln.strip() for ln in f if ln.strip() and not ln.lstrip().startswith("#")]
+
+def check_row_id_inventory(current_ids):
+    if not os.path.exists(INVENTORY_PATH):
+        raise AssertionError(
+            "row-id inventory reference/row-ids.txt is missing. Create it once with a manual "
+            "`python build/update_row_ids.py --write` (never run by the build itself).")
+    current, published = set(current_ids), set(read_inventory())
+    disappeared = published - current
+    assert not disappeared, (
+        "row id(s) " + ", ".join(sorted(disappeared)) + " are in the published roster "
+        "(reference/row-ids.txt) but no longer exist in the rows. A published row id is a PERMANENT "
+        "public identifier -- inbound deep links (#/row/<id>) point at it. Restore the id; or, if you "
+        "are deliberately retiring the row, remove its line from reference/row-ids.txt in the same "
+        "commit (the #/row/<id> route then shows its not-found state). Never rename an id in place.")
+    added = current - published
+    assert not added, (
+        str(len(added)) + " row id(s) are not yet in the published roster: " + ", ".join(sorted(added))
+        + ". Blessing an id into permanence is a manual step: run `python build/update_row_ids.py "
+        "--write` yourself and rebuild. No build or gate script may run it for you.")
+
 INDUSTRIES = {
     "healthcare": {"name": "Healthcare & life sciences",
         "frameworks": ["hipaa-security", "pci-dss-4", "nist-csf-2", "soc-2", "iso-27001-2022"],
@@ -505,6 +551,8 @@ def main():
     # ---- integrity checks ----
     ids = [r["id"] for r in rows]
     assert len(ids) == len(set(ids)), "duplicate row ids: " + str({i for i in ids if ids.count(i) > 1})
+    check_row_id_inventory(ids)  # PR-004: ids are permanent public identifiers once published
+
     for r in rows:
         assert r["framework"] in frameworks, f"row {r['id']} references unknown framework {r['framework']}"
         assert r["coverage"] in META["coverage_levels"], f"row {r['id']} bad coverage {r['coverage']}"
