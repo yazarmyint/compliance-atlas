@@ -249,11 +249,29 @@ should carry a claim that ages.
 
 ## Framework backlog
 
-Backlog (documented in FRAMEWORK-SELECTION.md): US state-privacy composite (CPRA-anchored),
-SEC 17a-4/FINRA (strong RM + Communication Compliance stories), NIS2/DORA. *(FERPA and the 800-53 subset shipped in Increment 1.)*
+Backlog, ranked (decided in Session 13, 2026-07-21; full rationale in FRAMEWORK-SELECTION.md):
+
+1. **SEC 17a-4 / FINRA** — lead v2 candidate (PR-026). A stable, single-regulator, Purview-dense
+   framework: Records Management immutability and Communication Compliance supervision are its
+   namesake activities and would make both of the atlas's thinnest solutions Direct. 17a-4 verified
+   unchanged since the 2022 amendments. Effort ~18–24 h.
+2. **US state-privacy composite** (CPRA-anchored, state-variance column) — deferred on maintenance
+   cost (~20 churning statutes) and near-duplication of the GDPR rows, which remain the annotated
+   interim analog.
+3. **CJIS Security Policy v6.0** — evaluated and **deferred with two dated triggers** (PR-025):
+   `TRG-CJIS-DEMAND` (demand-criterion check, next_review 2026-08-20) and `TRG-CJIS-V6-REVISIT`
+   (P2–P4 fully auditable, next_review 2027-10-01). A concrete state/local-government engagement
+   overrides the wait. Effort ~22–28 h, discounted by the v6.0 rebasing onto NIST 800-53 Rev 5 moderate.
+
+**Evaluated and declined** (PR-027, rationales in FRAMEWORK-SELECTION.md): NIS2 and DORA
+(operational-resilience law with a thin data-layer surface) and ISO/IEC 27701:2025 (now a standalone
+privacy PIMS, but its tooled layer is Priva, which the atlas permanently declines).
+
+*(FERPA and the 800-53 subset shipped in Increment 1.)*
 **Product roadmap: complete.** Defender for Cloud shipped 2026-07-18 as product #6, the final planned product
 (§15). *(Entra #2, Intune #3, Defender XDR #4 all 2026-07-17; Sentinel #5 2026-07-18.)* The five Defender-for-Cloud
 free-text entry points (PCI 5.2 / DPR J #38 / A.5.23 / A.8.8 / ID.RA-01) all gained stacked rows at their exact
 control refs (§15). The only remaining `RELATED_PRODUCTS` slug is **priva** (11 contributing links on privacy rows),
-deliberately kept as a permanent reference-only product, never to be authored (§15). Next: a whole-atlas
-consistency pass, then publishing.
+deliberately kept as a permanent reference-only product, never to be authored (§15). The consistency
+pass and publishing are done — the atlas is live at v3.1.1. Next framework work is the ranked backlog
+above, gated on the CJIS demand trigger and otherwise led by SEC 17a-4/FINRA.
