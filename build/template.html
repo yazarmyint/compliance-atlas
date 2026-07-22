@@ -278,6 +278,14 @@ abbr[title]{text-decoration:underline dotted; text-underline-offset:2px; cursor:
 .ctrlhead .intent{font-size:13.8px; color:var(--ink); max-width:100ch; line-height:1.45}
 .ctrl details.row{margin-left:14px; border-left:3px solid var(--rule-2)}
 .ctrl details.row[open]{border-left-color:var(--accent)}
+/* PR-013 group-level tier rationale: sits above the stacked cards, indented to their margin,
+   explaining why a stack's coverage tiers legitimately differ. Muted so it reads as context,
+   not as a claim; the uppercase label gives a screen reader a sensible lead-in before the cards. */
+.ctrl-rationale{margin:0 0 12px 14px; padding:9px 13px; border-left:3px solid var(--rule-2);
+  background:var(--paper-2); border-radius:0 8px 8px 0; font-size:12.8px; color:var(--ink-2);
+  line-height:1.5; max-width:100ch}
+.ctrl-rationale .lbl{font:700 10.5px var(--font-body); letter-spacing:.08em; text-transform:uppercase;
+  color:var(--ink-3); margin-right:6px}
 
 /* ---------- mapping rows ---------- */
 details.row{background:var(--card); border:1px solid var(--rule-2); border-radius:10px; margin:0 0 10px; box-shadow:var(--shadow); overflow:hidden}
@@ -627,6 +635,12 @@ function renderControlGroups(rows){
     h += `<div class="domain"><h3>${esc(dom)} <span class="count-pill">${rs.length}</span></h3>`;
     for(const g of groupByControl(rs)){
       h += `<div class="ctrl"><div class="ctrlhead"><span class="ref">${esc(g.ref)}</span><span class="intent">${esc(g.intent)}</span></div>`;
+      /* PR-013: a group-level line where a stack's coverage-tier spread could read as an
+         inconsistency. Keyed by (framework, control_ref) off META, rendered above the cards
+         and in reading order after the control ref/intent, so a screen reader gets the reason
+         before the stacked mappings. Absent for groups whose spread is self-explanatory. */
+      const rat = (META.stack_rationales?.[g.rows[0].framework] || {})[g.ref];
+      if(rat) h += `<p class="ctrl-rationale"><span class="lbl">Why the tiers differ:</span> ${esc(rat)}</p>`;
       h += g.rows.map(r => rowCard(r, {grouped:true, groupIntent:g.intent})).join("");
       h += `</div>`;
     }

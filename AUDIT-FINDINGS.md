@@ -3575,3 +3575,123 @@ does not read `meta.glossary`, and the definitions carry no `http` links by desi
 link was added and the baseline did not move. Keyboard walk: footer **Glossary** link reachable, focus lands
 on the `h1`, 47 entries with no interactive element in the list, Tab order sane (intro cross-link → footer),
 title "Glossary · Compliance Atlas". Two-commit shape; merge held for owner review.
+
+## 34. Stacked-control tier rationales (2026-07-22) — PR-013, v3.4.0
+
+Execution of AUDIT-FINDINGS §15.7 item 4 and PROJECT-REVIEW PR-013: sweep every stacked control for a
+coverage-tier spread a reader could misread from the badges, and add a group-level rationale where — and
+only where — the spread genuinely risks misreading. **The remedy was never a tier change.** Protected
+fields (coverage, confidence, license_requirement, sources, last_verified, control_ref, product/solution
+assignments) were locked for the whole session; the built `rows` array is byte-identical to 3.3.0 (§34.6).
+
+### 34.1 Inventory, criteria, and the three lists
+
+**Inventory.** 248 control groups; 90 stacked (≥2 rows); of those, 40 carry a uniform coverage tier and
+**50 carry a coverage-tier spread**. The 50 are the audit universe. Mechanical backing collected before any
+judgement: **zero** groups have the same `(product, solution)` at two different tiers, and no solution
+repeats within a group — the crispest authoring-error signal (C1) is absent atlas-wide.
+
+**Criteria (owner-approved as proposed).** A reader judges from the badge pairs `(product chip, coverage
+pill)` before reading prose. **(c) suspicious** if any: C1 same product+solution, near-identical capability
+text, different tier; C2 a tier that contradicts the row's own `how_it_supports` verb; C3 two rows with
+materially the same role at different tiers with no scope distinction. **(b) confusable** if not (c) and
+any: B1 namesake inversion (the control's namesake product rates *below* a co-product); B2 same-brand split
+(two "Defender…" chips at different tiers, resting on a discipline a lay reader won't know — Sentinel
+"detects, does not enforce"; Defender for Cloud "assesses, does not remediate"; engine vs policy layer); B3
+higher tier on the narrower-sounding product. **(a) self-explanatory** otherwise: the spread tracks naive
+expectation (namesake highest, contributors lower), or a member is a boundary row. The load-bearing line is
+B1: different-brand products with the highest tier on the namesake are (a); a namesake rating below a
+co-product, or same-brand adjacency, is (b).
+
+**The three lists.** Of 50 spreads: **27 (a)** self-explanatory (identity-primary access controls,
+evidence-tool-below-responders incident controls, boundary rows, config-management with Intune Direct on
+top), **23 (b)** confusable, **0 (c)** authoring errors of the crisp kind. Of the 23 (b): **22 received a
+rationale**; one (`hipaa-308-a1-a`) was escalated rather than rationalized (§34.4). The 22 fall in five
+families: audit/logging (8: Purview Audit Partial below Sentinel Direct on a logging control), assessment
+(4: Compliance Manager Evidence below the Defender-for-Cloud dashboard), malware (6: MDE engine Direct,
+Intune/MDC Partial), vulnerability scanning (3: the mirror — MDE Partial, MDC CSPM Direct), and
+runtime-monitoring (1). **Owner decision on same-brand (b):** kept all of them. The malware/vuln tier
+*reversal* — the same two Defender chips at opposite ranks on different pages — is a stronger confusion risk
+than a single inversion, and explaining one family while leaving its mirror bare would be asymmetric.
+
+### 34.2 The 22 rationales — scope and role only, no licensing
+
+Each line is one to two sentences, group-level, written from the members' own `how_it_supports` /
+`capability_detail`, introducing no new capability or licensing claim. **Scope discipline (owner rule):** a
+rationale explains role and scope; the tier legend and license bands own licensing. Two drafts named the
+licensing mechanism — `dpr` J#38 ("per-user endpoint licensing") and `pci` 5.2.1–5.2.2 ("priced per
+server") — and were recast in pure scope terms ("the server estate the endpoint row does not reach"); the
+same recast was extended to `iso` A.8.7 and `soc2` CC6.8, which carried "per-server workloads". A full
+sweep of the remaining 18 for licensing-adjacent phrasing (`per-user`, `per-server`, `priced`, `SKU`,
+`E3/E5`, `add-on`, `consumption`, `seat`, `tier`) found none; every scope phrase that survives ("server
+estates", "CDE servers", "onboarded endpoint slice", retention periods like "twelve-month") is a class of
+system or a framework requirement, not a licensing unit, and each traces to member-row content. **Check
+passed.**
+
+### 34.3 Storage — META.stack_rationales, the glossary pattern, and a self-honest guard
+
+The 22 lines are a `framework → control_ref → text` dict in `build/stack_rationales.py`, imported into
+`META["stack_rationales"]` exactly as `glossary.GLOSSARY` and `license_bands.BAND_DEFS` are. One source, so
+the framework view and any JSON consumer cannot drift; `renderControlGroups` renders each above its stacked
+cards. **Placement argued and settled: META keyed dict, not a row-group object** — the schema has no group
+container (stacking is derived at render time from `control_ref` equality), so a groups array would invent a
+second published structure duplicating the composite key rows already carry and create a new permanence
+surface. The keyed dict reuses the exact stacking key and touches no row. Keys were generated byte-exact
+from the built JSON, not transcribed, because five contain a `§` or an en dash (`§164.308(a)(1)(ii)(D)`,
+`3.11.2–3.11.3`, `5.2.1–5.2.2`, `§314.4(c)(8)`) that a hand-copy would corrupt.
+
+**The guard is self-honest.** `check_stack_rationales(rows)` asserts two things: that every key resolves to
+a live coverage-tier **spread** group (≥2 rows, ≥2 tiers), and that every rationale **value** is
+em/en-dash-free. The dash check is on the rationale text, never the keys: five control refs legitimately
+carry a `§` or an en dash (as noted above), which is exactly why the keys are generated byte-exact rather
+than transcribed. **A rationale cannot outlive its spread: a uniform-tier key fails the build** — so a
+future re-verification that collapses a group to one
+tier, or renames a `control_ref`, breaks the build until the line is removed or moved, and the explanation
+can never survive the thing it explained.
+
+### 34.4 Open findings — escalated, not dropped
+
+Two items fell outside this session's remit (which could add prose but never touch a protected field). Both
+are recorded here as **open**, with the owner's disposition, for a future re-verification session run under
+full procedure (live sources, drift ledger).
+
+| # | Finding | Reading | Owner disposition |
+|---|---|---|---|
+| **OF-1** | `hipaa-308-a1-a` (HIPAA §164.308(a)(1)(ii)(A), risk analysis): Purview Data Classification **Evidence**, Defender XDR **Evidence**, Defender for Cloud **Partial**. All three rows open `how_it_supports` with "Feeds the risk analysis…", yet MDC rates one tier higher. | Two readings, unresolved: **(a) tier error** — MDC should be Evidence like its siblings; or **(b) narrative undersell** — the MDC prose uses the Evidence-tier verb "feeds" while its `capability_detail` describes a performed continuous assessment (a Partial-worthy slice), so the *prose* understates the row. A rationale that resolved this by siding with `capability_detail` would paper over the internal HOW-verb-vs-tier tension rather than surface it. | **OPEN — escalated to the next re-verification pass.** No rationale written. Resolved under full procedure: confirm the MDC role against the live Defender for Cloud risk-analysis source, then either re-tier or rewrite the HOW verb, with a drift-ledger entry. |
+| **OF-2** | Cross-group confidence consistency: the Purview "data-layer access contributor" (Information Protection, coverage Partial) carries **Low** confidence on `dpr-j36` and `53-ac-3` but **Medium** on `iso-a-8-3`, `soc2-cc6-1`, `hipaa-308-a4`, `glba-314-4-c1` — and `53-ac-3`'s own prose calls it "the same contribution rated for ISO A.8.3 and SOC 2 CC6.1". | A defensible spread (stricter federal contexts rate a content-label contributor lower) or a minor inconsistency. Cross-group and confidence-only, so outside this session's within-group coverage-tier remit, and confidence is a protected field. | **OPEN — deferred to the same future re-verification pass.** On the record, not evaporated; adjudicated there, not here. |
+
+### 34.5 The /agentic-humanizer pass
+
+Every line ran through `/agentic-humanizer` before the gate (Core mode; Slop or Not Pro is a macOS bundle,
+unreachable on win32, as in §33.6). Saved profile applied silently: English (en-US), college, academic,
+trim. The pass made **no change to any of the 22 lines**. The drafts were authored in the de-slopped
+register *and dash-free from the start* (the Phase-2 instruction), so pattern 14 (strip em/en dashes) — the
+one mechanical rule that fired on the glossary pass — had nothing to strip, and no rule-of-three,
+negative-parallelism, inflated-verb, or vague-attribution tell was present. The accurate enumerations
+("collection, protection, and analysis"; the PCI verbs "detect, remove, and block") are not the
+rule-of-three tell (§33.6). Under `trim`, no filler was removable without dropping a stated reason.
+
+### 34.6 Gate
+
+**Expected-delta-first.** Predicted before rebuild: the JSON gains exactly `meta.stack_rationales` plus the
+two version strings, rows byte-identical. Verified structurally against the committed 3.3.0 JSON:
+`products`, `related_products`, `solutions`, `frameworks`, `industries`, and **`rows` all byte-identical**;
+the only `meta` key added is `stack_rationales` (10 frameworks, 22 entries), the only `meta` keys changed
+are `version` and `brand.atlas_version` (3.3.0 → 3.4.0). `git diff --stat`: 46 insertions, 2 deletions on
+the JSON (the two version lines; the rest the rationale block). No protected field moved, confirmed by the
+byte-identical `rows`.
+
+Axe **zero** across all 16 routes × 2 themes, including `#/framework/iso-27001-2022` (renders three
+rationales) in light and dark, so the muted `.ctrl-rationale` styling also clears WCAG contrast. Spelling
+lint clean (8 shippable targets; the new prose is covered via `compliance-atlas.html`). Render and reading
+order confirmed in a headless browser: on `#/framework/nist-csf-2` the `PR.PS-04` group's DOM child order is
+`ctrlhead → ctrl-rationale → row → row`, so a screen reader announces the control, then "Why the tiers
+differ: …", then the stacked cards; the self-explanatory `DE.AE-02` group carries no rationale. The line is
+a non-interactive `<p>` (no focusable element), so the keyboard Tab order is unchanged. Rationale count
+renders data-driven (22, only on (b) groups).
+
+**Version and commit shape.** MINOR → 3.4.0: a reader-facing `meta.*` addition, the shape of 3.3.0's
+glossary and 2.10.0's maintenance table. Because this touches the JSON, §31's one-version-one-artifact
+principle outranks the two-commit convention (per §33.3): the source, the rebuilt artifact, and the 3.4.0
+stamp ship in **one** commit; a following commit carries only this record and the changelog, which touch no
+artifact. Merge held for owner review.
