@@ -48,6 +48,34 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.4.0 — 2026-07-22
+
+Stacked-control tier rationales (PR-013, Session 16). On the framework view, one control can carry several
+product cards, and where their coverage badges differ the order can read as an inconsistency before the row
+prose resolves it — the clearest case being CSF `PR.PS-04`, where the product that *generates* the log
+records (Purview, Partial) sits below the one that makes them available (Sentinel, Direct). A new
+group-level line now states, for the 22 stacks where that misreading risk is real, why the tiers
+legitimately differ.
+
+**For readers.** Above the stacked cards on a control whose products rate differently, a short **"Why the
+tiers differ"** line explains the split in terms of role and scope — which product runs the namesake
+activity, which covers a slice, which reaches a different part of the estate. It appears only where a
+reader could reasonably misread the badges; stacks whose spread is self-explanatory (the primary product
+rates highest) are left unannotated. The lines make no new coverage or licensing claim: they restate what
+the rows already say, and licensing stays with the tier legend.
+
+**For consumers of `compliance-atlas.json`.** The dataset gains one key, `meta.stack_rationales` (a
+`framework → control_ref → rationale` map, 22 entries), and is otherwise byte-identical to 3.3.0 apart from
+`meta.version` and `meta.brand.atlas_version`. No row moved — every row is byte-identical, including every
+coverage, confidence, licensing, source, and last-verified field. The lines live in one place
+(`build/stack_rationales.py`), and a build guard fails if any key is not a live coverage-tier spread, so the
+prose cannot drift from the data it explains.
+
+**Why MINOR.** A reader-facing feature was added and existing rows kept their shape and meaning — the exact
+shape of 3.3.0's `meta.glossary` and 2.10.0's `meta.maintenance`: a new consumer-visible key under `meta`,
+additive, no data-model or scope change, so no consumer must change code. Not PATCH — readers gain a
+capability, not a correction; no protected field moved. Full record in AUDIT-FINDINGS §34.
+
 ## 3.3.0 — 2026-07-22
 
 Reader glossary (PR-011, Session 15). The atlas assumes fluency in two vocabularies at once — compliance
