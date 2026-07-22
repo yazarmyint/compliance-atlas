@@ -232,6 +232,17 @@ section.block .subtitle{color:var(--ink-2); margin:0 0 8px; max-width:80ch}
 .about dl.absent>div{margin:0 0 10px}
 .about dl.absent dt{font-weight:600; color:var(--ink-1)}
 .about dl.absent dd{margin:2px 0 0; color:var(--ink-2); line-height:1.6}
+/* glossary (PR-011): the same dt/dd column as the absent list, sized for ~47 lookup
+   entries. The term is set in the mono face the atlas already uses for refs and chips, so
+   an acronym reads as a token to look up rather than a word. */
+.about dl.glossary{margin:0}
+.about dl.glossary>div{margin:0 0 13px}
+.about dl.glossary dt{font:700 13px var(--font-mono); color:var(--ink-1)}
+.about dl.glossary dd{margin:3px 0 0; color:var(--ink-2); line-height:1.6; max-width:74ch}
+/* First-use abbreviations in static prose (PR-011). The dotted underline is the only
+   always-visible cue that a title exists; keep it, since the title itself is unreachable by
+   touch and keyboard, and the glossary is the real answer for anyone who cannot hover. */
+abbr[title]{text-decoration:underline dotted; text-underline-offset:2px; cursor:help}
 .pagehead{padding:30px 0 18px; border-bottom:1px solid var(--rule)}
 .pagehead h1{font-size:31px; margin:8px 0 4px}
 .pagehead .full{color:var(--ink-2); max-width:88ch; font-size:14px}
@@ -1026,9 +1037,11 @@ function vAbout(){
     <h2>How a row is made</h2>
     <p>Every row starts from the framework text, not from a product datasheet.</p>
     <ul>
-      <li><b>Frameworks are version-pinned.</b> Each row states the edition it maps — ISO/IEC 27001:2022,
-        PCI DSS v4.0.1, NIST SP 800-53 Rev 5 — because control numbering moves between revisions and a mapping
-        to an unnamed edition is not checkable.</li>
+      <li><b>Frameworks are version-pinned.</b> Each row states the edition it maps — <abbr
+        title="International Organization for Standardization / International Electrotechnical Commission">ISO/IEC</abbr>
+        27001:2022, <abbr title="Payment Card Industry Data Security Standard">PCI DSS</abbr> v4.0.1,
+        <abbr title="National Institute of Standards and Technology, Special Publication">NIST SP</abbr> 800-53 Rev 5 —
+        because control numbering moves between revisions and a mapping to an unnamed edition is not checkable.</li>
       <li><b>Control intent is paraphrased, never quoted.</b> The atlas says what a control is asking for in its
         own words. That is partly a copyright constraint and partly a usability one, but it cuts both ways:
         a paraphrase is an interpretation, so read the standard itself before relying on any mapping.</li>
@@ -1050,6 +1063,10 @@ function vAbout(){
       the licensing model says how you pay for the capability, and the license tier says roughly what you have to
       own before you can use it. They are defined once and used everywhere:</p>
     ${taxonomyLegend(false)}
+    <p>The atlas leans on the vocabulary of both worlds it bridges, so acronyms recur throughout:
+      <abbr title="Data Loss Prevention">DLP</abbr>, <abbr title="Extended Detection and Response">XDR</abbr>,
+      <abbr title="Cloud Security Posture Management">CSPM</abbr>, <abbr title="Insider Risk Management">IRM</abbr>,
+      and around forty others. Each is expanded in the <a href="#/glossary">glossary</a>.</p>
 
     <h2>Scope, and its edges</h2>
     <p>${PROD_ORDER.length} products — ${esc(prodNames)} — across ${Object.keys(FW).length} frameworks and
@@ -1092,6 +1109,30 @@ function vAbout(){
       reuse and adapt it with attribution. That open license is only possible because the atlas paraphrases control
       intent instead of reproducing standards text — the frameworks themselves remain the property of their authors,
       so anyone adapting this work needs to keep the paraphrase rule intact.</p>
+  </section>`;
+}
+
+/* PR-011 glossary. Its own route (#/glossary), reached from the footer nav and cross-linked
+   from About, but deliberately not a primary nav tab: it is reference material looked up on
+   demand, not a browse destination. Definitions come from META.glossary, which assemble.py
+   fills from build/glossary.py -- the same single-source pattern as the taxonomy legend, so
+   what a reader reads and what a JSON consumer gets cannot drift. Terms are sorted
+   case-insensitively here regardless of the source order. The <abbr> pass lives in static
+   prose only (About, below); row and list prose are never marked up, because "first use" is
+   unstable under filtering and per-instance markup makes a screen reader re-announce. */
+function vGlossary(){
+  const G = META.glossary || {};
+  const terms = Object.keys(G).sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase()));
+  const items = terms.map(t => `<div><dt>${esc(t)}</dt><dd>${esc(G[t])}</dd></div>`).join("");
+  return `<div class="pagehead">
+    <div class="overline">Reference</div>
+    <h1>Glossary</h1>
+    <div class="full">Plain-language definitions of the acronyms and initialisms that recur across the atlas.
+      Each entry describes the term; none makes a coverage or licensing claim (those live on the rows and in the
+      license-tier bands). <a href="#/about">About &amp; methodology</a> explains how a mapping is made.</div>
+  </div>
+  <section class="block about">
+    <dl class="glossary">${items}</dl>
   </section>`;
 }
 
@@ -1161,6 +1202,11 @@ function render(opts){
   else if(p1==="cell"){ html = vCell(p2, p3, p4); tab="matrix"; view = FW[p3] ? `${FW[p3].name} × ${dec(p4)}` : "Not found"; countRows = true; }
   else if(p1==="search"){ html = vSearch(p2); tab=""; view = `Search: ${dec(p2)}`; countRows = true; }
   else if(p1==="about"){ html = vAbout(); tab="about"; view = "About"; }
+  /* PR-011. Own path route; conforms to the URL grammar trivially (a bare path, no query
+     keys). `?term=` is reserved-not-implemented in docs/AUTHORING.md, so a stray one is
+     ignored (rule 2) and the whole page renders. No nav tab lights: it is not a browse mode. */
+  else if(p1==="glossary"){ html = vGlossary(); tab=""; view = "Glossary";
+    note = plural(Object.keys(META.glossary||{}).length, "term"); }
   else if(p1==="row"){ html = vRow(p2); tab="";
     /* Own route, filter-independent: reads only the id, so any stray query key is ignored (scheme
        rule 2) and no filter is inherited. An unknown id renders vRowMissing, never a blank view. */
@@ -1333,7 +1379,7 @@ document.getElementById("footDisc").textContent = META.disclaimer;
    a call to action rather than a bare nav item. */
 (function(){
   const P = META.project || {};
-  const links = [`<a href="#/about">About &amp; methodology</a>`];
+  const links = [`<a href="#/about">About &amp; methodology</a>`, `<a href="#/glossary">Glossary</a>`];
   if(P.repo_url) links.push(`<a href="${esc(P.repo_url)}">Source &amp; data on GitHub</a>`);
   if(P.changelog_url) links.push(`<a href="${esc(P.changelog_url)}">Changelog</a>`);
   document.getElementById("footLinks").innerHTML = links.join(`<span aria-hidden="true"> · </span>`);

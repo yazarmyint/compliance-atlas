@@ -34,6 +34,7 @@ from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
                     REVERIFY_DATE, REVERIFY_DATE_2, REVERIFIED_LIC_KEYS, REVERIFIED_LIC_KEYS_2)
 from dependency_migration import migrate_row
 import license_bands
+import glossary
 
 # Order controls display order in the HTML.
 MODULES = ["rows_dpr", "rows_iso", "rows_soc2", "rows_hipaa", "rows_171", "rows_80053", "rows_csf", "rows_pci", "rows_glba", "rows_ferpa", "rows_gdpr"]
@@ -218,7 +219,14 @@ BRAND = {
     # build/update_row_ids.py are build machinery and an id inventory, not the data model. Not PATCH: this
     # is a new capability, not a correction or re-verification. The change lives in the built HTML, whose
     # bytes moved, so a bump is required (§31). Reasoning in AUDIT-FINDINGS §32.
-    "atlas_version": "3.2.0",
+    # 3.3.0 is a MINOR: the reader glossary (PR-011) -- a #/glossary route, a first-use <abbr> pass in the
+    # About page's static prose, and a new meta.glossary block. A reader gains a capability (the ~47 acronyms
+    # that recur across rows now have one plain-language answer), which the policy's MINOR band names. Consumer-
+    # visible and additive, the exact shape of 2.10.0's meta.maintenance: a new key under meta, no row touched,
+    # no data-model or product/framework scope change, so no consumer must change code. Not PATCH: readers gain
+    # a feature, not a correction. The JSON delta is precisely meta.glossary plus this version string; verified
+    # empty-of-anything-else before the bump (the storage decision's whole point). Reasoning in AUDIT-FINDINGS §33.
+    "atlas_version": "3.3.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -308,6 +316,11 @@ META = {
         "Medium": "Reasonable mapping; acceptance may vary by assessor/scope.",
         "Low": "Defensible but narrow or contested; position carefully.",
     },
+    # PR-011. The reader glossary. Definitions live in build/glossary.py beside the term
+    # cut and the descriptive-only contract, imported here exactly as license_bands.BAND_DEFS
+    # is, so the #/glossary route and any JSON consumer read one source that cannot drift.
+    # Static strings only -- nothing here is computed at build time.
+    "glossary": glossary.GLOSSARY,
     "disclaimer": ("Mapped products support or evidence controls; they do not by themselves make an organization "
                    "compliant with any framework. Control references are practical intent mappings in original words, "
                    "not quotations of the standards. Licensing claims derive from each product's authoritative "
@@ -642,6 +655,12 @@ def main():
     # internally coherent and does every coordinate still resolve", which is what
     # makes an orphaned trigger impossible.
     check_maintenance_table(set(ids))
+
+    # ---- glossary: structural validation only (PR-011) ----
+    # Asserts the definitions are non-empty and em-dash-free (the humanizer's house rule);
+    # nothing here is derived or dated, so it never moves the JSON on a content-free rebuild.
+    n_terms = glossary.check_glossary()
+    print(f"  Glossary: {n_terms} terms")
 
     # Verification currency, derived from the rows rather than declared by hand (PR-014b).
     # default_last_verified and every row's last_verified are read-only here.

@@ -48,6 +48,30 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.3.0 — 2026-07-22
+
+Reader glossary (PR-011, Session 15). The atlas assumes fluency in two vocabularies at once — compliance
+frameworks and the Microsoft security stack — and a reader who knows one half hits an acronym wall in the
+other. A new **Glossary** defines the 47 acronyms and initialisms that recur across the rows, in plain
+language, reachable from the footer and cross-linked from About.
+
+**For readers.** `#/glossary` lists every recurring acronym (DLP, XDR, CSPM, MDCA, ROPA, CDE, C3PAO, GCC
+High …) with a one- or two-sentence definition written for whichever half of the material you don't
+already know. Definitions describe the term and never make a coverage or licensing claim — those stay on
+the rows. A restrained first-use `<abbr>` pass in the About page expands the framework short-forms and a
+handful of capability acronyms on hover; row and list prose are deliberately left unmarked, because
+"first use" is meaningless once a filter reorders the page.
+
+**For consumers of `compliance-atlas.json`.** The dataset gains one key, `meta.glossary` (a
+`term → definition` map), and is otherwise byte-identical to 3.2.0 apart from `meta.version` and
+`meta.brand.atlas_version`. No row key added or removed, no schema or scope change. The definitions live
+in one place (`build/glossary.py`), so the rendered page and the JSON cannot drift.
+
+**Why MINOR.** A reader-facing feature was added and existing rows kept their shape and meaning. This is
+the exact shape of 2.10.0, which added `meta.maintenance`: a new consumer-visible key under `meta`,
+additive, no data-model or scope change, so no consumer must change code. Not PATCH — readers gain a
+capability, not a correction. Full record in AUDIT-FINDINGS §33.
+
 ## 3.2.0 — 2026-07-21
 
 Row deep links (PR-004, Session 14). Any single mapping row is now citable on its own. `#/row/<id>`

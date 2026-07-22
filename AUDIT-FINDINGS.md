@@ -3442,3 +3442,136 @@ the in-session announcement and the file:// tier-3 fallback, 26/26 assertions, 0
 verification (Pages green, deployed sha256 == repo, deployed meta.version 3.2.0, live cold round-trip on
 `#/row/iso-a-5-10`, invalid id, and a copy-link round-trip) is performed post-merge and recorded in the
 session log.
+
+## 33. Reader glossary (2026-07-22) — PR-011, v3.3.0
+
+A data-and-template session that ships the reader glossary. The finding: the atlas assumes fluency in two
+vocabularies at once (compliance frameworks and the Microsoft stack), and a reader who has one half hits
+an acronym wall in the other — a GRC/legal reader meets "MDCA" in the first paragraph of most product
+pages, a Microsoft-fluent reader meets "ROPA" and "C3PAO". Phase 1 was an owner-reviewed domain pass over
+the term list and every definition; Phase 2 built to the approved design.
+
+### 33.1 Term inventory and the cut
+
+A token scan of the **shipped** outputs, triaged by surface. The acronym density is entirely in row prose
+(DLP 252, GCC 457, XDR 145, CSPM 120 …) and industry-note prose; the reader-facing **static** prose
+(About, hero, legend, footer) carries almost none. **47 terms ship.** The cut is recorded here because the
+exclusions are part of the value:
+
+- **WORM, DIB** — excluded, **zero occurrences** in the shipped artifact. Both were in the session's own
+  example list, but the atlas writes "immutable"/"records" and "Defense industrial base" spelled out. A
+  glossary defines what a reader actually meets; entries for absent terms would be padding.
+- **CM** — excluded, irreducibly ambiguous: "Compliance Manager" (product) vs the NIST 800-53 "CM"
+  (Configuration Management) control family. A hedged entry is worse than none.
+- **PII** — excluded as universal across both audiences; defining it over-signals.
+- **Framework short-names** (HIPAA, GDPR, PCI DSS, ISO, SOC, GLBA, FERPA, NIST, CSF) — excluded as a
+  class: each carries its full name on its own framework card and in About. CMMC is the one kept, because
+  it is a *program* referenced far from its card (government notes, 800-171 rows).
+- **SKU/tier tokens** (E3/E5/A5 …) and **control-ref tokens** (CC6, PR, AC, CFR-as-citation, TSC/POF) —
+  excluded: the tier legend and license bands already define the first with sourcing, and the second are
+  navigation, not vocabulary.
+
+Final recommended count was ~38 core plus promotions; the owner promoted MDM, MAM, ASR, FIM, RMS, SSPR,
+EHR, SSPA, DPR and cut PII, landing at 47. The count exceeds the finding's ~25 estimate because that
+estimate was eyeballed from Microsoft-capability acronyms and under-weighted the regulatory-mechanism
+cluster (CDE, ROPA, DPO, DPIA, DSR, CUI, C3PAO, SPRS, PHI) that the *Microsoft-fluent* half hits cold.
+
+### 33.2 Definitions — descriptive-only, with ambiguity resolutions
+
+The binding contract: definitions **describe**, they never **claim**. No entry states coverage, licensing,
+or a live accreditation. GCC High is defined by purpose and the standard it is assessed against, never by
+an authorization it "has" (which would go stale); CMMC is the model, **dateless** (the phased rollout
+lives in the maintenance trigger, not a definition). Ambiguities resolved in the text and pinned in the
+`build/glossary.py` docstring so a later edit cannot flatten them:
+
+- **IRM** = Insider Risk Management, explicitly **not** the legacy Information Rights Management.
+- **FIM** = File Integrity Monitoring, **not** the retired Forefront Identity Manager.
+- **CIEM** = the discipline; the product that carried the name (Entra Permissions Management) was retired
+  2025-10-01, so the definition names the discipline, not the dead product.
+- **MDCA** = Defender for Cloud **Apps**; the entry states the atlas never shortens Defender for Cloud
+  itself to "MDC", which is the collision it prevents.
+- **DoD** = the cloud **environment** (SRG IL5), not the department.
+- **DLP / XDR** = the discipline, with the mapped Microsoft product named in a second clause.
+- **C3PAO** — the leading C is for "CMMC", **not** "Certified" (a common misreading), corrected in Phase 1.
+
+Non-obvious expansions were verified against official sources: SSPA / DPR (microsoft.com/procurement/sspa
+and Microsoft Service Assurance — "Supplier Security and Privacy Assurance" delivering the versioned
+"Supplier Data Protection Requirements", v12 March 2026); GCC / GCC High / DoD (Office 365 US Government
+service descriptions); CMMC (owner correction: Level 2 is assessed by **self-assessment or** an independent
+C3PAO per contract, not C3PAO-only); C3PAO / SPRS (Cyber AB; SPRS at sprs.csd.disa.mil); MCSB (Microsoft
+cloud security benchmark); the Defender family names against the atlas's own verified row prose.
+
+### 33.3 Storage — META.glossary, the license_bands pattern
+
+Definitions are a `term → definition` dict in `build/glossary.py`, imported into `META["glossary"]` by
+`assemble.py` exactly as `license_bands.BAND_DEFS` is imported into `META["license_bands"]`. One source, so
+the `#/glossary` route and any JSON consumer cannot drift; the page renders from `META.glossary` and holds
+no copy of the text. `check_glossary()` runs in the build's check phase: non-empty terms and definitions,
+and — the guard that matters — a hard fail on any em/en dash, since the humanizer pass established
+em-dash-free as the house rule for these entries (§33.6).
+
+**Expected-delta-first.** The storage decision's whole claim is that the JSON gains *exactly* one key.
+Verified by rebuilding with the glossary wired but the version still 3.2.0: the diff was **49 insertions,
+0 deletions, the single key `meta.glossary`** (47 term lines plus the two braces), license bands and all
+else byte-identical. Only then was the version bumped; the final JSON diff is that block plus `meta.version`
+and `meta.brand.atlas_version` 3.2.0 → 3.3.0, nothing more.
+
+**Commit shape is conditional on this.** The feature-then-version two-commit convention (§32) applies only
+when the feature commit leaves `compliance-atlas.json` byte-identical; when the feature touches the JSON, as
+here, §31's one-version-one-artifact principle outranks the convention and version and content move
+atomically in a single commit — a rebuilt 3.2.0 JSON carrying `meta.glossary` would be a second artifact
+claiming a published number, which the rule forbids. So the glossary's bytes and its 3.3.0 stamp shipped in
+one commit; the following commit carries only the changelog and this record, which touch no artifact.
+
+### 33.4 Placement — route, footer, About; no nav tab; ?term= reserved
+
+`#/glossary` is its own path route (`vGlossary`), conforming to the URL grammar trivially — a bare path
+with no query keys. It is reached from the **footer** nav and cross-linked from the About "How to read a
+mapping" section, but is **not** a primary nav tab: the five tabs are browse destinations, and a glossary
+is reference material looked up on demand, so a sixth tab would dilute the nav. `term` is registered in the
+`docs/AUTHORING.md` URL-key table as **reserved, not implemented** (mirroring `cov`): `#/glossary?term=<slug>`
+would scroll to one term without breaking any link, but a single page does not yet earn per-term deep
+links, so no ids were added. Rendered as one alphabetical `<dl>` (case-insensitive sort), 47 dt/dd pairs,
+zero interactive elements — no keyboard trap.
+
+### 33.5 The <abbr> first-use pass — static prose only
+
+Scope was binding and narrow: `<abbr>` goes in **static prose only** (About, landing, legend), never in row
+content or any filtered/dynamic list, because "first use" is unstable once a filter reorders the page and
+per-instance markup makes a screen reader re-announce the expansion endlessly. The scan confirmed the
+static surface carries almost no capability acronyms, so the pass is deliberately small: the three framework
+short-forms (ISO/IEC, PCI DSS, NIST SP) in the "How a row is made" bullet, plus a new glossary-pointer
+sentence in "How to read a mapping" carrying four capability abbrs (DLP, XDR, CSPM, IRM) that link to the
+glossary. Seven `abbr[title]` elements on the About page, verified in the walk; a dotted underline is the
+only always-visible cue, and the glossary is the real answer for anyone who cannot hover.
+
+### 33.6 The /agentic-humanizer pass and its diff
+
+Every definition ran through `/agentic-humanizer` before the gate (its first full-scale run). Slop or Not
+Pro was not reachable on this platform (the CLI is a macOS bundle; no MCP backend connected), so it ran in
+**Core mode** — the full five-strategy rewrite without on-device detector scores. The pass was **light**,
+because the drafts were already written in a de-slopped register: no promotional language, AI-vocabulary,
+hedging, or padded rule-of-three (the accurate enumerations — "servers, containers, and databases" — are
+not the tell). Its one mechanical output rule, pattern 14 (strip em/en dashes), rewrote **four** entries,
+and one ellipsis was tidied:
+
+- **CDE** — "payment-card data — the scope …" → "payment-card data, which is the scope …" (em dash → relative clause).
+- **DKE** — "two keys — one held by the customer, one by Microsoft — so that …" → "two keys, one held by the customer and one by Microsoft, so that …" (em dashes → commas).
+- **DPR** — "Requirements — the versioned control set …" → "Requirements, the versioned control set …" (em dash → comma).
+- **SIT** — "a classifier — for a credit-card or passport number, say — that …" → "a classifier (for example, a credit-card or passport number) that …" (em dashes → parenthesis).
+- **C3PAO** — ellipsis form → "The leading C is for \"CMMC\", not \"Certified\", which is a common misreading." (non-elliptical).
+
+No other definition changed. This makes the glossary em-dash-free while the About/legend prose keeps its
+house em-dashes; the inconsistency is intentional here (the guard enforces it for new glossary entries) and
+left for the owner to extend atlas-wide or not.
+
+### 33.7 Gate
+
+Rebuild → JSON diff exactly `meta.glossary` + the two version strings, predicted before the run and matched
+(§33.3). Axe zero across all 16 routes × 2 themes including `#/glossary` in light and dark (h1 "Glossary" is
+the focus target). Spelling lint clean (8 shippable targets; the new prose is covered automatically by
+`SPELLING_LINT_TARGETS` reaching `compliance-atlas.html`). check_urls baseline **unchanged** — `collect()`
+does not read `meta.glossary`, and the definitions carry no `http` links by design, so no official-source
+link was added and the baseline did not move. Keyboard walk: footer **Glossary** link reachable, focus lands
+on the `h1`, 47 entries with no interactive element in the list, Tab order sane (intro cross-link → footer),
+title "Glossary · Compliance Atlas". Two-commit shape; merge held for owner review.
