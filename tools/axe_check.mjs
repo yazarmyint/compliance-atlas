@@ -37,6 +37,7 @@ const axeSource = readFileSync(require.resolve("axe-core/axe.min.js"), "utf8");
 const ALL_ROUTES = [
   "#/",                                              // landing + industries index
   "#/about",
+  "#/glossary",                                      // PR-011 reader glossary (static prose + <dl>)
   "#/frameworks",
   "#/framework/iso-27001-2022",                      // framework rows (largest, 57)
   "#/products",

@@ -146,6 +146,30 @@ calendar boundary with no commit behind it — breaking the strict empty-diff dr
 `MAINTENANCE` (see `TRG-MDO-P1-E3G3`, which owns dropping that partial flag when the rollout completes), not in the
 derivation.
 
+## Glossary (PR-011)
+
+The reader glossary is a `term -> definition` dict in `build/glossary.py`, imported into `META["glossary"]` by
+`assemble.py` exactly as `license_bands.BAND_DEFS` is — one source, so the `#/glossary` route and any JSON consumer
+cannot drift, and adding it was a MINOR (a reader feature; the analogue is 2.10.0's `meta.maintenance`). The route is
+reached from the footer nav and cross-linked from About; it is **not** a primary nav tab, because it is reference
+material looked up on demand rather than a browse mode.
+
+Three rules govern the content, all asserted by `check_glossary()` or stated in the module docstring:
+
+- **Definitions describe; they never claim.** No entry asserts coverage, licensing, or a live accreditation — those
+  live on the rows and the tier bands, and accreditation nowhere (it goes stale). GCC High is defined by purpose and
+  the standard it is assessed against; CMMC is the model, dateless.
+- **Entries stay em-dash-free.** The Session-15 `/agentic-humanizer` pass established this (pattern 14); the build
+  guard fails on an em/en dash so a later edit cannot quietly reintroduce one.
+- **The cut is on the record.** 47 terms ship; the exclusions (WORM/DIB as zero-occurrence, CM as ambiguous, PII as
+  universal, framework short-names as card-covered) and the ambiguity resolutions (IRM≠Information Rights Management,
+  FIM≠Forefront Identity Manager, CIEM the discipline not the retired product, DoD the environment) are recorded in the
+  module docstring and AUDIT-FINDINGS §33.
+
+The `<abbr>` first-use pass is **static prose only** (About page): the three framework short-forms in "How a row is
+made" and four capability acronyms in the glossary-pointer sentence. Row and list prose are never marked up — "first
+use" is unstable under client-side filtering, and per-instance markup makes a screen reader re-announce the expansion.
+
 ## URL state scheme
 
 The router grammar is:
@@ -162,6 +186,7 @@ and every link minted before it is still valid.
 | `tier` | `e3` \| `e5` \| `addon` | PR-015 | **implemented** |
 | `meter` | `exclude` (absent = include) | PR-015 | **implemented** |
 | `cov` | a `COV_ORDER` value, URL-encoded | coverage filter | **reserved, not implemented** — the filter is still module state |
+| `term` | a glossary term, URL-encoded | PR-011 | **reserved, not implemented** — the glossary is one anchored page (`#/glossary`); `#/glossary?term=<slug>` would scroll to a single term without breaking any link, but a single page does not yet earn per-term deep links |
 | `q` | search terms | search | **not migrating**; search stays on the path as `#/search/<q>` |
 
 `#/row/<id>` is the **row deep link** (PR-004, **implemented**). It is deliberately its own route rather than a
