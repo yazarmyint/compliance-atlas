@@ -35,6 +35,7 @@ from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
 from dependency_migration import migrate_row
 import license_bands
 import glossary
+import stack_rationales
 
 # Order controls display order in the HTML.
 MODULES = ["rows_dpr", "rows_iso", "rows_soc2", "rows_hipaa", "rows_171", "rows_80053", "rows_csf", "rows_pci", "rows_glba", "rows_ferpa", "rows_gdpr"]
@@ -226,7 +227,17 @@ BRAND = {
     # no data-model or product/framework scope change, so no consumer must change code. Not PATCH: readers gain
     # a feature, not a correction. The JSON delta is precisely meta.glossary plus this version string; verified
     # empty-of-anything-else before the bump (the storage decision's whole point). Reasoning in AUDIT-FINDINGS §33.
-    "atlas_version": "3.3.0",
+    # 3.4.0 is a MINOR: stacked-control tier rationales (PR-013) -- a new meta.stack_rationales block holding 22
+    # group-level lines that explain why a stack's coverage tiers legitimately differ, rendered above the cards on
+    # the framework view. A reader gains a capability (the tier spreads that could read as inconsistency now carry
+    # their reason on screen), which the policy's MINOR band names. Consumer-visible and additive, the exact shape
+    # of 3.3.0's meta.glossary and 2.10.0's meta.maintenance: a new key under meta, no row touched, no data-model or
+    # product/framework scope change, so no consumer must change code. Not PATCH: readers gain a feature, not a
+    # correction; no protected field (coverage/confidence/licensing/sources/last_verified/control_ref) moved. The
+    # JSON delta is precisely meta.stack_rationales plus this version string; verified empty-of-anything-else before
+    # the bump. Version and content ship in one commit because this touches the JSON (§31 one-version-one-artifact
+    # outranks the two-commit convention, per §33.3). Reasoning in AUDIT-FINDINGS §34.
+    "atlas_version": "3.4.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -321,6 +332,14 @@ META = {
     # is, so the #/glossary route and any JSON consumer read one source that cannot drift.
     # Static strings only -- nothing here is computed at build time.
     "glossary": glossary.GLOSSARY,
+    # PR-013. Stacked-control tier rationales. A short group-level line, keyed by
+    # (framework, control_ref), explaining why a stack's coverage tiers legitimately
+    # differ where the badge order could read as an inconsistency. Definitions live in
+    # build/stack_rationales.py beside the guard and the scope-only writing rule, imported
+    # here exactly as glossary.GLOSSARY is, so the framework view and any JSON consumer read
+    # one source that cannot drift. Static strings only. check_stack_rationales(rows) runs
+    # in the check phase below; a key that is not a live coverage-tier spread fails the build.
+    "stack_rationales": stack_rationales.STACK_RATIONALES,
     "disclaimer": ("Mapped products support or evidence controls; they do not by themselves make an organization "
                    "compliant with any framework. Control references are practical intent mappings in original words, "
                    "not quotations of the standards. Licensing claims derive from each product's authoritative "
@@ -661,6 +680,14 @@ def main():
     # nothing here is derived or dated, so it never moves the JSON on a content-free rebuild.
     n_terms = glossary.check_glossary()
     print(f"  Glossary: {n_terms} terms")
+
+    # ---- stack rationales: structural validation only (PR-013) ----
+    # Every rationale key must resolve to a live coverage-tier spread group (>=2 rows,
+    # >=2 tiers) and be em-dash-free. Self-honest: a rationale cannot outlive its spread,
+    # so a future re-verification that collapses a group to a uniform tier fails the build
+    # here until the line is removed or moved. Nothing derived or dated; no JSON drift.
+    n_rat = stack_rationales.check_stack_rationales(rows)
+    print(f"  Stack rationales: {n_rat} groups")
 
     # Verification currency, derived from the rows rather than declared by hand (PR-014b).
     # default_last_verified and every row's last_verified are read-only here.
