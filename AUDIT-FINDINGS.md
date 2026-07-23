@@ -3695,3 +3695,107 @@ glossary and 2.10.0's maintenance table. Because this touches the JSON, §31's o
 principle outranks the two-commit convention (per §33.3): the source, the rebuilt artifact, and the 3.4.0
 stamp ship in **one** commit; a following commit carries only this record and the changelog, which touch no
 artifact. Merge held for owner review.
+
+## 35. Priva reference-only treatment (2026-07-22) — PR-031, v3.4.1
+
+Closure of PROJECT-REVIEW PR-031: Priva is named 11 times across 10 privacy-domain rows as the tooled
+answer and is unreachable — there is no product page, deliberately (§15 roadmap closure). The audit
+document explained the boundary; the artifact did not. The decision, recorded here, is **Option A-lite**:
+two prose-only additions that name the boundary at point of use and in About, with **no new published data
+structure** and **no change to the 11 row mentions or any row data**. `compliance-atlas.json` is
+byte-identical to 3.4.0 apart from the version string (§35.4). The 11 mentions, `RELATED_PRODUCTS`, and the
+`related_microsoft` model are untouched.
+
+### 35.1 The two parts, and the shared sentence
+
+**Part 1 — the point-of-use note.** `relatedBlock()` now heads every Related-products block with a muted,
+non-interactive line: *"Related-product mentions are pointers to adjacent products, not banded or audited
+claims."* It renders once per block (not per entry), above the entries in reading order, and is generic to
+the block — it governs all related-product mentions, not Priva alone. Styling is the house muted pattern
+(`--ink-2`, 11.5px so it reads as secondary to the 12.5px entries), a plain `<p class="relnote">` so it
+reaches keyboard and screen-reader users as visible text, never a title-attribute tooltip.
+
+**The shared sentence.** Its operative clause is verbatim identical to the closing sentence of the
+license-band scope note (`meta.license_band_scope`, built from `BAND_SCOPE_NOTE`), whose surface adds the
+`"(if licensed)"` qualifier the point-of-use copy drops — correct scoping, since the block's entries are not
+marked that way. One policy, one wording, two surfaces. The clause cannot be sourced from `META` without
+moving published JSON bytes, so it is pinned as `REL_POINTER_NOTE` in `template.html`, with a **reciprocal**
+comment beside `BAND_SCOPE_NOTE` naming the twin; comments are not serialized, so the pin holds the empty
+JSON diff, and whichever copy is edited first names the other. Per-block, not per-entry, was judged correct
+and shipped: the block appears only on the 10 privacy rows, only when expanded, and the note reads once
+regardless of entry count (confirmed headless — `iso-a-5-34` renders **1** note over **2** entries).
+
+**Part 2 — the boundary passage (B-finish).** The About *"Scope, and its edges"* subsection *"Some products
+appear only as references"* is replaced. The prior text framed the omission as effort — *"mapping it
+properly is a larger job than gesturing at it"* — which reads as **temporary**; the new passage opens with a
+glossary-register clause on what Priva is, then states the **deliberate, permanent** reference-only
+decision. It is consistent with FRAMEWORK-SELECTION's ISO 27701 rationale (the roadmap closed at six mapped
+products; Priva sits outside it; a product the atlas will not author), which it summarizes and does not
+contradict. **Placement argued: About, not the Products index.** The roadmap-closure reasoning the passage
+leans on sits one subsection above it in the same section; Priva has no card on the Products index (it is
+`RELATED_PRODUCTS`, not `PRODUCTS`), so a passage there would introduce it only to explain an absence, in a
+terse card register prose does not fit; and the point-of-use note already serves the reader who meets Priva
+on a row. The full rationale is pointed to in the public repository in words — no new link, the repo is
+already linked in About's maintainer section — so check_urls does not move (§35.4).
+
+### 35.2 A-full declined, with its reopening condition
+
+The session's option framing, recorded so the decision is legible later:
+
+- **Option A — point-of-use.** *A-full* = PR-031 recommendation (a) in full: render each of the 11
+  `RELATED_PRODUCTS` mentions with a per-entry *"reference-only — not mapped in this atlas"* qualifier **and
+  a link to Microsoft's Priva overview**. *A-lite* = a single generic muted note per block, no per-entry
+  qualifier, no link. **A-lite shipped.**
+- **Option B — the boundary prose.** *B-finish* = complete the About boundary passage. **Shipped as Part
+  2.** So what shipped is A-lite + B-finish.
+
+**A-full declined.** A per-entry link to Priva's overview would give a reference-only product a per-mention
+outbound affordance the atlas withholds by design: it points to Priva but does not author or link it as a
+mapped product, and a link on all 11 mentions would multiply that pointer into something that reads as a
+promised or adjacent-product treatment — the very "unfinished edge vs decision" ambiguity PR-031 flagged,
+inverted. The generic per-block note carries the same information (these are pointers, not claims) once,
+without elevating the reference. **Reopening condition: reader demand via the feedback channel.** If readers
+ask, through the About corrections / issues path, for a direct link to Microsoft Priva from the row
+mentions, A-full is revisited — the structured `related_microsoft` model already carries everything needed,
+so it is a small, reversible add. Until that signal arrives, the boundary is stated in prose, not linked.
+
+### 35.3 The /agentic-humanizer pass
+
+Both new prose pieces ran through `/agentic-humanizer` before the gate (Core mode; Slop or Not Pro is a
+macOS bundle, unreachable on win32, as §33.6/§34.5). Saved profile applied silently: en-US, college,
+academic, trim. The pass made **no change** to either piece — they were written dash-free and in the
+de-slopped register from the start and owner-approved at the checkpoint, so pattern 14 (strip em/en dashes)
+had nothing to strip and no rule-of-three, AI-vocabulary, vague-attribution, negative-parallelism, or filler
+tell was present. The two pairs ("banded or audited"; "privacy risk assessment and subject rights requests")
+are accurate enumerations, not the tricolon tell. As a side effect, replacing the old About subsection
+removed one em dash from the shipped prose.
+
+### 35.4 Gate
+
+**Expected-delta-first.** Predicted before rebuild: the built HTML gains the two prose pieces;
+`compliance-atlas.json` moves by exactly the two version strings and nothing else. Verified in that order —
+**proven empty of content before the bump** (`cmp` on LF-normalized content byte-identical to committed
+3.4.0; `git diff` / `numstat` zero, the `M` in `git status` being the documented CRLF working-tree artifact
+that `.gitattributes eol=lf` normalizes away), then the bump applied as the **sole** `meta.version` /
+`brand.atlas_version` delta (3.4.0 → 3.4.1). No row, no other `meta` key, no protected field moved.
+
+Axe **zero** across 17 routes × 2 themes, including a new standing route `#/row/iso-a-5-34` — a row with a
+Related-products block rendered **open** — in light and dark, so the muted `.relnote` (`--ink-2`, 11.5px)
+clears WCAG contrast both ways. Render and reading order confirmed headless in both themes: the block's DOM
+child order is `h4 → p.relnote → div.relms`, so a screen reader announces "Related Microsoft products", then
+the note, then the entries; note count **1** over 2 entries (once per block); the note is a non-interactive
+`<p>` (`tabIndex -1`), so keyboard Tab order is unchanged. Spelling lint clean (8 shippable targets; the new
+prose reaches `compliance-atlas.html`). check_urls baseline **unchanged by construction**: `collect()` reads
+only `compliance-atlas.json`, which is byte-identical apart from the version string, and the passage adds no
+`href`, so the URL inventory did not move — no live re-sweep of an unchanged set was run (the §33.7
+reasoning). The `tools/axe_check.mjs` route addition is standing-QA machinery: it ships to no reader and does
+not enter the artifact.
+
+**Version and commit shape.** PATCH → **3.4.1**: clarifying prose over existing presentation, adding **no
+reader capability** — no route, filter, card, or toggle. That is the honest distinction from 3.1.0's
+HTML-only MINOR, which *added* capabilities (a social card, an error-report path); the policy sorts by what
+a reader gains, and here a reader gains a clarification, not a feature, so the PATCH band ("nothing
+structural") fits. The built HTML bytes moved, so a bump is required (§31); because this touches the JSON,
+§31's one-version-one-artifact outranks the two-commit convention (per §33.3): source + rebuilt artifact +
+3.4.1 stamp ship in **one** commit; a following commit carries only this record and the changelog, which
+touch no artifact. Merge held for owner review.
