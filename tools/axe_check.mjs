@@ -50,6 +50,7 @@ const ALL_ROUTES = [
   "#/industry/legal",
   "#/industry/insurance",
   "#/row/iso-a-5-10",                                 // PR-004 row deep link, valid id (single-row view)
+  "#/row/iso-a-5-34",                                 // PR-031: a row with a Related-products block, rendered open, so the point-of-use note is audited in both themes
   "#/row/no-such-row",                               // PR-004 row deep link, invalid id (not-found state)
 ];
 

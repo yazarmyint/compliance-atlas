@@ -237,7 +237,17 @@ BRAND = {
     # JSON delta is precisely meta.stack_rationales plus this version string; verified empty-of-anything-else before
     # the bump. Version and content ship in one commit because this touches the JSON (§31 one-version-one-artifact
     # outranks the two-commit convention, per §33.3). Reasoning in AUDIT-FINDINGS §34.
-    "atlas_version": "3.4.0",
+    # 3.4.1 is a PATCH: PR-031 Priva reference-only treatment (A-lite). Two prose-only additions to the built HTML --
+    # a muted point-of-use note heading every Related-products block (shared verbatim with the license-band scope
+    # note, meta.license_band_scope) and an upgraded About boundary passage stating the Priva reference-only decision.
+    # No new published data structure: compliance-atlas.json is byte-identical to 3.4.0 apart from this version string
+    # -- no row, no meta key added or removed, no protected field, no data-model or scope change (proven empty before
+    # the bump, cmp on LF-normalized content). Sorted PATCH, not MINOR: the change clarifies existing presentation and
+    # adds no reader capability (no route, filter, card, or toggle), which is the honest distinction from 3.1.0's MINOR
+    # -- that one added capabilities (a social card, an error-report path). The built HTML bytes moved, so a bump is
+    # required (§31); the JSON delta is precisely this version string. One commit for source + artifact + stamp, per
+    # §33.3. Reasoning in AUDIT-FINDINGS §35.
+    "atlas_version": "3.4.1",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }

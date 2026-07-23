@@ -403,6 +403,11 @@ BAND_PARTIAL_DEF = ("Reduced capability at this tier — the band is the lowest 
                     "mapped here works, and part of the mapping needs a higher tier. Read the license "
                     "requirement on the row for what is and is not included.")
 
+# PR-031 reciprocal pin. The closing sentence's operative clause ("...are pointers to adjacent
+# products, not banded or audited claims") is shared verbatim with REL_POINTER_NOTE in
+# build/template.html, which heads every Related-products block. Here it carries the surface-specific
+# "marked (if licensed)" qualifier; the point-of-use copy drops it. Comments are not serialized, so
+# this pin does not move the published JSON. Edit either copy and update the twin.
 BAND_SCOPE_NOTE = ("Bands describe Microsoft 365 COMMERCIAL licensing only: there is no G3/G5, F-series, "
                    "or Business Premium dimension, and government licensing is covered by the per-row "
                    "cloud availability notes instead. Consumption-priced products (Microsoft Sentinel, "

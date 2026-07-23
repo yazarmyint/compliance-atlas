@@ -307,6 +307,11 @@ details[open] .flip{transform:rotate(90deg)}
 .row .relms{margin:0 0 14px}
 .row .relms .rel{font-size:12.5px; color:var(--ink-2); margin:0 0 6px; line-height:1.45}
 .row .relms .rel b{color:var(--ink); font-weight:600}
+/* PR-031 point-of-use note above the related-product entries. Muted per house pattern
+   (--ink-2, AA in both themes); 11.5px so it reads as secondary to the 12.5px entries.
+   Selector carries p.relnote so it outranks both .row .body p (13.5px) and the aside
+   color rule above; a non-interactive <p>, so keyboard/reader reach it as plain text. */
+.row .body p.relnote{margin:2px 0 10px; font-size:11.5px; color:var(--ink-2)}
 .row .foot{grid-column:1 / -1; display:flex; gap:10px; align-items:center; flex-wrap:wrap; border-top:1px dashed var(--rule); padding-top:12px}
 /* Foot links (framework, solutions) sit inline inside muted metadata text, so they need a non-color
    cue to be distinguishable (WCAG 1.4.1). Collapsed rows hide the foot, so this shows only on an
@@ -556,10 +561,18 @@ function solLinks(r){
   return parts.length ? `<span>· Solution: ${parts.join(", ")}</span>` : "";
 }
 function prodChip(r){ return `<span class="chip prod" title="${esc(prodFull(r.product))}">${esc(prodName(r.product))}</span>`; }
+/* PR-031. The point-of-use note that heads every Related-products block. Its wording is
+   shared verbatim with the license-band scope note (meta.license_band_scope, built from
+   BAND_SCOPE_NOTE in build/license_bands.py, whose surface adds the "(if licensed)"
+   qualifier). The operative clause must stay identical across both surfaces so one policy
+   never drifts into two phrasings. It cannot be sourced from META without moving published
+   JSON bytes, so it is pinned here as a constant; the twin comment beside BAND_SCOPE_NOTE
+   names this const. Edit either copy and update the other. */
+const REL_POINTER_NOTE = "Related-product mentions are pointers to adjacent products, not banded or audited claims.";
 function relatedBlock(r){
   const rel = r.related_microsoft || [];
   if(!rel.length) return "";
-  return `<h4>Related Microsoft products</h4><div class="relms">` + rel.map(e =>
+  return `<h4>Related Microsoft products</h4><p class="relnote">${REL_POINTER_NOTE}</p><div class="relms">` + rel.map(e =>
     `<div class="rel">▸ <b>${esc(RELPROD[e.product]||prodFull(e.product))}</b> · ${esc(e.role)}${e.solution?` · ${esc(e.solution)}`:""}<br><span class="tiny">${esc(e.note||"")}</span></div>`).join("") + `</div>`;
 }
 function rowCard(r, opts={}){
@@ -1092,9 +1105,12 @@ function vAbout(){
       text is too thin to map honestly. Depth across ${Object.keys(FW).length} frameworks is worth more here than
       breadth across more products.</p>
     <h3>Some products appear only as references</h3>
-    <p>Microsoft Priva is named on privacy rows as a contributing product but has no rows of its own. It belongs
-      in the picture, and mapping it properly is a larger job than gesturing at it — so it is pointed to rather
-      than half-covered.</p>
+    <p>Microsoft Priva is Microsoft's privacy management solution, covering privacy risk assessment and subject
+      rights requests. It is named on privacy rows as a contributing product but has no rows of its own, and that
+      is a deliberate boundary rather than an unfinished one: the product roadmap closed at six mapped products,
+      and Priva sits outside it. Where a privacy control needs it, the atlas points to it rather than mapping a
+      seventh product it has chosen not to author. The full rationale is recorded in the project's public
+      repository.</p>
     <h3>Some industries are missing, and it is a framework problem</h3>
     <p>Each sector below would need a framework the atlas does not yet map. None of them can be added by
       relabelling what is already here.</p>
