@@ -48,6 +48,31 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.4.1 — 2026-07-22
+
+Priva reference-only treatment (PR-031, Session 17). Microsoft Priva is named on eleven privacy-row mentions
+as a contributing product and has no page of its own, by design. The atlas now says so where a reader meets
+it, and says why in About.
+
+**For readers.** Every expanded row's **Related Microsoft products** block now opens with a short muted line
+— *"Related-product mentions are pointers to adjacent products, not banded or audited claims"* — the same
+wording the license-tier scope note already carries, so the two surfaces state one policy. And the About
+page's *"Some products appear only as references"* passage is rewritten: it now says what Microsoft Priva is,
+that the atlas treats it as reference-only on purpose rather than as an unfinished edge, and why — the
+product roadmap closed at six mapped products and Priva sits outside it, so where a privacy control needs it
+the atlas points to it rather than authoring a seventh product. No row moved; the eleven mentions are
+unchanged.
+
+**For consumers of `compliance-atlas.json`.** Nothing. Both additions live in the page template; the dataset
+is byte-identical to 3.4.0 apart from `meta.version` / `meta.brand.atlas_version`, this bump itself. No row,
+no `meta` key, no protected field changed.
+
+**Why PATCH.** The change clarifies existing presentation and adds no reader capability — no route, filter,
+card, or toggle. That is the line between this and 3.1.0, which was a MINOR because it *added* features (a
+social card, an error-report path): the policy sorts by what a reader gains, and a reader here gains a
+clarification, not a feature, while nothing structural moves. The built HTML bytes changed, so it still takes
+a bump (§31). Full reasoning in AUDIT-FINDINGS §35.
+
 ## 3.4.0 — 2026-07-22
 
 Stacked-control tier rationales (PR-013, Session 16). On the framework view, one control can carry several
