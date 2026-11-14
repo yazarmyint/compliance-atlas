@@ -3799,3 +3799,62 @@ structural") fits. The built HTML bytes moved, so a bump is required (§31); bec
 §31's one-version-one-artifact outranks the two-commit convention (per §33.3): source + rebuilt artifact +
 3.4.1 stamp ship in **one** commit; a following commit carries only this record and the changelog, which
 touch no artifact. Merge held for owner review.
+
+## 36. CMMC Phase 2 suspension correction (2026-11-14) — REVIEW-2026-11 A-01, v3.4.2
+
+The first change after a gap of about three months. A review on 2026-11-11 (REVIEW-2026-11.md) found that
+the atlas still stated a CMMC date that had been superseded before the atlas was published. This section
+records the evidence, the edit, and the gate.
+
+### 36.1 Evidence
+
+The CMMC program page, read in a browser on 2026-11-14 at both `dodcio.defense.gov/cmmc/` (the URL the
+atlas cites) and `dowcio.war.gov/CMMC/`, opens with this notice, paraphrased: on July 13, 2026 the
+Department announced the immediate suspension of the CMMC Phase II requirements originally scheduled for
+November 10, 2026; all Phase I self-assessment requirements remain in place; a comprehensive review of
+CMMC follows. The page links a press release and two memoranda. Law-firm alerts dated 2026-07-20 to
+2026-09 agree and add that a 60-day review ran from July 13 and that a September 3 memorandum directed
+contracting officers to remove third-party assessment requirements. No review outcome and no restart date
+were found as of 2026-11-14.
+
+Both hosts return 403 to scripted clients, which is why `tools/check_urls.py` classifies the cited URL as
+WAF and could never have seen the notice. The cited URL still resolves in a browser without redirecting,
+and it now supports the corrected claim, so no source was repointed.
+
+### 36.2 What was wrong, and since when
+
+Three reader-facing strings said C3PAO certification starts Nov 10, 2026: the framework `version` line,
+the DIB lens `note_detail`, and the external-dependency text on row `171-3-12-1-3`. `TRG-CMMC-PHASE2`
+carried `last_executed` 2026-07-16. The suspension is dated 2026-07-13, so that check missed a
+three-day-old announcement and the atlas published the superseded date on 2026-07-20. The trigger then
+fell due on 2026-08-12 and sat overdue for 94 days because nothing ran the build.
+
+### 36.3 The edit
+
+| Location | Before | After |
+|---|---|---|
+| `rows_171.py` `FRAMEWORK["version"]` | "…Phase 2 C3PAO certifications from Nov 10, 2026)" | "…Phase 2 C3PAO certification requirement suspended Jul 13, 2026, pending program review)" |
+| Row `171-3-12-1-3`, dependency text | "C3PAO assessment (Phase 2 from Nov 10, 2026)" | "C3PAO assessment (Phase 2 requirement suspended Jul 13, 2026)" |
+| `assemble.py` DIB `note_detail` | "…Phase 2 … begins Nov 10, 2026;" | "…Phase 2 … was due Nov 10, 2026 and was suspended on Jul 13, 2026 pending a program review; Phase 1 self-assessment requirements still apply." |
+| `common.py` `TRG-CMMC-PHASE2` | title, note, dates for the Nov 10 milestone | retitled as a suspension watch; `last_executed` 2026-11-14, `next_review` 2027-02-12; names the row; records the miss |
+
+Not changed, deliberately: the `authority` string ("US DoD (CMMC program)") and the glossary's CMMC, DoD,
+and SPRS entries. The program page now publishes under the Department of War name; whether the atlas
+follows is an owner decision carried to the next session. The glossary's CMMC entry describes the model
+and stays accurate.
+
+### 36.4 Gate
+
+**Expected-delta-first.** Predicted before rebuild: the JSON moves by one framework string, one industry
+string, two derived fields on one row, one trigger, and the two version strings. Verified against the
+committed 3.4.1 JSON: row ids identical; exactly one row differs, in `external_dependencies` and
+`legacy_dependencies` only; **no protected field moved on any of the 378 rows** (coverage, confidence,
+license_requirement, sources, last_verified, control_ref, product, solution, bands); `products`,
+`related_products`, and `solutions` byte-identical; the only `meta` keys that changed are `version`,
+`brand`, and `maintenance`. `reference/dependency-migration-log.json` moved by the same one row, as it
+logs the pre-split string.
+
+Spelling lint clean. The standing URL and accessibility gates were run after the commit; results are in
+the session log. Source, rebuilt artifacts, and the 3.4.2 stamp ship in one commit (§31
+one-version-one-artifact); this record and the changelog entry follow in a second commit that touches no
+artifact. Merge held for owner review.

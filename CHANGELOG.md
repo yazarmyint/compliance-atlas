@@ -48,6 +48,26 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.4.2 — 2026-11-14
+
+CMMC Phase 2 correction (Session 18, REVIEW-2026-11 finding A-01). The atlas said that third-party (C3PAO)
+Level 2 certification begins in new contracts on Nov 10, 2026. That requirement was suspended on
+July 13, 2026 pending a program review, and no restart date has been announced.
+
+**For readers.** The NIST 800-171 / CMMC framework header, the Defense industrial base lens notes, and the
+external-dependency line on the security-assessment row (3.12.1, 3.12.3) now state the suspension. Phase 1
+self-assessment requirements remain in place, and the lens says so. The mappings themselves are unchanged:
+they rest on NIST SP 800-171 Rev 2, which the suspension does not touch.
+
+**For consumers of `compliance-atlas.json`.** Four strings changed: `frameworks[nist-800-171].version`, the
+DIB industry `note_detail`, and `external_dependencies` / `legacy_dependencies` on row `171-3-12-1-3`. The
+`TRG-CMMC-PHASE2` maintenance trigger was retitled and re-dated. No row key added or removed, and no
+coverage, confidence, licensing, source, or last-verified value moved on any row.
+
+**Why PATCH.** A claim was corrected and nothing structural moved. This entry also records a miss: the date
+was already superseded when the atlas was first published on 2026-07-20, because the trigger's 2026-07-16
+check did not catch a suspension announced three days earlier. Full record in AUDIT-FINDINGS §36.
+
 ## 3.4.1 — 2026-07-22
 
 Priva reference-only treatment (PR-031, Session 17). Microsoft Priva is named on eleven privacy-row mentions
