@@ -31,7 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
                     reverify_passes, MAINTENANCE, RETIRED_NAMES, STALENESS_CLASSES,
                     TRIGGER_TYPES, TYPE_CADENCE, constant_dicts, lic_dicts, staleness_class,
-                    lic_pass_ledger)
+                    lic_pass_ledger, gov_dicts, gov_verified_on)
 from dependency_migration import migrate_row
 import license_bands
 import glossary
@@ -507,6 +507,15 @@ def maintenance_report(rows, today, stream, limit=12):
             if age > cadence:
                 n_rows = sum(1 for r in rows if value in (r.get("license_requirement") or ""))
                 stale.append((age, dict_name, key, cls_name, cadence, date, n_rows))
+    # Government-cloud notes: same shape, their own ledger, counted against the rows
+    # whose cloud_availability_note carries the string.
+    for (dict_name, key), date in gov_verified_on().items():
+        cls_name, cadence = staleness_class(dict_name)
+        age = (today - datetime.date.fromisoformat(date)).days
+        if age > cadence:
+            value = gov_dicts()[dict_name][key]
+            n_rows = sum(1 for r in rows if value in (r.get("cloud_availability_note") or ""))
+            stale.append((age, dict_name, key, cls_name, cadence, date, n_rows))
     counts["stale"] = len(stale)
     for age, dict_name, key, cls_name, cadence, date, n_rows in sorted(stale, key=lambda x: -x[0])[:limit]:
         lines.append(f"  STALE    {dict_name}[{key!r}] [{cls_name}, {cadence}d] "

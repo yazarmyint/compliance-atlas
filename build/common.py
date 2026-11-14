@@ -236,6 +236,14 @@ STALENESS_CLASSES = {
                "prior, not a measurement: it rests on a single pass over a dataset three days old, "
                "so recalibrate it from `last_executed` history once real cycles have run.",
     },
+    "sovereign": {
+        "cadence_days": 180,
+        "dicts": ("GOV", "ENTRA_GOV", "INTUNE_GOV", "DEFENDER_GOV", "SENTINEL_GOV", "MDC_GOV"),
+        "why": "Government-cloud availability notes. Features reach GCC High and DoD late and gap "
+               "lists shrink without announcement, so a note can go stale in the generous direction "
+               "(a gap that has closed) or the harmful one (a feature withdrawn). Clock added in "
+               "pass 3 (2026-11-14); until then these strings had no verification date at all.",
+    },
     "boundary": {
         "cadence_days": 365,
         "dicts": (),
@@ -690,13 +698,49 @@ def constant_dicts():
 def lic_dicts():
     """The six licensing dicts: the constants that have a verification date.
 
-    This is the staleness clock's domain. GOV and URLS constants validate as trigger
-    coordinates but carry no pass date, so they get no staleness warning -- a
-    documented gap, recorded in docs/MAINTENANCE.md and to be closed by extending the
-    REVERIFIED_LIC_KEYS convention to them in a future pass.
+    These drive last_verified. GOV constants have their own, separate ledger below
+    (gov_verified_on); they get a staleness warning but never move a row's date. URLS
+    constants deliberately have no ledger at all: tools/check_urls.py tests every cited
+    URL for resolution and redirect on every run, which is a better clock than a date.
     """
     return {n: globals()[n] for n in
             ("LIC", "ENTRA_LIC", "INTUNE_LIC", "DEFENDER_LIC", "SENTINEL_LIC", "MDC_LIC")}
+
+
+# ---------------------------------------------------------------------------
+# GOV ledger (pass 3, AUDIT-FINDINGS SS37). The six government-cloud note dicts get a
+# verification date per string, so the staleness report can flag them like licensing
+# constants. Two deliberate limits:
+#   - The baseline is each dict's AUTHORING date, taken from the dated comment above
+#     the dict. No GOV string has been re-verified since, and this ledger says so.
+#   - A GOV date never feeds a row's last_verified. That field is derived from the
+#     licensing constants and sources only; a government note is a caveat on the row,
+#     not the claim the row makes.
+# ---------------------------------------------------------------------------
+GOV_BASELINE = {
+    "GOV": "2026-07-16", "ENTRA_GOV": "2026-07-17", "INTUNE_GOV": "2026-07-17",
+    "DEFENDER_GOV": "2026-07-17", "SENTINEL_GOV": "2026-07-18", "MDC_GOV": "2026-07-18",
+}
+
+# GOV re-verification passes, in date order: [(date, {(dict name, key), ...}), ...].
+# Empty on purpose: none has run. Add a pass here when one does, listing only the
+# coordinates whose government source was fetched that day.
+REVERIFIED_GOV_PASSES = []
+
+
+def gov_dicts():
+    """The six government-cloud note dicts: the `sovereign` staleness class's domain."""
+    return {n: globals()[n] for n in GOV_BASELINE}
+
+
+def gov_verified_on():
+    """{(dict name, key): date} for every GOV string: baseline, then any later pass."""
+    out = {(d, k): GOV_BASELINE[d] for d, keys in gov_dicts().items() for k in keys}
+    for date, keys in REVERIFIED_GOV_PASSES:
+        for coord in keys:
+            assert coord in out, f"GOV pass {date} names a missing constant: {coord}"
+            out[coord] = date
+    return out
 
 
 def staleness_class(dict_name):

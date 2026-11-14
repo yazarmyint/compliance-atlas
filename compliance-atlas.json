@@ -731,6 +731,18 @@
      ],
      "why": "Purview, held against one authoritative source (the service description per-feature tables) on one publisher cadence. SS22.2 looks volatile at 14 of 20 keys changed, but 12 of those 14 were a single systemic authoring defect (the Office 365 entitlement path, missing from 12 constants at once, SS22.4) and 9 were one Purview Suite naming catch-up. Only 3 keys showed genuine upstream movement, and 2 of those 3 were add-on SKU renames, which the RETIRED_NAMES lint catches without a clock. Treat 180 as a prior, not a measurement: it rests on a single pass over a dataset three days old, so recalibrate it from `last_executed` history once real cycles have run."
     },
+    "sovereign": {
+     "cadence_days": 180,
+     "dicts": [
+      "GOV",
+      "ENTRA_GOV",
+      "INTUNE_GOV",
+      "DEFENDER_GOV",
+      "SENTINEL_GOV",
+      "MDC_GOV"
+     ],
+     "why": "Government-cloud availability notes. Features reach GCC High and DoD late and gap lists shrink without announcement, so a note can go stale in the generous direction (a gap that has closed) or the harmful one (a feature withdrawn). Clock added in pass 3 (2026-11-14); until then these strings had no verification date at all."
+    },
     "boundary": {
      "cadence_days": 365,
      "dicts": [],
