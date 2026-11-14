@@ -362,7 +362,7 @@ def scan_banned_spellings(root, targets=None):
 # ---------------------------------------------------------------------------
 MAINTENANCE = [
     # ---- framework and regulatory milestones -------------------------------
-    {"id": "TRG-CMMC-PHASE2", "type": "framework", "cadence_days": None,
+    {"id": "TRG-CMMC-PHASE2", "type": "framework", "framework": "nist-800-171", "cadence_days": None,
      "title": "CMMC Phase 2 suspension: review outcome and any restart date",
      "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [], "rows": ["171-3-12-1-3"],
@@ -375,18 +375,91 @@ MAINTENANCE = [
              "and the DIB lens note in assemble.py. History: the 2026-07-16 execution of this trigger "
              "missed the three-day-old suspension, so the atlas published the superseded Nov 10, 2026 "
              "date until 3.4.2."},
-    {"id": "TRG-HIPAA-FINAL-RULE", "type": "framework", "cadence_days": None,
+    {"id": "TRG-HIPAA-FINAL-RULE", "type": "framework", "framework": "hipaa-security", "cadence_days": None,
      "title": "HIPAA Security Rule final rule",
      "next_review": "2027-04-01", "last_executed": "2026-07-16",
      "affects": [], "rows": [],
      "note": "~Jul 2027: HIPAA Security Rule final rule target (per OMB agenda); rows flag proposed "
              "changes as direction-of-travel."},
-    {"id": "TRG-DPR-VERSION", "type": "framework", "cadence_days": 365,
+    {"id": "TRG-DPR-VERSION", "type": "framework", "framework": "sspa-dpr", "cadence_days": 365,
      "title": "SSPA DPR version refresh",
      "next_review": "2027-02-12", "last_executed": "2026-07-16",
      "affects": [], "rows": [],
      "note": "Annual (~Q1): SSPA DPR version refresh (v12 -> v13 likely early 2027); requirement "
              "numbering can shift."},
+    {"id": "TRG-ISO27001-VERSION", "type": "framework", "framework": "iso-27001-2022", "cadence_days": 365,
+     "title": "ISO/IEC 27001 edition and amendments",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on iso.org that ISO/IEC 27001:2022 with Amd 1:2024 is still the current "
+             "edition and that no new amendment or revision has been published. iso.org refuses "
+             "scripted clients, so read it in a browser. Added in pass 3 (2026-11-14), when the "
+             "build gained the rule that every shipped framework has a currency trigger. The version "
+             "was last confirmed at authoring in July 2026; this trigger has never been executed."},
+    {"id": "TRG-SOC2-TSC-VERSION", "type": "framework", "framework": "soc-2", "cadence_days": 365,
+     "title": "SOC 2 Trust Services Criteria revision",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm with the AICPA that the 2017 Trust Services Criteria with the 2022 revised "
+             "points of focus are still current. Added in pass 3 (2026-11-14), when the build gained "
+             "the rule that every shipped framework has a currency trigger. The version was last "
+             "confirmed at authoring in July 2026; this trigger has never been executed."},
+    {"id": "TRG-80053-RELEASE", "type": "framework", "framework": "nist-800-53", "cadence_days": 365,
+     "title": "NIST SP 800-53 release",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on CSRC that Rev 5 Release 5.2.0 (Aug 2025) is still the latest release. A "
+             "patch release can add controls without changing the revision number, as 5.2.0 did. "
+             "Added in pass 3 (2026-11-14), when the build gained the rule that every shipped "
+             "framework has a currency trigger. The version was last confirmed at authoring in July "
+             "2026; this trigger has never been executed."},
+    {"id": "TRG-CSF-VERSION", "type": "framework", "framework": "nist-csf-2", "cadence_days": 365,
+     "title": "NIST CSF version",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on nist.gov that CSF 2.0 (Feb 2024) is still current. Also check whether the "
+             "Cyber AI Profile (NIST IR 8596, an initial preliminary draft as of 2026-11-11) has "
+             "been finalized: it is a CSF 2.0 profile and a candidate framework. Added in pass 3 "
+             "(2026-11-14), when the build gained the rule that every shipped framework has a "
+             "currency trigger. The version was last confirmed at authoring in July 2026; this "
+             "trigger has never been executed."},
+    {"id": "TRG-PCI-VERSION", "type": "framework", "framework": "pci-dss-4", "cadence_days": 365,
+     "title": "PCI DSS version",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm in the PCI SSC document library that v4.0.1 is still the sole active version. "
+             "Third-party reports say PCI SSC ran a stakeholder comment period on v4.0.1 from June 3 "
+             "to July 20, 2026 toward the next iteration; not verified at the source. Added in pass "
+             "3 (2026-11-14), when the build gained the rule that every shipped framework has a "
+             "currency trigger. The version was last confirmed at authoring in July 2026; this "
+             "trigger has never been executed."},
+    {"id": "TRG-GLBA-AMENDMENTS", "type": "framework", "framework": "glba-safeguards", "cadence_days": 365,
+     "title": "GLBA Safeguards Rule amendments",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on eCFR that 16 CFR Part 314 has not been amended since the May 2024 breach- "
+             "notification amendment. Added in pass 3 (2026-11-14), when the build gained the rule "
+             "that every shipped framework has a currency trigger. The version was last confirmed at "
+             "authoring in July 2026; this trigger has never been executed."},
+    {"id": "TRG-FERPA-RULEMAKING", "type": "framework", "framework": "ferpa", "cadence_days": 365,
+     "title": "FERPA rulemaking",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on eCFR that 34 CFR Part 99 is unchanged and check the Department of Education "
+             "rulemaking agenda the framework notes already flag. Added in pass 3 (2026-11-14), when "
+             "the build gained the rule that every shipped framework has a currency trigger. The "
+             "version was last confirmed at authoring in July 2026; this trigger has never been "
+             "executed."},
+    {"id": "TRG-GDPR-OMNIBUS", "type": "framework", "framework": "gdpr", "cadence_days": 365,
+     "title": "GDPR amendments under the EU Digital Omnibus",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "The Digital Omnibus data proposal would amend GDPR articles these rows cite. As of "
+             "2026-11-11 only the AI part had become law (Regulation (EU) 2026/1744); the data part "
+             "was still in negotiation, per secondary sources. Confirm on EUR-Lex whether Regulation "
+             "(EU) 2016/679 has been amended. Added in pass 3 (2026-11-14), when the build gained "
+             "the rule that every shipped framework has a currency trigger. The version was last "
+             "confirmed at authoring in July 2026; this trigger has never been executed."},
 
     # ---- Purview -----------------------------------------------------------
     {"id": "TRG-PURVIEW-SD-LICENSING", "type": "licensing", "cadence_days": 180,

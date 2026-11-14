@@ -378,7 +378,7 @@ META = {
 # past a bare "(".
 GLOSS = re.compile(r"formerly[^)]{0,4}$", re.IGNORECASE)
 
-def check_maintenance_table(row_ids):
+def check_maintenance_table(row_ids, framework_ids=None):
     """Structural validation of MAINTENANCE. Pure assertions, no dates evaluated.
 
     The point of these is that an orphaned trigger becomes impossible: a coordinate
@@ -411,6 +411,16 @@ def check_maintenance_table(row_ids):
             assert key in dicts[dict_name], f"trigger {tid} names missing key {dict_name}[{key!r}]"
         for rid in t["rows"]:
             assert rid in row_ids, f"trigger {tid} names a row that does not exist: {rid}"
+
+    # Every shipped framework must be claimed by a framework-type trigger (pass 3).
+    # Seven of eleven had none, so a superseded version could only be found by accident.
+    if framework_ids is not None:
+        for t in MAINTENANCE:
+            fid = t.get("framework")
+            assert fid is None or fid in framework_ids, f"trigger {t['id']} names unknown framework: {fid}"
+        covered = {t.get("framework") for t in MAINTENANCE if t["type"] == "framework"}
+        missing = sorted(set(framework_ids) - covered)
+        assert not missing, "frameworks with no framework-type maintenance trigger: " + ", ".join(missing)
 
     # Every licensing constant must be claimed by at least one trigger. This is the
     # assertion that found the three ownership gaps the prose list had (ENTRA_LIC's
@@ -692,7 +702,7 @@ def main():
     # No dates are compared against today here. This block asks only "is the table
     # internally coherent and does every coordinate still resolve", which is what
     # makes an orphaned trigger impossible.
-    check_maintenance_table(set(ids))
+    check_maintenance_table(set(ids), set(frameworks))
 
     # ---- glossary: structural validation only (PR-011) ----
     # Asserts the definitions are non-empty and em-dash-free (the humanizer's house rule);
