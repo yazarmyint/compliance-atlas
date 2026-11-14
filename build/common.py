@@ -88,6 +88,40 @@ REVERIFIED_SOURCE_ROWS = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Pass 3, 2026-11-14 (AUDIT-FINDINGS SS37). The first pass after the atlas went
+# quiet for about three months. Scope was every licensing constant, not only the
+# ones past cadence, so that all six dicts restart their clocks together.
+# ---------------------------------------------------------------------------
+REVERIFY_DATE_3 = "2026-11-14"
+
+# (dict name, key) pairs re-derived or re-confirmed against a live fetch on 2026-11-14.
+# Filled in by the licensing commit of this pass; a key is listed only if its source
+# was fetched that day.
+REVERIFIED_LIC_KEYS_3 = set()
+
+# Rows whose sources array changed on 2026-11-14: the Intune "monitor device encryption"
+# article moved from /intune/device-management/ to /intune/device-configuration/endpoint-security/
+# (check_urls REDIRECT). The cited page is the same article at its new address.
+REVERIFIED_SOURCE_ROWS_3 = {
+    "dpr-j48-intune", "171-3-13-16-intune", "53-sc-28-intune",
+}
+
+
+def lic_pass_ledger():
+    """Every re-verification pass as (date, licensing keys, source rows), in date order.
+
+    The single list both consumers read: reverify_passes() derives last_verified from
+    it, and the staleness report in assemble.py derives each constant's verification
+    date from it. Add a pass here and nowhere else.
+    """
+    return [
+        (REVERIFY_DATE, REVERIFIED_LIC_KEYS, REVERIFIED_SOURCE_ROWS),
+        (REVERIFY_DATE_2, REVERIFIED_LIC_KEYS_2, frozenset()),
+        (REVERIFY_DATE_3, REVERIFIED_LIC_KEYS_3, REVERIFIED_SOURCE_ROWS_3),
+    ]
+
+
 def reverified_license_strings(keys=None):
     """The literal license strings governed by a constant re-verified in a pass."""
     dicts = lic_dicts()
@@ -105,10 +139,8 @@ def reverify_passes():
     Applied in this order, so a row covered by more than one pass ends on the
     latest date that verified something it actually rests on.
     """
-    return [
-        (REVERIFY_DATE, reverified_license_strings(REVERIFIED_LIC_KEYS), REVERIFIED_SOURCE_ROWS),
-        (REVERIFY_DATE_2, reverified_license_strings(REVERIFIED_LIC_KEYS_2), frozenset()),
-    ]
+    return [(date, reverified_license_strings(keys), source_rows)
+            for date, keys, source_rows in lic_pass_ledger()]
 
 # ---------------------------------------------------------------------------
 # Maintenance triggers (PR-050), the forward-looking twin of the re-verification
@@ -1259,7 +1291,7 @@ INTUNE_URLS = {
     "disk_encryption": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/disk-encryption",
     "bitlocker": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/encrypt-bitlocker-windows",
     "filevault": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/encrypt-filevault-macos",
-    "monitor_encryption": "https://learn.microsoft.com/intune/device-management/monitor-encryption",
+    "monitor_encryption": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/monitor-encryption",
     "app_protection": "https://learn.microsoft.com/intune/app-management/protection/overview",
     "enrollment": "https://learn.microsoft.com/intune/device-enrollment/guide",
     "enrollment_windows": "https://learn.microsoft.com/intune/device-enrollment/windows/guide",

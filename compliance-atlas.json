@@ -818,7 +818,7 @@
   },
   "verified_range": {
    "earliest": "2026-07-16",
-   "latest": "2026-07-20"
+   "latest": "2026-11-14"
   },
   "description_meta": "Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
  },
@@ -2288,10 +2288,10 @@
    "sources": [
     "https://www.microsoft.com/en-us/procurement/sspa",
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/disk-encryption",
-    "https://learn.microsoft.com/intune/device-management/monitor-encryption"
+    "https://learn.microsoft.com/intune/device-configuration/endpoint-security/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20",
+   "last_verified": "2026-11-14",
    "license_band": "e3",
    "license_band_partial": false
   },
@@ -8671,10 +8671,10 @@
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/disk-encryption",
-    "https://learn.microsoft.com/intune/device-management/monitor-encryption"
+    "https://learn.microsoft.com/intune/device-configuration/endpoint-security/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20",
+   "last_verified": "2026-11-14",
    "license_band": "e3",
    "license_band_partial": false
   },
@@ -10729,10 +10729,10 @@
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
     "https://learn.microsoft.com/intune/device-configuration/endpoint-security/disk-encryption",
-    "https://learn.microsoft.com/intune/device-management/monitor-encryption"
+    "https://learn.microsoft.com/intune/device-configuration/endpoint-security/monitor-encryption"
    ],
    "status": "verified",
-   "last_verified": "2026-07-20",
+   "last_verified": "2026-11-14",
    "license_band": "e3",
    "license_band_partial": false
   },

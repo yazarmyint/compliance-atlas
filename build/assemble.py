@@ -31,7 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
                     reverify_passes, MAINTENANCE, RETIRED_NAMES, STALENESS_CLASSES,
                     TRIGGER_TYPES, TYPE_CADENCE, constant_dicts, lic_dicts, staleness_class,
-                    REVERIFY_DATE, REVERIFY_DATE_2, REVERIFIED_LIC_KEYS, REVERIFIED_LIC_KEYS_2)
+                    lic_pass_ledger)
 from dependency_migration import migrate_row
 import license_bands
 import glossary
@@ -489,7 +489,7 @@ def maintenance_report(rows, today, stream, limit=12):
     # read from the same declarative ledger last_verified is derived from, so the two
     # can never disagree.
     verified_on = {}
-    for date, keys in ((REVERIFY_DATE, REVERIFIED_LIC_KEYS), (REVERIFY_DATE_2, REVERIFIED_LIC_KEYS_2)):
+    for date, keys, _source_rows in lic_pass_ledger():
         for coord in keys:
             verified_on[coord] = date
 
