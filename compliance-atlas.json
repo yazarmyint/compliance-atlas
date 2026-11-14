@@ -7534,7 +7534,7 @@
     "Foundational CSPM"
    ],
    "capability_detail": "Risk-analysis input for ePHI hosted on cloud infrastructure: agentless vulnerability scanning across VMs/containers/databases, attack path analysis tracing exploitable chains from internet exposure toward data stores, sensitive data discovery locating cloud storage and databases that contain health-data-pattern sensitive information (Purview SIT-powered), and risk prioritization ranking findings by real exploitability",
-   "how_it_supports": "Feeds the risk analysis with continuously refreshed technical evidence for the cloud slice of the ePHI estate: where ePHI-bearing resources are, what is vulnerable, and which attack paths reach them. The risk analysis itself (scope, likelihood/impact determination, documentation across all ePHI locations including M365 and on-premises) is an organizational obligation the stacked rows also feed.",
+   "how_it_supports": "Performs a risk assessment for the cloud slice of the ePHI estate: the Defender CSPM engine weighs exploitability and potential business impact to rank findings, on top of locating ePHI-bearing resources, their vulnerabilities, and the attack paths that reach them. The risk analysis as a whole (scope, likelihood/impact determination, and documentation across all ePHI locations including M365 and on-premises) remains an organizational obligation that the stacked rows feed.",
    "config_evidence_example": "Defender CSPM with agentless scanning and sensitive data discovery enabled on subscriptions hosting ePHI workloads; health-data SITs active in data sensitivity settings",
    "operational_evidence_example": "Attack-path and vulnerability reports scoped to ePHI resources; sensitive-data discovery findings; risk-prioritized recommendation exports for the risk-analysis file",
    "related_microsoft": [
@@ -7554,7 +7554,7 @@
    "external_dependencies": "The documented risk analysis itself (scope, likelihood, impact, all ePHI locations); on-premises clinical system assessment; BAA/contractual scope",
    "legacy_dependencies": "",
    "coverage": "Partial Support",
-   "confidence": "High",
+   "confidence": "Medium",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
    "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
