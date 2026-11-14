@@ -31,7 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
                     reverify_passes, MAINTENANCE, RETIRED_NAMES, STALENESS_CLASSES,
                     TRIGGER_TYPES, TYPE_CADENCE, constant_dicts, lic_dicts, staleness_class,
-                    REVERIFY_DATE, REVERIFY_DATE_2, REVERIFIED_LIC_KEYS, REVERIFIED_LIC_KEYS_2)
+                    lic_pass_ledger, gov_dicts, gov_verified_on)
 from dependency_migration import migrate_row
 import license_bands
 import glossary
@@ -247,7 +247,7 @@ BRAND = {
     # -- that one added capabilities (a social card, an error-report path). The built HTML bytes moved, so a bump is
     # required (§31); the JSON delta is precisely this version string. One commit for source + artifact + stamp, per
     # §33.3. Reasoning in AUDIT-FINDINGS §35.
-    "atlas_version": "3.4.2",
+    "atlas_version": "3.4.3",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -378,7 +378,7 @@ META = {
 # past a bare "(".
 GLOSS = re.compile(r"formerly[^)]{0,4}$", re.IGNORECASE)
 
-def check_maintenance_table(row_ids):
+def check_maintenance_table(row_ids, framework_ids=None):
     """Structural validation of MAINTENANCE. Pure assertions, no dates evaluated.
 
     The point of these is that an orphaned trigger becomes impossible: a coordinate
@@ -411,6 +411,16 @@ def check_maintenance_table(row_ids):
             assert key in dicts[dict_name], f"trigger {tid} names missing key {dict_name}[{key!r}]"
         for rid in t["rows"]:
             assert rid in row_ids, f"trigger {tid} names a row that does not exist: {rid}"
+
+    # Every shipped framework must be claimed by a framework-type trigger (pass 3).
+    # Seven of eleven had none, so a superseded version could only be found by accident.
+    if framework_ids is not None:
+        for t in MAINTENANCE:
+            fid = t.get("framework")
+            assert fid is None or fid in framework_ids, f"trigger {t['id']} names unknown framework: {fid}"
+        covered = {t.get("framework") for t in MAINTENANCE if t["type"] == "framework"}
+        missing = sorted(set(framework_ids) - covered)
+        assert not missing, "frameworks with no framework-type maintenance trigger: " + ", ".join(missing)
 
     # Every licensing constant must be claimed by at least one trigger. This is the
     # assertion that found the three ownership gaps the prose list had (ENTRA_LIC's
@@ -489,7 +499,7 @@ def maintenance_report(rows, today, stream, limit=12):
     # read from the same declarative ledger last_verified is derived from, so the two
     # can never disagree.
     verified_on = {}
-    for date, keys in ((REVERIFY_DATE, REVERIFIED_LIC_KEYS), (REVERIFY_DATE_2, REVERIFIED_LIC_KEYS_2)):
+    for date, keys, _source_rows in lic_pass_ledger():
         for coord in keys:
             verified_on[coord] = date
 
@@ -507,6 +517,15 @@ def maintenance_report(rows, today, stream, limit=12):
             if age > cadence:
                 n_rows = sum(1 for r in rows if value in (r.get("license_requirement") or ""))
                 stale.append((age, dict_name, key, cls_name, cadence, date, n_rows))
+    # Government-cloud notes: same shape, their own ledger, counted against the rows
+    # whose cloud_availability_note carries the string.
+    for (dict_name, key), date in gov_verified_on().items():
+        cls_name, cadence = staleness_class(dict_name)
+        age = (today - datetime.date.fromisoformat(date)).days
+        if age > cadence:
+            value = gov_dicts()[dict_name][key]
+            n_rows = sum(1 for r in rows if value in (r.get("cloud_availability_note") or ""))
+            stale.append((age, dict_name, key, cls_name, cadence, date, n_rows))
     counts["stale"] = len(stale)
     for age, dict_name, key, cls_name, cadence, date, n_rows in sorted(stale, key=lambda x: -x[0])[:limit]:
         lines.append(f"  STALE    {dict_name}[{key!r}] [{cls_name}, {cadence}d] "
@@ -683,7 +702,7 @@ def main():
     # No dates are compared against today here. This block asks only "is the table
     # internally coherent and does every coordinate still resolve", which is what
     # makes an orphaned trigger impossible.
-    check_maintenance_table(set(ids))
+    check_maintenance_table(set(ids), set(frameworks))
 
     # ---- glossary: structural validation only (PR-011) ----
     # Asserts the definitions are non-empty and em-dash-free (the humanizer's house rule);

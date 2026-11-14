@@ -3657,8 +3657,8 @@ full procedure (live sources, drift ledger).
 
 | # | Finding | Reading | Owner disposition |
 |---|---|---|---|
-| **OF-1** | `hipaa-308-a1-a` (HIPAA §164.308(a)(1)(ii)(A), risk analysis): Purview Data Classification **Evidence**, Defender XDR **Evidence**, Defender for Cloud **Partial**. All three rows open `how_it_supports` with "Feeds the risk analysis…", yet MDC rates one tier higher. | Two readings, unresolved: **(a) tier error** — MDC should be Evidence like its siblings; or **(b) narrative undersell** — the MDC prose uses the Evidence-tier verb "feeds" while its `capability_detail` describes a performed continuous assessment (a Partial-worthy slice), so the *prose* understates the row. A rationale that resolved this by siding with `capability_detail` would paper over the internal HOW-verb-vs-tier tension rather than surface it. | **OPEN — escalated to the next re-verification pass.** No rationale written. Resolved under full procedure: confirm the MDC role against the live Defender for Cloud risk-analysis source, then either re-tier or rewrite the HOW verb, with a drift-ledger entry. |
-| **OF-2** | Cross-group confidence consistency: the Purview "data-layer access contributor" (Information Protection, coverage Partial) carries **Low** confidence on `dpr-j36` and `53-ac-3` but **Medium** on `iso-a-8-3`, `soc2-cc6-1`, `hipaa-308-a4`, `glba-314-4-c1` — and `53-ac-3`'s own prose calls it "the same contribution rated for ISO A.8.3 and SOC 2 CC6.1". | A defensible spread (stricter federal contexts rate a content-label contributor lower) or a minor inconsistency. Cross-group and confidence-only, so outside this session's within-group coverage-tier remit, and confidence is a protected field. | **OPEN — deferred to the same future re-verification pass.** On the record, not evaporated; adjudicated there, not here. |
+| **OF-1** | `hipaa-308-a1-a` (HIPAA §164.308(a)(1)(ii)(A), risk analysis): Purview Data Classification **Evidence**, Defender XDR **Evidence**, Defender for Cloud **Partial**. All three rows open `how_it_supports` with "Feeds the risk analysis…", yet MDC rates one tier higher. | Two readings, unresolved: **(a) tier error** — MDC should be Evidence like its siblings; or **(b) narrative undersell** — the MDC prose uses the Evidence-tier verb "feeds" while its `capability_detail` describes a performed continuous assessment (a Partial-worthy slice), so the *prose* understates the row. A rationale that resolved this by siding with `capability_detail` would paper over the internal HOW-verb-vs-tier tension rather than surface it. | **CLOSED 2026-11-14 (§37.7).** Originally: OPEN — escalated to the next re-verification pass. No rationale written. Resolved under full procedure: confirm the MDC role against the live Defender for Cloud risk-analysis source, then either re-tier or rewrite the HOW verb, with a drift-ledger entry. |
+| **OF-2** | Cross-group confidence consistency: the Purview "data-layer access contributor" (Information Protection, coverage Partial) carries **Low** confidence on `dpr-j36` and `53-ac-3` but **Medium** on `iso-a-8-3`, `soc2-cc6-1`, `hipaa-308-a4`, `glba-314-4-c1` — and `53-ac-3`'s own prose calls it "the same contribution rated for ISO A.8.3 and SOC 2 CC6.1". | A defensible spread (stricter federal contexts rate a content-label contributor lower) or a minor inconsistency. Cross-group and confidence-only, so outside this session's within-group coverage-tier remit, and confidence is a protected field. | **CLOSED 2026-11-14 (§37.7).** Originally: OPEN — deferred to the same future re-verification pass. On the record, not evaporated; adjudicated there, not here. |
 
 ### 34.5 The /agentic-humanizer pass
 
@@ -3858,3 +3858,146 @@ Spelling lint clean. The standing URL and accessibility gates were run after the
 the session log. Source, rebuilt artifacts, and the 3.4.2 stamp ship in one commit (§31
 one-version-one-artifact); this record and the changelog entry follow in a second commit that touches no
 artifact. Merge held for owner review.
+
+## 37. Re-verification pass 3 (2026-11-14) — declared edit to protected fields, v3.4.3
+
+Session 19, from REVIEW-2026-11 findings A-02 to A-08. The first pass since publication. On 2026-11-11
+the build reported 8 triggers overdue and 11 constants past cadence; by the day of the pass, 18 more
+constants were two days from their cadence. The owner set the scope at a checkpoint on 2026-11-14: all
+49 licensing constants, so that the six dicts restart their clocks together. After the pass the build
+reports no trigger due and no constant past cadence.
+
+### 37.1 Sources fetched (all on 2026-11-14)
+
+Scripted fetches to text, read by targeted search and by parsing the service-description tables. Page
+dates are the page's own `ms.date`.
+
+| Source | Page date | Used for |
+|---|---|---|
+| Purview service description | 2026-11-06 | `LIC` (19 keys) |
+| DSPM get-started; DSPM for AI considerations; Audit overview; Information Barriers article | 2025-12-15; 2026-05-01; n/a; n/a | `LIC` dspm, dspm_ai, audit_std; attempted `ib` |
+| Entra licensing; ID Governance licensing fundamentals | 2026-06-18; 2026-07-29 | `ENTRA_LIC` |
+| Intune licensing; Intune planning guide; Intune pricing page | 2026-05-13; 2026-05-28; n/a | `INTUNE_LIC` |
+| Defender service description; Defender for Office 365 service description; Defender XDR prerequisites; Defender for Endpoint Plan 1; MDVM capabilities | 2026-10-29; 2025-10-24; 2025-04-03; 2026-07-28; 2025-02-28 | `DEFENDER_LIC` |
+| Sentinel billing; Sentinel pricing page; data lake overview; log plans; Microsoft 365 benefit offer; Partner Center announcements Jun/Sep/Oct/Nov 2026 | 2026-04-01; n/a; n/a; n/a; n/a; various | `SENTINEL_LIC` |
+| Defender for Cloud pricing; CSPM concept; Servers overview, plan selection, FAQ; assign-standards; data-ingestion benefit; risk prioritization | n/a; 2026-09-11; 2026-08-10, 2025-02-23, n/a; 2026-07-03; 2026-07-12; 2026-02-17 | `MDC_LIC`; OF-1 |
+
+Two address changes seen on the way: the Sentinel pricing page now redirects from azure.microsoft.com to
+microsoft.com/security/pricing/microsoft-sentinel, and the Intune planning guide lives at
+`/intune/fundamentals/planning-guide`.
+
+### 37.2 Per-constant results — 4 CHANGED, 44 PASS, 1 not re-verified
+
+| Constant | Verdict | Basis |
+|---|---|---|
+| `LIC` labels_manual, label_encryption, customer_key, classification_analytics, dlp_core, dlp_endpoint, retention_basic, retention_advanced, records, audit_std, audit_prem, ediscovery_std, irm, cc, cm | PASS (15) | Service-description tables and licensing lists match the strings. audit_std's 180-day retention confirmed on the Audit overview. Observation, not acted on: the Audit (Premium) table has a new column for two Business Premium add-on suites, with a footnote. |
+| `LIC["labels_auto"]` | **CHANGED** | Row "Client and service-side automatic sensitivity labeling": Microsoft 365 E5/A5/G5; Microsoft Purview Suite/GOV/FLW; Defender + Purview Suite FLW; Microsoft 365 E5 Information Protection and Governance; Office 365 E5/A5/G5. |
+| `LIC["dlp_teams"]` | **CHANGED** | The Teams DLP table still has an Office 365 E5/A5/G5 column, and its cell is blank where the Microsoft 365 column says "Included". Raw cells read: `['Purview Data Loss Prevention (DLP) for Teams', 'Included', '']`. |
+| `LIC["dspm"]`, `["dspm_ai"]` | PASS (2) | DSPM get-started: "Microsoft 365 E5 or Microsoft Purview Suite". Considerations page: Copilot license for monitored users; pay-as-you-go for some configurations. DSPM is still not a service-description row. |
+| `LIC["ib"]` | **not re-verified** | The service description's Information Barriers section no longer lists SKUs, and the Information Barriers article exposed no licensing text to the fetch. Left out of `REVERIFIED_LIC_KEYS_3`. |
+| `ENTRA_LIC` ca, mfa, pim, gov_core, gov_lcw, free | PASS (6) | Entra licensing article. The article now also says Microsoft 365 E7 includes the Entra Suite and Agent 365; the governance strings name the Governance SKU and the Suite and stay accurate. |
+| `ENTRA_LIC["id_protection"]` | **CHANGED** | P2 list also names Microsoft Defender Suite FLW and Microsoft Defender + Purview Suite FLW. |
+| `INTUNE_LIC` p1, p1_ca, epm | PASS (3) | Planning guide: "Starting July 2026, Suite capabilities are distributed across Microsoft 365 license tiers"; "Microsoft 365 E5 and E7 include everything in E3, plus Endpoint Privilege Management…". The pricing page corroborates, so the claim no longer rests on one page. |
+| `DEFENDER_LIC` mde_p1, mde_p2, mdvm, mdo_p2, mdi, mdca, xdr | PASS (7) | Defender service description plan lists; XDR prerequisites license list; Plan 1 capability terms and MDVM premium capability terms present on their articles. |
+| `DEFENDER_LIC["mdo_p1"]` | **CHANGED** | Defender service description: "…Microsoft 365 E3, …Office 365 E3… provide the rights". Defender for Office 365 service description: "effective July 1, 2026, in Office 365 E3 and Microsoft 365 E3". Neither names G3. |
+| `SENTINEL_LIC` ingest, retention, free_benefit, soar, included | PASS (5) | Pricing page: 50 GB tier in public preview, promotional pricing Oct 1, 2025 to Dec 31, 2026, locked to Mar 31, 2027. Billing: 90 days included, 6:1 compression. Data lake overview: up to 12 years. Offer page: 5 MB per user per day, E7/E5/A5/F5/G5. |
+| `MDC_LIC` foundational, cspm, servers_p1, servers_p2, workload, dashboard | PASS (6), with a stated gap | Free Foundational CSPM; billable-resource model; "Billed per hour" and the double-billing adjustment on the Servers FAQ; Plan 2 feature list on the Servers overview; 500 MB per node per day; 73M transaction threshold; per-1K-token AI Services; 22% pre-purchase; dashboard gate "any plan, except Servers Plan 1 or API Plan 1". **Gap:** the pricing page hides its per-unit columns from scripted and text reads, so the App Service and database billing units were not seen. |
+
+### 37.3 Changed strings — before and after
+
+| Constant | Removed | Added |
+|---|---|---|
+| `DEFENDER_LIC["mdo_p1"]` | "Effective July 1, 2026 it is also included in Microsoft 365 E3/G3 and Office 365 E3/G3; that rollout began June 2026 and Microsoft expects it to complete during 2026." | "Microsoft 365 E3" and "Office 365 E3" in the plan list; "Microsoft 365 E3 and Office 365 E3 have included Plan 1 since July 1, 2026; that inclusion does not extend to Plan 2 capabilities." |
+| `ENTRA_LIC["id_protection"]` | — | "Microsoft Defender Suite FLW, Microsoft Defender + Purview Suite FLW," |
+| `LIC["labels_auto"]` | "Office 365 E5/A5"; "Purview Suite/EDU/GOV/FLW"; "Microsoft 365 E5/A5/F5/G5 Information Protection & Governance" | "Office 365 E5/A5/G5"; "Purview Suite/GOV/FLW"; "Microsoft 365 E5 Information Protection & Governance" |
+| `LIC["dlp_teams"]` | "Office 365 E5/A5/G5," | "(the service description lists an Office 365 E5/A5/G5 column for this feature but does not mark it included)" |
+
+Two of these narrow an entitlement list on the strength of a table cell (`labels_auto`, `dlp_teams`). If
+either is a documentation slip, the atlas now errs toward understating what a license includes, which is
+the safer direction for a reference that must never overclaim. Both are named in
+`TRG-PURVIEW-SD-LICENSING` for the next pass.
+
+Rows whose `license_requirement` changed: 6 (mdo_p1), 6 (id_protection), 19 (labels_auto), 7
+(dlp_teams); 38 in total.
+
+### 37.4 Band change (owner decision)
+
+`license_bands.BANDS[("DEFENDER_LIC", "mdo_p1")]`: `("e3", True)` → `("e3", False)`, as
+`TRG-MDO-P1-E3G3` instructs once the service description names E3. Six rows rest on the constant. Five
+keep `license_band_partial` true because another constant in their string sets it; one clears:
+`53-si-8-defender`. Partial count 149 → 148.
+
+### 37.5 `last_verified` — 369 of 378 moved, 9 deliberately not
+
+369 rows end on 2026-11-14: 366 through a licensing constant, 3 through a repointed source. Not moved:
+the 8 boundary rows (no licensing claim; they keep 2026-07-16/17) and `iso-a-5-3` (Information Barriers,
+keeps 2026-07-19 because `LIC["ib"]` was not re-verified).
+
+**What the date does and does not mean.** A row moves when any licensing constant it rests on was
+re-fetched. The pass re-read licensing. It did not re-read each row's capability claims against the
+product documentation, and it did not re-verify any government-cloud note. The new `sovereign` clock
+(§37.8) exists to make the second omission visible.
+
+### 37.6 Sources (A-08)
+
+`INTUNE_URLS["monitor_encryption"]` repointed from `/intune/device-management/monitor-encryption` to
+`/intune/device-configuration/endpoint-security/monitor-encryption`. Same article: its title and its
+BitLocker and FileVault encryption-report content were confirmed. Rows: `dpr-j48-intune`,
+`171-3-13-16-intune`, `53-sc-28-intune`.
+
+### 37.7 Open findings closed (owner verdicts, 2026-11-14)
+
+| Finding | Verdict | Edit |
+|---|---|---|
+| **OF-1** `hipaa-308-a1-a-mdc` | Reading (b): the tier was right and the prose undersold it. The Defender for Cloud risk-prioritization page says the product "performs a risk assessment" weighing exploitation potential and business impact. REVIEW-2026-11 had recommended reading (a); the live source reversed that. | `coverage` stays Partial Support. `confidence` High → Medium, matching the sibling rows. `how_it_supports` opens "Performs a risk assessment for the cloud slice…" in place of "Feeds…". |
+| **OF-2** data-layer access contributor | `53-ac-3` contradicted itself: its prose calls it the same contribution as two Medium rows. `dpr-j36` is a narrower fit and may stay lower if it says why. | `53-ac-3` `confidence` Low → Medium. `dpr-j36` stays Low; one sentence added giving the reason. |
+
+Both §34.4 entries are now closed.
+
+### 37.8 Machinery
+
+- **One pass ledger.** `common.lic_pass_ledger()` is the single list of passes; `reverify_passes()` and
+  the staleness report both read it. Before this, `assemble.py` kept its own hand-written copy of the
+  pass list, which a third pass would have had to remember to extend.
+- **GOV ledger (A-06).** `GOV_BASELINE`, `REVERIFIED_GOV_PASSES` (empty), and a `sovereign` staleness
+  class at 180 days over the six `*_GOV` dicts, 36 strings. The baseline is each dict's authoring date.
+  Simulated for 2027-01-20, all 36 report STALE. A GOV date never moves `last_verified`.
+- **No URL ledger, by decision.** `check_urls.py` tests every URL on every run.
+- **Framework triggers (A-07).** Eight added, one per shipped framework that had none. The build now
+  fails if a shipped framework has no framework-type trigger. The assertion was exercised by hand with
+  an unknown framework id and fired. REVIEW-2026-11 said seven frameworks lacked a trigger; the count
+  is eight.
+- **Triggers.** 16 executed and re-dated, each with a dated note that says what was not re-read. Two
+  expired China-region watches deleted. `TRG-CJIS-DEMAND` re-deferred to 2027-05-14: 0 stars, 0 forks,
+  0 issues, 0 views on 2026-11-11.
+
+### 37.9 Not done, on the record
+
+- `LIC["ib"]`: not re-verified (§37.2).
+- Defender for Cloud App Service and database billing units: not visible (§37.2).
+- Regulatory compliance dashboard standards catalog: not re-read.
+- Azure Government gap list for Defender for Cloud: not re-read.
+- Every `*_GOV` string: not re-verified. Due from 2027-01-12.
+- Framework versions other than CMMC: not checked at the regulator. Eight triggers due 2027-02-12.
+- CJIS v6.1: reported by third parties, not confirmed at the FBI source.
+- The "(formerly Microsoft 365 E5 Security)" gloss: kept one more cycle.
+- Department naming: the CMMC sponsor publishes as the Department of War; the atlas still says DoD.
+
+### 37.10 Gate
+
+**Expected-delta-first, per commit.** Each of the six content commits was rebuilt and its JSON diff read
+before committing; each showed only its own change. Whole session against 3.4.2: row ids identical; row
+fields changed are `last_verified` 369, `license_requirement` 38, `sources` 3, `confidence` 2,
+`how_it_supports` 2, `license_band_partial` 1, and nothing else; `coverage`, `control_ref`, product, and
+solution assignment identical on all 378 rows; `products`, `related_products`, `solutions`,
+`frameworks`, and `industries` byte-identical; `meta` keys changed are `maintenance`, `verified_range`,
+`version`, and `brand`.
+
+Build exit 0 with no maintenance warning. Spelling lint clean. axe and `check_urls.py` results are in the
+session log.
+
+**Commit shape.** One commit per finding, each carrying its rebuilt artifacts at 3.4.2, then a commit
+that stamps 3.4.3, then this record with the changelog. The intermediate commits therefore hold artifacts
+whose bytes differ while claiming 3.4.2. That is tolerable only because the branch merges and deploys as
+one step, so no intermediate artifact is ever published; §31's one-version-one-artifact rule governs
+what readers can fetch, and they can only ever fetch the 3.4.3 bytes. Merge held for owner review.

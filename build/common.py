@@ -88,6 +88,69 @@ REVERIFIED_SOURCE_ROWS = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Pass 3, 2026-11-14 (AUDIT-FINDINGS SS37). The first pass after the atlas went
+# quiet for about three months. Scope was every licensing constant, not only the
+# ones past cadence, so that all six dicts restart their clocks together.
+# ---------------------------------------------------------------------------
+REVERIFY_DATE_3 = "2026-11-14"
+
+# (dict name, key) pairs re-derived or re-confirmed against a live fetch on 2026-11-14.
+# 48 of the 49 licensing constants. A key is listed only if its source was fetched that day.
+REVERIFIED_LIC_KEYS_3 = {
+    # Purview service description (page revised 2026-11-06), DSPM get-started, DSPM for AI
+    # considerations, Audit overview. ("LIC", "ib") is deliberately ABSENT: the service
+    # description's Information Barriers section no longer lists SKUs and no fetched page
+    # confirmed them, so rows resting on it keep their July date.
+    ("LIC", "labels_manual"), ("LIC", "labels_auto"), ("LIC", "label_encryption"),
+    ("LIC", "customer_key"), ("LIC", "classification_analytics"), ("LIC", "dlp_core"),
+    ("LIC", "dlp_teams"), ("LIC", "dlp_endpoint"), ("LIC", "retention_basic"),
+    ("LIC", "retention_advanced"), ("LIC", "records"), ("LIC", "audit_std"),
+    ("LIC", "audit_prem"), ("LIC", "ediscovery_std"), ("LIC", "irm"), ("LIC", "cc"),
+    ("LIC", "cm"), ("LIC", "dspm"), ("LIC", "dspm_ai"),
+    # Entra licensing article + ID Governance licensing fundamentals
+    ("ENTRA_LIC", "ca"), ("ENTRA_LIC", "mfa"), ("ENTRA_LIC", "id_protection"),
+    ("ENTRA_LIC", "pim"), ("ENTRA_LIC", "gov_core"), ("ENTRA_LIC", "gov_lcw"),
+    ("ENTRA_LIC", "free"),
+    # Intune licensing article + planning guide + Intune pricing page
+    ("INTUNE_LIC", "p1"), ("INTUNE_LIC", "p1_ca"), ("INTUNE_LIC", "epm"),
+    # Defender service description, Defender for Office 365 service description, Defender XDR
+    # prerequisites, Defender for Endpoint Plan 1 article, MDVM capabilities article
+    ("DEFENDER_LIC", "mde_p1"), ("DEFENDER_LIC", "mde_p2"), ("DEFENDER_LIC", "mdvm"),
+    ("DEFENDER_LIC", "mdo_p1"), ("DEFENDER_LIC", "mdo_p2"), ("DEFENDER_LIC", "mdi"),
+    ("DEFENDER_LIC", "mdca"), ("DEFENDER_LIC", "xdr"),
+    # Sentinel billing article, Sentinel pricing page, data lake overview, log plans,
+    # Microsoft 365 benefit offer page, Partner Center announcements Jun/Sep/Oct/Nov 2026
+    ("SENTINEL_LIC", "ingest"), ("SENTINEL_LIC", "retention"), ("SENTINEL_LIC", "free_benefit"),
+    ("SENTINEL_LIC", "soar"), ("SENTINEL_LIC", "included"),
+    # Defender for Cloud pricing page, CSPM concept, Servers overview / plan selection / FAQ,
+    # assign-standards prerequisites, data-ingestion benefit
+    ("MDC_LIC", "foundational"), ("MDC_LIC", "cspm"), ("MDC_LIC", "servers_p1"),
+    ("MDC_LIC", "servers_p2"), ("MDC_LIC", "workload"), ("MDC_LIC", "dashboard"),
+}
+
+# Rows whose sources array changed on 2026-11-14: the Intune "monitor device encryption"
+# article moved from /intune/device-management/ to /intune/device-configuration/endpoint-security/
+# (check_urls REDIRECT). The cited page is the same article at its new address.
+REVERIFIED_SOURCE_ROWS_3 = {
+    "dpr-j48-intune", "171-3-13-16-intune", "53-sc-28-intune",
+}
+
+
+def lic_pass_ledger():
+    """Every re-verification pass as (date, licensing keys, source rows), in date order.
+
+    The single list both consumers read: reverify_passes() derives last_verified from
+    it, and the staleness report in assemble.py derives each constant's verification
+    date from it. Add a pass here and nowhere else.
+    """
+    return [
+        (REVERIFY_DATE, REVERIFIED_LIC_KEYS, REVERIFIED_SOURCE_ROWS),
+        (REVERIFY_DATE_2, REVERIFIED_LIC_KEYS_2, frozenset()),
+        (REVERIFY_DATE_3, REVERIFIED_LIC_KEYS_3, REVERIFIED_SOURCE_ROWS_3),
+    ]
+
+
 def reverified_license_strings(keys=None):
     """The literal license strings governed by a constant re-verified in a pass."""
     dicts = lic_dicts()
@@ -105,10 +168,8 @@ def reverify_passes():
     Applied in this order, so a row covered by more than one pass ends on the
     latest date that verified something it actually rests on.
     """
-    return [
-        (REVERIFY_DATE, reverified_license_strings(REVERIFIED_LIC_KEYS), REVERIFIED_SOURCE_ROWS),
-        (REVERIFY_DATE_2, reverified_license_strings(REVERIFIED_LIC_KEYS_2), frozenset()),
-    ]
+    return [(date, reverified_license_strings(keys), source_rows)
+            for date, keys, source_rows in lic_pass_ledger()]
 
 # ---------------------------------------------------------------------------
 # Maintenance triggers (PR-050), the forward-looking twin of the re-verification
@@ -174,6 +235,14 @@ STALENESS_CLASSES = {
                "SKU renames, which the RETIRED_NAMES lint catches without a clock. Treat 180 as a "
                "prior, not a measurement: it rests on a single pass over a dataset three days old, "
                "so recalibrate it from `last_executed` history once real cycles have run.",
+    },
+    "sovereign": {
+        "cadence_days": 180,
+        "dicts": ("GOV", "ENTRA_GOV", "INTUNE_GOV", "DEFENDER_GOV", "SENTINEL_GOV", "MDC_GOV"),
+        "why": "Government-cloud availability notes. Features reach GCC High and DoD late and gap "
+               "lists shrink without announcement, so a note can go stale in the generous direction "
+               "(a gap that has closed) or the harmful one (a feature withdrawn). Clock added in "
+               "pass 3 (2026-11-14); until then these strings had no verification date at all.",
     },
     "boundary": {
         "cadence_days": 365,
@@ -293,7 +362,7 @@ def scan_banned_spellings(root, targets=None):
 # ---------------------------------------------------------------------------
 MAINTENANCE = [
     # ---- framework and regulatory milestones -------------------------------
-    {"id": "TRG-CMMC-PHASE2", "type": "framework", "cadence_days": None,
+    {"id": "TRG-CMMC-PHASE2", "type": "framework", "framework": "nist-800-171", "cadence_days": None,
      "title": "CMMC Phase 2 suspension: review outcome and any restart date",
      "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [], "rows": ["171-3-12-1-3"],
@@ -306,23 +375,96 @@ MAINTENANCE = [
              "and the DIB lens note in assemble.py. History: the 2026-07-16 execution of this trigger "
              "missed the three-day-old suspension, so the atlas published the superseded Nov 10, 2026 "
              "date until 3.4.2."},
-    {"id": "TRG-HIPAA-FINAL-RULE", "type": "framework", "cadence_days": None,
+    {"id": "TRG-HIPAA-FINAL-RULE", "type": "framework", "framework": "hipaa-security", "cadence_days": None,
      "title": "HIPAA Security Rule final rule",
      "next_review": "2027-04-01", "last_executed": "2026-07-16",
      "affects": [], "rows": [],
      "note": "~Jul 2027: HIPAA Security Rule final rule target (per OMB agenda); rows flag proposed "
              "changes as direction-of-travel."},
-    {"id": "TRG-DPR-VERSION", "type": "framework", "cadence_days": 365,
+    {"id": "TRG-DPR-VERSION", "type": "framework", "framework": "sspa-dpr", "cadence_days": 365,
      "title": "SSPA DPR version refresh",
      "next_review": "2027-02-12", "last_executed": "2026-07-16",
      "affects": [], "rows": [],
      "note": "Annual (~Q1): SSPA DPR version refresh (v12 -> v13 likely early 2027); requirement "
              "numbering can shift."},
+    {"id": "TRG-ISO27001-VERSION", "type": "framework", "framework": "iso-27001-2022", "cadence_days": 365,
+     "title": "ISO/IEC 27001 edition and amendments",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on iso.org that ISO/IEC 27001:2022 with Amd 1:2024 is still the current "
+             "edition and that no new amendment or revision has been published. iso.org refuses "
+             "scripted clients, so read it in a browser. Added in pass 3 (2026-11-14), when the "
+             "build gained the rule that every shipped framework has a currency trigger. The version "
+             "was last confirmed at authoring in July 2026; this trigger has never been executed."},
+    {"id": "TRG-SOC2-TSC-VERSION", "type": "framework", "framework": "soc-2", "cadence_days": 365,
+     "title": "SOC 2 Trust Services Criteria revision",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm with the AICPA that the 2017 Trust Services Criteria with the 2022 revised "
+             "points of focus are still current. Added in pass 3 (2026-11-14), when the build gained "
+             "the rule that every shipped framework has a currency trigger. The version was last "
+             "confirmed at authoring in July 2026; this trigger has never been executed."},
+    {"id": "TRG-80053-RELEASE", "type": "framework", "framework": "nist-800-53", "cadence_days": 365,
+     "title": "NIST SP 800-53 release",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on CSRC that Rev 5 Release 5.2.0 (Aug 2025) is still the latest release. A "
+             "patch release can add controls without changing the revision number, as 5.2.0 did. "
+             "Added in pass 3 (2026-11-14), when the build gained the rule that every shipped "
+             "framework has a currency trigger. The version was last confirmed at authoring in July "
+             "2026; this trigger has never been executed."},
+    {"id": "TRG-CSF-VERSION", "type": "framework", "framework": "nist-csf-2", "cadence_days": 365,
+     "title": "NIST CSF version",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on nist.gov that CSF 2.0 (Feb 2024) is still current. Also check whether the "
+             "Cyber AI Profile (NIST IR 8596, an initial preliminary draft as of 2026-11-11) has "
+             "been finalized: it is a CSF 2.0 profile and a candidate framework. Added in pass 3 "
+             "(2026-11-14), when the build gained the rule that every shipped framework has a "
+             "currency trigger. The version was last confirmed at authoring in July 2026; this "
+             "trigger has never been executed."},
+    {"id": "TRG-PCI-VERSION", "type": "framework", "framework": "pci-dss-4", "cadence_days": 365,
+     "title": "PCI DSS version",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm in the PCI SSC document library that v4.0.1 is still the sole active version. "
+             "Third-party reports say PCI SSC ran a stakeholder comment period on v4.0.1 from June 3 "
+             "to July 20, 2026 toward the next iteration; not verified at the source. Added in pass "
+             "3 (2026-11-14), when the build gained the rule that every shipped framework has a "
+             "currency trigger. The version was last confirmed at authoring in July 2026; this "
+             "trigger has never been executed."},
+    {"id": "TRG-GLBA-AMENDMENTS", "type": "framework", "framework": "glba-safeguards", "cadence_days": 365,
+     "title": "GLBA Safeguards Rule amendments",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on eCFR that 16 CFR Part 314 has not been amended since the May 2024 breach- "
+             "notification amendment. Added in pass 3 (2026-11-14), when the build gained the rule "
+             "that every shipped framework has a currency trigger. The version was last confirmed at "
+             "authoring in July 2026; this trigger has never been executed."},
+    {"id": "TRG-FERPA-RULEMAKING", "type": "framework", "framework": "ferpa", "cadence_days": 365,
+     "title": "FERPA rulemaking",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "Confirm on eCFR that 34 CFR Part 99 is unchanged and check the Department of Education "
+             "rulemaking agenda the framework notes already flag. Added in pass 3 (2026-11-14), when "
+             "the build gained the rule that every shipped framework has a currency trigger. The "
+             "version was last confirmed at authoring in July 2026; this trigger has never been "
+             "executed."},
+    {"id": "TRG-GDPR-OMNIBUS", "type": "framework", "framework": "gdpr", "cadence_days": 365,
+     "title": "GDPR amendments under the EU Digital Omnibus",
+     "next_review": "2027-02-12", "last_executed": None,
+     "affects": [], "rows": [],
+     "note": "The Digital Omnibus data proposal would amend GDPR articles these rows cite. As of "
+             "2026-11-11 only the AI part had become law (Regulation (EU) 2026/1744); the data part "
+             "was still in negotiation, per secondary sources. Confirm on EUR-Lex whether Regulation "
+             "(EU) 2016/679 has been amended. Added in pass 3 (2026-11-14), when the build gained "
+             "the rule that every shipped framework has a currency trigger. The version was last "
+             "confirmed at authoring in July 2026; this trigger has never been executed."},
 
     # ---- Purview -----------------------------------------------------------
     {"id": "TRG-PURVIEW-SD-LICENSING", "type": "licensing", "cadence_days": 180,
      "title": "Purview service description: per-feature licensing tables and naming",
-     "next_review": "2027-01-15", "last_executed": "2026-07-19",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("LIC", k) for k in ("labels_manual", "labels_auto", "label_encryption", "customer_key",
                                       "classification_analytics", "dlp_core", "dlp_teams", "dlp_endpoint",
                                       "retention_basic", "retention_advanced", "records", "audit_std",
@@ -331,10 +473,16 @@ MAINTENANCE = [
      "rows": [],
      "note": "Microsoft renames: check the Purview service description and solution overview pages; the "
              "atlas already reflects the unified eDiscovery (classic retired Aug 2025), Data explorer, "
-             "DSPM current version, and \"Microsoft Purview Suite\" SKU naming."},
+             "DSPM current version, and \"Microsoft Purview Suite\" SKU naming."
+             " 2026-11-14: 19 of 20 constants re-read against the service description revised 2026-11-06. "
+             "LIC['ib'] was NOT re-verified: the Information Barriers section no longer lists SKUs and no "
+             "fetched page confirmed them. Two changes: the automatic-labeling row, and the Teams DLP row, "
+             "whose Office 365 E5/A5/G5 cell is now blank. The page also gained sections for DLP for "
+             "Microsoft Copilot and for agentic workloads (Microsoft 365 E7 and Agent 365), which no "
+             "current row rests on."},
     {"id": "TRG-DSPM-CLASSIC", "type": "naming", "cadence_days": 120,
      "title": "Classic DSPM pages retire: re-evaluate the dspm / dspm_ai constant split",
-     "next_review": "2026-12-04", "last_executed": "2026-07-20",
+     "next_review": "2027-03-14", "last_executed": "2026-11-14",
      "affects": [("LIC", "dspm"), ("LIC", "dspm_ai"), ("GOV", "dspm_ai"), ("SOLUTIONS", "DSPM for AI")],
      "rows": ["csf-de-cm-03-ai", "gdpr-35"],
      "note": "Both /purview/dspm-for-ai and /purview/data-security-posture-management now carry "
@@ -347,23 +495,28 @@ MAINTENANCE = [
              "leave the portal, collapse dspm_ai into dspm, fold GOV['dspm_ai'] into the unified GCC High "
              "note, and drop the \"(classic; converging into DSPM)\" gloss from SOLUTIONS['DSPM for AI']. "
              "That is a row-modeling change (purview_solution on csf-de-cm-03-ai and the also_involves "
-             "entry on gdpr-35), so it needs a session authorized to touch protected fields."},
+             "entry on gdpr-35), so it needs a session authorized to touch protected fields."
+             " 2026-11-14: unchanged. Both classic articles still exist with '(classic)' banners and the "
+             "unified article is current, so the split stands."},
 
     # ---- Entra -------------------------------------------------------------
     {"id": "TRG-ENTRA-LICENSING", "type": "licensing", "cadence_days": 120,
      "title": "Entra licensing article: P1/P2 inclusion lists and Governance split",
-     "next_review": "2026-11-25", "last_executed": "2026-07-19",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("ENTRA_LIC", k) for k in ("ca", "mfa", "id_protection", "pim", "gov_core", "gov_lcw", "free")],
      "rows": [],
      "note": "ADDED by PR-050, not migrated: the prose trigger list named no owner for any ENTRA_LIC "
              "constant, despite SS22.2 finding two of the seven changed in the last pass (ENTRA_LIC['ca'] "
              "missing E7/F1/F3/EMS E3, PR-037a; ENTRA_LIC['id_protection'] missing E7, Microsoft Defender "
-             "Suite, EMS E5). Re-derive all seven from the Entra licensing article."},
+             "Suite, EMS E5). Re-derive all seven from the Entra licensing article."
+             " 2026-11-14: six PASS, one CHANGED (id_protection gained the two FLW suites). The article now "
+             "also states that Microsoft 365 E7 includes the Entra Suite and Agent 365; the governance "
+             "strings were left naming the Governance SKU and the Suite, which stays accurate."},
 
     # ---- Intune ------------------------------------------------------------
     {"id": "TRG-INTUNE-LICENSING", "type": "licensing", "cadence_days": 90,
      "title": "Intune licensing restructure: Suite capabilities distributed into M365 tiers",
-     "next_review": "2026-10-17", "last_executed": "2026-07-20",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("INTUNE_LIC", "p1"), ("INTUNE_LIC", "p1_ca"), ("INTUNE_LIC", "epm")],
      "rows": [],
      "note": "Intune licensing restructure (July 2026 -- in effect, documentation still catching up): "
@@ -376,21 +529,28 @@ MAINTENANCE = [
              "fundamentals/advanced-capabilities says only \"select Microsoft 365 bundles\" without naming "
              "them. Re-check both once they carry the mapping again; until then the planning guide is the "
              "sole first-party citation for which tier includes EPM. Note also the article moved from "
-             "fundamentals/licenses to fundamentals/licensing."},
+             "fundamentals/licenses to fundamentals/licensing."
+             " 2026-11-14: PASS on all three constants. The planning guide still states the July 2026 "
+             "distribution, and the Intune pricing page now corroborates it (Microsoft 365 E5 carries all "
+             "advanced endpoint management capabilities), so the claim no longer rests on one page. The "
+             "licensing article still defers bundle contents to the pricing page."},
     {"id": "TRG-INTUNE-DOCS-MOVE", "type": "naming", "cadence_days": 120,
      "title": "Intune documentation path migration",
-     "next_review": "2026-12-13", "last_executed": "2026-07-19",
+     "next_review": "2027-03-14", "last_executed": "2026-11-14",
      "affects": [("INTUNE_URLS", "what_is"), ("INTUNE_URLS", "licensing"), ("INTUNE_URLS", "advanced")],
      "rows": [],
      "note": "Intune docs migrated to learn.microsoft.com/intune/* (off /mem/intune). (The forward "
              "defender-xdr links on Intune/Entra rows were reconciled when Defender XDR landed; see "
              "AUDIT-FINDINGS SS13.4.) Both legs are enforced by RETIRED_NAMES; this trigger covers "
-             "redirect retirement, which the lint cannot see."},
+             "redirect retirement, which the lint cannot see."
+             " 2026-11-14: one old path stopped being canonical. device-management/monitor-encryption now "
+             "redirects to device-configuration/endpoint-security/monitor-encryption, and INTUNE_URLS was "
+             "repointed."},
 
     # ---- Defender XDR ------------------------------------------------------
     {"id": "TRG-MDO-P1-E3G3", "type": "licensing", "cadence_days": 90,
      "title": "MDO Plan 1 inclusion in E3/G3 completes rollout",
-     "next_review": "2026-11-21", "last_executed": "2026-07-19",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("DEFENDER_LIC", "mdo_p1")],
      "rows": [],
      "note": "MDO Plan 1 in E3/G3 (effective July 1, 2026): encoded in DEFENDER_LIC['mdo_p1']. Confirmed "
@@ -406,10 +566,15 @@ MAINTENANCE = [
              "flip that entry to ('e3', False) in the same pass. If the rollout has NOT completed, leave "
              "it and re-diarize. The pair is a hard-coded literal on purpose and must never be computed "
              "from the current date -- a clock-derived band would move with no commit behind it and "
-             "break the strict empty-diff drift check (SS27.1)."},
+             "break the strict empty-diff drift check (SS27.1)."
+             " 2026-11-14: RESOLVED for E3. Both the Defender service description and the Defender for "
+             "Office 365 service description now list Microsoft 365 E3 and Office 365 E3 without a rollout "
+             "qualifier, so the string was rewritten and the band flipped to ('e3', False). Neither page "
+             "names G3; the G3 half of the original announcement was dropped from the string and is the "
+             "only thing left for this trigger to watch."},
     {"id": "TRG-DEFENDER-SUITE-NAME", "type": "naming", "cadence_days": 120,
      "title": "Microsoft Defender Suite naming: retire the \"(formerly ...)\" gloss",
-     "next_review": "2026-11-16", "last_executed": "2026-07-19",
+     "next_review": "2027-03-14", "last_executed": "2026-11-14",
      "affects": [("DEFENDER_LIC", k) for k in ("mde_p1", "mde_p2", "mdvm", "mdo_p1", "mdo_p2", "mdi", "mdca", "xdr")],
      "rows": [],
      "note": "The SKU formerly called Microsoft 365 E5 Security is now Microsoft Defender Suite, with "
@@ -419,7 +584,11 @@ MAINTENANCE = [
              "recognize it. Drop the gloss once the old name has fully left circulation -- at which point "
              "remove the pair from RETIRED_NAMES too, or the lint will start flagging the gloss itself. "
              "(Corrected in the PR-050 migration: the prose list said \"all six strings were re-derived\", "
-             "conflating the eight re-derived with the six glossed.)"},
+             "conflating the eight re-derived with the six glossed.)"
+             " 2026-11-14: gloss KEPT for one more cycle. The Defender service description no longer "
+             "carries the old name, but the Entra licensing article still writes the Suite with its former "
+             "name in brackets and the Defender XDR prerequisites page still refers to an E5 Security "
+             "license."},
     {"id": "TRG-MDVM-GOV", "type": "sovereign", "cadence_days": 180,
      "title": "MDVM add-on purchase availability in GCC High/DoD",
      "next_review": "2027-01-29", "last_executed": "2026-07-19",
@@ -441,15 +610,16 @@ MAINTENANCE = [
     # ---- Sentinel ----------------------------------------------------------
     {"id": "TRG-SENTINEL-PORTAL-RETIRE", "type": "retirement", "cadence_days": None,
      "title": "Microsoft Sentinel Azure-portal retirement",
-     "next_review": "2026-12-31", "last_executed": "2026-07-19",
+     "next_review": "2026-12-31", "last_executed": "2026-11-14",
      "affects": [], "rows": [],
      "note": "Mar 31, 2027: Microsoft Sentinel Azure-portal retirement (extended from Jul 1, 2026; "
              "announced Feb 12, 2026). After this date Sentinel is Defender-portal only; the atlas "
              "already describes the Defender-portal experience. Note the date coincidentally matches the "
-             "unrelated 50 GB promo lock-in date, which is a trap for a future reader."},
+             "unrelated 50 GB promo lock-in date, which is a trap for a future reader."
+             " 2026-11-14: the billing article still states Mar 31, 2027."},
     {"id": "TRG-SENTINEL-50GB", "type": "licensing", "cadence_days": 90,
      "title": "Sentinel 50 GB commitment tier: GA status and promo extension",
-     "next_review": "2026-10-24", "last_executed": "2026-07-19",
+     "next_review": "2027-01-08", "last_executed": "2026-11-14",
      "affects": [("SENTINEL_LIC", "ingest")],
      "rows": [],
      "note": "Dec 31, 2026 / Mar 31, 2027: Sentinel 50 GB commitment tier promo. Launched Oct 1, 2025 in "
@@ -460,10 +630,16 @@ MAINTENANCE = [
              "extended a third time. Note the billing article still describes commitment tiers as "
              "starting at 100 GB/day, so the 50 GB tier is documented only in the promo announcement and "
              "the pricing page. THIS IS THE TRIGGER THAT FAILED SILENTLY BEFORE PUBLICATION (PR-036): it "
-             "was correctly diarised, its underlying fact changed twice, and nothing said so."},
+             "was correctly diarised, its underlying fact changed twice, and nothing said so."
+             " 2026-11-14: PASS. The Sentinel pricing page (now served from "
+             "microsoft.com/security/pricing/microsoft-sentinel) itself documents the 50 GB tier: public "
+             "preview, promotional pricing Oct 1, 2025 through Dec 31, 2026, rate locked through Mar 31, "
+             "2027. No Partner Center announcement from September to November 2026 mentions it. Next "
+             "review sits just after the promotional window closes, when the string needs rewriting either "
+             "way."},
     {"id": "TRG-SENTINEL-LAKE-METERS", "type": "licensing", "cadence_days": 90,
      "title": "Sentinel data lake meters",
-     "next_review": "2026-11-14", "last_executed": "2026-07-19",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("SENTINEL_LIC", "retention")],
      "rows": [],
      "note": "Ingestion, processing, storage (6:1 compression), and query are encoded in "
@@ -476,7 +652,7 @@ MAINTENANCE = [
              "capability."},
     {"id": "TRG-SENTINEL-E5-GRANT", "type": "licensing", "cadence_days": 365,
      "title": "Sentinel E5/E7 data grant",
-     "next_review": "2027-07-14", "last_executed": "2026-07-20",
+     "next_review": "2027-11-14", "last_executed": "2026-11-14",
      "affects": [("SENTINEL_LIC", "free_benefit")],
      "rows": [],
      "note": "5 MB/user/day, eligible SKUs incl. E7. Verified 2026-07-18 on the offer page and "
@@ -488,27 +664,15 @@ MAINTENANCE = [
              "exists to stop.)"},
     {"id": "TRG-SENTINEL-PRICING-MODEL", "type": "licensing", "cadence_days": 90,
      "title": "Sentinel automation and inclusion meters",
-     "next_review": "2026-12-05", "last_executed": "2026-07-19",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("SENTINEL_LIC", "soar"), ("SENTINEL_LIC", "included")],
      "rows": [],
      "note": "ADDED by PR-050, not migrated: SENTINEL_LIC['soar'] (automation rules included, Logic Apps "
              "billed separately) and SENTINEL_LIC['included'] had no trigger owner in the prose list. "
              "Both passed in SS22.2; both are consumption-model claims on the billing article and belong "
              "on the consumption clock."},
-    {"id": "TRG-SENTINEL-CHINA", "type": "watch", "cadence_days": None,
-     "title": "Sentinel in China (21Vianet) retirement",
-     "next_review": "2026-08-18", "last_executed": "2026-07-19",
-     "affects": [], "rows": [],
-     "note": "Sentinel in China (21Vianet) retires Aug 18, 2026: irrelevant to US-focused rows; noted "
-             "for completeness."},
 
     # ---- Defender for Cloud ------------------------------------------------
-    {"id": "TRG-MDC-CHINA", "type": "watch", "cadence_days": None,
-     "title": "Defender for Cloud in China (21Vianet) retirement",
-     "next_review": "2026-10-01", "last_executed": "2026-07-19",
-     "affects": [], "rows": [],
-     "note": "Defender for Cloud in China (21Vianet) retires Oct 1, 2026: likewise noted for "
-             "completeness only."},
     {"id": "TRG-MDC-PORTAL-PIVOT", "type": "naming", "cadence_days": 120,
      "title": "Defender for Cloud experiences migrating into the Defender portal",
      "next_review": "2026-12-30", "last_executed": "2026-07-19",
@@ -519,32 +683,40 @@ MAINTENANCE = [
              "\"Defender portal\" column) at each maintenance pass."},
     {"id": "TRG-MDC-DASHBOARD-CATALOG", "type": "licensing", "cadence_days": 90,
      "title": "Regulatory compliance dashboard standards catalog and paid-plan gate",
-     "next_review": "2026-10-31", "last_executed": "2026-07-20",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("MDC_LIC", "dashboard"), ("MDC_GOV", "dashboard")],
      "rows": ["171-3-12-1-3-mdc"],
      "note": "Regulatory compliance dashboard standards catalog churns: the built-in list tracks current "
              "publications (e.g., it now offers NIST 800-171 R3 while the atlas pins R2, noted on "
              "171-3-12-1-3-mdc); re-verify the standards named in dashboard rows and the paid-plan gate "
-             "(any plan except Servers P1/APIs P1) at each pass."},
+             "(any plan except Servers P1/APIs P1) at each pass."
+             " 2026-11-14: paid-plan gate re-confirmed on the assign-standards prerequisites. The standards "
+             "catalog named in dashboard rows was NOT re-read in this pass."},
     {"id": "TRG-MDC-SERVERS-CSPM", "type": "licensing", "cadence_days": 90,
      "title": "Defender for Servers / CSPM feature boundaries and Azure Government gaps",
-     "next_review": "2026-11-28", "last_executed": "2026-07-20",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("MDC_LIC", "cspm"), ("MDC_LIC", "foundational"), ("MDC_LIC", "servers_p1"),
                  ("MDC_LIC", "servers_p2"), ("MDC_GOV", "gaps")],
      "rows": [],
      "note": "Defender for Servers / CSPM feature boundaries move: re-verify the free-vs-paid CSPM split, "
              "the Servers P2 inclusion list (premium MDVM, FIM, JIT, 500 MB/day ingestion benefit), and "
              "the Azure Government gap list (CIEM, Data & AI dashboard, APIs/App Service/AI Services "
-             "plans absent as of 2026-07-18)."},
+             "plans absent as of 2026-07-18)."
+             " 2026-11-14: free-versus-paid CSPM split, hourly Servers billing, and the Servers Plan 2 "
+             "inclusion list re-confirmed. The Azure Government gap list was NOT re-read in this pass."},
     {"id": "TRG-MDC-WORKLOAD-METERS", "type": "licensing", "cadence_days": 90,
      "title": "Defender for Cloud per-workload meters",
-     "next_review": "2026-11-07", "last_executed": "2026-07-19",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
      "affects": [("MDC_LIC", "workload")],
      "rows": [],
      "note": "ADDED by PR-050, not migrated: MDC_LIC['workload'] carries the per-resource meters "
              "(including the 73M-transaction Storage threshold that PROJECT-REVIEW SS4.4 challenged and "
              "SS22.5 confirmed against pricing-page footnote 6) and had no trigger owner in the prose "
-             "list. Consumption clock, re-derived from the Azure pricing page."},
+             "list. Consumption clock, re-derived from the Azure pricing page."
+             " 2026-11-14: meter names, the 73M Storage threshold, per-1K-token AI Services billing, the "
+             "30-day trial, and the 22% pre-purchase ceiling re-confirmed. The pricing page hides its per- "
+             "unit columns from scripted and text reads, so the App Service and database billing units "
+             "were not visible; check them in a full browser at the next pass."},
 
     # ---- CJIS (evaluated and deferred, Session 13 / PR-025) ----------------
     # CJIS Security Policy v6.0 was evaluated live on 2026-07-21 and DEFERRED, not
@@ -554,7 +726,7 @@ MAINTENANCE = [
     # and point there so the criteria are recorded in one place, not two.
     {"id": "TRG-CJIS-DEMAND", "type": "watch", "cadence_days": None,
      "title": "CJIS demand-criterion check: does sustained interest justify the framework increment?",
-     "next_review": "2026-08-20", "last_executed": "2026-07-21",
+     "next_review": "2027-05-14", "last_executed": "2026-11-14",
      "affects": [], "rows": [],
      "note": "CJIS v6.0 was evaluated and deferred in Session 13 (2026-07-21); the full go/no-go "
              "thresholds and rationale are in FRAMEWORK-SELECTION.md. When this fires, judge demand over "
@@ -562,7 +734,11 @@ MAINTENANCE = [
              "instrumentation is added, by design): GitHub stars/forks, substantive issues, engagement "
              "requests, and the repo unique-visitor trend. A concrete state/local-government engagement "
              "satisfies the criterion immediately and overrides the wait. If unmet, re-defer and advance "
-             "next_review; if met, promote CJIS to a framework increment (about 22-28 h)."},
+             "next_review; if met, promote CJIS to a framework increment (about 22-28 h)."
+             " 2026-11-14: criterion NOT met on any test. GitHub on 2026-11-11: 0 stars, 0 forks, 0 issues, "
+             "and over 14 days 0 views and 3 clones. Re-deferred for six months. Third-party reports say "
+             "the FBI published CJIS Security Policy v6.1 in June 2026 as a corrections release on v6.0; "
+             "confirm that at the FBI source before any CJIS work starts."},
     {"id": "TRG-CJIS-V6-REVISIT", "type": "framework", "cadence_days": None,
      "title": "CJIS Security Policy v6.0: P2-P4 controls become fully auditable",
      "next_review": "2027-10-01", "last_executed": "2026-07-21",
@@ -595,13 +771,49 @@ def constant_dicts():
 def lic_dicts():
     """The six licensing dicts: the constants that have a verification date.
 
-    This is the staleness clock's domain. GOV and URLS constants validate as trigger
-    coordinates but carry no pass date, so they get no staleness warning -- a
-    documented gap, recorded in docs/MAINTENANCE.md and to be closed by extending the
-    REVERIFIED_LIC_KEYS convention to them in a future pass.
+    These drive last_verified. GOV constants have their own, separate ledger below
+    (gov_verified_on); they get a staleness warning but never move a row's date. URLS
+    constants deliberately have no ledger at all: tools/check_urls.py tests every cited
+    URL for resolution and redirect on every run, which is a better clock than a date.
     """
     return {n: globals()[n] for n in
             ("LIC", "ENTRA_LIC", "INTUNE_LIC", "DEFENDER_LIC", "SENTINEL_LIC", "MDC_LIC")}
+
+
+# ---------------------------------------------------------------------------
+# GOV ledger (pass 3, AUDIT-FINDINGS SS37). The six government-cloud note dicts get a
+# verification date per string, so the staleness report can flag them like licensing
+# constants. Two deliberate limits:
+#   - The baseline is each dict's AUTHORING date, taken from the dated comment above
+#     the dict. No GOV string has been re-verified since, and this ledger says so.
+#   - A GOV date never feeds a row's last_verified. That field is derived from the
+#     licensing constants and sources only; a government note is a caveat on the row,
+#     not the claim the row makes.
+# ---------------------------------------------------------------------------
+GOV_BASELINE = {
+    "GOV": "2026-07-16", "ENTRA_GOV": "2026-07-17", "INTUNE_GOV": "2026-07-17",
+    "DEFENDER_GOV": "2026-07-17", "SENTINEL_GOV": "2026-07-18", "MDC_GOV": "2026-07-18",
+}
+
+# GOV re-verification passes, in date order: [(date, {(dict name, key), ...}), ...].
+# Empty on purpose: none has run. Add a pass here when one does, listing only the
+# coordinates whose government source was fetched that day.
+REVERIFIED_GOV_PASSES = []
+
+
+def gov_dicts():
+    """The six government-cloud note dicts: the `sovereign` staleness class's domain."""
+    return {n: globals()[n] for n in GOV_BASELINE}
+
+
+def gov_verified_on():
+    """{(dict name, key): date} for every GOV string: baseline, then any later pass."""
+    out = {(d, k): GOV_BASELINE[d] for d, keys in gov_dicts().items() for k in keys}
+    for date, keys in REVERIFIED_GOV_PASSES:
+        for coord in keys:
+            assert coord in out, f"GOV pass {date} names a missing constant: {coord}"
+            out[coord] = date
+    return out
 
 
 def staleness_class(dict_name):
@@ -826,12 +1038,12 @@ SOLUTIONS = {
 SD = "https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description"
 LIC = {
     "labels_manual": "Manual sensitivity labeling: Microsoft 365 E5/A5/G5/E3/A3/G3/F1/F3 or Business Premium; also Office 365 E5/A5/E3/A3, Enterprise Mobility + Security E3/E5, OneDrive for Business (Plan 2), and Azure Information Protection Plan 1/Plan 2",
-    "labels_auto": "Automatic/policy-based sensitivity labeling: Microsoft 365 E5/A5/G5, Office 365 E5/A5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
+    "labels_auto": "Automatic/policy-based sensitivity labeling: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5 Information Protection & Governance",
     "label_encryption": "Label-based encryption: included with sensitivity labeling entitlements (manual E3+; automatic application E5-tier)",
     "customer_key": "Customer Key: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
     "classification_analytics": "Data classification analytics (Data/Content/Activity explorer): Microsoft 365 E5/A5/G5, Office 365 E5, Microsoft 365 E5/A5/G5 Compliance (Purview Suite), or Microsoft 365 E5/A5/G5 Information Protection & Governance; E3/A3/G3 tenants keep the underlying Content explorer data aggregation without the explorer interfaces",
     "dlp_core": "DLP for Exchange/SharePoint/OneDrive: Microsoft 365 E5/A5/G5/E3/A3/G3 or Business Premium; also Office 365 E5/A5/G5/E3/A3/G3, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, SharePoint Online Plan 2, OneDrive for Business (Plan 2), or Exchange Online Plan 2",
-    "dlp_teams": "DLP for Teams: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
+    "dlp_teams": "DLP for Teams: Microsoft 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance (the service description lists an Office 365 E5/A5/G5 column for this feature but does not mark it included)",
     "dlp_endpoint": "Endpoint DLP: Microsoft 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance (no Office 365 path; Endpoint DLP is Microsoft 365 only)",
     "retention_basic": "Org/location-wide retention policies & manual retention labels: Microsoft 365 E5/A5/G5/E3/A3/G3 or Business Premium; also Office 365 E5/A5/G5/E3/A3/G3, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
     "retention_advanced": "Adaptive scopes / auto-apply retention: Microsoft 365 E5/A5/G5, Office 365 E5/A5/G5, Microsoft Purview Suite/EDU/GOV/FLW, Microsoft Defender + Purview Suite FLW, or Microsoft 365 E5/A5/F5/G5 Information Protection & Governance",
@@ -1202,7 +1414,7 @@ PRODUCTS["defender-cloud"]["solutions"] = [k for k, v in SOLUTIONS.items() if v.
 ENTRA_LIC = {
     "ca": "Microsoft Entra Conditional Access: Microsoft Entra ID P1 (included in Microsoft 365 E3/E5/E7, Microsoft 365 F1/F3, Enterprise Mobility + Security E3, and Business Premium). Risk-based conditions additionally require Entra ID P2.",
     "mfa": "Multifactor authentication & authentication methods: Microsoft Entra ID Free (basic) and P1; authentication strengths and full policy control require Entra ID P1.",
-    "id_protection": "Microsoft Entra ID Protection (risk-based policies, risky users/sign-ins): Microsoft Entra ID P2 (included in Microsoft 365 E5/E7, Microsoft Defender Suite (formerly Microsoft 365 E5 Security), and Enterprise Mobility + Security E5) or Microsoft Entra Suite.",
+    "id_protection": "Microsoft Entra ID Protection (risk-based policies, risky users/sign-ins): Microsoft Entra ID P2 (included in Microsoft 365 E5/E7, Microsoft Defender Suite (formerly Microsoft 365 E5 Security), Microsoft Defender Suite FLW, Microsoft Defender + Purview Suite FLW, and Enterprise Mobility + Security E5) or Microsoft Entra Suite.",
     "pim": "Privileged Identity Management: Microsoft Entra ID P2 or the Microsoft Entra ID Governance SKU.",
     "gov_core": "Access reviews & entitlement management (baseline capabilities previously GA in Entra ID P2): Microsoft Entra ID P2; advanced governance requires the Microsoft Entra ID Governance SKU or Microsoft Entra Suite.",
     "gov_lcw": "Lifecycle Workflows: Microsoft Entra ID Governance SKU or Microsoft Entra Suite (not included in standalone Entra ID P2).",
@@ -1259,7 +1471,7 @@ INTUNE_URLS = {
     "disk_encryption": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/disk-encryption",
     "bitlocker": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/encrypt-bitlocker-windows",
     "filevault": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/encrypt-filevault-macos",
-    "monitor_encryption": "https://learn.microsoft.com/intune/device-management/monitor-encryption",
+    "monitor_encryption": "https://learn.microsoft.com/intune/device-configuration/endpoint-security/monitor-encryption",
     "app_protection": "https://learn.microsoft.com/intune/app-management/protection/overview",
     "enrollment": "https://learn.microsoft.com/intune/device-enrollment/guide",
     "enrollment_windows": "https://learn.microsoft.com/intune/device-enrollment/windows/guide",
@@ -1312,10 +1524,10 @@ DEFENDER_LIC = {
              "add-on, available to Defender for Endpoint Plan 2, Microsoft 365 E5/A5/G5, Microsoft Defender Suite/EDU/GOV/FLW, "
              "Microsoft Defender + Purview Suite FLW, and Windows 11/10 Enterprise E5/A5/G5 customers; an MDVM standalone "
              "exists for non-P2 customers."),
-    "mdo_p1": ("Microsoft Defender for Office 365 Plan 1: standalone, Microsoft 365 Business Premium, Microsoft 365 E5/A5/G5, "
-               "Office 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, or Microsoft "
-               "Defender + Purview Suite FLW. Effective July 1, 2026 it is also included in Microsoft 365 E3/G3 and Office 365 "
-               "E3/G3; that rollout began June 2026 and Microsoft expects it to complete during 2026."),
+    "mdo_p1": ("Microsoft Defender for Office 365 Plan 1: standalone, Microsoft 365 Business Premium, Microsoft 365 E3, "
+               "Microsoft 365 E5/A5/G5, Office 365 E3, Office 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 "
+               "E5 Security)/EDU/GOV/FLW, or Microsoft Defender + Purview Suite FLW. Microsoft 365 E3 and Office 365 E3 "
+               "have included Plan 1 since July 1, 2026; that inclusion does not extend to Plan 2 capabilities."),
     "mdo_p2": ("Microsoft Defender for Office 365 Plan 2: standalone or included in Microsoft 365 E5/A5/G5, "
                "Office 365 E5/A5/G5, Microsoft Defender Suite (formerly Microsoft 365 E5 Security)/EDU/GOV/FLW, or Microsoft "
                "Defender + Purview Suite FLW. Threat Explorer, automated investigation & response, attack simulation training, "

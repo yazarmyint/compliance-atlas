@@ -48,6 +48,41 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.4.3 — 2026-11-14
+
+Re-verification pass 3 (Session 19). The first full pass since publication: every licensing claim was
+re-read against Microsoft's own live source on 2026-11-14, two open findings were closed, and the
+maintenance machinery gained two clocks it was missing.
+
+**For readers.** 369 of 378 rows now carry a last-verified date of 2026-11-14. Four licensing statements
+changed, touching 38 rows:
+
+- **Defender for Office 365 Plan 1** is listed as included in Microsoft 365 E3 and Office 365 E3 without
+  the earlier "rollout in progress" qualifier. The G3 half of that claim is gone, because neither service
+  description names it. One row's "partial" tier badge clears as a result.
+- **Entra ID Protection**: the plans that include Entra ID P2 now also name the two frontline (FLW) suites.
+- **Automatic sensitivity labeling**: the plan list follows the service description's current row.
+- **DLP for Teams**: the Office 365 E5/A5/G5 path is removed. The service description still shows that
+  column for the feature but no longer marks it included, and the row text says so.
+
+Two ratings changed. The Defender for Cloud row on the HIPAA risk-analysis requirement keeps Partial
+Support and drops from High to Medium confidence, and its wording now says what the product does there
+(it performs a risk assessment over cloud resources) instead of "feeds". The Information Protection row
+on NIST 800-53 AC-3 rises from Low to Medium confidence, matching the same contribution on ISO A.8.3 and
+SOC 2 CC6.1. Three Intune rows cite a source at its new address.
+
+One row was **not** re-verified and says so by keeping its July date: the Information Barriers row, whose
+licensing could not be confirmed from any page fetched.
+
+**For consumers of `compliance-atlas.json`.** No row key added or removed. Changed row fields:
+`last_verified` (369 rows), `license_requirement` (38), `sources` (3), `confidence` (2),
+`how_it_supports` (2), `license_band_partial` (1). Under `meta.maintenance`: two expired watch triggers
+removed, eight framework triggers added, an optional `framework` key on framework-type triggers, and a
+new `sovereign` staleness class covering the government-cloud note constants.
+
+**Why PATCH.** Row corrections and re-verifications, plus machinery that changes the published bytes.
+Claims moved; nothing structural did. Per-constant results and every before/after are in AUDIT-FINDINGS §37.
+
 ## 3.4.2 — 2026-11-14
 
 CMMC Phase 2 correction (Session 18, REVIEW-2026-11 finding A-01). The atlas said that third-party (C3PAO)

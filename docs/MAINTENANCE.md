@@ -40,18 +40,26 @@ which carry no licensing claim and are named individually under the `boundary` c
 | `consumption` | `SENTINEL_LIC`, `MDC_LIC` | 90 d | Meters and promo windows move on Azure pricing-page cadence. Both PR-036 misses were here. |
 | `sku-volatile` | `DEFENDER_LIC`, `ENTRA_LIC`, `INTUNE_LIC` | 120 d | The rename-prone SKU families; PR-035 landed here. |
 | `sku-stable` | `LIC` (Purview) | 180 d | One authoritative source on one publisher cadence. See the note in `STALENESS_CLASSES` on why §22.2's apparent volatility was mostly a one-time systemic fix. |
+| `sovereign` | the six `*_GOV` dicts (36 strings) | 180 d | Government-cloud notes. Gap lists change without announcement, in both directions. Clock added in pass 3. |
 | `boundary` | — (the 8 `n/a` rows) | 365 d | A `Not Covered` verdict rests on framework text, so it ages at framework speed. |
 
 Trigger `type` carries its own cadence (`TYPE_CADENCE`): `licensing` 90 d, `naming` 120 d,
 `framework` 365 d, `sovereign` 180 d, `watch` 365 d, and `retirement` no cadence at all — its
 `next_review` is the announced date minus a 90-day lead.
 
-### Known ledger gap
+### Ledger coverage: LIC, GOV, and why URLS has none
 
-`*_GOV` and `*_URLS` constants validate as trigger coordinates but have **no re-verification ledger**,
-so they get no `STALE` warning. Only the six `*_LIC` dicts carry pass dates. Three triggers point at
-GOV/URLS constants today and are covered by their `next_review` date alone. Closing this is a job for
-the next re-verification pass — see Step 3 of the runbook.
+Three kinds of constant, three answers (settled in pass 3, 2026-11-14):
+
+| Constants | Ledger | What it drives |
+|---|---|---|
+| `*_LIC` (49 strings) | `lic_pass_ledger()` in `common.py` | `STALE` warnings **and** each row's `last_verified` |
+| `*_GOV` (36 strings) | `GOV_BASELINE` + `REVERIFIED_GOV_PASSES` | `STALE` warnings only. A government note is a caveat on a row, not the row's claim, so it never moves `last_verified` |
+| `*_URLS` (187 URLs) | none, on purpose | `tools/check_urls.py` tests every cited URL for resolution and redirect on every run. A date ledger would duplicate a check that is already stricter |
+
+The GOV baseline is each dict's **authoring** date. No GOV string has been re-verified since July 2026,
+and the ledger says exactly that: `REVERIFIED_GOV_PASSES` is empty. All 36 cross their 180-day cadence
+between 2027-01-12 and 2027-01-14, which is when the first GOV pass falls due.
 
 ## The re-verification runbook
 
@@ -141,8 +149,8 @@ larger piece of work. Record it and stop.
 
 <a id="sovereign"></a>
 **`sovereign`** — the US Government service descriptions and per-product government availability
-pages. Note the ledger gap above: these constants have no pass date, so your `next_review` is the
-only clock on them.
+pages. These strings have their own ledger (`REVERIFIED_GOV_PASSES`), so a GOV pass is recorded the same
+way a licensing pass is: list only the coordinates whose government source you fetched.
 
 <a id="watch"></a>
 **`watch`** — read it, decide, and usually change nothing. Advance `next_review` and move on. A watch
@@ -163,7 +171,7 @@ REVERIFIED_LIC_KEYS_3 = {                # ONLY coordinates whose source you fet
 }
 ```
 
-then append to `reverify_passes()`. Passes run in date order, so a row covered by more than one ends
+then append the pass to `lic_pass_ledger()`. Passes run in date order, so a row covered by more than one ends
 on the latest date that verified something it actually rests on.
 
 **The rule, restated because it is the one that decays first:** a key goes in only if you fetched its
@@ -174,9 +182,9 @@ not all 378, precisely because of this.
 Then, per trigger you executed: set `last_executed` to the pass date and advance `next_review`. Both
 are hand-set static dates. Nothing in `MAINTENANCE` is ever computed.
 
-> **Extend the ledger while you are here.** The `REVERIFIED_LIC_KEYS` convention currently covers only
-> the six `*_LIC` dicts. The next pass should extend it to `*_GOV` and `*_URLS` so those constants get
-> a real staleness clock instead of relying on a trigger date alone.
+> **Add the pass to `lic_pass_ledger()` and nowhere else.** That one list feeds both `last_verified`
+> and the staleness report. For government notes, append `(date, {coordinates})` to
+> `REVERIFIED_GOV_PASSES` instead. URLs need neither: `check_urls.py` is their clock.
 
 ### Step 4 — the drift ledger
 
@@ -259,7 +267,7 @@ Backlog, ranked (decided in Session 13, 2026-07-21; full rationale in FRAMEWORK-
    cost (~20 churning statutes) and near-duplication of the GDPR rows, which remain the annotated
    interim analog.
 3. **CJIS Security Policy v6.0** — evaluated and **deferred with two dated triggers** (PR-025):
-   `TRG-CJIS-DEMAND` (demand-criterion check, next_review 2026-08-20) and `TRG-CJIS-V6-REVISIT`
+   `TRG-CJIS-DEMAND` (demand-criterion check; unmet on 2026-11-14 and re-deferred to 2027-05-14) and `TRG-CJIS-V6-REVISIT`
    (P2–P4 fully auditable, next_review 2027-10-01). A concrete state/local-government engagement
    overrides the wait. Effort ~22–28 h, discounted by the v6.0 rebasing onto NIST 800-53 Rev 5 moderate.
 
@@ -273,5 +281,5 @@ privacy PIMS, but its tooled layer is Priva, which the atlas permanently decline
 free-text entry points (PCI 5.2 / DPR J #38 / A.5.23 / A.8.8 / ID.RA-01) all gained stacked rows at their exact
 control refs (§15). The only remaining `RELATED_PRODUCTS` slug is **priva** (11 contributing links on privacy rows),
 deliberately kept as a permanent reference-only product, never to be authored (§15). The consistency
-pass and publishing are done — the atlas is live at v3.1.1. Next framework work is the ranked backlog
+pass and publishing are done — the atlas has been live since v3.1.1. Next framework work is the ranked backlog
 above, gated on the CJIS demand trigger and otherwise led by SEC 17a-4/FINRA.
