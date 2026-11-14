@@ -267,7 +267,7 @@ Backlog, ranked (decided in Session 13, 2026-07-21; full rationale in FRAMEWORK-
    cost (~20 churning statutes) and near-duplication of the GDPR rows, which remain the annotated
    interim analog.
 3. **CJIS Security Policy v6.0** — evaluated and **deferred with two dated triggers** (PR-025):
-   `TRG-CJIS-DEMAND` (demand-criterion check, next_review 2026-08-20) and `TRG-CJIS-V6-REVISIT`
+   `TRG-CJIS-DEMAND` (demand-criterion check; unmet on 2026-11-14 and re-deferred to 2027-05-14) and `TRG-CJIS-V6-REVISIT`
    (P2–P4 fully auditable, next_review 2027-10-01). A concrete state/local-government engagement
    overrides the wait. Effort ~22–28 h, discounted by the v6.0 rebasing onto NIST 800-53 Rev 5 moderate.
 
@@ -281,5 +281,5 @@ privacy PIMS, but its tooled layer is Priva, which the atlas permanently decline
 free-text entry points (PCI 5.2 / DPR J #38 / A.5.23 / A.8.8 / ID.RA-01) all gained stacked rows at their exact
 control refs (§15). The only remaining `RELATED_PRODUCTS` slug is **priva** (11 contributing links on privacy rows),
 deliberately kept as a permanent reference-only product, never to be authored (§15). The consistency
-pass and publishing are done — the atlas is live at v3.1.1. Next framework work is the ranked backlog
+pass and publishing are done — the atlas has been live since v3.1.1. Next framework work is the ranked backlog
 above, gated on the CJIS demand trigger and otherwise led by SEC 17a-4/FINRA.
