@@ -182,7 +182,7 @@ BANDS = {
     # boundary with no commit behind it, breaking the strict empty-diff drift check
     # (AUDIT-FINDINGS SS27.1). The re-check is scheduled, not computed: see
     # TRG-MDO-P1-E3G3, which owns dropping this partial flag when the rollout completes.
-    ("DEFENDER_LIC", "mdo_p1"): ("e3", True),
+    ("DEFENDER_LIC", "mdo_p1"): ("e3", False),
     ("DEFENDER_LIC", "mdo_p2"): ("e5", False),
     ("DEFENDER_LIC", "mdi"): ("e5", False),
     # "Conditional Access App Control additionally requires Entra ID P1" — P1 is
