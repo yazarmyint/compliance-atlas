@@ -247,7 +247,7 @@ BRAND = {
     # -- that one added capabilities (a social card, an error-report path). The built HTML bytes moved, so a bump is
     # required (§31); the JSON delta is precisely this version string. One commit for source + artifact + stamp, per
     # §33.3. Reasoning in AUDIT-FINDINGS §35.
-    "atlas_version": "3.4.2",
+    "atlas_version": "3.4.3",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
