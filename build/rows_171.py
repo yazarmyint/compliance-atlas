@@ -12,7 +12,7 @@ FRAMEWORK = {
     "id": "nist-800-171",
     "name": "NIST 800-171 R2 / CMMC L2",
     "full_name": "NIST SP 800-171 Rev 2: Protecting CUI in Nonfederal Systems (assessed at CMMC 2.0 Level 2 per 32 CFR Part 170)",
-    "version": "SP 800-171 Rev 2 (Feb 2020, incl. errata). CMMC: 32 CFR 170 (eff. Dec 2024) + 48 CFR rule (clauses from Nov 10, 2025; Phase 2 C3PAO certifications from Nov 10, 2026)",
+    "version": "SP 800-171 Rev 2 (Feb 2020, incl. errata). CMMC: 32 CFR 170 (eff. Dec 2024) + 48 CFR rule (clauses from Nov 10, 2025; Phase 2 C3PAO certification requirement suspended Jul 13, 2026, pending program review)",
     "authority": "NIST (publication) / US DoD (CMMC program)",
     "official_source": NIST171,
     "document_url": CFR170,
@@ -139,7 +139,7 @@ ROWS = [
         "Structures and evidences periodic assessment plus continuous monitoring for the M365 control slice: useful SSP/POA&M support artifacts. The full 110-requirement assessment (incl. infrastructure) is the assessor's scope.",
         "Active NIST 800-171/CMMC L2 assessment in Compliance Manager",
         "Assessment exports over time; improvement-action test history",
-        "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
+        "SSP and POA&M ownership; C3PAO assessment (Phase 2 requirement suspended Jul 13, 2026)",
         "Evidence Support Only", "Medium", LIC["cm"] + " (CMMC templates included by default in GCC/GCC High/DoD)", GOV["cm"],
         [NIST171, CMMC, URLS["cm"], URLS["cm_regs"]]),
 

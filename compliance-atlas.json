@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "3.4.1"
+   "atlas_version": "3.4.2"
   },
   "project": {
    "maintainer": "Yazar",
@@ -176,12 +176,14 @@
      "id": "TRG-CMMC-PHASE2",
      "type": "framework",
      "cadence_days": null,
-     "title": "CMMC Phase 2: C3PAO Level 2 certification required in new DoD contracts",
-     "next_review": "2026-08-12",
-     "last_executed": "2026-07-16",
+     "title": "CMMC Phase 2 suspension: review outcome and any restart date",
+     "next_review": "2027-02-12",
+     "last_executed": "2026-11-14",
      "affects": [],
-     "rows": [],
-     "note": "Nov 10, 2026: CMMC Phase 2 begins; C3PAO Level 2 certifications required in new applicable DoD contracts. Reviewed 90 days ahead so the DIB lens text is right before readers arrive on it."
+     "rows": [
+      "171-3-12-1-3"
+     ],
+     "note": "Jul 13, 2026: CMMC Phase 2 (C3PAO Level 2 certification in new applicable contracts, originally due Nov 10, 2026) was suspended pending a program review. Phase 1 self-assessment requirements remain in place. No restart date is announced as of 2026-11-14 (program page: dodcio.defense.gov/cmmc). At each review, read the program page for the review outcome. If Phase 2 is rescheduled or the rule is amended, update FRAMEWORK['version'] in rows_171.py, the external-dependency text on row 171-3-12-1-3, and the DIB lens note in assemble.py. History: the 2026-07-16 execution of this trigger missed the three-day-old suspension, so the atlas published the superseded Nov 10, 2026 date until 3.4.2."
     },
     {
      "id": "TRG-HIPAA-FINAL-RULE",
@@ -1279,7 +1281,7 @@
    "id": "nist-800-171",
    "name": "NIST 800-171 R2 / CMMC L2",
    "full_name": "NIST SP 800-171 Rev 2: Protecting CUI in Nonfederal Systems (assessed at CMMC 2.0 Level 2 per 32 CFR Part 170)",
-   "version": "SP 800-171 Rev 2 (Feb 2020, incl. errata). CMMC: 32 CFR 170 (eff. Dec 2024) + 48 CFR rule (clauses from Nov 10, 2025; Phase 2 C3PAO certifications from Nov 10, 2026)",
+   "version": "SP 800-171 Rev 2 (Feb 2020, incl. errata). CMMC: 32 CFR 170 (eff. Dec 2024) + 48 CFR rule (clauses from Nov 10, 2025; Phase 2 C3PAO certification requirement suspended Jul 13, 2026, pending program review)",
    "authority": "NIST (publication) / US DoD (CMMC program)",
    "official_source": "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
    "document_url": "https://www.ecfr.gov/current/title-32/subtitle-A/chapter-I/subchapter-G/part-170",
@@ -1482,7 +1484,7 @@
     "iso-27001-2022"
    ],
    "note": "For defense contractors and their suppliers that handle controlled unclassified information, where NIST 800-171 and CMMC set the bar. The stack lines up product by product across endpoint hardening, threat detection, audit trails, and cloud enclaves, with government-cloud limits that recur throughout this sector.",
-   "note_detail": "CMMC Level 2 Phase 2 (third-party certification in new contracts) begins Nov 10, 2026; GCC High notes sit on every 800-171 row. Intune anchors the endpoint CM/mobile/encryption families (3.1.18/3.1.19, 3.4.1/3.4.2, 3.13.16), though Windows Autopilot and update policies are limited in GCC High/DoD. Defender XDR carries the assessment-heavy 3.11/3.14 detection band (MDVM scanning, malware protection, system monitoring) plus 3.6 incident response; all workloads run in GCC High/DoD, though Microsoft Threat Experts does not. Sentinel carries the 3.3 audit-and-accountability band (3.3.1 create/retain, 3.3.4 failure alerting, 3.3.5 correlation); multi-year retention is a consumption meter at data-lake rates. Defender for Cloud assesses CUI cloud enclaves for 3.11.2–3.11.3 and 3.12, cloud-resource scope only, with CIEM and several CSPM features absent in Azure Government."
+   "note_detail": "CMMC Level 2 Phase 2 (third-party certification in new contracts) was due Nov 10, 2026 and was suspended on Jul 13, 2026 pending a program review; Phase 1 self-assessment requirements still apply. GCC High notes sit on every 800-171 row. Intune anchors the endpoint CM/mobile/encryption families (3.1.18/3.1.19, 3.4.1/3.4.2, 3.13.16), though Windows Autopilot and update policies are limited in GCC High/DoD. Defender XDR carries the assessment-heavy 3.11/3.14 detection band (MDVM scanning, malware protection, system monitoring) plus 3.6 incident response; all workloads run in GCC High/DoD, though Microsoft Threat Experts does not. Sentinel carries the 3.3 audit-and-accountability band (3.3.1 create/retain, 3.3.4 failure alerting, 3.3.5 correlation); multi-year retention is a consumption meter at data-lake rates. Defender for Cloud assesses CUI cloud enclaves for 3.11.2–3.11.3 and 3.12, cloud-resource scope only, with CIEM and several CSPM features absent in Azure Government."
   },
   "finserv": {
    "name": "Financial services",
@@ -8071,8 +8073,8 @@
    "status": "verified",
    "last_verified": "2026-07-19",
    "related_microsoft": [],
-   "external_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
-   "legacy_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 from Nov 10, 2026)",
+   "external_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 requirement suspended Jul 13, 2026)",
+   "legacy_dependencies": "SSP and POA&M ownership; C3PAO assessment (Phase 2 requirement suspended Jul 13, 2026)",
    "licensing_model": "per_user",
    "license_band": "e3",
    "license_band_partial": true

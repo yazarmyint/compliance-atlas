@@ -105,7 +105,7 @@ INDUSTRIES = {
     "dib": {"name": "Defense industrial base",
         "frameworks": ["nist-800-171", "nist-csf-2", "iso-27001-2022"],
         "note": "For defense contractors and their suppliers that handle controlled unclassified information, where NIST 800-171 and CMMC set the bar. The stack lines up product by product across endpoint hardening, threat detection, audit trails, and cloud enclaves, with government-cloud limits that recur throughout this sector.",
-        "note_detail": "CMMC Level 2 Phase 2 (third-party certification in new contracts) begins Nov 10, 2026; GCC High notes sit on every 800-171 row. "
+        "note_detail": "CMMC Level 2 Phase 2 (third-party certification in new contracts) was due Nov 10, 2026 and was suspended on Jul 13, 2026 pending a program review; Phase 1 self-assessment requirements still apply. GCC High notes sit on every 800-171 row. "
                 "Intune anchors the endpoint CM/mobile/encryption families (3.1.18/3.1.19, 3.4.1/3.4.2, 3.13.16), though Windows Autopilot and update policies are limited in GCC High/DoD. "
                 "Defender XDR carries the assessment-heavy 3.11/3.14 detection band (MDVM scanning, malware protection, system monitoring) plus 3.6 incident response; all workloads run in GCC High/DoD, though Microsoft Threat Experts does not. "
                 "Sentinel carries the 3.3 audit-and-accountability band (3.3.1 create/retain, 3.3.4 failure alerting, 3.3.5 correlation); multi-year retention is a consumption meter at data-lake rates. "
@@ -247,7 +247,7 @@ BRAND = {
     # -- that one added capabilities (a social card, an error-report path). The built HTML bytes moved, so a bump is
     # required (§31); the JSON delta is precisely this version string. One commit for source + artifact + stamp, per
     # §33.3. Reasoning in AUDIT-FINDINGS §35.
-    "atlas_version": "3.4.1",
+    "atlas_version": "3.4.2",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }

@@ -294,12 +294,18 @@ def scan_banned_spellings(root, targets=None):
 MAINTENANCE = [
     # ---- framework and regulatory milestones -------------------------------
     {"id": "TRG-CMMC-PHASE2", "type": "framework", "cadence_days": None,
-     "title": "CMMC Phase 2: C3PAO Level 2 certification required in new DoD contracts",
-     "next_review": "2026-08-12", "last_executed": "2026-07-16",
-     "affects": [], "rows": [],
-     "note": "Nov 10, 2026: CMMC Phase 2 begins; C3PAO Level 2 certifications required in new "
-             "applicable DoD contracts. Reviewed 90 days ahead so the DIB lens text is right before "
-             "readers arrive on it."},
+     "title": "CMMC Phase 2 suspension: review outcome and any restart date",
+     "next_review": "2027-02-12", "last_executed": "2026-11-14",
+     "affects": [], "rows": ["171-3-12-1-3"],
+     "note": "Jul 13, 2026: CMMC Phase 2 (C3PAO Level 2 certification in new applicable contracts, "
+             "originally due Nov 10, 2026) was suspended pending a program review. Phase 1 "
+             "self-assessment requirements remain in place. No restart date is announced as of "
+             "2026-11-14 (program page: dodcio.defense.gov/cmmc). At each review, read the program "
+             "page for the review outcome. If Phase 2 is rescheduled or the rule is amended, update "
+             "FRAMEWORK['version'] in rows_171.py, the external-dependency text on row 171-3-12-1-3, "
+             "and the DIB lens note in assemble.py. History: the 2026-07-16 execution of this trigger "
+             "missed the three-day-old suspension, so the atlas published the superseded Nov 10, 2026 "
+             "date until 3.4.2."},
     {"id": "TRG-HIPAA-FINAL-RULE", "type": "framework", "cadence_days": None,
      "title": "HIPAA Security Rule final rule",
      "next_review": "2027-04-01", "last_executed": "2026-07-16",
