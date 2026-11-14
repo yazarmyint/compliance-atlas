@@ -129,7 +129,7 @@ ROWS = [
     row("dpr-j36", "J #36", "J Security",
         "Access-rights management preventing unauthorized access to Microsoft data: identification, lockout, auto-logoff, strong credentials, MFA, least-privilege reviews, deactivation within 48 hours of termination.",
         "Information Protection", "Label-based encryption restricting who can open protected content regardless of location",
-        "Adds a content-layer access restriction on labeled Microsoft data, a narrow contributor. The requirement's substance (accounts, MFA, lockout, 48-hour deprovisioning, access reviews) is identity-platform territory.",
+        "Adds a content-layer access restriction on labeled Microsoft data, a narrow contributor. The requirement's substance (accounts, MFA, lockout, 48-hour deprovisioning, access reviews) is identity-platform territory. Rated lower than the same contribution on ISO A.8.3, SOC 2 CC6.1, and 800-53 AC-3 because this requirement is almost entirely account lifecycle and authentication, where a label reaches only the last step.",
         "Label encryption permission configuration on top-tier labels",
         "Encrypted-item counts; access-denied events for protected content in audit log",
         "Entra ID, Conditional Access/MFA, PIM, access reviews, joiner-mover-leaver process (primary)",

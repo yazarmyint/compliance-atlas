@@ -1905,7 +1905,7 @@
    "purview_solution": "Information Protection",
    "also_involves": [],
    "capability_detail": "Label-based encryption restricting who can open protected content regardless of location",
-   "how_it_supports": "Adds a content-layer access restriction on labeled Microsoft data, a narrow contributor. The requirement's substance (accounts, MFA, lockout, 48-hour deprovisioning, access reviews) is identity-platform territory.",
+   "how_it_supports": "Adds a content-layer access restriction on labeled Microsoft data, a narrow contributor. The requirement's substance (accounts, MFA, lockout, 48-hour deprovisioning, access reviews) is identity-platform territory. Rated lower than the same contribution on ISO A.8.3, SOC 2 CC6.1, and 800-53 AC-3 because this requirement is almost entirely account lifecycle and authentication, where a label reaches only the last step.",
    "config_evidence_example": "Label encryption permission configuration on top-tier labels",
    "operational_evidence_example": "Encrypted-item counts; access-denied events for protected content in audit log",
    "coverage": "Partial Support",
@@ -9540,7 +9540,7 @@
    "config_evidence_example": "Label encryption permissions on controlled-information tiers",
    "operational_evidence_example": "RMS access-granted/denied logs for protected items",
    "coverage": "Partial Support",
-   "confidence": "Low",
+   "confidence": "Medium",
    "license_requirement": "Label-based encryption: included with sensitivity labeling entitlements (manual E3+; automatic application E5-tier)",
    "cloud_availability_note": "Auto-labeling for Exchange/SharePoint/OneDrive, Office apps, and containers: Available in GCC High; named-entity SITs remain on engineering backlog in GCC High.",
    "sources": [

@@ -55,7 +55,7 @@ ROWS = [
         "Label encryption permissions on controlled-information tiers",
         "RMS access-granted/denied logs for protected items",
         "Entra ID authorizations, Conditional Access, application ACLs (primary)",
-        "Partial Support", "Low", LIC["label_encryption"], GOV["labels_auto"],
+        "Partial Support", "Medium", LIC["label_encryption"], GOV["labels_auto"],
         [NIST53, URLS["label_encrypt"]], also=["Data Loss Prevention"]),
 
     row("53-ac-4", "AC-4", "AC Access Control",
