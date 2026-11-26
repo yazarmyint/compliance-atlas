@@ -254,6 +254,25 @@ PATCH under the policy in [`CHANGELOG.md`](../CHANGELOG.md#versioning-policy): r
 row corrections change claims, not structure. Then append an AUDIT-FINDINGS section following the
 existing numbering.
 
+### Step 7 — release
+
+**Every version gets a GitHub release** (owner decision, 2026-11-26). The README sends offline readers to
+the latest release for `compliance-atlas.html`, so a version without one leaves them on an older copy than
+the site serves. That happened once: releases stopped at v2.9.1 while the site reached v3.4.3.
+
+After the version is merged to `main`, pushed, and the Pages deploy has finished:
+
+```
+git tag -a vX.Y.Z <merge commit> -m "vX.Y.Z: <one-line summary>"
+git push origin vX.Y.Z
+gh release create vX.Y.Z compliance-atlas.html compliance-atlas.json --verify-tag --latest   --title "vX.Y.Z: <one-line summary>" --notes-file <notes.md>
+```
+
+Attach the files from the tagged commit, not from a fresh build: the HTML carries its build timestamp,
+and the release must be the artifact the site serves. Check that with `gh release download` and a hash
+against the repo copy. Write the notes for readers, from the CHANGELOG entry, and link the changelog for
+the detail. A release is public the moment it is created, so it goes out only on the owner's go-ahead.
+
 ### What a pass may not do
 
 Re-author rows, change coverage or confidence verdicts on anything other than the evidence in front

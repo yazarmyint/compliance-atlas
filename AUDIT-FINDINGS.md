@@ -4100,3 +4100,19 @@ DIB lens cards with the long CMMC version string in source casing; the landing o
 next-pass date in both themes; a click on a card's description text navigates to that card's
 framework; Tab lands on the card link and the card shows the 2 px focus ring. Merge held for owner
 review.
+
+## 40. Release and repo settings (2026-11-26) — REVIEW-2026-11 C-02, D-03, D-10; no version
+
+Session 22. Nothing in the built artifact changed, so no version. Each outward action was put to the
+owner first and approved on 2026-11-26.
+
+| Finding | Done |
+|---|---|
+| **C-02, D-03** | Annotated tag `v3.5.0` on merge commit `bfd665d`, pushed; release "v3.5.0: reader fixes and a current offline copy", marked Latest, with `compliance-atlas.html` and `compliance-atlas.json` from that commit. Downloaded back and hashed: both match the repo, and the JSON matches the live site. The intervening versions (2.10.0 to 3.4.3) were not backfilled as releases; their notes are in the CHANGELOG, and the release notes summarize them. |
+| **D-10** | Homepage set to the Pages URL; 15 topics added (compliance, grc, control-mapping, microsoft-security, microsoft-purview, microsoft-defender, microsoft-entra, microsoft-sentinel, nist-800-171, cmmc, iso27001, soc2, hipaa, pci-dss, gdpr). |
+| **Decision 11** | A release for every version. `docs/MAINTENANCE.md` gains Step 7 with the commands and the rule that assets come from the tagged commit. |
+
+**Not done.** GitHub still detects the code license as "Other": `LICENSE` is MIT with a preamble scoping
+it to the software, which the detector does not recognize. Making it detectable means restructuring a
+legal file (MIT text alone in `LICENSE`, the scoping note moved beside `LICENSE-CONTENT.md`); that is a
+licensing edit, so it waits for an owner decision rather than riding on a metadata session.
