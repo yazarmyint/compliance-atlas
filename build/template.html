@@ -1119,7 +1119,7 @@ function vAbout(){
     <p>The atlas leans on the vocabulary of both worlds it bridges, so acronyms recur throughout:
       <abbr title="Data Loss Prevention">DLP</abbr>, <abbr title="Extended Detection and Response">XDR</abbr>,
       <abbr title="Cloud Security Posture Management">CSPM</abbr>, <abbr title="Insider Risk Management">IRM</abbr>,
-      and around forty others. Each is expanded in the <a href="#/glossary">glossary</a>.</p>
+      and ${Math.max(0, Object.keys(META.glossary || {}).length - 4)} others. Each is expanded in the <a href="#/glossary">glossary</a>.</p>
 
     <h2>Scope, and its edges</h2>
     <p>${PROD_ORDER.length} products — ${esc(prodNames)} — across ${Object.keys(FW).length} frameworks and

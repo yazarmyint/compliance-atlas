@@ -166,7 +166,7 @@ Three rules govern the content, all asserted by `check_glossary()` or stated in 
   the standard it is assessed against; CMMC is the model, dateless.
 - **Entries stay em-dash-free.** The Session-15 `/agentic-humanizer` pass established this (pattern 14); the build
   guard fails on an em/en dash so a later edit cannot quietly reintroduce one.
-- **The cut is on the record.** 47 terms ship; the exclusions (WORM/DIB as zero-occurrence, CM as ambiguous, PII as
+- **The cut is on the record.** 59 terms ship (47 in 3.3.0, 12 added in 3.4.4); the exclusions (WORM/DIB as zero-occurrence, CM and NPI as ambiguous, PII as
   universal, framework short-names as card-covered) and the ambiguity resolutions (IRM≠Information Rights Management,
   FIM≠Forefront Identity Manager, CIEM the discipline not the retired product, DoD the environment) are recorded in the
   module docstring and AUDIT-FINDINGS §33.
