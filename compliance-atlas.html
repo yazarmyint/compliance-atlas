@@ -163,8 +163,12 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .stat span{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
 .grid{display:grid; gap:14px}
 .grid.cards{grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); margin:20px 0 44px}
-/* Cards are <a> elements: the whole card is the link, so the mouse hit area is the full
-   card exactly as before, and keyboard users get one stop per card. */
+/* A card is a <div>; its link is the heading text alone, and the link's ::before stretches over
+   the whole card, so the mouse hit area is still the full card and keyboard users still get one
+   stop per card. The accessible name is the heading, which is also the link's visible text, so it
+   meets WCAG 2.5.3 Label in Name. Until 3.4.4 the whole card was an <a> named by an aria-label of
+   the heading alone (AUDIT-FINDINGS 21.3), which axe-core 4.14 flags because the name omitted the
+   rest of the card's visible text (AUDIT-FINDINGS 39). */
 .card{display:block; color:var(--ink); text-decoration:none;
   background:var(--card); border:1px solid var(--rule-2); border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
   cursor:pointer; transition:transform .12s ease, border-color .12s ease; position:relative; overflow:hidden}
@@ -172,6 +176,13 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .card::after{content:"→"; position:absolute; right:16px; top:14px; color:var(--ink-3); font-size:15px; transition:transform .12s}
 .card:hover::after{transform:translateX(3px); color:var(--accent-ink)}
 .card h3{margin:2px 0 6px; font-size:19px}
+.cardlink{color:inherit; text-decoration:none}
+.cardlink:hover{text-decoration:none}
+.cardlink::before{content:""; position:absolute; inset:0; border-radius:inherit}
+/* The ring belongs on the card, not on the heading text the link wraps. */
+.cardlink:focus-visible{outline:none; box-shadow:none}
+.card:has(.cardlink:focus-visible){outline:2px solid var(--link); outline-offset:2px;
+  box-shadow:0 0 0 4px color-mix(in srgb, var(--link) 18%, transparent)}
 .card .desc{color:var(--ink-2); font-size:13px; min-height:2.6em}
 .card .meta{display:flex; gap:6px; flex-wrap:wrap; margin-top:12px}
 .minibar{display:flex; height:6px; border-radius:3px; overflow:hidden; margin-top:12px; background:var(--paper-2)}
@@ -695,10 +706,10 @@ function vHome(){
   <section class="block"><div class="overline">Industry lens</div><h2>Start from an industry</h2>
   <div class="grid cards">${inds.map(([id,i])=>{
     const rows = ROWS.filter(r => i.frameworks.includes(r.framework));
-    return `<a class="card" href="#/industry/${esc(id)}" aria-label="${esc(i.name)}">
-      <h3>${esc(i.name)}</h3><div class="desc">${esc(i.note)}</div>
+    return `<div class="card">
+      <h3><a class="cardlink" href="#/industry/${esc(id)}">${esc(i.name)}</a></h3><div class="desc">${esc(i.note)}</div>
       <div class="meta">${i.frameworks.map(f=>`<span class="chip">${esc(FW[f]?.name||f)}</span>`).join("")}</div>
-      ${minibar(rows)}</a>`; }).join("")}
+      ${minibar(rows)}</div>`; }).join("")}
   </div>
   ${/* PR-021: say out loud which sectors have no lens and why, rather than letting a reader from one
        of them conclude the atlas simply forgot them. Same META list the about page renders in full. */""}
@@ -718,11 +729,11 @@ function vIndustry(id){
   <section class="block"><h2>Applicable frameworks</h2>
   <div class="grid cards">${i.frameworks.map(fid=>{
     const f = FW[fid], rows = byFw(fid);
-    return `<a class="card" href="#/framework/${esc(fid)}" aria-label="${esc(f.name)}">
-      <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
+    return `<div class="card">
+      <div class="overline">${esc(f.version)}</div><h3><a class="cardlink" href="#/framework/${esc(fid)}">${esc(f.name)}</a></h3>
       <div class="desc">${esc(f.applies_to)}</div>
       <div class="meta"><span class="count-pill">${rows.length} mapped controls</span>${f.compliance_manager_template?.exists?`<span class="chip">CM template ✓</span>`:""}</div>
-      ${minibar(rows)}</a>`; }).join("")}
+      ${minibar(rows)}</div>`; }).join("")}
   </div></section>`;
 }
 function vFrameworks(){
@@ -730,11 +741,11 @@ function vFrameworks(){
     <div class="full">Every mapped control, grouped by framework. Each row is verified against a live official source; per-row dates govern currency.</div></div>
   <div class="grid cards" style="margin-top:22px">${FW_ORDER.map(fid=>{
     const f = FW[fid], rows = byFw(fid);
-    return `<a class="card" href="#/framework/${esc(fid)}" aria-label="${esc(f.name)}">
-      <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
+    return `<div class="card">
+      <div class="overline">${esc(f.version)}</div><h3><a class="cardlink" href="#/framework/${esc(fid)}">${esc(f.name)}</a></h3>
       <div class="desc">${esc(f.applies_to)}</div>
       <div class="meta"><span class="count-pill">${rows.length} controls</span>${cmChip(f)}</div>
-      ${minibar(rows)}</a>`; }).join("")}</div>`;
+      ${minibar(rows)}</div>`; }).join("")}</div>`;
 }
 let fwFilter = null;
 function setFwFilter(c){ fwFilter = c; render({focus:"filter", filter:c}); }
@@ -839,10 +850,10 @@ function vProducts(){
     <div class="full">${esc(PIVOT_EXPLAINER)}</div></div>
   <div class="grid cards" style="margin-top:22px">${PROD_ORDER.map(pid=>{
     const rows = byProd(pid);
-    return `<a class="card" href="#/product/${esc(pid)}" aria-label="${esc(prodFull(pid))}">
-      <h3>${esc(prodFull(pid))}</h3><div class="desc">${esc(PRODUCTS[pid].notes||"")}</div>
+    return `<div class="card">
+      <h3><a class="cardlink" href="#/product/${esc(pid)}">${esc(prodFull(pid))}</a></h3><div class="desc">${esc(PRODUCTS[pid].notes||"")}</div>
       <div class="meta"><span class="count-pill">${rows.length} mappings</span><span class="count-pill">${PRODUCTS[pid].solutions.length} solutions</span></div>
-      ${minibar(rows)}</a>`; }).join("")}</div>`;
+      ${minibar(rows)}</div>`; }).join("")}</div>`;
 }
 function vProduct(pid){
   const p = PRODUCTS[pid]; if(!p) return vMissing("product", pid);
@@ -860,10 +871,10 @@ function vProduct(pid){
   <div class="grid cards" style="margin-top:22px">${p.solutions.map(key=>{
     const s = SOL[key]||{}, prim = bySolP(pid,key), also = byAlsoP(pid,key);
     const fwids = [...new Set(prim.concat(also).map(r=>r.framework))];
-    return `<a class="card" href="#/product/${esc(pid)}/solution/${esc(encodeURIComponent(key))}" aria-label="${esc(key)}">
-      <h3>${esc(key)}</h3><div class="desc">${esc(s.scope||"")}</div>
+    return `<div class="card">
+      <h3><a class="cardlink" href="#/product/${esc(pid)}/solution/${esc(encodeURIComponent(key))}">${esc(key)}</a></h3><div class="desc">${esc(s.scope||"")}</div>
       <div class="meta"><span class="count-pill">${prim.length} primary</span><span class="count-pill">${also.length} contributing</span><span class="count-pill">${fwids.length} frameworks</span></div>
-      ${minibar(prim)}</a>`; }).join("")}
+      ${minibar(prim)}</div>`; }).join("")}
   </div>
   ${refs.length?`<section class="block"><h2>Referenced by other products' mappings</h2>
     <p class="subtitle muted small">Rows mapped to another product that name ${esc(p.official_name)} as a related product.</p>
@@ -1428,7 +1439,7 @@ document.getElementById("footVersion").innerHTML =
    dataset. compliance-atlas.json deliberately carries nothing time-derived, so a content-free
    rebuild leaves it byte-identical (PR-057). This file is the one that moves on every rebuild —
    by design; the drift check is defined on the JSON, not on the HTML. */
-const BUILT_AT = "2026-11-14T13:06:48";
+const BUILT_AT = "2026-11-26T11:44:07";
 document.getElementById("footMeta").textContent =
   `Built ${BUILT_AT} from compliance-atlas.json. A rebuild moves this timestamp whether or not any content changed.`;
 
