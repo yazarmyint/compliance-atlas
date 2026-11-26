@@ -75,12 +75,15 @@ identification only; this is an independent project, not affiliated with or endo
 | [`reference/SOURCES.md`](reference/SOURCES.md) | Provenance and redistribution status of every file in `reference/` |
 | `build/` | The generator: row modules, product and solution maps, template, assembler |
 | [`tools/`](tools/README.md) | Standing QA: `check_urls.py` resolves every cited URL, `axe_check.mjs` runs WCAG 2.1 A/AA over every view in both themes |
+| `tests/` | Regression tests for the build guards: each breaks one thing and asserts the right guard fails |
+| `.github/workflows/qa.yml` | Runs the gate on every push, and a weekly maintenance and URL check that opens an issue when something is due |
 
 ## Regenerate
 
 ```powershell
 python build/assemble.py      # row modules + maps → compliance-atlas.json
 python build/build_html.py    # JSON + template.html → compliance-atlas.html + index.html
+python -m unittest discover -s tests   # guard regression tests
 ```
 
 Edit content in `build/rows_*.py`, maps in `build/common.py`, presentation in `build/template.html`;

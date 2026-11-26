@@ -1,5 +1,6 @@
 """Assemble compliance-atlas.json from per-framework row modules.
 Run:  python build/assemble.py
+      python build/assemble.py --check   # validate and compare, write nothing (exit 1 on drift)
 Add a framework: create build/rows_<name>.py exposing FRAMEWORK (dict) and ROWS (list), append to MODULES.
 Add a product: see docs/AUTHORING.md "Add a product" — products-map entry in common.py, row modules with
 product=<id>, solutions registered in SOLUTIONS and the product's solutions list.
@@ -731,15 +732,40 @@ def main():
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     path = os.path.join(root, "compliance-atlas.json")
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(out, f, indent=1, ensure_ascii=False)
     logpath = os.path.join(root, "reference", "dependency-migration-log.json")
-    with open(logpath, "w", encoding="utf-8") as f:
-        json.dump(dep_log, f, indent=1, ensure_ascii=False)
+    # Serialized once, to a string, so --check compares exactly the bytes a write would produce.
+    # Written with newline="\n" (D-09): without it, Windows translates every newline to CRLF in the
+    # working tree, which is the "M in git status" artifact AUDIT-FINDINGS §35.4 had to explain away.
+    outputs = [(path, json.dumps(out, indent=1, ensure_ascii=False)),
+               (logpath, json.dumps(dep_log, indent=1, ensure_ascii=False))]
     n_rel = sum(1 for r in rows if r["related_microsoft"])
     n_flag = sum(1 for rec in dep_log if rec["flagged"])
-    print(f"Wrote {path}: {len(rows)} rows, {len(frameworks)} frameworks, {len(INDUSTRIES)} industries, {len(PRODUCTS)} product(s)")
-    print(f"Dependency migration: {len(dep_log)} rows migrated; {n_rel} rows with related_microsoft entries; {n_flag} rows with flagged (platform-token) external segments -> {logpath}")
+    check = "--check" in sys.argv
+    if check:
+        # --check (D-11): every integrity assertion above has already run; nothing is written. The
+        # outputs are compared with what is on disk instead, CRLF-normalized because a Windows
+        # checkout without .gitattributes in force may hold CRLF bytes that git still stores as LF.
+        drift = []
+        for p, text in outputs:
+            try:
+                with open(p, encoding="utf-8", newline="") as f:
+                    current = f.read().replace("\r\n", "\n")
+            except FileNotFoundError:
+                current = None
+            if current != text:
+                drift.append(os.path.relpath(p, root))
+        print(f"Checked {len(rows)} rows, {len(frameworks)} frameworks, {len(INDUSTRIES)} industries, "
+              f"{len(PRODUCTS)} product(s): all integrity checks passed; nothing written.")
+        if drift:
+            print("assemble.py --check: the committed output is stale; a build would change "
+                  + ", ".join(drift) + ". Run python build/assemble.py and commit the result.",
+                  file=sys.stderr)
+    else:
+        for p, text in outputs:
+            with open(p, "w", encoding="utf-8", newline="\n") as f:
+                f.write(text)
+        print(f"Wrote {path}: {len(rows)} rows, {len(frameworks)} frameworks, {len(INDUSTRIES)} industries, {len(PRODUCTS)} product(s)")
+        print(f"Dependency migration: {len(dep_log)} rows migrated; {n_rel} rows with related_microsoft entries; {n_flag} rows with flagged (platform-token) external segments -> {logpath}")
 
     # ---- maintenance warnings (PR-050) ----
     # Deliberately AFTER the write. There is no code path by which a computed
@@ -751,6 +777,8 @@ def main():
     if n and "--strict-maintenance" in sys.argv:
         print(f"assemble.py: --strict-maintenance set and {n} maintenance warning(s) present; failing.",
               file=sys.stderr)
+        sys.exit(1)
+    if check and drift:
         sys.exit(1)
 
 if __name__ == "__main__":

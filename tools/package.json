@@ -10,7 +10,10 @@
     "axe:live": "node axe_check.mjs --url https://yazarmyint.github.io/compliance-atlas/compliance-atlas.html"
   },
   "devDependencies": {
-    "axe-core": "^4.10.0",
-    "puppeteer-core": "^23.0.0"
+    "axe-core": "4.14.0",
+    "puppeteer-core": "25.17.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

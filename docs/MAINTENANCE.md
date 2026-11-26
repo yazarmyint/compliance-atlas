@@ -16,7 +16,18 @@ To see what is due:
 python build/assemble.py                       # warnings print to stderr; build still exits 0
 python build/assemble.py --maintenance-report  # same, without the 12-item display cap
 python build/assemble.py --strict-maintenance  # exit 1 if anything is due (opt-in, for CI)
+python build/assemble.py --check               # validate and report, write nothing
 ```
+
+### Automation
+
+`.github/workflows/qa.yml` runs the strict report and the URL sweep **every Monday** and opens an issue
+labelled `maintenance-due` (or comments on the open one) when either finds something. It also gates
+every push and pull request on the guard tests, `assemble.py --check`, the spelling lint, and axe.
+
+Keep a calendar reminder anyway. GitHub disables scheduled workflows in a public repository after 60
+days with no activity, and a quiet atlas is exactly when this alarm matters. If the weekly run stops
+appearing under Actions, re-enable it there.
 
 Warnings are **advisory**. The build succeeds with them present, so an unrelated fix can ship while
 rows are aging. Four prefixes, each pointing at a section of the runbook below:
@@ -201,9 +212,14 @@ rows are why the `last_verified` policy is defensible).
 ```powershell
 python build/assemble.py            # integrity assertions + the maintenance report
 python build/build_html.py
+python -m unittest discover -s tests -v   # guard regression tests
 python tools/check_urls.py          # citation resolution and redirect drift
 node tools/axe_check.mjs            # WCAG 2.1 A/AA, every view, both themes
 ```
+
+`check_urls.py` lists hosts that refuse scripts under **CHECK BY HAND**, with the date a person last
+opened each page in a browser. Open them, and if they are right, update the dates in `WAF_HOSTS`; the
+sweep fails once a hand check is more than 90 days old.
 
 > **You no longer clear `build/__pycache__` by hand — the build does it.** `assemble.py` and
 > `build_html.py` each remove `build/__pycache__` before their first sibling import (PR-058), so a
@@ -266,7 +282,8 @@ Backlog, ranked (decided in Session 13, 2026-07-21; full rationale in FRAMEWORK-
 2. **US state-privacy composite** (CPRA-anchored, state-variance column) — deferred on maintenance
    cost (~20 churning statutes) and near-duplication of the GDPR rows, which remain the annotated
    interim analog.
-3. **CJIS Security Policy v6.0** — evaluated and **deferred with two dated triggers** (PR-025):
+3. **CJIS Security Policy v6.0** (third parties report a v6.1 corrections release in June 2026, unconfirmed at
+   the FBI source) — evaluated and **deferred with two dated triggers** (PR-025):
    `TRG-CJIS-DEMAND` (demand-criterion check; unmet on 2026-11-14 and re-deferred to 2027-05-14) and `TRG-CJIS-V6-REVISIT`
    (P2–P4 fully auditable, next_review 2027-10-01). A concrete state/local-government engagement
    overrides the wait. Effort ~22–28 h, discounted by the v6.0 rebasing onto NIST 800-53 Rev 5 moderate.
