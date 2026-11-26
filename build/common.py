@@ -850,7 +850,7 @@ PRODUCTS = {
         "solutions": [],  # derived at import bottom from SOLUTIONS entries tagged product="purview"
         "licensing_source": "https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description",
         "default_licensing_model": "per_user",
-        "notes": "Microsoft's data security, governance, and compliance suite for the Microsoft 365 estate: classification and labeling, data loss prevention, lifecycle and records, insider risk, eDiscovery, and audit. Licensed per user. It implements and evidences data-layer controls, and marks deliberate gaps honestly rather than overclaiming.",
+        "notes": "Microsoft's data security, governance, and compliance suite for the Microsoft 365 estate: classification and labeling, data loss prevention, lifecycle and records, insider risk, eDiscovery, and audit. Licensed per user. It implements and evidences data-layer controls, and records its gaps as boundary rows rather than claiming coverage it lacks.",
         "notes_detail": ("Microsoft Purview: data security, governance, and compliance across the Microsoft 365 estate: "
                   "classification and labeling, DLP, data lifecycle and records, insider risk, communication compliance, "
                   "eDiscovery, and audit. Licensed per user, drawn exclusively from the Microsoft Purview service "

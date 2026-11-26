@@ -124,10 +124,10 @@ INDUSTRIES = {
     "insurance": {"name": "Insurance",
         "frameworks": ["glba-safeguards", "soc-2", "pci-dss-4", "nist-csf-2"],
         "note": "For carriers, brokers, and managing general agents: financial institutions under GLBA, card handlers under PCI, and SOC 2 respondents to their distribution partners, with NIST CSF 2.0 as the program frame examiners increasingly expect. One caveat on GLBA applies to insurers specifically.",
-        "note_detail": "The GLBA caveat: insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule at 16 CFR 314 — the text these rows cite — exempts entities regulated by a state insurance authority. The operative requirement is usually the NAIC Insurance Data Security Model Law, adopted in most states, or New York's 23 NYCRR 500. Both track 16 CFR 314 closely enough that the control mappings read across; the citations do not. Take these rows for the control substance and cite your own state's text. "
+        "note_detail": "The GLBA caveat: insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule at 16 CFR 314, the text these rows cite, exempts entities regulated by a state insurance authority. The operative requirement is usually the NAIC Insurance Data Security Model Law, adopted in most states, or New York's 23 NYCRR 500. Both track 16 CFR 314 closely enough that the control mappings read across; the citations do not. Take these rows for the control substance and cite your own state's text. "
                 "PCI reaches premium and claims payments wherever cards are accepted, directly or through a portal, and SOC 2 arrives from the other direction: MGAs, third-party administrators, and insurtech vendors are asked for it by the carriers they distribute for. "
                 "Purview is Audit-heavy here (13 of 51 rows): the record-keeping and retention obligations across policy, claims, and underwriting files are the densest part of the sector's data layer, with classification and DLP over policyholder information. "
-                "Sentinel carries the institution-wide audit and detection story the workload products cannot see — policy administration, claims, and underwriting systems are typically third-party or mainframe-adjacent and reach the security program through connectors rather than native integration. "
+                "Sentinel carries the institution-wide audit and detection story the workload products cannot see. Policy administration, claims, and underwriting systems are typically third-party or mainframe-adjacent and reach the security program through connectors rather than native integration. "
                 "Defender for Cloud's 14 rows cover the cloud-hosted side of that estate, which is where modern quoting and claims platforms increasingly sit."},
     "higher-ed": {"name": "Higher education",
         "frameworks": ["ferpa", "glba-safeguards", "pci-dss-4", "nist-csf-2"],
@@ -156,7 +156,7 @@ INDUSTRIES = {
     "legal": {"name": "Legal & professional services",
         "frameworks": ["soc-2", "iso-27001-2022", "gdpr", "hipaa-security"],
         "note": "For law firms, accountancies, and consultancies, where client assurance drives SOC 2 and ISO 27001, client personal data pulls in GDPR, and health-sector engagements bring HIPAA obligations. The stack concentrates on matter confidentiality, need-to-know access, and a persistently targeted endpoint and mailbox estate.",
-        "note_detail": "SOC 2 is the client-assurance ask; ISO 27001 certification often accompanies it at firms with international clients. GDPR binds the firm both as controller of its own client data and as processor acting on client instructions, while HIPAA applies only when the firm is a business associate — health-sector litigation, benefits counsel, life-sciences advisory — so treat those rows as conditional on handling PHI. "
+        "note_detail": "SOC 2 is the client-assurance ask; ISO 27001 certification often accompanies it at firms with international clients. GDPR binds the firm both as controller of its own client data and as processor acting on client instructions, while HIPAA applies only when the firm is a business associate (health-sector litigation, benefits counsel, life-sciences advisory), so treat those rows as conditional on handling PHI. "
                 "Purview carries the confidentiality core: sensitivity labels and label-based encryption for matter material, DLP on the outbound path, retention and records management for engagement-file destruction schedules, and eDiscovery for the firm's own holds rather than its clients'. "
                 "Entra carries need-to-know, with Conditional Access over the unmanaged and personal devices common in partner-heavy firms and ID Governance access packages for matter- and client-scoped teams. Information Barriers appears once (A.5.3) and is the nearest thing here to an ethical wall, though the wall itself is a matter-intake decision rather than a product setting. "
                 "Defender XDR is 22 rows, 18 of them Defender for Endpoint: legal is a standing target for business email compromise and departing-partner data theft, and the endpoint and mail surface is where that lands. "
@@ -283,7 +283,7 @@ PROJECT = {
 # which are gaps: CJIS is a genuine omission (PROJECT-REVIEW PR-025), the other two are structural.
 ABSENT_INDUSTRIES = [
     {"sector": "State & local government", "framework": "CJIS Security Policy",
-     "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision — it is the strongest candidate for the next framework added."},
+     "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision. It is the strongest candidate for the next framework added."},
     {"sector": "Energy & utilities", "framework": "NERC CIP",
      "reason": "Built around the operational technology and control systems that run the bulk electric system, which none of the six products reach."},
     {"sector": "Pharmaceuticals & medical devices", "framework": "21 CFR Part 11",
@@ -305,7 +305,7 @@ META = {
     # this is a one-person project and pretending otherwise would be the dishonest option.
     "reverification_policy": ("Every row carries the date its claims were last checked against a live source. "
                               "Full re-verification passes are run at least twice a year, and targeted ones whenever a "
-                              "diarized change lands — a framework revision, a Microsoft rename, a licensing restructure. "
+                              "diarized change lands, such as a framework revision, a Microsoft rename, or a licensing restructure. "
                               "This is a single-maintainer project, so treat those dates as the real currency signal "
                               "rather than any assumption that the whole atlas is refreshed continuously."),
     "footer_lines": FOOTER_LINES,
@@ -462,6 +462,36 @@ def retired_name_hits():
                 if name == "SOLUTIONS":
                     scan(f"{name} key {key!r}", key)
     return hits
+
+
+# Where an em dash is allowed in the dataset: a framework's formal title and edition, which are
+# quoted as the publisher writes them ("Information security, cybersecurity and privacy
+# protection — Information security management systems — Requirements").
+EM_DASH_ALLOWED_KEYS = {"full_name", "version"}
+
+
+def check_no_em_dash(out):
+    """REVIEW-2026-11 C-07: no em dash in any published string, except a framework's quoted title.
+
+    Rows were already free of them (47,863 words, none); 3.4.4 cleared the meta, industry, and
+    product strings, and this keeps the whole dataset that way. The en dash is not checked: it is
+    the right mark for a range ("3.11.2–3.11.3", "Articles 12–23").
+    """
+    hits = []
+    def walk(o, path, key=None):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                walk(v, f"{path}.{k}", k)
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{i}]", key)
+        elif isinstance(o, str) and "—" in o:
+            if not (path.lstrip(".").startswith("frameworks.") and key in EM_DASH_ALLOWED_KEYS):
+                hits.append(path)
+    walk(out, "")
+    hits = [h.lstrip(".") for h in hits]
+    assert not hits, ("em dash in published strings (house rule, REVIEW-2026-11 C-07; use a colon, comma, "
+                      "parentheses, or a new sentence): " + ", ".join(hits[:20]))
 
 
 def maintenance_report(rows, today, stream, limit=12):
@@ -751,6 +781,7 @@ def main():
                 description_meta=description)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
+    check_no_em_dash(out)
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     path = os.path.join(root, "compliance-atlas.json")
     logpath = os.path.join(root, "reference", "dependency-migration-log.json")

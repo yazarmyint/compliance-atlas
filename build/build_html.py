@@ -97,11 +97,37 @@ location.replace({filename_js} + location.hash);
 </html>
 """
 
+def reader_text_dashes(tpl):
+    """REVIEW-2026-11 C-07: the em dash is out of reader-visible template text, and this keeps it out.
+
+    Comments are stripped first (/* */, <!-- -->, and // to end of line where it starts a line or
+    follows code punctuation), because the template's comments are maintainer notes and use the em
+    dash freely. What is left is markup and script that a reader sees or hears. The en dash is not
+    checked: it is the correct mark for a range ("3.11.2–3.11.3", "2026-07-16 – 2026-11-14").
+    Returns (line number, line) for each hit, numbered against the unstripped template.
+    """
+    blank = lambda m: re.sub(r"[^\n]", " ", m.group(0))  # keep line numbers stable
+    t = re.sub(r"/\*.*?\*/", blank, tpl, flags=re.S)
+    t = re.sub(r"<!--.*?-->", blank, t, flags=re.S)
+    t = re.sub(r"(?m)^\s*//.*$", blank, t)
+    t = re.sub(r"(?<=[;{}),])\s*//[^\n`]*", blank, t)
+    src = tpl.split("\n")
+    return [(i + 1, src[i]) for i, line in enumerate(t.split("\n")) if "—" in line]
+
+
 def main():
     data = json.load(open(JSON_PATH, encoding="utf-8"))
     payload = json.dumps(data, separators=(",", ":"), ensure_ascii=False)
     payload = payload.replace("</", "<\\/")  # keep </script> sequences inert inside the data block
     tpl = open(TEMPLATE, encoding="utf-8").read()
+    dashes = reader_text_dashes(tpl)
+    if dashes:
+        print(f"build_html.py: {len(dashes)} em dash(es) in reader-visible template text "
+              f"(house rule, REVIEW-2026-11 C-07); use a colon, comma, parentheses, or a new sentence:",
+              file=sys.stderr)
+        for lineno, line in dashes:
+            print(f"  build/template.html:{lineno}: {line.strip()[:110]}", file=sys.stderr)
+        sys.exit(1)
     marker = "/*__DATA__*/"
     assert marker in tpl, "template is missing the data marker"
     # Head metadata (title, description, Open Graph) is substituted rather than read from the data

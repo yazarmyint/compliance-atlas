@@ -497,8 +497,8 @@ const BAND_ORDER = ["e3","e5","addon","consumption","na"];
 /* Chrome, not data: the summary label for the collapsed scope note. It states the commercial-only
    limit in the always-visible summary, so a reader who never opens the disclosure still cannot
    mistake a band for a G/F/Business-Premium claim; the full note is verbatim inside. */
-const BAND_SCOPE_LABEL = "License tier bands cover Microsoft 365 commercial licensing only — scope and limitations";
-const withDef = (label, def) => def ? `${label} — ${def}` : label;
+const BAND_SCOPE_LABEL = "License tier bands cover Microsoft 365 commercial licensing only: scope and limitations";
+const withDef = (label, def) => def ? `${label}: ${def}` : label;
 /* Dataset currency, derived at build time from the rows' own last_verified values. */
 function verifiedRange(){
   const v = META.verified_range || {};
@@ -725,7 +725,7 @@ function vHome(){
        of them conclude the atlas simply forgot them. Same META list the about page renders in full. */""}
   <p class="small muted" style="margin-top:16px; max-width:88ch">
     <b>Not covered here:</b> ${(META.absent_industries||[]).map(a =>
-      `${esc(a.sector)} (needs ${esc(a.framework)})`).join(", ")} — each would need a framework the atlas
+      `${esc(a.sector)} (needs ${esc(a.framework)})`).join(", ")}. Each would need a framework the atlas
     does not map, so none can be added by relabelling what is already here.
     <a href="#/about">Why, in full</a>.</p>
   </section>`;
@@ -790,7 +790,7 @@ function tierBtnFace(name, seat, composed){
   const vis = composed ? `${name} (${seat} +${composed})` : `${name} (${seat})`;
   const words = composed ? `${plural(seat, "mapping")} plus ${composed} with no seat tier`
                          : plural(seat, "mapping");
-  return `${esc(vis)}<span class="sr-only"> — ${esc(words)}</span>`;
+  return `${esc(vis)}<span class="sr-only">, ${esc(words)}</span>`;
 }
 function setTier(t){ setQuery({tier: t || null}); render({focus:"tier", filter:t||""}); }
 function setMeter(exclude){ setQuery({meter: exclude ? "exclude" : null}); render({focus:"meter", filter:exclude?"exclude":"include"}); }
@@ -842,7 +842,7 @@ function vFramework(id){
       <button type="button" class="fbtn ${!tier?"on":""}" data-tier="" aria-pressed="${!tier}" onclick="setTier(null)">${tierBtnFace("All tiers", seatCount(null), composed)}</button>
       ${seatPresent.map(b=>`<button type="button" class="fbtn ${tier===b?"on":""}" data-tier="${esc(b)}" aria-pressed="${tier===b}" onclick="setTier('${esc(b)}')">${tierBtnFace(BAND_LABEL[b]||b, seatCount(b), composed)}</button>`).join("")}
     </span>
-    ${composed?`<span class="tiny muted">The <b>+${composed}</b> is rows with no seat tier — consumption-priced and boundary rows — which show under every tier unless excluded below.</span>`:""}
+    ${composed?`<span class="tiny muted">The <b>+${composed}</b> is rows with no seat tier (consumption-priced and boundary rows), which show under every tier unless excluded below.</span>`:""}
   </div>`:""}
   ${showMeter?`<div class="toolrow"><span class="lbl" id="meterlbl">No seat tier</span>
     <span role="group" aria-labelledby="meterlbl">
@@ -959,7 +959,7 @@ function vMatrix(){
     : `<p class="subtitle muted small" style="margin-top:6px">Click a product column cell to drill into its frameworks × solutions matrix.</p>`;
   return `<div class="pagehead"><div class="overline">Coverage density</div><h1>Frameworks × products</h1>
     <div class="full">Count of mapped controls per product. Darker = more rows. Drill into a product for its frameworks × solutions detail.
-    Boundary rows (deliberate "not covered" verdicts) count toward totals; honesty is part of the map.</div></div>
+    Boundary rows ("Not Covered" verdicts) count toward totals: a gap the atlas states is part of the map.</div></div>
   ${top}${drills}`;
 }
 function matrixProductSection(pid){
@@ -1097,21 +1097,21 @@ function vAbout(){
     <h2>How a row is made</h2>
     <p>Every row starts from the framework text, not from a product datasheet.</p>
     <ul>
-      <li><b>Frameworks are version-pinned.</b> Each row states the edition it maps — <abbr
+      <li><b>Frameworks are version-pinned.</b> Each row states the edition it maps (<abbr
         title="International Organization for Standardization / International Electrotechnical Commission">ISO/IEC</abbr>
         27001:2022, <abbr title="Payment Card Industry Data Security Standard">PCI DSS</abbr> v4.0.1,
-        <abbr title="National Institute of Standards and Technology, Special Publication">NIST SP</abbr> 800-53 Rev 5 —
+        <abbr title="National Institute of Standards and Technology, Special Publication">NIST SP</abbr> 800-53 Rev 5),
         because control numbering moves between revisions and a mapping to an unnamed edition is not checkable.</li>
       <li><b>Control intent is paraphrased, never quoted.</b> The atlas says what a control is asking for in its
         own words. That is partly a copyright constraint and partly a usability one, but it cuts both ways:
         a paraphrase is an interpretation, so read the standard itself before relying on any mapping.</li>
       <li><b>Every row cites at least one official source and at least one Microsoft source.</b> The official
-        source is the framework's own authority — the regulator, the standards body, the regulation text. The
+        source is the framework's own authority: the regulator, the standards body, or the regulation text. The
         Microsoft source is the product documentation behind the capability claim. The one exception is a
         boundary row: where the verdict is <b>Not Covered</b> there is no Microsoft capability to cite, and that
         absence is the finding.</li>
       <li><b>Every row carries its own verification date</b>, recording when its claims were last checked against
-        those sources — not when this page was generated.</li>
+        those sources, not when this page was generated.</li>
       <li><b>Rows that could not be confirmed are labeled UNVERIFIED</b> rather than quietly published alongside
         the rest. ${unver === 0
           ? `The atlas currently has none: all ${ROWS.length} rows have been checked against a live source.`
@@ -1129,18 +1129,18 @@ function vAbout(){
       and ${Math.max(0, Object.keys(META.glossary || {}).length - 4)} others. Each is expanded in the <a href="#/glossary">glossary</a>.</p>
 
     <h2>Scope, and its edges</h2>
-    <p>${PROD_ORDER.length} products — ${esc(prodNames)} — across ${Object.keys(FW).length} frameworks and
+    <p>${PROD_ORDER.length} products (${esc(prodNames)}) across ${Object.keys(FW).length} frameworks and
       ${ROWS.length} control mappings.</p>
     <h3>The product roadmap is closed</h3>
     <p>These six cover the ground where compliance frameworks and the Microsoft security stack actually meet:
       data protection, identity, endpoint, detection and response, logging, and cloud posture. Adding a seventh
       would mean either repeating what these already carry or reaching for products whose relationship to control
-      text is too thin to map honestly. Depth across ${Object.keys(FW).length} frameworks is worth more here than
+      text is too thin to map without overclaiming. Depth across ${Object.keys(FW).length} frameworks is worth more here than
       breadth across more products.</p>
     <h3>Some products appear only as references</h3>
     <p>Microsoft Priva is Microsoft's privacy management solution, covering privacy risk assessment and subject
       rights requests. It is named on privacy rows as a contributing product but has no rows of its own, and that
-      is a deliberate boundary rather than an unfinished one: the product roadmap closed at six mapped products,
+      is a decided boundary, not unfinished work: the product roadmap closed at six mapped products,
       and Priva sits outside it. Where a privacy control needs it, the atlas points to it rather than mapping a
       seventh product it has chosen not to author. The full rationale is recorded in the project's public
       repository.</p>
@@ -1158,9 +1158,9 @@ function vAbout(){
       for one, and the per-row dates matter more than usual.` : ""}</p>
     <p>The <b>built</b> timestamp in the footer is a different thing: it is when this page was last generated, and
       it moves on every rebuild whether or not any content changed. It belongs to this page rather than to the
-      data behind it — <span class="mono">compliance-atlas.json</span> carries no timestamp at all, so a rebuild
+      data behind it: <span class="mono">compliance-atlas.json</span> carries no timestamp at all, so a rebuild
       that changes no content leaves the dataset byte-identical. The version number above it is what tells you
-      the content changed — you are reading version <b>${esc(META.brand.atlas_version)}</b>, and the
+      the content changed. You are reading version <b>${esc(META.brand.atlas_version)}</b>, and the
       ${P.changelog_url ? `<a href="${esc(P.changelog_url)}">changelog</a>` : "changelog"} records what moved in
       each one, including corrections made after a reader reported them.</p>
 
@@ -1170,11 +1170,11 @@ function vAbout(){
       <a href="${repo}">${repo}</a>.</p>
     <p><b>Corrections are wanted.</b> With ${ROWS.length} rows spanning six products that change constantly, some
       of this is wrong and more of it will go stale. If you find a mis-mapped control, a licensing claim that no
-      longer holds, or a dead citation, please <a href="${issues}">open an issue</a> — fixes are recorded so you
+      longer holds, or a dead citation, please <a href="${issues}">open an issue</a>. Fixes are recorded so you
       can see that a report landed.</p>
     <p>Content is licensed <b>${esc(P.content_license || "")}</b> and the build code <b>${esc(P.code_license || "")}</b>;
       reuse and adapt it with attribution. That open license is only possible because the atlas paraphrases control
-      intent instead of reproducing standards text — the frameworks themselves remain the property of their authors,
+      intent instead of reproducing standards text. The frameworks themselves remain the property of their authors,
       so anyone adapting this work needs to keep the paraphrase rule intact.</p>
   </section>`;
 }
@@ -1333,7 +1333,7 @@ function render(opts){
   } else if(h1){
     h1.focus({preventScroll:true});
   }
-  if(!first) srStatus.textContent = note ? `${view || META.brand.title} — ${note}` : (view || META.brand.title);
+  if(!first) srStatus.textContent = note ? `${view || META.brand.title}: ${note}` : (view || META.brand.title);
 }
 window.addEventListener("hashchange", () => render());
 
