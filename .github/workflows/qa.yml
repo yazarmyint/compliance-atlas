@@ -88,6 +88,27 @@ jobs:
         continue-on-error: true
         run: python tools/check_urls.py > urls.log 2>&1
 
+      - name: Show both reports
+        # The two steps above write to files so the issue body can quote them. Print them here
+        # too, pass or fail, so every run's log and summary page show what was checked.
+        if: always()
+        run: |
+          for f in maintenance.log urls.log; do
+            echo "::group::$f"
+            cat "$f" 2>/dev/null || echo "($f was not written)"
+            echo "::endgroup::"
+          done
+          {
+            echo "## Maintenance report (${{ steps.maintenance.outcome }})"
+            echo '```'
+            tail -c 30000 maintenance.log 2>/dev/null
+            echo '```'
+            echo "## URL sweep (${{ steps.urls.outcome }})"
+            echo '```'
+            tail -c 30000 urls.log 2>/dev/null
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Open or update the maintenance-due issue
         if: steps.maintenance.outcome == 'failure' || steps.urls.outcome == 'failure'
         env:

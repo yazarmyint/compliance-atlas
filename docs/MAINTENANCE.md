@@ -22,7 +22,8 @@ python build/assemble.py --check               # validate and report, write noth
 ### Automation
 
 `.github/workflows/qa.yml` runs the strict report and the URL sweep **every Monday** and opens an issue
-labelled `maintenance-due` (or comments on the open one) when either finds something. It also gates
+labelled `maintenance-due` (or comments on the open one) when either finds something. Both reports
+are printed on the run's summary page every week, pass or fail, so a quiet week can be read too. It also gates
 every push and pull request on the guard tests, `assemble.py --check`, the spelling lint, and axe.
 
 Keep a calendar reminder anyway. GitHub disables scheduled workflows in a public repository after 60
