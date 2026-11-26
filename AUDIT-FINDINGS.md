@@ -4060,3 +4060,43 @@ differs only in `BUILT_AT` and was restored; spelling lint clean. `check_urls.py
 to check by hand, exit 0. `axe_check.mjs`: 0 gating violation nodes across 17 routes × 2 themes, plus the
 100 known nodes above. The workflow file was checked structurally only; it has not run on GitHub yet,
 because nothing is pushed. Merge held for owner review.
+
+## 39. Reader fixes (2026-11-26) — REVIEW-2026-11 C-01, C-04, C-05, C-07, E-03, and the §38.3 card fix; v3.5.0
+
+Session 21. One commit per finding, each rebuilt and gated, then one commit for the version and one
+for this record. Against 3.4.3 the published JSON changes at 23 paths, none under `rows`.
+
+### 39.1 What changed
+
+| Finding | Change |
+|---|---|
+| **§38.3 (WCAG 2.5.3)** | The five card templates (industries, an industry's frameworks, frameworks, products, a product's solutions) are now `<div class="card">` with the link on the heading text; `.cardlink::before` is stretched over the card, so the hit area and the one-stop-per-card keyboard order are as before. The focus ring moves to the card through `.card:has(.cardlink:focus-visible)`. The link's accessible name is its own visible text, so `label-content-name-mismatch` has nothing to report. Supersedes the §21.3 `aria-label` decision. The `KNOWN_FINDINGS` entry was removed in the same commit, as §38.3 required; the table stays, empty, for the next one. |
+| **C-01** | Search: a term of three characters or fewer made only of letters and digits must match a whole word (a non-alphanumeric character or the end of the text on each side). Longer terms, and terms with punctuation (control refs, row ids), still match as substrings. `#/search/AI` 348 → 26 rows; `copilot` 2, `MFA` 32, `A.8.12` 2, `retention` 73, unchanged. A short term adds one line saying how it was matched. `#/search/AI` joins the axe routes (18). |
+| **C-05** | `.overline.ver` on framework version strings on cards: source casing, no tracking. |
+| **C-04** | Glossary +12, read in context before definition: AMA, CEF, CMDB, EASM, FIDO2, FIPS, KQL, M365, NDR, NRT, PAN, SIS. **NPI excluded as ambiguous**: the GLBA rows mean nonpublic personal information, while `dpr-d11` lists it beside pseudonymous and unlinked data in a different sense; the CM precedent applies. About derives its "and N others" from `META.glossary` instead of saying "around forty". |
+| **E-03** | `NEXT_PASS_DUE` (hand-set, 2027-05-14) and `meta.reverification_schedule` {`last_pass` from `lic_pass_ledger()`, `next_due`}. Shown in the landing overline and in About's currency paragraph. Never derived from the clock, in the build or in the page: a reader who sees a past date can tell the atlas is overdue without the page computing it. The build fails if `next_due` is not after the last pass or is more than 184 days after it (the twice-a-year promise); the maintenance report adds a `PASS` warning once it has gone by, so the weekly watch job raises it. |
+| **C-07** | Narrow, as recommended: 28 edits, owner-reviewed before commit. 25 em dashes replaced (17 in reader-visible template text, mostly About; 8 in meta, industry, and band strings), including three that are separators in the tier-button names, the route announcement, and definition tooltips. Four self-commenting phrases rewritten ("honesty is part of the map", "a deliberate boundary rather than an unfinished one", "too thin to map honestly", Purview's "marks deliberate gaps honestly"). Two guards: `assemble.py` fails on an em dash anywhere in the published JSON except a framework's `full_name` or `version` (the ISO and SOC 2 titles quote the publisher), and `build_html.py` fails on one in the template outside comments. En dashes stay legal, since they mark ranges. No row field touched. |
+
+### 39.2 Version: MINOR, by owner ruling
+
+The review planned PATCH 3.4.4 and left E-03 as "PATCH or MINOR, your ruling". At the version step it
+was put to the owner with the precedent: 2.10.0 was a MINOR because it added `meta.maintenance`, a
+consumer-visible key, and E-03 adds both a key and something a reader can see that they could not
+before. **Ruling (2026-11-26): MINOR, 3.5.0.** The later planned versions each move up one minor: DPR
+Section K is now 3.6.0, ISO 42001 3.7.0, and so on. The review file is untracked and was not edited.
+
+### 39.3 Tests
+
+`tests/test_guards.py` +6: two for `NEXT_PASS_DUE` (before the last pass; beyond 184 days), and four
+for the em-dash guards (a published string fails, a framework title passes, reader-visible template
+text fails, a template comment passes). Each asserts the guard's own message, per §38.
+
+### 39.4 Gate
+
+`python -m unittest discover -s tests`: 34 tests OK. `assemble.py --check`: exit 0, no maintenance
+warning. Spelling lint clean; template em-dash lint clean. `axe_check.mjs`: 0 violation nodes across
+18 routes × 2 themes, with nothing on the known list. On screen (headless Chrome at 1280 × 900): the
+DIB lens cards with the long CMMC version string in source casing; the landing overline with the
+next-pass date in both themes; a click on a card's description text navigates to that card's
+framework; Tab lands on the card link and the card shows the 2 px focus ring. Merge held for owner
+review.
