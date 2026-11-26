@@ -20,7 +20,7 @@ authorization it "has". CMMC is the model, dateless (the rollout phase lives in 
 maintenance trigger, not here). This mirrors the license_bands rule that the band is a
 signpost, never the authority.
 
-TERM CUT (Session 15, owner-reviewed). 47 terms ship. Notable exclusions and why, recorded
+TERM CUT (Session 15, owner-reviewed; extended in 3.5.0). 59 terms ship. Notable exclusions and why, recorded
 because the cut being on the record is part of the value (AUDIT-FINDINGS §33):
   - WORM, DIB      excluded: ZERO occurrences in the shipped artifact. The atlas writes
                    "immutable"/"records" and "Defense industrial base" spelled out. A
@@ -31,6 +31,9 @@ because the cut being on the record is part of the value (AUDIT-FINDINGS §33):
   - framework      excluded as a class (HIPAA, GDPR, PCI DSS, ISO, SOC, GLBA, FERPA, NIST,
     short-names    CSF): each carries its full name on its own framework card. CMMC is kept
                    because it is a program referenced far from its card (gov notes, 800-171).
+  - NPI            excluded (3.5.0): ambiguous. The GLBA rows use it for "nonpublic personal
+                   information"; the DPR row dpr-d11 lists it beside pseudonymous and unlinked
+                   data, a different sense. One definition would be wrong for one of them.
   - E3/E5/tier     excluded: the tier legend and license bands already define these with
     and control    sourcing; and control-ref tokens (CC6, PR, AC, CFR-as-citation, TSC/POF)
     tokens         are navigation, not vocabulary.
@@ -51,6 +54,10 @@ GCC/GCC High/DoD (Office 365 US Government service descriptions), CMMC/C3PAO/SPR
 SPRS/DISA), MCSB (Microsoft cloud security benchmark), and the Defender family names against
 the atlas's own verified row prose. Sources in AUDIT-FINDINGS §33.
 
+3.5.0 ADDITIONS (REVIEW-2026-11 C-04): AMA, CEF, CMDB, EASM, FIDO2, FIPS, KQL, M365, NDR, NRT,
+PAN, SIS, the acronyms that occurred most often in row prose with no entry. Each was read in
+context across the rows before it was defined, so the sense given is the one the rows use.
+
 HOUSE-VOICE NOTE: every definition ran through /agentic-humanizer (Session 15, Phase 2).
 The pass was light because the drafts were already de-slopped; its one mechanical output
 rule, pattern 14 (strip em/en dashes), rewrote four entries (CDE, DKE, DPR, SIT). Keep new
@@ -62,10 +69,13 @@ entries em-dash-free to match.
 # lookup order; the #/glossary route sorts case-insensitively regardless.
 GLOSSARY = {
     "AIR": "Automated Investigation and Response: automation that investigates an alert and, where permitted, remediates it without an analyst driving each step.",
+    "AMA": "Azure Monitor Agent: Microsoft's agent for collecting logs and performance data from Windows and Linux machines into a Log Analytics workspace, including Syslog and CEF events forwarded from network devices.",
     "ASR": "Attack Surface Reduction: Microsoft Defender for Endpoint rules that block common exploit and malware behaviors.",
     "C3PAO": "CMMC Third-Party Assessment Organization: an assessor accredited by the Cyber AB to perform official CMMC Level 2 certification assessments. The leading C is for \"CMMC\", not \"Certified\", which is a common misreading.",
     "CDE": "Cardholder Data Environment: in PCI DSS, the systems and networks that store, process, or transmit payment-card data, which is the scope the standard's controls apply to.",
+    "CEF": "Common Event Format: a text log format, carried over Syslog, that many firewalls, proxies, and security appliances use to send events to a SIEM.",
     "CIEM": "Cloud Infrastructure Entitlement Management: analyzing and right-sizing the permissions identities hold across cloud infrastructure. (The former standalone product, Microsoft Entra Permissions Management, was retired in 2025.)",
+    "CMDB": "Configuration Management Database: the register of an organization's IT assets and how they relate, usually kept in an IT service management tool. The atlas treats it as outside the Microsoft stack.",
     "CMMC": "Cybersecurity Maturity Model Certification: the US Department of Defense program requiring defense contractors to implement NIST SP 800-171 controls, with Level 2 assessed either by self-assessment or by an independent C3PAO depending on the contract.",
     "CNAPP": "Cloud-Native Application Protection Platform: an umbrella category combining posture management (CSPM) and workload protection (CWPP) for cloud-native applications.",
     "CSPM": "Cloud Security Posture Management: continuous assessment of cloud configuration against a security baseline, surfacing misconfigurations and posture recommendations.",
@@ -79,12 +89,17 @@ GLOSSARY = {
     "DPR": "Data Protection Requirements: Microsoft's Supplier Data Protection Requirements, the versioned control set (v12, March 2026 here) that suppliers must meet under SSPA. In this atlas, the mapped framework.",
     "DSPM": "Data Security Posture Management: continuous discovery and risk assessment of where sensitive data lives and how it is exposed.",
     "DSR": "Data Subject Request (also DSAR, Data Subject Access Request): an individual's request to access, correct, or delete their personal data under privacy law.",
+    "EASM": "External Attack Surface Management: discovering and monitoring an organization's internet-facing assets the way an attacker would see them. Microsoft's product is Microsoft Defender External Attack Surface Management.",
     "EDR": "Endpoint Detection and Response: continuous monitoring of endpoints to detect, investigate, and respond to threats on them.",
     "EHR": "Electronic Health Record: a patient's digital clinical record, held in the healthcare systems the atlas treats as outside the Microsoft stack.",
+    "FIDO2": "An open standard from the FIDO Alliance and the W3C for passwordless, phishing-resistant sign-in with a security key, a passkey, or a device's built-in authenticator, using public-key cryptography instead of a shared secret.",
     "FIM": "File Integrity Monitoring: detecting unauthorized changes to critical files and system objects. (Not the retired \"Forefront Identity Manager\".)",
+    "FIPS": "Federal Information Processing Standards: US government standards published by NIST. In this atlas the reference is usually FIPS 140, which validates cryptographic modules; \"FIPS-validated\" means a module holds that validation.",
     "GCC": "Government Community Cloud: a Microsoft 365 environment segregated for US public-sector customers and their partners, meeting US federal requirements. Eligibility is validated before purchase.",
     "GCC High": "Government Community Cloud High: a more strictly isolated US-government environment assessed against NIST SP 800-53 at a High categorization, for organizations handling export-controlled (ITAR/DFARS) or defense-adjacent data. Feature availability and timing often differ from the commercial cloud.",
     "IRM": "Insider Risk Management: the Microsoft Purview capability that detects and manages risky insider activity, such as data theft by a departing employee. Not the older \"Information Rights Management\" encryption feature.",
+    "KQL": "Kusto Query Language: the query language for searching and analyzing log data in Microsoft Sentinel, Defender XDR advanced hunting, and Azure Monitor.",
+    "M365": "Microsoft 365: Microsoft's productivity cloud (Exchange Online, SharePoint, OneDrive, Teams, and the Office apps), and the license family the E3 and E5 suites belong to.",
     "MAM": "Mobile Application Management: protecting corporate data inside apps, with or without full device enrollment.",
     "MCSB": "Microsoft cloud security benchmark: Microsoft's baseline of security recommendations, mapped to industry frameworks, used to assess Azure and multicloud resources.",
     "MDCA": "Microsoft Defender for Cloud Apps: Microsoft's cloud access security broker for discovering and governing SaaS-app usage. Distinct from Defender for Cloud, which this atlas never shortens to \"MDC\".",
@@ -95,12 +110,16 @@ GLOSSARY = {
     "MDTI": "Microsoft Defender Threat Intelligence: Microsoft's threat-intelligence data and tooling for enriching investigations.",
     "MDVM": "Microsoft Defender Vulnerability Management: Microsoft's capability for assessing vulnerabilities and tracking their remediation.",
     "MFA": "Multifactor Authentication: requiring more than one form of evidence to sign in.",
+    "NDR": "Network Detection and Response: monitoring network traffic to detect and respond to threats, usually from sensors on the network rather than agents on endpoints.",
+    "NRT": "Near-real-time: in Microsoft Sentinel, an analytics rule that runs about once a minute, rather than on the longer interval of a scheduled rule.",
+    "PAN": "Primary Account Number: in PCI DSS, the payment-card number itself. Storing, processing, or transmitting it is what brings a system into the standard's scope.",
     "PHI": "Protected Health Information: individually identifiable health information protected under the US HIPAA rules.",
     "PIM": "Privileged Identity Management: the Microsoft Entra capability for just-in-time, time-bound activation and oversight of privileged roles.",
     "RBAC": "Role-Based Access Control: granting permissions through roles assigned to users, rather than to individuals directly.",
     "RMS": "Rights Management Service: the Microsoft encryption-and-usage-rights technology that underlies sensitivity-label protection.",
     "ROPA": "Records of Processing Activities: the register of an organization's personal-data processing required by GDPR Article 30.",
     "SIEM": "Security Information and Event Management: a platform that centralizes logs from across an estate for correlation, alerting, and investigation.",
+    "SIS": "Student Information System: a school's system of record for enrollment, grades, and other education records. The atlas treats it as outside the Microsoft stack.",
     "SIT": "Sensitive Information Type: a pattern-based classifier (for example, a credit-card or passport number) that Microsoft Purview uses to detect a specific kind of sensitive data.",
     "SOAR": "Security Orchestration, Automation, and Response: automating investigation and response steps, usually as playbooks attached to a SIEM.",
     "SPRS": "Supplier Performance Risk System: the US Department of Defense database where contractors record their NIST SP 800-171 / CMMC assessment scores.",

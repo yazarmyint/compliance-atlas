@@ -47,6 +47,7 @@ const ALL_ROUTES = [
   "#/matrix/purview",
   "#/cell/purview/iso-27001-2022/Data%20Loss%20Prevention",
   "#/search/retention",
+  "#/search/AI",                                     // C-01: a short term, matched as a whole word, with the note it shows
   "#/industry/legal",
   "#/industry/insurance",
   "#/row/iso-a-5-10",                                 // PR-004 row deep link, valid id (single-row view)
@@ -60,16 +61,9 @@ const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 // here is a debt with a named fix, never a way to make a rule go quiet: the rule still runs, its
 // node count is printed on every route, and the total is printed at the end. Remove the entry in
 // the same commit that fixes the finding. (REVIEW-2026-11 D-05, owner decision 2026-11-26.)
-const KNOWN_FINDINGS = {
-  "label-content-name-mismatch": {
-    since: "2026-11-26",
-    why: "axe-core 4.14 enables this WCAG 2.5.3 rule by default. Each card link carries an aria-label "
-       + "of its heading only (AUDIT-FINDINGS \u00a721.3), so the accessible name omits the rest of the "
-       + "card's visible text.",
-    fix: "Link only the card heading and stretch its click area over the card, so the accessible "
-       + "name is the heading and matches the link's visible text. A template change; PATCH.",
-  },
-};
+// Entry shape: "rule-id": { since: "YYYY-MM-DD", why: "...", fix: "..." }.
+// Empty since 3.5.0: label-content-name-mismatch on the cards was fixed (AUDIT-FINDINGS 39).
+const KNOWN_FINDINGS = {};
 
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,

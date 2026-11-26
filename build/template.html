@@ -96,6 +96,9 @@ mark{background:var(--warn-bg); color:inherit; padding:0 2px; border-radius:2px}
 .mono{font-family:var(--font-mono)}
 .wrap{max-width:1180px; margin:0 auto; padding:0 28px}
 .overline{font:600 11px/1 var(--font-body); letter-spacing:.18em; text-transform:uppercase; color:var(--accent-ink)}
+/* C-05: a framework's version string can run to two lines ("SP 800-171 Rev 2 (Feb 2020, incl. errata).
+   CMMC: 32 CFR 170 ..."), and set in spaced capitals it read as a wall. It keeps its source casing. */
+.overline.ver{text-transform:none; letter-spacing:.02em; line-height:1.4}
 .muted{color:var(--ink-2)} .small{font-size:12.5px} .tiny{font-size:11.5px}
 
 /* ---------- header ---------- */
@@ -163,8 +166,12 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .stat span{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
 .grid{display:grid; gap:14px}
 .grid.cards{grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); margin:20px 0 44px}
-/* Cards are <a> elements: the whole card is the link, so the mouse hit area is the full
-   card exactly as before, and keyboard users get one stop per card. */
+/* A card is a <div>; its link is the heading text alone, and the link's ::before stretches over
+   the whole card, so the mouse hit area is still the full card and keyboard users still get one
+   stop per card. The accessible name is the heading, which is also the link's visible text, so it
+   meets WCAG 2.5.3 Label in Name. Before 3.5.0 the whole card was an <a> named by an aria-label of
+   the heading alone (AUDIT-FINDINGS 21.3), which axe-core 4.14 flags because the name omitted the
+   rest of the card's visible text (AUDIT-FINDINGS 39). */
 .card{display:block; color:var(--ink); text-decoration:none;
   background:var(--card); border:1px solid var(--rule-2); border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
   cursor:pointer; transition:transform .12s ease, border-color .12s ease; position:relative; overflow:hidden}
@@ -172,6 +179,13 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 .card::after{content:"→"; position:absolute; right:16px; top:14px; color:var(--ink-3); font-size:15px; transition:transform .12s}
 .card:hover::after{transform:translateX(3px); color:var(--accent-ink)}
 .card h3{margin:2px 0 6px; font-size:19px}
+.cardlink{color:inherit; text-decoration:none}
+.cardlink:hover{text-decoration:none}
+.cardlink::before{content:""; position:absolute; inset:0; border-radius:inherit}
+/* The ring belongs on the card, not on the heading text the link wraps. */
+.cardlink:focus-visible{outline:none; box-shadow:none}
+.card:has(.cardlink:focus-visible){outline:2px solid var(--link); outline-offset:2px;
+  box-shadow:0 0 0 4px color-mix(in srgb, var(--link) 18%, transparent)}
 .card .desc{color:var(--ink-2); font-size:13px; min-height:2.6em}
 .card .meta{display:flex; gap:6px; flex-wrap:wrap; margin-top:12px}
 .minibar{display:flex; height:6px; border-radius:3px; overflow:hidden; margin-top:12px; background:var(--paper-2)}
@@ -483,13 +497,20 @@ const BAND_ORDER = ["e3","e5","addon","consumption","na"];
 /* Chrome, not data: the summary label for the collapsed scope note. It states the commercial-only
    limit in the always-visible summary, so a reader who never opens the disclosure still cannot
    mistake a band for a G/F/Business-Premium claim; the full note is verbatim inside. */
-const BAND_SCOPE_LABEL = "License tier bands cover Microsoft 365 commercial licensing only — scope and limitations";
-const withDef = (label, def) => def ? `${label} — ${def}` : label;
+const BAND_SCOPE_LABEL = "License tier bands cover Microsoft 365 commercial licensing only: scope and limitations";
+const withDef = (label, def) => def ? `${label}: ${def}` : label;
 /* Dataset currency, derived at build time from the rows' own last_verified values. */
 function verifiedRange(){
   const v = META.verified_range || {};
   if(!v.earliest) return "";
   return v.earliest === v.latest ? `rows verified ${v.earliest}` : `rows verified ${v.earliest} – ${v.latest}`;
+}
+/* E-03: when the next full pass is due. Read from META, never from the reader's clock: the
+   page states the promise as made, so a reader who sees a date in the past knows the atlas is
+   overdue, and the page never has to compute or announce that itself. */
+function nextPass(){
+  const s = META.reverification_schedule || {};
+  return s.next_due ? `next pass due by ${s.next_due}` : "";
 }
 
 /* ---------------- shared fragments ---------------- */
@@ -679,7 +700,7 @@ function cmChip(fw){
 function vHome(){
   const inds = Object.entries(IND);
   return `<div class="hero">
-    <div class="overline">${esc(META.brand.tagline)}${verifiedRange()?` · ${esc(verifiedRange())}`:""}</div>
+    <div class="overline">${esc(META.brand.tagline)}${verifiedRange()?` · ${esc(verifiedRange())}`:""}${nextPass()?` · ${esc(nextPass())}`:""}</div>
     <h1>Where does the Microsoft stack fit?</h1>
     <p class="lede">Pick an industry, open the frameworks it answers to, and read off each control's
       product mappings: claim strength, license tier, evidence examples, and the source behind every statement.</p>
@@ -695,16 +716,16 @@ function vHome(){
   <section class="block"><div class="overline">Industry lens</div><h2>Start from an industry</h2>
   <div class="grid cards">${inds.map(([id,i])=>{
     const rows = ROWS.filter(r => i.frameworks.includes(r.framework));
-    return `<a class="card" href="#/industry/${esc(id)}" aria-label="${esc(i.name)}">
-      <h3>${esc(i.name)}</h3><div class="desc">${esc(i.note)}</div>
+    return `<div class="card">
+      <h3><a class="cardlink" href="#/industry/${esc(id)}">${esc(i.name)}</a></h3><div class="desc">${esc(i.note)}</div>
       <div class="meta">${i.frameworks.map(f=>`<span class="chip">${esc(FW[f]?.name||f)}</span>`).join("")}</div>
-      ${minibar(rows)}</a>`; }).join("")}
+      ${minibar(rows)}</div>`; }).join("")}
   </div>
   ${/* PR-021: say out loud which sectors have no lens and why, rather than letting a reader from one
        of them conclude the atlas simply forgot them. Same META list the about page renders in full. */""}
   <p class="small muted" style="margin-top:16px; max-width:88ch">
     <b>Not covered here:</b> ${(META.absent_industries||[]).map(a =>
-      `${esc(a.sector)} (needs ${esc(a.framework)})`).join(", ")} — each would need a framework the atlas
+      `${esc(a.sector)} (needs ${esc(a.framework)})`).join(", ")}. Each would need a framework the atlas
     does not map, so none can be added by relabelling what is already here.
     <a href="#/about">Why, in full</a>.</p>
   </section>`;
@@ -718,11 +739,11 @@ function vIndustry(id){
   <section class="block"><h2>Applicable frameworks</h2>
   <div class="grid cards">${i.frameworks.map(fid=>{
     const f = FW[fid], rows = byFw(fid);
-    return `<a class="card" href="#/framework/${esc(fid)}" aria-label="${esc(f.name)}">
-      <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
+    return `<div class="card">
+      <div class="overline ver">${esc(f.version)}</div><h3><a class="cardlink" href="#/framework/${esc(fid)}">${esc(f.name)}</a></h3>
       <div class="desc">${esc(f.applies_to)}</div>
       <div class="meta"><span class="count-pill">${rows.length} mapped controls</span>${f.compliance_manager_template?.exists?`<span class="chip">CM template ✓</span>`:""}</div>
-      ${minibar(rows)}</a>`; }).join("")}
+      ${minibar(rows)}</div>`; }).join("")}
   </div></section>`;
 }
 function vFrameworks(){
@@ -730,11 +751,11 @@ function vFrameworks(){
     <div class="full">Every mapped control, grouped by framework. Each row is verified against a live official source; per-row dates govern currency.</div></div>
   <div class="grid cards" style="margin-top:22px">${FW_ORDER.map(fid=>{
     const f = FW[fid], rows = byFw(fid);
-    return `<a class="card" href="#/framework/${esc(fid)}" aria-label="${esc(f.name)}">
-      <div class="overline">${esc(f.version)}</div><h3>${esc(f.name)}</h3>
+    return `<div class="card">
+      <div class="overline ver">${esc(f.version)}</div><h3><a class="cardlink" href="#/framework/${esc(fid)}">${esc(f.name)}</a></h3>
       <div class="desc">${esc(f.applies_to)}</div>
       <div class="meta"><span class="count-pill">${rows.length} controls</span>${cmChip(f)}</div>
-      ${minibar(rows)}</a>`; }).join("")}</div>`;
+      ${minibar(rows)}</div>`; }).join("")}</div>`;
 }
 let fwFilter = null;
 function setFwFilter(c){ fwFilter = c; render({focus:"filter", filter:c}); }
@@ -769,7 +790,7 @@ function tierBtnFace(name, seat, composed){
   const vis = composed ? `${name} (${seat} +${composed})` : `${name} (${seat})`;
   const words = composed ? `${plural(seat, "mapping")} plus ${composed} with no seat tier`
                          : plural(seat, "mapping");
-  return `${esc(vis)}<span class="sr-only"> — ${esc(words)}</span>`;
+  return `${esc(vis)}<span class="sr-only">, ${esc(words)}</span>`;
 }
 function setTier(t){ setQuery({tier: t || null}); render({focus:"tier", filter:t||""}); }
 function setMeter(exclude){ setQuery({meter: exclude ? "exclude" : null}); render({focus:"meter", filter:exclude?"exclude":"include"}); }
@@ -821,7 +842,7 @@ function vFramework(id){
       <button type="button" class="fbtn ${!tier?"on":""}" data-tier="" aria-pressed="${!tier}" onclick="setTier(null)">${tierBtnFace("All tiers", seatCount(null), composed)}</button>
       ${seatPresent.map(b=>`<button type="button" class="fbtn ${tier===b?"on":""}" data-tier="${esc(b)}" aria-pressed="${tier===b}" onclick="setTier('${esc(b)}')">${tierBtnFace(BAND_LABEL[b]||b, seatCount(b), composed)}</button>`).join("")}
     </span>
-    ${composed?`<span class="tiny muted">The <b>+${composed}</b> is rows with no seat tier — consumption-priced and boundary rows — which show under every tier unless excluded below.</span>`:""}
+    ${composed?`<span class="tiny muted">The <b>+${composed}</b> is rows with no seat tier (consumption-priced and boundary rows), which show under every tier unless excluded below.</span>`:""}
   </div>`:""}
   ${showMeter?`<div class="toolrow"><span class="lbl" id="meterlbl">No seat tier</span>
     <span role="group" aria-labelledby="meterlbl">
@@ -839,10 +860,10 @@ function vProducts(){
     <div class="full">${esc(PIVOT_EXPLAINER)}</div></div>
   <div class="grid cards" style="margin-top:22px">${PROD_ORDER.map(pid=>{
     const rows = byProd(pid);
-    return `<a class="card" href="#/product/${esc(pid)}" aria-label="${esc(prodFull(pid))}">
-      <h3>${esc(prodFull(pid))}</h3><div class="desc">${esc(PRODUCTS[pid].notes||"")}</div>
+    return `<div class="card">
+      <h3><a class="cardlink" href="#/product/${esc(pid)}">${esc(prodFull(pid))}</a></h3><div class="desc">${esc(PRODUCTS[pid].notes||"")}</div>
       <div class="meta"><span class="count-pill">${rows.length} mappings</span><span class="count-pill">${PRODUCTS[pid].solutions.length} solutions</span></div>
-      ${minibar(rows)}</a>`; }).join("")}</div>`;
+      ${minibar(rows)}</div>`; }).join("")}</div>`;
 }
 function vProduct(pid){
   const p = PRODUCTS[pid]; if(!p) return vMissing("product", pid);
@@ -860,10 +881,10 @@ function vProduct(pid){
   <div class="grid cards" style="margin-top:22px">${p.solutions.map(key=>{
     const s = SOL[key]||{}, prim = bySolP(pid,key), also = byAlsoP(pid,key);
     const fwids = [...new Set(prim.concat(also).map(r=>r.framework))];
-    return `<a class="card" href="#/product/${esc(pid)}/solution/${esc(encodeURIComponent(key))}" aria-label="${esc(key)}">
-      <h3>${esc(key)}</h3><div class="desc">${esc(s.scope||"")}</div>
+    return `<div class="card">
+      <h3><a class="cardlink" href="#/product/${esc(pid)}/solution/${esc(encodeURIComponent(key))}">${esc(key)}</a></h3><div class="desc">${esc(s.scope||"")}</div>
       <div class="meta"><span class="count-pill">${prim.length} primary</span><span class="count-pill">${also.length} contributing</span><span class="count-pill">${fwids.length} frameworks</span></div>
-      ${minibar(prim)}</a>`; }).join("")}
+      ${minibar(prim)}</div>`; }).join("")}
   </div>
   ${refs.length?`<section class="block"><h2>Referenced by other products' mappings</h2>
     <p class="subtitle muted small">Rows mapped to another product that name ${esc(p.official_name)} as a related product.</p>
@@ -938,7 +959,7 @@ function vMatrix(){
     : `<p class="subtitle muted small" style="margin-top:6px">Click a product column cell to drill into its frameworks × solutions matrix.</p>`;
   return `<div class="pagehead"><div class="overline">Coverage density</div><h1>Frameworks × products</h1>
     <div class="full">Count of mapped controls per product. Darker = more rows. Drill into a product for its frameworks × solutions detail.
-    Boundary rows (deliberate "not covered" verdicts) count toward totals; honesty is part of the map.</div></div>
+    Boundary rows ("Not Covered" verdicts) count toward totals: a gap the atlas states is part of the map.</div></div>
   ${top}${drills}`;
 }
 function matrixProductSection(pid){
@@ -982,9 +1003,21 @@ function vSearch(q){
     FW[r.framework].name, r.control_domain,
     r.cloud_availability_note, r.config_evidence_example, r.operational_evidence_example,
     r.coverage, r.confidence, r.id].join(" ").toLowerCase();
-  const hits = terms.length ? ROWS.filter(r => terms.every(t => hay(r).includes(t))) : [];
+  /* REVIEW-2026-11 C-01: a short plain term must match a whole word. As a substring, "AI" matched
+     "maintain" and "detail" and returned 348 of 378 rows. A term of three characters or fewer made
+     only of letters and digits ("ai", "mfa", "e5", "pim") therefore needs a non-alphanumeric
+     character or the end of the text on each side. Anything longer, or anything with punctuation
+     in it (control refs such as "A.8.12" or "3.13.16", ids such as "iso-a-5-10"), still matches
+     as a substring, so a partial ref or a word stem keeps working. The term is [a-z0-9] only, so it
+     needs no escaping before it goes into the pattern. */
+  const short = t => /^[a-z0-9]{1,3}$/.test(t);
+  const tests = terms.map(t => short(t)
+    ? (re => h => re.test(h))(new RegExp(`(^|[^a-z0-9])${t}($|[^a-z0-9])`))
+    : h => h.includes(t));
+  const hits = terms.length ? ROWS.filter(r => { const h = hay(r); return tests.every(f => f(h)); }) : [];
   return `<div class="pagehead"><div class="overline">Global search</div><h1>“${esc(q)}”</h1>
-    <div class="metaline"><span class="count-pill">${hits.length} matching row(s)</span></div></div>
+    <div class="metaline"><span class="count-pill">${hits.length} matching row(s)</span>${terms.some(short)
+      ? `<span class="small muted">Terms of three characters or fewer match whole words only.</span>` : ""}</div></div>
   <div style="height:14px"></div>
   ${hits.length ? hits.map(r=>`<div class="result-item">${rowCard(r,{showFw:true})}</div>`).join("")
     : `<div class="callout gray">No rows match. Try a control ref (e.g. <span class="mono">3.13.16</span>, <span class="mono">A.8.12</span>, <span class="mono">CC6.7</span>), a product (<span class="mono">purview</span>), or a keyword (<span class="mono">retention</span>, <span class="mono">CUI</span>).</div>`}`;
@@ -1064,21 +1097,21 @@ function vAbout(){
     <h2>How a row is made</h2>
     <p>Every row starts from the framework text, not from a product datasheet.</p>
     <ul>
-      <li><b>Frameworks are version-pinned.</b> Each row states the edition it maps — <abbr
+      <li><b>Frameworks are version-pinned.</b> Each row states the edition it maps (<abbr
         title="International Organization for Standardization / International Electrotechnical Commission">ISO/IEC</abbr>
         27001:2022, <abbr title="Payment Card Industry Data Security Standard">PCI DSS</abbr> v4.0.1,
-        <abbr title="National Institute of Standards and Technology, Special Publication">NIST SP</abbr> 800-53 Rev 5 —
+        <abbr title="National Institute of Standards and Technology, Special Publication">NIST SP</abbr> 800-53 Rev 5),
         because control numbering moves between revisions and a mapping to an unnamed edition is not checkable.</li>
       <li><b>Control intent is paraphrased, never quoted.</b> The atlas says what a control is asking for in its
         own words. That is partly a copyright constraint and partly a usability one, but it cuts both ways:
         a paraphrase is an interpretation, so read the standard itself before relying on any mapping.</li>
       <li><b>Every row cites at least one official source and at least one Microsoft source.</b> The official
-        source is the framework's own authority — the regulator, the standards body, the regulation text. The
+        source is the framework's own authority: the regulator, the standards body, or the regulation text. The
         Microsoft source is the product documentation behind the capability claim. The one exception is a
         boundary row: where the verdict is <b>Not Covered</b> there is no Microsoft capability to cite, and that
         absence is the finding.</li>
       <li><b>Every row carries its own verification date</b>, recording when its claims were last checked against
-        those sources — not when this page was generated.</li>
+        those sources, not when this page was generated.</li>
       <li><b>Rows that could not be confirmed are labeled UNVERIFIED</b> rather than quietly published alongside
         the rest. ${unver === 0
           ? `The atlas currently has none: all ${ROWS.length} rows have been checked against a live source.`
@@ -1093,21 +1126,21 @@ function vAbout(){
     <p>The atlas leans on the vocabulary of both worlds it bridges, so acronyms recur throughout:
       <abbr title="Data Loss Prevention">DLP</abbr>, <abbr title="Extended Detection and Response">XDR</abbr>,
       <abbr title="Cloud Security Posture Management">CSPM</abbr>, <abbr title="Insider Risk Management">IRM</abbr>,
-      and around forty others. Each is expanded in the <a href="#/glossary">glossary</a>.</p>
+      and ${Math.max(0, Object.keys(META.glossary || {}).length - 4)} others. Each is expanded in the <a href="#/glossary">glossary</a>.</p>
 
     <h2>Scope, and its edges</h2>
-    <p>${PROD_ORDER.length} products — ${esc(prodNames)} — across ${Object.keys(FW).length} frameworks and
+    <p>${PROD_ORDER.length} products (${esc(prodNames)}) across ${Object.keys(FW).length} frameworks and
       ${ROWS.length} control mappings.</p>
     <h3>The product roadmap is closed</h3>
     <p>These six cover the ground where compliance frameworks and the Microsoft security stack actually meet:
       data protection, identity, endpoint, detection and response, logging, and cloud posture. Adding a seventh
       would mean either repeating what these already carry or reaching for products whose relationship to control
-      text is too thin to map honestly. Depth across ${Object.keys(FW).length} frameworks is worth more here than
+      text is too thin to map without overclaiming. Depth across ${Object.keys(FW).length} frameworks is worth more here than
       breadth across more products.</p>
     <h3>Some products appear only as references</h3>
     <p>Microsoft Priva is Microsoft's privacy management solution, covering privacy risk assessment and subject
       rights requests. It is named on privacy rows as a contributing product but has no rows of its own, and that
-      is a deliberate boundary rather than an unfinished one: the product roadmap closed at six mapped products,
+      is a decided boundary, not unfinished work: the product roadmap closed at six mapped products,
       and Priva sits outside it. Where a privacy control needs it, the atlas points to it rather than mapping a
       seventh product it has chosen not to author. The full rationale is recorded in the project's public
       repository.</p>
@@ -1118,12 +1151,16 @@ function vAbout(){
 
     <h2>How current it is</h2>
     <p>${verifiedRange() ? esc(verifiedRange().replace(/^rows /, "Rows currently in the atlas were ")) + "." : ""}
-      ${esc(META.reverification_policy || "")}</p>
+      ${esc(META.reverification_policy || "")}
+      ${(META.reverification_schedule || {}).next_due ? `The last pass closed on
+      <b>${esc(META.reverification_schedule.last_pass)}</b>, and the next is due by
+      <b>${esc(META.reverification_schedule.next_due)}</b>. If that date is behind you, the atlas is overdue
+      for one, and the per-row dates matter more than usual.` : ""}</p>
     <p>The <b>built</b> timestamp in the footer is a different thing: it is when this page was last generated, and
       it moves on every rebuild whether or not any content changed. It belongs to this page rather than to the
-      data behind it — <span class="mono">compliance-atlas.json</span> carries no timestamp at all, so a rebuild
+      data behind it: <span class="mono">compliance-atlas.json</span> carries no timestamp at all, so a rebuild
       that changes no content leaves the dataset byte-identical. The version number above it is what tells you
-      the content changed — you are reading version <b>${esc(META.brand.atlas_version)}</b>, and the
+      the content changed. You are reading version <b>${esc(META.brand.atlas_version)}</b>, and the
       ${P.changelog_url ? `<a href="${esc(P.changelog_url)}">changelog</a>` : "changelog"} records what moved in
       each one, including corrections made after a reader reported them.</p>
 
@@ -1133,11 +1170,11 @@ function vAbout(){
       <a href="${repo}">${repo}</a>.</p>
     <p><b>Corrections are wanted.</b> With ${ROWS.length} rows spanning six products that change constantly, some
       of this is wrong and more of it will go stale. If you find a mis-mapped control, a licensing claim that no
-      longer holds, or a dead citation, please <a href="${issues}">open an issue</a> — fixes are recorded so you
+      longer holds, or a dead citation, please <a href="${issues}">open an issue</a>. Fixes are recorded so you
       can see that a report landed.</p>
     <p>Content is licensed <b>${esc(P.content_license || "")}</b> and the build code <b>${esc(P.code_license || "")}</b>;
       reuse and adapt it with attribution. That open license is only possible because the atlas paraphrases control
-      intent instead of reproducing standards text — the frameworks themselves remain the property of their authors,
+      intent instead of reproducing standards text. The frameworks themselves remain the property of their authors,
       so anyone adapting this work needs to keep the paraphrase rule intact.</p>
   </section>`;
 }
@@ -1296,7 +1333,7 @@ function render(opts){
   } else if(h1){
     h1.focus({preventScroll:true});
   }
-  if(!first) srStatus.textContent = note ? `${view || META.brand.title} — ${note}` : (view || META.brand.title);
+  if(!first) srStatus.textContent = note ? `${view || META.brand.title}: ${note}` : (view || META.brand.title);
 }
 window.addEventListener("hashchange", () => render());
 

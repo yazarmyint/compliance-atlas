@@ -48,6 +48,43 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.5.0 — 2026-11-26
+
+Reader fixes (Session 21, REVIEW-2026-11 findings C-01, C-04, C-05, C-07, and E-03, plus the card
+accessibility fix deferred from Session 20).
+
+**For readers.**
+
+- **The landing page and the about page now say when the next full re-verification pass is due**
+  (2027-05-14), beside the date of the last one. The date is the promise as made, never computed from
+  your clock, so if it is in the past when you read it, the atlas is overdue and the per-row dates
+  matter more than usual.
+- **Search treats short terms as whole words.** A term of three characters or fewer ("AI", "MFA",
+  "E5") must match a whole word, so "AI" no longer matches "maintain" and "detail": it returns 26 rows
+  instead of 348. Longer terms and anything with punctuation in it (control refs such as `A.8.12`,
+  row ids) still match partially. Results for a short term say so in one line.
+- **The glossary has 12 more entries** (AMA, CEF, CMDB, EASM, FIDO2, FIPS, KQL, M365, NDR, NRT, PAN,
+  SIS), the acronyms met most often in row text without one. 59 in all.
+- **Framework version strings on cards keep their own casing** instead of spaced capitals, which made
+  the longer ones (NIST 800-171 / CMMC) hard to read.
+- **Cards meet WCAG 2.5.3 (Label in Name).** The link is now the card's heading, with its click area
+  stretched over the card: the whole card still clicks, keyboard users still get one stop per card,
+  and the focus ring still outlines the card. What a screen reader announces and what a speech-input
+  user says are now the same text.
+- **Prose.** Em dashes are gone from the about page and the explanatory strings around the rows, and
+  four sentences that commented on the atlas's own honesty now say the plain thing instead. No row's
+  text changed.
+
+**For consumers of `compliance-atlas.json`.** One key added: `meta.reverification_schedule`
+(`last_pass`, derived from the re-verification ledger; `next_due`, hand-set). `meta.glossary` gains
+12 terms. Eight strings changed: `meta.reverification_policy`, `meta.license_band_partial`,
+`meta.license_band_scope`, `meta.license_bands.na`, `meta.absent_industries[0].reason`, the `legal`
+and `insurance` industry `note_detail`, and `products.purview.notes`. No row changed in any field.
+
+**Why MINOR.** A reader-facing feature (the next-pass date) and a new published `meta` key, sorted the
+way 2.10.0 sorted `meta.maintenance`. The review had planned a PATCH; the owner ruled MINOR on
+2026-11-26. Detail in AUDIT-FINDINGS §39.
+
 ## 3.4.3 — 2026-11-14
 
 Re-verification pass 3 (Session 19). The first full pass since publication: every licensing claim was

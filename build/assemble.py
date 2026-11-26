@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
                     reverify_passes, MAINTENANCE, RETIRED_NAMES, STALENESS_CLASSES,
                     TRIGGER_TYPES, TYPE_CADENCE, constant_dicts, lic_dicts, staleness_class,
-                    lic_pass_ledger, gov_dicts, gov_verified_on)
+                    lic_pass_ledger, gov_dicts, gov_verified_on, NEXT_PASS_DUE, NEXT_PASS_MAX_DAYS)
 from dependency_migration import migrate_row
 import license_bands
 import glossary
@@ -124,10 +124,10 @@ INDUSTRIES = {
     "insurance": {"name": "Insurance",
         "frameworks": ["glba-safeguards", "soc-2", "pci-dss-4", "nist-csf-2"],
         "note": "For carriers, brokers, and managing general agents: financial institutions under GLBA, card handlers under PCI, and SOC 2 respondents to their distribution partners, with NIST CSF 2.0 as the program frame examiners increasingly expect. One caveat on GLBA applies to insurers specifically.",
-        "note_detail": "The GLBA caveat: insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule at 16 CFR 314 — the text these rows cite — exempts entities regulated by a state insurance authority. The operative requirement is usually the NAIC Insurance Data Security Model Law, adopted in most states, or New York's 23 NYCRR 500. Both track 16 CFR 314 closely enough that the control mappings read across; the citations do not. Take these rows for the control substance and cite your own state's text. "
+        "note_detail": "The GLBA caveat: insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule at 16 CFR 314, the text these rows cite, exempts entities regulated by a state insurance authority. The operative requirement is usually the NAIC Insurance Data Security Model Law, adopted in most states, or New York's 23 NYCRR 500. Both track 16 CFR 314 closely enough that the control mappings read across; the citations do not. Take these rows for the control substance and cite your own state's text. "
                 "PCI reaches premium and claims payments wherever cards are accepted, directly or through a portal, and SOC 2 arrives from the other direction: MGAs, third-party administrators, and insurtech vendors are asked for it by the carriers they distribute for. "
                 "Purview is Audit-heavy here (13 of 51 rows): the record-keeping and retention obligations across policy, claims, and underwriting files are the densest part of the sector's data layer, with classification and DLP over policyholder information. "
-                "Sentinel carries the institution-wide audit and detection story the workload products cannot see — policy administration, claims, and underwriting systems are typically third-party or mainframe-adjacent and reach the security program through connectors rather than native integration. "
+                "Sentinel carries the institution-wide audit and detection story the workload products cannot see. Policy administration, claims, and underwriting systems are typically third-party or mainframe-adjacent and reach the security program through connectors rather than native integration. "
                 "Defender for Cloud's 14 rows cover the cloud-hosted side of that estate, which is where modern quoting and claims platforms increasingly sit."},
     "higher-ed": {"name": "Higher education",
         "frameworks": ["ferpa", "glba-safeguards", "pci-dss-4", "nist-csf-2"],
@@ -156,7 +156,7 @@ INDUSTRIES = {
     "legal": {"name": "Legal & professional services",
         "frameworks": ["soc-2", "iso-27001-2022", "gdpr", "hipaa-security"],
         "note": "For law firms, accountancies, and consultancies, where client assurance drives SOC 2 and ISO 27001, client personal data pulls in GDPR, and health-sector engagements bring HIPAA obligations. The stack concentrates on matter confidentiality, need-to-know access, and a persistently targeted endpoint and mailbox estate.",
-        "note_detail": "SOC 2 is the client-assurance ask; ISO 27001 certification often accompanies it at firms with international clients. GDPR binds the firm both as controller of its own client data and as processor acting on client instructions, while HIPAA applies only when the firm is a business associate — health-sector litigation, benefits counsel, life-sciences advisory — so treat those rows as conditional on handling PHI. "
+        "note_detail": "SOC 2 is the client-assurance ask; ISO 27001 certification often accompanies it at firms with international clients. GDPR binds the firm both as controller of its own client data and as processor acting on client instructions, while HIPAA applies only when the firm is a business associate (health-sector litigation, benefits counsel, life-sciences advisory), so treat those rows as conditional on handling PHI. "
                 "Purview carries the confidentiality core: sensitivity labels and label-based encryption for matter material, DLP on the outbound path, retention and records management for engagement-file destruction schedules, and eDiscovery for the firm's own holds rather than its clients'. "
                 "Entra carries need-to-know, with Conditional Access over the unmanaged and personal devices common in partner-heavy firms and ID Governance access packages for matter- and client-scoped teams. Information Barriers appears once (A.5.3) and is the nearest thing here to an ethical wall, though the wall itself is a matter-intake decision rather than a product setting. "
                 "Defender XDR is 22 rows, 18 of them Defender for Endpoint: legal is a standing target for business email compromise and departing-partner data theft, and the endpoint and mail surface is where that lands. "
@@ -248,7 +248,7 @@ BRAND = {
     # -- that one added capabilities (a social card, an error-report path). The built HTML bytes moved, so a bump is
     # required (§31); the JSON delta is precisely this version string. One commit for source + artifact + stamp, per
     # §33.3. Reasoning in AUDIT-FINDINGS §35.
-    "atlas_version": "3.4.3",
+    "atlas_version": "3.5.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -283,7 +283,7 @@ PROJECT = {
 # which are gaps: CJIS is a genuine omission (PROJECT-REVIEW PR-025), the other two are structural.
 ABSENT_INDUSTRIES = [
     {"sector": "State & local government", "framework": "CJIS Security Policy",
-     "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision — it is the strongest candidate for the next framework added."},
+     "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision. It is the strongest candidate for the next framework added."},
     {"sector": "Energy & utilities", "framework": "NERC CIP",
      "reason": "Built around the operational technology and control systems that run the bulk electric system, which none of the six products reach."},
     {"sector": "Pharmaceuticals & medical devices", "framework": "21 CFR Part 11",
@@ -305,7 +305,7 @@ META = {
     # this is a one-person project and pretending otherwise would be the dishonest option.
     "reverification_policy": ("Every row carries the date its claims were last checked against a live source. "
                               "Full re-verification passes are run at least twice a year, and targeted ones whenever a "
-                              "diarized change lands — a framework revision, a Microsoft rename, a licensing restructure. "
+                              "diarized change lands, such as a framework revision, a Microsoft rename, or a licensing restructure. "
                               "This is a single-maintainer project, so treat those dates as the real currency signal "
                               "rather than any assumption that the whole atlas is refreshed continuously."),
     "footer_lines": FOOTER_LINES,
@@ -464,6 +464,36 @@ def retired_name_hits():
     return hits
 
 
+# Where an em dash is allowed in the dataset: a framework's formal title and edition, which are
+# quoted as the publisher writes them ("Information security, cybersecurity and privacy
+# protection — Information security management systems — Requirements").
+EM_DASH_ALLOWED_KEYS = {"full_name", "version"}
+
+
+def check_no_em_dash(out):
+    """REVIEW-2026-11 C-07: no em dash in any published string, except a framework's quoted title.
+
+    Rows were already free of them (47,863 words, none); 3.5.0 cleared the meta, industry, and
+    product strings, and this keeps the whole dataset that way. The en dash is not checked: it is
+    the right mark for a range ("3.11.2–3.11.3", "Articles 12–23").
+    """
+    hits = []
+    def walk(o, path, key=None):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                walk(v, f"{path}.{k}", k)
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{i}]", key)
+        elif isinstance(o, str) and "—" in o:
+            if not (path.lstrip(".").startswith("frameworks.") and key in EM_DASH_ALLOWED_KEYS):
+                hits.append(path)
+    walk(out, "")
+    hits = [h.lstrip(".") for h in hits]
+    assert not hits, ("em dash in published strings (house rule, REVIEW-2026-11 C-07; use a colon, comma, "
+                      "parentheses, or a new sentence): " + ", ".join(hits[:20]))
+
+
 def maintenance_report(rows, today, stream, limit=12):
     """Evaluate staleness and emit it. Returns the number of warnings emitted.
 
@@ -473,6 +503,16 @@ def maintenance_report(rows, today, stream, limit=12):
     """
     lines, counts = [], {"trigger": 0, "stale": 0, "naming": 0}
 
+    # --- limb 0: the next full pass, as promised to the reader (E-03) -----------
+    late = (today - datetime.date.fromisoformat(NEXT_PASS_DUE)).days
+    if late > 0:
+        counts["trigger"] += 1
+        lines.append(f"  PASS     next full re-verification pass was due {NEXT_PASS_DUE} "
+                     f"-- {late} days overdue")
+        lines.append("           the landing and about pages show readers this date")
+        lines.append("           runbook: docs/MAINTENANCE.md#the-re-verification-runbook")
+        lines.append("")
+
     # --- limb 1a: triggers past their next_review -------------------------------
     due = []
     for t in MAINTENANCE:
@@ -481,7 +521,7 @@ def maintenance_report(rows, today, stream, limit=12):
         overdue = (today - datetime.date.fromisoformat(t["next_review"])).days
         if overdue > 0:
             due.append((overdue, t))
-    counts["trigger"] = len(due)
+    counts["trigger"] += len(due)
     for overdue, t in sorted(due, key=lambda x: -x[0])[:limit]:
         aff = ", ".join(f"{d}[{k!r}]" for d, k in t["affects"]) or "no constants"
         n_rows = len({r["id"] for r in rows for d, k in t["affects"]
@@ -724,12 +764,24 @@ def main():
     vdates = sorted(r["last_verified"] for r in rows if r.get("last_verified"))
     verified_range = {"earliest": vdates[0], "latest": vdates[-1]} if vdates else {}
 
+    # The pass schedule shown to the reader (E-03). last_pass is derived from the ledger; next_due
+    # is the hand-set promise. Neither is read from the clock, so a rebuild never moves them.
+    last_pass = lic_pass_ledger()[-1][0]
+    gap = (datetime.date.fromisoformat(NEXT_PASS_DUE) - datetime.date.fromisoformat(last_pass)).days
+    assert gap > 0, f"NEXT_PASS_DUE {NEXT_PASS_DUE} is not after the latest pass {last_pass}"
+    assert gap <= NEXT_PASS_MAX_DAYS, (f"NEXT_PASS_DUE {NEXT_PASS_DUE} is {gap} days after the latest pass "
+                                       f"{last_pass}; the about page promises a pass at least twice a year "
+                                       f"(at most {NEXT_PASS_MAX_DAYS} days)")
+    reverification_schedule = {"last_pass": last_pass, "next_due": NEXT_PASS_DUE}
+
     description = DESCRIPTION.format(tagline=BRAND["tagline"], rows=len(rows),
                                      frameworks=len(frameworks), products=len(PRODUCTS))
 
-    meta = dict(META, verified_range=verified_range, description_meta=description)
+    meta = dict(META, verified_range=verified_range, reverification_schedule=reverification_schedule,
+                description_meta=description)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
+    check_no_em_dash(out)
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     path = os.path.join(root, "compliance-atlas.json")
     logpath = os.path.join(root, "reference", "dependency-migration-log.json")

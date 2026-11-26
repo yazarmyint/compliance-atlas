@@ -194,6 +194,11 @@ not all 378, precisely because of this.
 Then, per trigger you executed: set `last_executed` to the pass date and advance `next_review`. Both
 are hand-set static dates. Nothing in `MAINTENANCE` is ever computed.
 
+Then set `NEXT_PASS_DUE` in `build/common.py` to the date the next full pass is due. Readers see it
+on the landing page and the about page, beside the date of this pass. The build fails if it is not
+after the latest pass, or more than 184 days after it (the about page promises two passes a year),
+and the maintenance report warns once the date has gone by.
+
 > **Add the pass to `lic_pass_ledger()` and nowhere else.** That one list feeds both `last_verified`
 > and the staleness report. For government notes, append `(date, {coordinates})` to
 > `REVERIFIED_GOV_PASSES` instead. URLs need neither: `check_urls.py` is their clock.

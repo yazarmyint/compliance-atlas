@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "3.4.3",
+  "version": "3.5.0",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "3.4.3"
+   "atlas_version": "3.5.0"
   },
   "project": {
    "maintainer": "Yazar",
@@ -20,7 +20,7 @@
    {
     "sector": "State & local government",
     "framework": "CJIS Security Policy",
-    "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision — it is the strongest candidate for the next framework added."
+    "reason": "Its control areas line up well with these six products, so this is a gap rather than a decision. It is the strongest candidate for the next framework added."
    },
    {
     "sector": "Energy & utilities",
@@ -33,7 +33,7 @@
     "reason": "Turns on validation and electronic-signature semantics for FDA-regulated records rather than the security controls mapped here."
    }
   ],
-  "reverification_policy": "Every row carries the date its claims were last checked against a live source. Full re-verification passes are run at least twice a year, and targeted ones whenever a diarized change lands — a framework revision, a Microsoft rename, a licensing restructure. This is a single-maintainer project, so treat those dates as the real currency signal rather than any assumption that the whole atlas is refreshed continuously.",
+  "reverification_policy": "Every row carries the date its claims were last checked against a live source. Full re-verification passes are run at least twice a year, and targeted ones whenever a diarized change lands, such as a framework revision, a Microsoft rename, or a licensing restructure. This is a single-maintainer project, so treat those dates as the real currency signal rather than any assumption that the whole atlas is refreshed continuously.",
   "footer_lines": [
    "Informational reference only; not legal, audit, or compliance advice.",
    "Independent community project. Not affiliated with, sponsored, or endorsed by Microsoft Corporation.",
@@ -61,10 +61,10 @@
    "e5": "Requires Microsoft 365 E5 or the relevant E5 step-up.",
    "addon": "Requires an add-on or standalone SKU beyond the base seat license.",
    "consumption": "Consumption/meter-billed (Sentinel, Defender for Cloud). No seat tier applies.",
-   "na": "No license claim — boundary rows, where the verdict is that the product does not cover the control."
+   "na": "No license claim. These are boundary rows, where the verdict is that the product does not cover the control."
   },
-  "license_band_partial": "Reduced capability at this tier — the band is the lowest tier where something mapped here works, and part of the mapping needs a higher tier. Read the license requirement on the row for what is and is not included.",
-  "license_band_scope": "Bands describe Microsoft 365 COMMERCIAL licensing only: there is no G3/G5, F-series, or Business Premium dimension, and government licensing is covered by the per-row cloud availability notes instead. Consumption-priced products (Microsoft Sentinel, Defender for Cloud) have no seat tier at all, so they appear under every tier filter unless you exclude them with the No seat tier toggle — which is what the \"+n\" on each tier button counts: rows at that tier, plus rows that have no tier at all. The band is derived from each row's license requirement and is a coarse signpost to it, never a replacement — the full entitlement string stays on every row. Related-product mentions marked \"(if licensed)\" are pointers to adjacent products, not banded or audited claims.",
+  "license_band_partial": "Reduced capability at this tier. The band is the lowest tier where something mapped here works, and part of the mapping needs a higher tier. Read the license requirement on the row for what is and is not included.",
+  "license_band_scope": "Bands describe Microsoft 365 COMMERCIAL licensing only: there is no G3/G5, F-series, or Business Premium dimension, and government licensing is covered by the per-row cloud availability notes instead. Consumption-priced products (Microsoft Sentinel, Defender for Cloud) have no seat tier at all, so they appear under every tier filter unless you exclude them with the No seat tier toggle. That is what the \"+n\" on each tier button counts: rows at that tier, plus rows that have no tier at all. The band is derived from each row's license requirement and is a coarse signpost to it, never a replacement for it: the full entitlement string stays on every row. Related-product mentions marked \"(if licensed)\" are pointers to adjacent products, not banded or audited claims.",
   "coverage_levels": {
    "Direct Support": "The product directly implements/enforces the control activity (within the stated scope).",
    "Partial Support": "The product implements part; a control outside it is also required.",
@@ -78,10 +78,13 @@
   },
   "glossary": {
    "AIR": "Automated Investigation and Response: automation that investigates an alert and, where permitted, remediates it without an analyst driving each step.",
+   "AMA": "Azure Monitor Agent: Microsoft's agent for collecting logs and performance data from Windows and Linux machines into a Log Analytics workspace, including Syslog and CEF events forwarded from network devices.",
    "ASR": "Attack Surface Reduction: Microsoft Defender for Endpoint rules that block common exploit and malware behaviors.",
    "C3PAO": "CMMC Third-Party Assessment Organization: an assessor accredited by the Cyber AB to perform official CMMC Level 2 certification assessments. The leading C is for \"CMMC\", not \"Certified\", which is a common misreading.",
    "CDE": "Cardholder Data Environment: in PCI DSS, the systems and networks that store, process, or transmit payment-card data, which is the scope the standard's controls apply to.",
+   "CEF": "Common Event Format: a text log format, carried over Syslog, that many firewalls, proxies, and security appliances use to send events to a SIEM.",
    "CIEM": "Cloud Infrastructure Entitlement Management: analyzing and right-sizing the permissions identities hold across cloud infrastructure. (The former standalone product, Microsoft Entra Permissions Management, was retired in 2025.)",
+   "CMDB": "Configuration Management Database: the register of an organization's IT assets and how they relate, usually kept in an IT service management tool. The atlas treats it as outside the Microsoft stack.",
    "CMMC": "Cybersecurity Maturity Model Certification: the US Department of Defense program requiring defense contractors to implement NIST SP 800-171 controls, with Level 2 assessed either by self-assessment or by an independent C3PAO depending on the contract.",
    "CNAPP": "Cloud-Native Application Protection Platform: an umbrella category combining posture management (CSPM) and workload protection (CWPP) for cloud-native applications.",
    "CSPM": "Cloud Security Posture Management: continuous assessment of cloud configuration against a security baseline, surfacing misconfigurations and posture recommendations.",
@@ -95,12 +98,17 @@
    "DPR": "Data Protection Requirements: Microsoft's Supplier Data Protection Requirements, the versioned control set (v12, March 2026 here) that suppliers must meet under SSPA. In this atlas, the mapped framework.",
    "DSPM": "Data Security Posture Management: continuous discovery and risk assessment of where sensitive data lives and how it is exposed.",
    "DSR": "Data Subject Request (also DSAR, Data Subject Access Request): an individual's request to access, correct, or delete their personal data under privacy law.",
+   "EASM": "External Attack Surface Management: discovering and monitoring an organization's internet-facing assets the way an attacker would see them. Microsoft's product is Microsoft Defender External Attack Surface Management.",
    "EDR": "Endpoint Detection and Response: continuous monitoring of endpoints to detect, investigate, and respond to threats on them.",
    "EHR": "Electronic Health Record: a patient's digital clinical record, held in the healthcare systems the atlas treats as outside the Microsoft stack.",
+   "FIDO2": "An open standard from the FIDO Alliance and the W3C for passwordless, phishing-resistant sign-in with a security key, a passkey, or a device's built-in authenticator, using public-key cryptography instead of a shared secret.",
    "FIM": "File Integrity Monitoring: detecting unauthorized changes to critical files and system objects. (Not the retired \"Forefront Identity Manager\".)",
+   "FIPS": "Federal Information Processing Standards: US government standards published by NIST. In this atlas the reference is usually FIPS 140, which validates cryptographic modules; \"FIPS-validated\" means a module holds that validation.",
    "GCC": "Government Community Cloud: a Microsoft 365 environment segregated for US public-sector customers and their partners, meeting US federal requirements. Eligibility is validated before purchase.",
    "GCC High": "Government Community Cloud High: a more strictly isolated US-government environment assessed against NIST SP 800-53 at a High categorization, for organizations handling export-controlled (ITAR/DFARS) or defense-adjacent data. Feature availability and timing often differ from the commercial cloud.",
    "IRM": "Insider Risk Management: the Microsoft Purview capability that detects and manages risky insider activity, such as data theft by a departing employee. Not the older \"Information Rights Management\" encryption feature.",
+   "KQL": "Kusto Query Language: the query language for searching and analyzing log data in Microsoft Sentinel, Defender XDR advanced hunting, and Azure Monitor.",
+   "M365": "Microsoft 365: Microsoft's productivity cloud (Exchange Online, SharePoint, OneDrive, Teams, and the Office apps), and the license family the E3 and E5 suites belong to.",
    "MAM": "Mobile Application Management: protecting corporate data inside apps, with or without full device enrollment.",
    "MCSB": "Microsoft cloud security benchmark: Microsoft's baseline of security recommendations, mapped to industry frameworks, used to assess Azure and multicloud resources.",
    "MDCA": "Microsoft Defender for Cloud Apps: Microsoft's cloud access security broker for discovering and governing SaaS-app usage. Distinct from Defender for Cloud, which this atlas never shortens to \"MDC\".",
@@ -111,12 +119,16 @@
    "MDTI": "Microsoft Defender Threat Intelligence: Microsoft's threat-intelligence data and tooling for enriching investigations.",
    "MDVM": "Microsoft Defender Vulnerability Management: Microsoft's capability for assessing vulnerabilities and tracking their remediation.",
    "MFA": "Multifactor Authentication: requiring more than one form of evidence to sign in.",
+   "NDR": "Network Detection and Response: monitoring network traffic to detect and respond to threats, usually from sensors on the network rather than agents on endpoints.",
+   "NRT": "Near-real-time: in Microsoft Sentinel, an analytics rule that runs about once a minute, rather than on the longer interval of a scheduled rule.",
+   "PAN": "Primary Account Number: in PCI DSS, the payment-card number itself. Storing, processing, or transmitting it is what brings a system into the standard's scope.",
    "PHI": "Protected Health Information: individually identifiable health information protected under the US HIPAA rules.",
    "PIM": "Privileged Identity Management: the Microsoft Entra capability for just-in-time, time-bound activation and oversight of privileged roles.",
    "RBAC": "Role-Based Access Control: granting permissions through roles assigned to users, rather than to individuals directly.",
    "RMS": "Rights Management Service: the Microsoft encryption-and-usage-rights technology that underlies sensitivity-label protection.",
    "ROPA": "Records of Processing Activities: the register of an organization's personal-data processing required by GDPR Article 30.",
    "SIEM": "Security Information and Event Management: a platform that centralizes logs from across an estate for correlation, alerting, and investigation.",
+   "SIS": "Student Information System: a school's system of record for enrollment, grades, and other education records. The atlas treats it as outside the Microsoft stack.",
    "SIT": "Sensitive Information Type: a pattern-based classifier (for example, a credit-card or passport number) that Microsoft Purview uses to detect a specific kind of sensitive data.",
    "SOAR": "Security Orchestration, Automation, and Response: automating investigation and response steps, usually as playbooks attached to a SIEM.",
    "SPRS": "Supplier Performance Risk System: the US Department of Defense database where contractors record their NIST SP 800-171 / CMMC assessment scores.",
@@ -909,6 +921,10 @@
    "earliest": "2026-07-16",
    "latest": "2026-11-14"
   },
+  "reverification_schedule": {
+   "last_pass": "2026-11-14",
+   "next_due": "2027-05-14"
+  },
   "description_meta": "Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
  },
  "products": {
@@ -934,7 +950,7 @@
    ],
    "licensing_source": "https://learn.microsoft.com/office365/servicedescriptions/microsoft-365-service-descriptions/microsoft-365-tenantlevel-services-licensing-guidance/microsoft-purview-service-description",
    "default_licensing_model": "per_user",
-   "notes": "Microsoft's data security, governance, and compliance suite for the Microsoft 365 estate: classification and labeling, data loss prevention, lifecycle and records, insider risk, eDiscovery, and audit. Licensed per user. It implements and evidences data-layer controls, and marks deliberate gaps honestly rather than overclaiming.",
+   "notes": "Microsoft's data security, governance, and compliance suite for the Microsoft 365 estate: classification and labeling, data loss prevention, lifecycle and records, insider risk, eDiscovery, and audit. Licensed per user. It implements and evidences data-layer controls, and records its gaps as boundary rows rather than claiming coverage it lacks.",
    "notes_detail": "Microsoft Purview: data security, governance, and compliance across the Microsoft 365 estate: classification and labeling, DLP, data lifecycle and records, insider risk, communication compliance, eDiscovery, and audit. Licensed per user, drawn exclusively from the Microsoft Purview service description per-feature tables (E3-tier for the baseline capabilities, E5-tier or the Purview Suite for the advanced ones). Mapping discipline: Purview implements and evidences data-layer controls; deliberate gaps render as 'None (boundary row)'."
   },
   "entra": {
@@ -1596,7 +1612,7 @@
     "nist-csf-2"
    ],
    "note": "For carriers, brokers, and managing general agents: financial institutions under GLBA, card handlers under PCI, and SOC 2 respondents to their distribution partners, with NIST CSF 2.0 as the program frame examiners increasingly expect. One caveat on GLBA applies to insurers specifically.",
-   "note_detail": "The GLBA caveat: insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule at 16 CFR 314 — the text these rows cite — exempts entities regulated by a state insurance authority. The operative requirement is usually the NAIC Insurance Data Security Model Law, adopted in most states, or New York's 23 NYCRR 500. Both track 16 CFR 314 closely enough that the control mappings read across; the citations do not. Take these rows for the control substance and cite your own state's text. PCI reaches premium and claims payments wherever cards are accepted, directly or through a portal, and SOC 2 arrives from the other direction: MGAs, third-party administrators, and insurtech vendors are asked for it by the carriers they distribute for. Purview is Audit-heavy here (13 of 51 rows): the record-keeping and retention obligations across policy, claims, and underwriting files are the densest part of the sector's data layer, with classification and DLP over policyholder information. Sentinel carries the institution-wide audit and detection story the workload products cannot see — policy administration, claims, and underwriting systems are typically third-party or mainframe-adjacent and reach the security program through connectors rather than native integration. Defender for Cloud's 14 rows cover the cloud-hosted side of that estate, which is where modern quoting and claims platforms increasingly sit."
+   "note_detail": "The GLBA caveat: insurers are GLBA Title V financial institutions, but the FTC Safeguards Rule at 16 CFR 314, the text these rows cite, exempts entities regulated by a state insurance authority. The operative requirement is usually the NAIC Insurance Data Security Model Law, adopted in most states, or New York's 23 NYCRR 500. Both track 16 CFR 314 closely enough that the control mappings read across; the citations do not. Take these rows for the control substance and cite your own state's text. PCI reaches premium and claims payments wherever cards are accepted, directly or through a portal, and SOC 2 arrives from the other direction: MGAs, third-party administrators, and insurtech vendors are asked for it by the carriers they distribute for. Purview is Audit-heavy here (13 of 51 rows): the record-keeping and retention obligations across policy, claims, and underwriting files are the densest part of the sector's data layer, with classification and DLP over policyholder information. Sentinel carries the institution-wide audit and detection story the workload products cannot see. Policy administration, claims, and underwriting systems are typically third-party or mainframe-adjacent and reach the security program through connectors rather than native integration. Defender for Cloud's 14 rows cover the cloud-hosted side of that estate, which is where modern quoting and claims platforms increasingly sit."
   },
   "higher-ed": {
    "name": "Higher education",
@@ -1651,7 +1667,7 @@
     "hipaa-security"
    ],
    "note": "For law firms, accountancies, and consultancies, where client assurance drives SOC 2 and ISO 27001, client personal data pulls in GDPR, and health-sector engagements bring HIPAA obligations. The stack concentrates on matter confidentiality, need-to-know access, and a persistently targeted endpoint and mailbox estate.",
-   "note_detail": "SOC 2 is the client-assurance ask; ISO 27001 certification often accompanies it at firms with international clients. GDPR binds the firm both as controller of its own client data and as processor acting on client instructions, while HIPAA applies only when the firm is a business associate — health-sector litigation, benefits counsel, life-sciences advisory — so treat those rows as conditional on handling PHI. Purview carries the confidentiality core: sensitivity labels and label-based encryption for matter material, DLP on the outbound path, retention and records management for engagement-file destruction schedules, and eDiscovery for the firm's own holds rather than its clients'. Entra carries need-to-know, with Conditional Access over the unmanaged and personal devices common in partner-heavy firms and ID Governance access packages for matter- and client-scoped teams. Information Barriers appears once (A.5.3) and is the nearest thing here to an ethical wall, though the wall itself is a matter-intake decision rather than a product setting. Defender XDR is 22 rows, 18 of them Defender for Endpoint: legal is a standing target for business email compromise and departing-partner data theft, and the endpoint and mail surface is where that lands. Defender for Cloud's 16 rows apply only where a firm runs its own cloud estate; most buy practice-management SaaS instead, in which case the vendor's own SOC 2 report is the relevant artifact."
+   "note_detail": "SOC 2 is the client-assurance ask; ISO 27001 certification often accompanies it at firms with international clients. GDPR binds the firm both as controller of its own client data and as processor acting on client instructions, while HIPAA applies only when the firm is a business associate (health-sector litigation, benefits counsel, life-sciences advisory), so treat those rows as conditional on handling PHI. Purview carries the confidentiality core: sensitivity labels and label-based encryption for matter material, DLP on the outbound path, retention and records management for engagement-file destruction schedules, and eDiscovery for the firm's own holds rather than its clients'. Entra carries need-to-know, with Conditional Access over the unmanaged and personal devices common in partner-heavy firms and ID Governance access packages for matter- and client-scoped teams. Information Barriers appears once (A.5.3) and is the nearest thing here to an ethical wall, though the wall itself is a matter-intake decision rather than a product setting. Defender XDR is 22 rows, 18 of them Defender for Endpoint: legal is a standing target for business email compromise and departing-partner data theft, and the endpoint and mail surface is where that lands. Defender for Cloud's 16 rows apply only where a firm runs its own cloud estate; most buy practice-management SaaS instead, in which case the vendor's own SOC 2 report is the relevant artifact."
   },
   "manufacturing": {
    "name": "Manufacturing",

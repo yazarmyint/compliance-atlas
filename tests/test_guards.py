@@ -210,6 +210,18 @@ class MaintenanceTable(GuardTest):
         self.assertFailsWith("--strict-maintenance set", "--strict-maintenance")
 
 
+class NextPassDue(GuardTest):
+    """E-03: the next-pass date shown to readers must follow the last pass, within the promise."""
+
+    def test_next_pass_before_latest_pass_fails(self):
+        self.copy.append("build/common.py", 'NEXT_PASS_DUE = "2026-01-01"')
+        self.assertFailsWith("is not after the latest pass", "--check")
+
+    def test_next_pass_beyond_twice_a_year_fails(self):
+        self.copy.append("build/common.py", 'NEXT_PASS_DUE = "2027-12-31"')
+        self.assertFailsWith("promises a pass at least twice a year", "--check")
+
+
 class ProseGuards(GuardTest):
     def test_glossary_rejects_em_dash(self):
         self.copy.append("build/glossary.py", 'GLOSSARY["ZZZ"] = "A test term — with an em dash."')
@@ -219,6 +231,27 @@ class ProseGuards(GuardTest):
         self.copy.append("build/stack_rationales.py",
                          'STACK_RATIONALES.setdefault("ferpa", {})["no-such-ref"] = "A rationale."')
         self.assertFailsWith("is not a coverage-tier spread group", "--check")
+
+    def test_em_dash_in_published_string_fails(self):
+        self.copy.append("build/rows_ferpa.py",
+                         'ROWS[0]["how_it_supports"] += " A test clause — with an em dash."')
+        self.assertFailsWith("em dash in published strings", "--check")
+
+    def test_em_dash_in_framework_title_is_allowed(self):
+        # The ISO and SOC 2 formal titles quote the publisher's own em dashes; --check must pass.
+        code, out = self.check()
+        self.assertEqual(code, 0, out[-1500:])
+
+    def test_em_dash_in_reader_visible_template_text_fails(self):
+        self.copy.replace("build/template.html", "<h1>About this atlas</h1>",
+                          "<h1>About this atlas — a test</h1>")
+        self.assertFailsWith("em dash(es) in reader-visible template text", script="build/build_html.py")
+
+    def test_em_dash_in_template_comment_is_allowed(self):
+        self.copy.replace("build/template.html", "<h1>About this atlas</h1>",
+                          "<h1>About this atlas</h1><!-- a comment — with a dash -->")
+        code, out = self.copy.run("build/build_html.py")
+        self.assertEqual(code, 0, out[-1500:])
 
     def test_spelling_lint_fails_build_html(self):
         with open(self.copy.path("README.md"), "a", encoding="utf-8") as f:
