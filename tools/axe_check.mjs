@@ -56,6 +56,21 @@ const ALL_ROUTES = [
 
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
+// Known findings that are measured and reported on every run but do not fail the gate. An entry
+// here is a debt with a named fix, never a way to make a rule go quiet: the rule still runs, its
+// node count is printed on every route, and the total is printed at the end. Remove the entry in
+// the same commit that fixes the finding. (REVIEW-2026-11 D-05, owner decision 2026-11-26.)
+const KNOWN_FINDINGS = {
+  "label-content-name-mismatch": {
+    since: "2026-11-26",
+    why: "axe-core 4.14 enables this WCAG 2.5.3 rule by default. Each card link carries an aria-label "
+       + "of its heading only (AUDIT-FINDINGS \u00a721.3), so the accessible name omits the rest of the "
+       + "card's visible text.",
+    fix: "Link only the card heading and stretch its click area over the card, so the accessible "
+       + "name is the heading and matches the link's visible text. A template change; PATCH.",
+  },
+};
+
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -93,6 +108,7 @@ const browser = await puppeteer.launch({
 
 const report = [];
 let total = 0;
+let knownTotal = 0;
 
 for (const theme of themes) {
   for (const route of routes) {
@@ -112,13 +128,19 @@ for (const theme of themes) {
     const res = await page.evaluate(async tags =>
       await axe.run(document, { runOnly: { type: "tag", values: tags } }), WCAG_TAGS);
 
-    const nodes = res.violations.reduce((n, v) => n + v.nodes.length, 0);
+    const gating = res.violations.filter(v => !KNOWN_FINDINGS[v.id]);
+    const known = res.violations.filter(v => KNOWN_FINDINGS[v.id]);
+    const nodes = gating.reduce((n, v) => n + v.nodes.length, 0);
+    const knownNodes = known.reduce((n, v) => n + v.nodes.length, 0);
     total += nodes;
-    report.push({ theme, route, appliedTheme: gotTheme, h1, nodes,
-      violations: res.violations.map(v => ({ id: v.id, impact: v.impact, help: v.help, nodes: v.nodes.length })) });
+    knownTotal += knownNodes;
+    report.push({ theme, route, appliedTheme: gotTheme, h1, nodes, knownNodes,
+      violations: res.violations.map(v => ({ id: v.id, impact: v.impact, help: v.help, nodes: v.nodes.length,
+                                               known: Boolean(KNOWN_FINDINGS[v.id]) })) });
 
-    console.log(`${nodes ? "FAIL" : "ok  "} ${theme.padEnd(5)} ${route.padEnd(22)} theme=${gotTheme} h1="${h1.slice(0, 42)}" violations=${nodes}`);
-    for (const v of res.violations) {
+    console.log(`${nodes ? "FAIL" : "ok  "} ${theme.padEnd(5)} ${route.padEnd(22)} theme=${gotTheme} h1="${h1.slice(0, 42)}" violations=${nodes}`
+                + (knownNodes ? ` known=${knownNodes}` : ""));
+    for (const v of gating) {
       console.log(`      [${v.impact}] ${v.id}: ${v.help} (${v.nodes.length})`);
       for (const n of v.nodes.slice(0, 3)) console.log(`         ${n.html.slice(0, 150)}`);
     }
@@ -134,8 +156,13 @@ for (const theme of themes) {
 
 await browser.close();
 if (jsonOut) {
-  writeFileSync(jsonOut, JSON.stringify({ target, generated: new Date().toISOString(), total, report }, null, 2));
+  writeFileSync(jsonOut, JSON.stringify({ target, generated: new Date().toISOString(), total, knownTotal, report }, null, 2));
   console.log(`\nWrote ${jsonOut}`);
 }
 console.log(`\nTOTAL VIOLATION NODES: ${total}`);
+for (const [id, k] of Object.entries(KNOWN_FINDINGS)) {
+  console.log(`KNOWN, NOT GATING (since ${k.since}): ${id}, ${knownTotal} node(s) across all runs.`);
+  console.log(`  Why: ${k.why}`);
+  console.log(`  Fix: ${k.fix}`);
+}
 process.exit(total ? 1 : 0);

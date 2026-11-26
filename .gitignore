@@ -12,7 +12,8 @@ venv/
 # Node (tools/ QA harnesses only — nothing in the published artifact uses Node)
 # ---------------------------------------------------------------------------
 node_modules/
-package-lock.json
+# tools/package-lock.json is committed (REVIEW-2026-11 D-05): `npm ci` must reproduce the exact
+# axe-core the accessibility baseline was measured with.
 
 # ---------------------------------------------------------------------------
 # Editor / OS cruft

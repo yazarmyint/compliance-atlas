@@ -7,7 +7,7 @@ against the built output, and both exit non-zero on failure so they can gate a r
 | Tool | Checks | Needs |
 |---|---|---|
 | `check_urls.py` | Every URL cited anywhere in the dataset still resolves, and has not silently redirected somewhere else | Python 3, no packages |
-| `axe_check.mjs` | WCAG 2.1 A/AA, every view type × both themes | Node 18+, `npm install`, installed Chrome |
+| `axe_check.mjs` | WCAG 2.1 A/AA, every view type × both themes | Node 22.12+, `npm ci`, installed Chrome |
 
 ## check_urls.py — citation resolution
 
@@ -33,12 +33,22 @@ Exit code is 0 only when nothing is `BROKEN`, nothing is `REDIRECT`, and no hand
 
 ## axe_check.mjs — accessibility
 
-Install once:
+Install once, from the committed lockfile:
 
 ```powershell
 cd tools
-npm install
+npm ci
 ```
+
+Versions are pinned exactly (axe-core 4.14.0, puppeteer-core 25.17.0) and the lockfile is committed,
+because a new axe-core release can enable rules that change the result. Upgrade on purpose: bump the
+pins, run the harness, and record what changed. The 4.12.1 to 4.14.0 upgrade on 2026-11-26 is the
+worked example.
+
+**Known findings.** `KNOWN_FINDINGS` in `axe_check.mjs` lists findings that are measured and printed
+on every run but do not fail the gate, each with the date it was accepted, why, and the planned fix.
+Today it holds one: `label-content-name-mismatch` (WCAG 2.5.3) on the card links, 100 nodes. It is a
+debt with a named fix, not a suppression: remove the entry in the commit that fixes the cards.
 
 Then, from the repository root:
 
