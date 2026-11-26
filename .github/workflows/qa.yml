@@ -1,0 +1,124 @@
+# Standing QA for Compliance Atlas (REVIEW-2026-11 finding D-02).
+#
+# Two jobs, for two different failure modes:
+#
+#   gate   On every push and pull request. Fails if a guard test fails, if the committed
+#          compliance-atlas.json is not what the sources build, if the spelling lint fires,
+#          or if axe finds a WCAG 2.1 A/AA violation. This is the per-commit gate that until
+#          now ran only when someone remembered to run it.
+#
+#   watch  Weekly, and on demand. Runs the maintenance report in strict mode and the URL
+#          sweep. If either finds something, it opens an issue labelled maintenance-due, or
+#          comments on the open one. This is the alarm the atlas lacked from July to
+#          November 2026, when eight triggers went overdue because nothing ran the build.
+#
+# Caveat: GitHub disables scheduled workflows in a public repository after 60 days with no
+# repository activity. A quiet atlas is exactly when this alarm matters, so keep a calendar
+# reminder as a backstop (docs/MAINTENANCE.md, "Automation").
+#
+# Neither job writes to the repository or deploys anything. Pages deployment is unchanged.
+
+name: QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"   # Mondays 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Guard tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Committed JSON matches the sources
+        run: python build/assemble.py --check
+
+      - name: Spelling lint (build_html.py)
+        # Rewrites compliance-atlas.html in the runner's checkout only; nothing is pushed.
+        run: python build/build_html.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install QA tooling
+        working-directory: tools
+        run: npm ci --no-audit --no-fund
+
+      - name: Accessibility (axe-core, every view, both themes)
+        run: node tools/axe_check.mjs
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+
+  watch:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Maintenance report (strict)
+        id: maintenance
+        continue-on-error: true
+        run: python build/assemble.py --check --strict-maintenance --maintenance-report > maintenance.log 2>&1
+
+      - name: URL sweep
+        id: urls
+        continue-on-error: true
+        run: python tools/check_urls.py > urls.log 2>&1
+
+      - name: Open or update the maintenance-due issue
+        if: steps.maintenance.outcome == 'failure' || steps.urls.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "The weekly QA run found something to act on. Runbook: docs/MAINTENANCE.md."
+            echo
+            echo "Run: $RUN_URL"
+            echo
+            echo "## Maintenance report (${{ steps.maintenance.outcome }})"
+            echo '```'
+            tail -c 30000 maintenance.log
+            echo '```'
+            echo
+            echo "## URL sweep (${{ steps.urls.outcome }})"
+            echo '```'
+            tail -c 25000 urls.log
+            echo '```'
+          } > report.md
+          gh label create maintenance-due --color D93F0B \
+            --description "Opened by the weekly QA workflow" --force
+          existing=$(gh issue list --label maintenance-due --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file report.md
+          else
+            gh issue create --title "Maintenance due: weekly QA run $(date -u +%F)" \
+              --label maintenance-due --body-file report.md
+          fi
+
+      - name: Nothing due
+        if: steps.maintenance.outcome == 'success' && steps.urls.outcome == 'success'
+        run: echo "No trigger due, no constant past cadence, no broken or stale-hand-check URL."
