@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (SOLUTIONS, PRODUCTS, RELATED_PRODUCTS, VERIFIED_DATE,
                     reverify_passes, MAINTENANCE, RETIRED_NAMES, STALENESS_CLASSES,
                     TRIGGER_TYPES, TYPE_CADENCE, constant_dicts, lic_dicts, staleness_class,
-                    lic_pass_ledger, gov_dicts, gov_verified_on)
+                    lic_pass_ledger, gov_dicts, gov_verified_on, NEXT_PASS_DUE, NEXT_PASS_MAX_DAYS)
 from dependency_migration import migrate_row
 import license_bands
 import glossary
@@ -473,6 +473,16 @@ def maintenance_report(rows, today, stream, limit=12):
     """
     lines, counts = [], {"trigger": 0, "stale": 0, "naming": 0}
 
+    # --- limb 0: the next full pass, as promised to the reader (E-03) -----------
+    late = (today - datetime.date.fromisoformat(NEXT_PASS_DUE)).days
+    if late > 0:
+        counts["trigger"] += 1
+        lines.append(f"  PASS     next full re-verification pass was due {NEXT_PASS_DUE} "
+                     f"-- {late} days overdue")
+        lines.append("           the landing and about pages show readers this date")
+        lines.append("           runbook: docs/MAINTENANCE.md#the-re-verification-runbook")
+        lines.append("")
+
     # --- limb 1a: triggers past their next_review -------------------------------
     due = []
     for t in MAINTENANCE:
@@ -481,7 +491,7 @@ def maintenance_report(rows, today, stream, limit=12):
         overdue = (today - datetime.date.fromisoformat(t["next_review"])).days
         if overdue > 0:
             due.append((overdue, t))
-    counts["trigger"] = len(due)
+    counts["trigger"] += len(due)
     for overdue, t in sorted(due, key=lambda x: -x[0])[:limit]:
         aff = ", ".join(f"{d}[{k!r}]" for d, k in t["affects"]) or "no constants"
         n_rows = len({r["id"] for r in rows for d, k in t["affects"]
@@ -724,10 +734,21 @@ def main():
     vdates = sorted(r["last_verified"] for r in rows if r.get("last_verified"))
     verified_range = {"earliest": vdates[0], "latest": vdates[-1]} if vdates else {}
 
+    # The pass schedule shown to the reader (E-03). last_pass is derived from the ledger; next_due
+    # is the hand-set promise. Neither is read from the clock, so a rebuild never moves them.
+    last_pass = lic_pass_ledger()[-1][0]
+    gap = (datetime.date.fromisoformat(NEXT_PASS_DUE) - datetime.date.fromisoformat(last_pass)).days
+    assert gap > 0, f"NEXT_PASS_DUE {NEXT_PASS_DUE} is not after the latest pass {last_pass}"
+    assert gap <= NEXT_PASS_MAX_DAYS, (f"NEXT_PASS_DUE {NEXT_PASS_DUE} is {gap} days after the latest pass "
+                                       f"{last_pass}; the about page promises a pass at least twice a year "
+                                       f"(at most {NEXT_PASS_MAX_DAYS} days)")
+    reverification_schedule = {"last_pass": last_pass, "next_due": NEXT_PASS_DUE}
+
     description = DESCRIPTION.format(tagline=BRAND["tagline"], rows=len(rows),
                                      frameworks=len(frameworks), products=len(PRODUCTS))
 
-    meta = dict(META, verified_range=verified_range, description_meta=description)
+    meta = dict(META, verified_range=verified_range, reverification_schedule=reverification_schedule,
+                description_meta=description)
     out = {"meta": meta, "products": PRODUCTS, "related_products": RELATED_PRODUCTS,
            "solutions": SOLUTIONS, "frameworks": frameworks, "industries": INDUSTRIES, "rows": rows}
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -505,6 +505,13 @@ function verifiedRange(){
   if(!v.earliest) return "";
   return v.earliest === v.latest ? `rows verified ${v.earliest}` : `rows verified ${v.earliest} – ${v.latest}`;
 }
+/* E-03: when the next full pass is due. Read from META, never from the reader's clock: the
+   page states the promise as made, so a reader who sees a date in the past knows the atlas is
+   overdue, and the page never has to compute or announce that itself. */
+function nextPass(){
+  const s = META.reverification_schedule || {};
+  return s.next_due ? `next pass due by ${s.next_due}` : "";
+}
 
 /* ---------------- shared fragments ---------------- */
 function covBadge(cov){ return `<span class="badge ${COV_CLASS[cov]||""}" title="${esc(withDef(cov, COV_DEF[cov]))}">${esc(cov)}</span>`; }
@@ -693,7 +700,7 @@ function cmChip(fw){
 function vHome(){
   const inds = Object.entries(IND);
   return `<div class="hero">
-    <div class="overline">${esc(META.brand.tagline)}${verifiedRange()?` · ${esc(verifiedRange())}`:""}</div>
+    <div class="overline">${esc(META.brand.tagline)}${verifiedRange()?` · ${esc(verifiedRange())}`:""}${nextPass()?` · ${esc(nextPass())}`:""}</div>
     <h1>Where does the Microsoft stack fit?</h1>
     <p class="lede">Pick an industry, open the frameworks it answers to, and read off each control's
       product mappings: claim strength, license tier, evidence examples, and the source behind every statement.</p>
@@ -1144,7 +1151,11 @@ function vAbout(){
 
     <h2>How current it is</h2>
     <p>${verifiedRange() ? esc(verifiedRange().replace(/^rows /, "Rows currently in the atlas were ")) + "." : ""}
-      ${esc(META.reverification_policy || "")}</p>
+      ${esc(META.reverification_policy || "")}
+      ${(META.reverification_schedule || {}).next_due ? `The last pass closed on
+      <b>${esc(META.reverification_schedule.last_pass)}</b>, and the next is due by
+      <b>${esc(META.reverification_schedule.next_due)}</b>. If that date is behind you, the atlas is overdue
+      for one, and the per-row dates matter more than usual.` : ""}</p>
     <p>The <b>built</b> timestamp in the footer is a different thing: it is when this page was last generated, and
       it moves on every rebuild whether or not any content changed. It belongs to this page rather than to the
       data behind it — <span class="mono">compliance-atlas.json</span> carries no timestamp at all, so a rebuild

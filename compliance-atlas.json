@@ -921,6 +921,10 @@
    "earliest": "2026-07-16",
    "latest": "2026-11-14"
   },
+  "reverification_schedule": {
+   "last_pass": "2026-11-14",
+   "next_due": "2027-05-14"
+  },
   "description_meta": "Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
  },
  "products": {

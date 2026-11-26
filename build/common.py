@@ -137,6 +137,16 @@ REVERIFIED_SOURCE_ROWS_3 = {
 }
 
 
+# When the next full re-verification pass is due (REVIEW-2026-11 E-03). Shown to the reader on the
+# landing page and the about page, beside the date of the last pass, so a reader can tell when the
+# atlas is overdue. Hand-set when a pass closes, never computed from the clock: the page must show
+# the promise as it was made, so an overdue atlas shows a date in the past. The build asserts it
+# falls after the latest pass in lic_pass_ledger() and within the twice-a-year promise the about
+# page makes (at most NEXT_PASS_MAX_DAYS after it), and the maintenance report warns once it passes.
+NEXT_PASS_DUE = "2027-05-14"
+NEXT_PASS_MAX_DAYS = 184
+
+
 def lic_pass_ledger():
     """Every re-verification pass as (date, licensing keys, source rows), in date order.
 

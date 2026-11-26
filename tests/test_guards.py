@@ -210,6 +210,18 @@ class MaintenanceTable(GuardTest):
         self.assertFailsWith("--strict-maintenance set", "--strict-maintenance")
 
 
+class NextPassDue(GuardTest):
+    """E-03: the next-pass date shown to readers must follow the last pass, within the promise."""
+
+    def test_next_pass_before_latest_pass_fails(self):
+        self.copy.append("build/common.py", 'NEXT_PASS_DUE = "2026-01-01"')
+        self.assertFailsWith("is not after the latest pass", "--check")
+
+    def test_next_pass_beyond_twice_a_year_fails(self):
+        self.copy.append("build/common.py", 'NEXT_PASS_DUE = "2027-12-31"')
+        self.assertFailsWith("promises a pass at least twice a year", "--check")
+
+
 class ProseGuards(GuardTest):
     def test_glossary_rejects_em_dash(self):
         self.copy.append("build/glossary.py", 'GLOSSARY["ZZZ"] = "A test term — with an em dash."')
