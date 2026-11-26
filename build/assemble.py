@@ -248,7 +248,7 @@ BRAND = {
     # -- that one added capabilities (a social card, an error-report path). The built HTML bytes moved, so a bump is
     # required (§31); the JSON delta is precisely this version string. One commit for source + artifact + stamp, per
     # §33.3. Reasoning in AUDIT-FINDINGS §35.
-    "atlas_version": "3.4.3",
+    "atlas_version": "3.5.0",
     # No hand-maintained as_of: the landing page shows meta.verified_range, derived from the rows
     # themselves at assemble time, so the stated currency cannot drift from the data (PR-014).
 }
@@ -473,7 +473,7 @@ EM_DASH_ALLOWED_KEYS = {"full_name", "version"}
 def check_no_em_dash(out):
     """REVIEW-2026-11 C-07: no em dash in any published string, except a framework's quoted title.
 
-    Rows were already free of them (47,863 words, none); 3.4.4 cleared the meta, industry, and
+    Rows were already free of them (47,863 words, none); 3.5.0 cleared the meta, industry, and
     product strings, and this keeps the whole dataset that way. The en dash is not checked: it is
     the right mark for a range ("3.11.2–3.11.3", "Articles 12–23").
     """

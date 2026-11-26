@@ -169,7 +169,7 @@ nav.tabs a.on{background:var(--paper-2); color:var(--ink); box-shadow:inset 0 0 
 /* A card is a <div>; its link is the heading text alone, and the link's ::before stretches over
    the whole card, so the mouse hit area is still the full card and keyboard users still get one
    stop per card. The accessible name is the heading, which is also the link's visible text, so it
-   meets WCAG 2.5.3 Label in Name. Until 3.4.4 the whole card was an <a> named by an aria-label of
+   meets WCAG 2.5.3 Label in Name. Before 3.5.0 the whole card was an <a> named by an aria-label of
    the heading alone (AUDIT-FINDINGS 21.3), which axe-core 4.14 flags because the name omitted the
    rest of the card's visible text (AUDIT-FINDINGS 39). */
 .card{display:block; color:var(--ink); text-decoration:none;

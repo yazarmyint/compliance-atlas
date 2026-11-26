@@ -62,7 +62,7 @@ const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 // node count is printed on every route, and the total is printed at the end. Remove the entry in
 // the same commit that fixes the finding. (REVIEW-2026-11 D-05, owner decision 2026-11-26.)
 // Entry shape: "rule-id": { since: "YYYY-MM-DD", why: "...", fix: "..." }.
-// Empty since 3.4.4: label-content-name-mismatch on the cards was fixed (AUDIT-FINDINGS 39).
+// Empty since 3.5.0: label-content-name-mismatch on the cards was fixed (AUDIT-FINDINGS 39).
 const KNOWN_FINDINGS = {};
 
 const CHROME_CANDIDATES = [

@@ -20,7 +20,7 @@ authorization it "has". CMMC is the model, dateless (the rollout phase lives in 
 maintenance trigger, not here). This mirrors the license_bands rule that the band is a
 signpost, never the authority.
 
-TERM CUT (Session 15, owner-reviewed; extended in 3.4.4). 59 terms ship. Notable exclusions and why, recorded
+TERM CUT (Session 15, owner-reviewed; extended in 3.5.0). 59 terms ship. Notable exclusions and why, recorded
 because the cut being on the record is part of the value (AUDIT-FINDINGS §33):
   - WORM, DIB      excluded: ZERO occurrences in the shipped artifact. The atlas writes
                    "immutable"/"records" and "Defense industrial base" spelled out. A
@@ -31,7 +31,7 @@ because the cut being on the record is part of the value (AUDIT-FINDINGS §33):
   - framework      excluded as a class (HIPAA, GDPR, PCI DSS, ISO, SOC, GLBA, FERPA, NIST,
     short-names    CSF): each carries its full name on its own framework card. CMMC is kept
                    because it is a program referenced far from its card (gov notes, 800-171).
-  - NPI            excluded (3.4.4): ambiguous. The GLBA rows use it for "nonpublic personal
+  - NPI            excluded (3.5.0): ambiguous. The GLBA rows use it for "nonpublic personal
                    information"; the DPR row dpr-d11 lists it beside pseudonymous and unlinked
                    data, a different sense. One definition would be wrong for one of them.
   - E3/E5/tier     excluded: the tier legend and license bands already define these with
@@ -54,7 +54,7 @@ GCC/GCC High/DoD (Office 365 US Government service descriptions), CMMC/C3PAO/SPR
 SPRS/DISA), MCSB (Microsoft cloud security benchmark), and the Defender family names against
 the atlas's own verified row prose. Sources in AUDIT-FINDINGS §33.
 
-3.4.4 ADDITIONS (REVIEW-2026-11 C-04): AMA, CEF, CMDB, EASM, FIDO2, FIPS, KQL, M365, NDR, NRT,
+3.5.0 ADDITIONS (REVIEW-2026-11 C-04): AMA, CEF, CMDB, EASM, FIDO2, FIPS, KQL, M365, NDR, NRT,
 PAN, SIS, the acronyms that occurred most often in row prose with no entry. Each was read in
 context across the rows before it was defined, so the sense given is the one the rows use.
 
