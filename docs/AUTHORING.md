@@ -4,7 +4,7 @@ Maintainer reference for everything upstream of the generated files: the dataset
 state, the repository layout, the row schema, and the procedures for regenerating the build or adding
 a framework or a product. Reader-facing orientation lives in [`../README.md`](../README.md).
 
-## Contents (v3.0.0 — full version history in `CHANGELOG.md`)
+## Contents (current release; version history in `CHANGELOG.md`)
 
 | Framework | Version pinned | Rows (all products) |
 |---|---|---|
@@ -68,7 +68,12 @@ reference/
 ```powershell
 python build/assemble.py      # row modules + maps → compliance-atlas.json (with integrity checks + dep migration)
 python build/build_html.py    # JSON + template.html → compliance-atlas.html
+python build/assemble.py --check          # validate and compare with the committed JSON; writes nothing
+python -m unittest discover -s tests -v   # guard regression tests (stdlib only, about 20 s)
 ```
+
+Toolchain the build is known to reproduce on: Python 3.14 (3.14.6 locally; CI uses the latest 3.14) and,
+for the QA tooling in `tools/`, Node 22.12 or later. The build itself has no third-party Python packages.
 
 Edit content in `build/rows_*.py`, maps in `build/common.py`, presentation in `build/template.html`; never the outputs.
 The build is fully regenerable from source: `assemble.py` re-derives the JSON (and re-runs the dependency migration as a
@@ -299,8 +304,9 @@ ids, then commit `reference/row-ids.txt` alongside the row module.
 4. **Bless the new row ids** into the permanent roster: `python build/update_row_ids.py --write`, then commit
    `reference/row-ids.txt` with the module. The build fails until you do (see *Row id permanence*); this step is
    deliberately manual, so a new permanent public id is only ever created on purpose.
-5. Rebuild (both commands above), then QA: re-verify a random row sample, run the URL check
-   (see AUDIT-FINDINGS §7 for the pattern), and confirm JSON↔HTML row counts reconcile.
+5. Rebuild (both commands above), then QA: re-verify a random row sample, run
+   `python tools/check_urls.py` and `node tools/axe_check.mjs`, run the guard tests, and confirm
+   JSON↔HTML row counts reconcile. The method behind the URL check is in AUDIT-FINDINGS §7.
 ## Add a product
 
 Mirrors add-a-framework; the data model and all four UI views already generalize over products.

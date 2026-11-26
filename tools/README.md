@@ -18,10 +18,18 @@ python tools/check_urls.py --only learn.microsoft.com
 ```
 
 Verdicts are `OK`, `REDIRECT` (resolves, but the cited page moved — the citation has degraded and
-should be repointed), `WAF` (a host that blocks scripted clients; documented, not a defect), and
-`BROKEN`. Requests to rate-limiting hosts are serialised, so a full run takes several minutes;
-that is deliberate, because a parallel sweep produces spurious failures. Exit code is 0 when
-nothing is `BROKEN` and every `REDIRECT` is a known one.
+should be repointed), `WAF` (a host that refuses scripted clients but serves the page to a browser),
+and `BROKEN`. Requests to rate-limiting hosts are serialised, so a full run takes several minutes;
+that is deliberate, because a parallel sweep produces spurious failures.
+
+`WAF` is not a pass. Each such host is listed in `WAF_HOSTS` with the status it returns to the script,
+the date a person last opened the cited page in a browser, and what they saw. Every run prints those
+pages under **CHECK BY HAND**. The script does not try to get past a refusal (no user-agent rotation);
+a person with a browser is the check. The status is matched per host, so a 404 counts as a refusal for
+`www.ftc.gov` only.
+
+Exit code is 0 only when nothing is `BROKEN`, nothing is `REDIRECT`, and no hand check is older than
+90 days. Offline unit tests of the verdict logic are in `tests/test_check_urls.py`.
 
 ## axe_check.mjs — accessibility
 
