@@ -4001,3 +4001,62 @@ that stamps 3.4.3, then this record with the changelog. The intermediate commits
 whose bytes differ while claiming 3.4.2. That is tolerable only because the branch merges and deploys as
 one step, so no intermediate artifact is ever published; §31's one-version-one-artifact rule governs
 what readers can fetch, and they can only ever fetch the 3.4.3 bytes. Merge held for owner review.
+
+## 38. Engineering and repo health (2026-11-26) — REVIEW-2026-11 D-01 to D-09, D-11; no version
+
+Session 20. Machinery, tooling, and documentation only. `compliance-atlas.json`, `compliance-atlas.html`,
+and `index.html` are byte-identical to 3.4.3 on this branch, so there is no version bump (CHANGELOG
+policy: a change that never touches the built artifact takes none) and no CHANGELOG entry.
+
+### 38.1 What changed, one commit each
+
+| Finding | Change |
+|---|---|
+| **D-09** | `assemble.py` and `build_html.py` write their four outputs with `newline="\n"`. A Windows build no longer leaves CRLF in the working tree, which is what made `git status` show unchanged outputs as modified (§35.4). |
+| **D-11** | `assemble.py --check`: every integrity assertion and the maintenance report run, nothing is written, and the would-be outputs are compared with the files on disk. Exit 1 on drift. `--maintenance-report` used to rewrite the JSON as a side effect. |
+| **D-01** | `tests/test_guards.py`, 22 tests, stdlib `unittest`, about 16 s. Each copies the build to a temporary directory, breaks one thing, runs the real entry point, and asserts that the build fails **with the message of the guard under test**. Covered: baseline and byte-identical rebuild, `--check` drift, the PR-058 bytecode purge, row integrity, the row-id inventory, bands G1 to G4, the maintenance table including the pass-3 framework rule, `--strict-maintenance`, the glossary and rationale guards, and the spelling lint. |
+| **D-06** | `check_urls.py`: `WAF_HOSTS` is a registry (status per host, date of the last hand check in a browser, what was seen); ftc.gov (404 to scripts) and iso.org (403) added; every run prints a CHECK BY HAND list and exits 1 once a hand check is over 90 days old. `tests/test_check_urls.py`, 6 offline tests. |
+| **D-05** | QA lockfile committed; axe-core 4.12.1 → 4.14.0 and puppeteer-core 23.11.1 → 25.17.0, pinned exactly. |
+| **D-02** | `.github/workflows/qa.yml`: a `gate` job on push and pull request, and a weekly `watch` job that opens or updates a `maintenance-due` issue. |
+| **D-04** | `.nojekyll` at the root. |
+| **D-07, D-08** | AUTHORING, MAINTENANCE, README, and tools/README brought in line with the tooling; toolchain recorded. |
+
+### 38.2 Two things this session declined to do
+
+**User-agent refresh (proposed in D-06).** The review proposed replacing the pinned Chrome 124 user agent.
+Changing the client's identity to get past a host that refuses scripts is evasion, and the session's
+own tooling refused a test of it. The checker keeps its user agent; the four refusing hosts are checked
+by a person in a browser instead, and the date of that check is now part of the data. All four were
+checked on 2026-11-26: the CMMC program page (with the Phase II suspension notice), HHS's Security Rule
+page, the FTC Safeguards Rule page, and ISO/IEC 27001:2022 (Edition 3, one amendment, Amd 1:2024, which
+matches the atlas's pin; `TRG-ISO27001-VERSION` was not executed here because that would move the JSON).
+
+**Hiding a new axe finding.** See §38.3.
+
+### 38.3 The axe upgrade surfaced a real finding: WCAG 2.5.3 on the card links
+
+axe-core 4.14 runs `label-content-name-mismatch` (WCAG 2.5.3, Label in Name; ACT rule 2ee8b8) by
+default. Under 4.12.1 it did not run. It reports **100 nodes**: every clickable card on `#/`,
+`#/frameworks`, `#/products`, `#/product/purview`, `#/industry/legal`, and `#/industry/insurance`, in
+both themes. Each card is one `<a>` whose `aria-label` is the card heading alone, the §21.3 decision that
+keeps a screen reader's link list to headings rather than whole card bodies. The rule requires a link's
+accessible name to contain its visible text, and the card's visible text is heading plus body.
+
+A speech-input user saying the heading still reaches the card, so the practical harm is small. The rule
+is still right that the markup gives the link a name narrower than what it visibly contains.
+
+**Owner decision (2026-11-26): upgrade now, fix later.** `axe_check.mjs` gains `KNOWN_FINDINGS`. The rule
+still runs; its count prints on every route and in a closing summary with its reason and planned fix; only
+those nodes stop failing the gate. Every other rule gates as before. The entry is to be removed in the
+commit that fixes the cards. **Planned fix:** make the `<a>` wrap only the heading and stretch its click
+area over the card with a positioned pseudo-element, so the accessible name is the heading and the link's
+visible text is the heading. That changes the published HTML, so it is a PATCH.
+
+### 38.4 Gate
+
+`python -m unittest discover -s tests`: 28 tests OK. `python build/assemble.py --check`: exit 0, no
+maintenance warning. Full rebuild: `compliance-atlas.json` byte-identical to 3.4.3; `compliance-atlas.html`
+differs only in `BUILT_AT` and was restored; spelling lint clean. `check_urls.py`: 150 OK, 3 WAF listed
+to check by hand, exit 0. `axe_check.mjs`: 0 gating violation nodes across 17 routes × 2 themes, plus the
+100 known nodes above. The workflow file was checked structurally only; it has not run on GitHub yet,
+because nothing is pushed. Merge held for owner review.
