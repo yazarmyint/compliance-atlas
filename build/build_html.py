@@ -133,7 +133,8 @@ def main():
     assert "__BUILT_AT__" in tpl, "template is missing the __BUILT_AT__ marker"
     tpl = tpl.replace("__BUILT_AT__", built_at)
     doc = tpl.replace(marker, payload)
-    with open(OUT, "w", encoding="utf-8") as f:
+    # newline="\n" (D-09): the committed file is LF; without it Windows writes CRLF to the working tree.
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:
         f.write(doc)
     print(f"Wrote {OUT}")
     print(f"  rows embedded: {len(data['rows'])} | frameworks: {len(data['frameworks'])} | products: {len(data.get('products',{}))} | size: {len(doc)/1024:.0f} KB")
@@ -166,7 +167,7 @@ def write_index(meta):
         filename_js=json.dumps(ATLAS_FILENAME),
         favicon=favicon.group(0),
     )
-    with open(INDEX_OUT, "w", encoding="utf-8") as f:
+    with open(INDEX_OUT, "w", encoding="utf-8", newline="\n") as f:
         f.write(doc)
     print(f"Wrote {INDEX_OUT}")
     print(f"  redirects to: {CANONICAL_URL}")
