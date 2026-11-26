@@ -993,9 +993,21 @@ function vSearch(q){
     FW[r.framework].name, r.control_domain,
     r.cloud_availability_note, r.config_evidence_example, r.operational_evidence_example,
     r.coverage, r.confidence, r.id].join(" ").toLowerCase();
-  const hits = terms.length ? ROWS.filter(r => terms.every(t => hay(r).includes(t))) : [];
+  /* REVIEW-2026-11 C-01: a short plain term must match a whole word. As a substring, "AI" matched
+     "maintain" and "detail" and returned 348 of 378 rows. A term of three characters or fewer made
+     only of letters and digits ("ai", "mfa", "e5", "pim") therefore needs a non-alphanumeric
+     character or the end of the text on each side. Anything longer, or anything with punctuation
+     in it (control refs such as "A.8.12" or "3.13.16", ids such as "iso-a-5-10"), still matches
+     as a substring, so a partial ref or a word stem keeps working. The term is [a-z0-9] only, so it
+     needs no escaping before it goes into the pattern. */
+  const short = t => /^[a-z0-9]{1,3}$/.test(t);
+  const tests = terms.map(t => short(t)
+    ? (re => h => re.test(h))(new RegExp(`(^|[^a-z0-9])${t}($|[^a-z0-9])`))
+    : h => h.includes(t));
+  const hits = terms.length ? ROWS.filter(r => { const h = hay(r); return tests.every(f => f(h)); }) : [];
   return `<div class="pagehead"><div class="overline">Global search</div><h1>“${esc(q)}”</h1>
-    <div class="metaline"><span class="count-pill">${hits.length} matching row(s)</span></div></div>
+    <div class="metaline"><span class="count-pill">${hits.length} matching row(s)</span>${terms.some(short)
+      ? `<span class="small muted">Terms of three characters or fewer match whole words only.</span>` : ""}</div></div>
   <div style="height:14px"></div>
   ${hits.length ? hits.map(r=>`<div class="result-item">${rowCard(r,{showFw:true})}</div>`).join("")
     : `<div class="callout gray">No rows match. Try a control ref (e.g. <span class="mono">3.13.16</span>, <span class="mono">A.8.12</span>, <span class="mono">CC6.7</span>), a product (<span class="mono">purview</span>), or a keyword (<span class="mono">retention</span>, <span class="mono">CUI</span>).</div>`}`;
@@ -1439,7 +1451,7 @@ document.getElementById("footVersion").innerHTML =
    dataset. compliance-atlas.json deliberately carries nothing time-derived, so a content-free
    rebuild leaves it byte-identical (PR-057). This file is the one that moves on every rebuild —
    by design; the drift check is defined on the JSON, not on the HTML. */
-const BUILT_AT = "2026-11-26T11:44:07";
+const BUILT_AT = "2026-11-26T11:45:17";
 document.getElementById("footMeta").textContent =
   `Built ${BUILT_AT} from compliance-atlas.json. A rebuild moves this timestamp whether or not any content changed.`;
 

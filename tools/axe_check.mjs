@@ -47,6 +47,7 @@ const ALL_ROUTES = [
   "#/matrix/purview",
   "#/cell/purview/iso-27001-2022/Data%20Loss%20Prevention",
   "#/search/retention",
+  "#/search/AI",                                     // C-01: a short term, matched as a whole word, with the note it shows
   "#/industry/legal",
   "#/industry/insurance",
   "#/row/iso-a-5-10",                                 // PR-004 row deep link, valid id (single-row view)
