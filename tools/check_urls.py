@@ -8,7 +8,9 @@ appear in the built file) and reports, per URL:
 
   OK           200, and the final URL matches the cited one
   REDIRECT     200, but the final URL differs by more than locale insertion
-  WAF          403/406 from a host known to block automated clients (documented, not a defect)
+  WAF          a refusal from a host known to block scripted clients. Not a defect, but not proof
+               of health either: the page is listed as CHECK BY HAND with the date a person last
+               opened it in a browser, and the run warns when that date is older than 90 days
   BROKEN       any other status, or a transport error
 
 Two things this exists to catch that a plain 200-check does not:
@@ -24,7 +26,7 @@ Two things this exists to catch that a plain 200-check does not:
 
 Exit code is 0 when nothing is BROKEN and nothing is an unexplained REDIRECT.
 """
-import argparse, json, os, re, sys, time, urllib.error, urllib.request
+import argparse, datetime, json, os, re, sys, time, urllib.error, urllib.request
 from urllib.parse import urlsplit, urlunsplit
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,9 +37,27 @@ THROTTLED_HOSTS = {"learn.microsoft.com", "docs.microsoft.com", "azure.microsoft
 THROTTLE_SECONDS = 1.1
 MAX_RETRIES = 4
 
-# Hosts whose WAF blocks scripted clients outright. Both remain human-reachable, and every
-# row citing them also carries a machine-resolving alternate (AUDIT-FINDINGS SS7.2).
-WAF_HOSTS = {"dodcio.defense.gov", "www.hhs.gov"}
+# Hosts that refuse scripted clients but serve the page to a browser. Each entry records the
+# status the host returns to this script, the date a person last opened the cited page in a
+# browser and saw the right document, and what they saw. A WAF verdict is only as good as that
+# date, so main() prints it and warns once it is older than HAND_CHECK_MAX_DAYS.
+#
+# This script does NOT try to get past these refusals (no user-agent rotation, no header
+# games). The honest fix for a host that refuses scripts is a person with a browser.
+#
+# Status is matched per host, never globally: ftc.gov answers this script with 404 for a page
+# that exists, so 404 is accepted for ftc.gov alone. A genuine 404 on any other host stays BROKEN.
+WAF_HOSTS = {
+    "dodcio.defense.gov": {"statuses": (403,), "checked": "2026-11-26",
+                           "saw": "CMMC program page, with the Phase II suspension notice"},
+    "www.hhs.gov":        {"statuses": (403,), "checked": "2026-11-26",
+                           "saw": "The Security Rule | HHS.gov"},
+    "www.ftc.gov":        {"statuses": (403, 404), "checked": "2026-11-26",
+                           "saw": "Safeguards Rule | Federal Trade Commission"},
+    "www.iso.org":        {"statuses": (403,), "checked": "2026-11-26",
+                           "saw": "ISO/IEC 27001:2022, Edition 3, one amendment (Amd 1:2024)"},
+}
+HAND_CHECK_MAX_DAYS = 90
 
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
@@ -107,7 +127,7 @@ def fetch(url):
 
 def classify(url, status, final):
     host = urlsplit(url).netloc.lower()
-    if status in (403, 406) and host in WAF_HOSTS:
+    if host in WAF_HOSTS and status in WAF_HOSTS[host]["statuses"]:
         return "WAF"
     # Any 2xx is a successful fetch. This was `status != 200`, which reported EUR-Lex as BROKEN:
     # eur-lex.europa.eu answers scripted clients with 202 Accepted (its bot-mitigation path) while
@@ -164,12 +184,29 @@ def main():
         if counts.get(v):
             print(f"{v:10} {counts[v]}")
 
+    # WAF hosts: list each page to check by hand, with the date it was last checked.
+    waf = [r for r in results if r["verdict"] == "WAF"]
+    stale_hand_checks = 0
+    if waf:
+        today = datetime.date.today()
+        print("\nCHECK BY HAND (the host refuses scripts; open each in a browser):")
+        for r in waf:
+            entry = WAF_HOSTS[urlsplit(r["url"]).netloc.lower()]
+            age = (today - datetime.date.fromisoformat(entry["checked"])).days
+            flag = ""
+            if age > HAND_CHECK_MAX_DAYS:
+                stale_hand_checks += 1
+                flag = f"  << last checked {age} days ago; re-check and update WAF_HOSTS"
+            print(f"  {r['url']}\n    last checked {entry['checked']}: {entry['saw']}{flag}")
+
     if args.json:
         with open(args.json, "w", encoding="utf-8") as fh:
             json.dump(results, fh, indent=1)
         print(f"\nreport -> {args.json}")
 
-    return 1 if counts.get("BROKEN") or counts.get("REDIRECT") else 0
+    if stale_hand_checks:
+        print(f"\n{stale_hand_checks} hand check(s) older than {HAND_CHECK_MAX_DAYS} days.")
+    return 1 if counts.get("BROKEN") or counts.get("REDIRECT") or stale_hand_checks else 0
 
 
 if __name__ == "__main__":
