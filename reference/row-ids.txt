@@ -167,6 +167,13 @@ dpr-j48
 dpr-j48-intune
 dpr-j49
 dpr-j50
+dpr-k-boundary
+dpr-k53-mdc
+dpr-k57-mdc
+dpr-k58
+dpr-k59-mdc
+dpr-k60-mdc
+dpr-k62-mdc
 ferpa-99-10
 ferpa-99-30-33
 ferpa-99-31-a1ii

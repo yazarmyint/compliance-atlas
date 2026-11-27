@@ -8,7 +8,7 @@ a framework or a product. Reader-facing orientation lives in [`../README.md`](..
 
 | Framework | Version pinned | Rows (all products) |
 |---|---|---|
-| Microsoft SSPA DPR | v12 (March 2026) | 26 |
+| Microsoft SSPA DPR | v12 (March 2026) | 33 |
 | ISO/IEC 27001:2022 | 2022 (Amd 1:2024 noted) | 57 |
 | SOC 2 | 2017 TSC, 2022 revised points of focus | 41 |
 | HIPAA Security Rule | 45 CFR 164 Subpart C (current; NPRM flagged) | 32 |
@@ -20,10 +20,10 @@ a framework or a product. Reader-facing orientation lives in [`../README.md`](..
 | FERPA | 34 CFR Part 99 (current; ED rulemaking watch) | 6 |
 | EU GDPR | 2016/679 | 24 |
 
-**378 rows across 11 frameworks and six products: Purview (150), Entra (48), Intune (41), Defender XDR (53),
-Sentinel (46), and Defender for Cloud (40), all `verified` against live sources.** By framework: ISO/IEC 27001:2022
-(57), NIST SP 800-53 R5 subset (54), NIST 800-171 R2 / CMMC L2 (46), SOC 2 (41), NIST CSF 2.0 (40), HIPAA Security
-Rule (32), PCI DSS v4.0.1 (31), Microsoft SSPA DPR (26), EU GDPR (24), GLBA Safeguards Rule (21), FERPA (6). Claim taxonomy: Coverage = Direct Support /
+**385 rows across 11 frameworks and six products: Purview (152), Entra (48), Intune (41), Defender XDR (53),
+Sentinel (46), and Defender for Cloud (45), all `verified` against live sources.** By framework: ISO/IEC 27001:2022
+(57), NIST SP 800-53 R5 subset (54), NIST 800-171 R2 / CMMC L2 (46), SOC 2 (41), NIST CSF 2.0 (40), Microsoft SSPA DPR
+(33), HIPAA Security Rule (32), PCI DSS v4.0.1 (31), EU GDPR (24), GLBA Safeguards Rule (21), FERPA (6). Claim taxonomy: Coverage = Direct Support /
 Partial Support / Evidence Support Only / Not Covered; Confidence = High / Medium / Low. Mapped products **support or
 evidence** controls; the artifact never claims a product satisfies or meets a requirement. Sentinel's mapping
 discipline: it **evidences and detects, it does not enforce**: Direct Support only where the control's namesake

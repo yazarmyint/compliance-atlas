@@ -734,6 +734,16 @@ MAINTENANCE = [
     # it gets reconsidered. Full rationale, both drafted entries, and the demand
     # thresholds live in FRAMEWORK-SELECTION.md (Session 13); these notes stay compact
     # and point there so the criteria are recorded in one place, not two.
+    {"id": "TRG-EU-AI-ACT", "type": "watch", "cadence_days": None,
+     "title": "EU AI Act: decide whether it becomes a framework module or stays out",
+     "next_review": "2027-06-01", "last_executed": "2026-11-27",
+     "affects": [], "rows": [],
+     "note": "Deferred in Session 23 (owner ruling 2026-11-27, AUDIT-FINDINGS SS41.2). Regulation (EU) 2024/1689 as "
+             "amended by the 2026 AI Omnibus: high-risk obligations apply from 2 Dec 2027 (Annex III) and 2 Aug 2028 "
+             "(Annex I). The technical articles bind mainly high-risk providers, and the harmonised standards were "
+             "not settled in November 2026. When this fires, six months before the Annex III date: re-read the "
+             "Commission's AI Act page for dates and the standards' status, then choose between a module, a "
+             "note on the ISO 42001 and NIST AI RMF rows, or another deferral."},
     {"id": "TRG-CJIS-DEMAND", "type": "watch", "cadence_days": None,
      "title": "CJIS demand-criterion check: does sustained interest justify the framework increment?",
      "next_review": "2027-05-14", "last_executed": "2026-11-14",
@@ -808,7 +818,11 @@ GOV_BASELINE = {
 # GOV re-verification passes, in date order: [(date, {(dict name, key), ...}), ...].
 # Empty on purpose: none has run. Add a pass here when one does, listing only the
 # coordinates whose government source was fetched that day.
-REVERIFIED_GOV_PASSES = []
+REVERIFIED_GOV_PASSES = [
+    # 2026-11-27: Defender for Cloud support matrix (page updated 2026-11-24), fetched for the Section K
+    # rows. Two claims in MDC_GOV['gaps'] had gone stale and were corrected; MDC_GOV['ai'] was written.
+    ("2026-11-27", {("MDC_GOV", "gaps"), ("MDC_GOV", "ai")}),
+]
 
 
 def gov_dicts():
@@ -973,6 +987,11 @@ PRODUCTS = {
 # prodFull()/relatedBlock() in the template resolve either map.
 RELATED_PRODUCTS = {
     "priva": "Microsoft Priva",
+    # Session 23 ruling (AUDIT-FINDINGS SS41.2): admitted reference-only for AI rows. Agent 365 because
+    # Microsoft now licenses agent-level security through it (Conditional Access for agents; Defender
+    # agent posture since 2026-07-01); Foundry because it is where custom AI applications are built.
+    "agent-365": "Microsoft Agent 365",
+    "foundry": "Microsoft Foundry",
 }
 
 # Canonical Purview solution names (pivot keys). Display metadata lives in SOLUTIONS.
@@ -1089,6 +1108,7 @@ URLS = {
     "edisc": "https://learn.microsoft.com/purview/edisc",
     "audit": "https://learn.microsoft.com/purview/audit-solutions-overview",
     "audit_search": "https://learn.microsoft.com/purview/audit-search",
+    "audit_ai": "https://learn.microsoft.com/purview/audit-copilot",
     "irm": "https://learn.microsoft.com/purview/insider-risk-management",
     "adaptive": "https://learn.microsoft.com/purview/insider-risk-management-adaptive-protection",
     "cc": "https://learn.microsoft.com/purview/communication-compliance-solution-overview",
@@ -1769,6 +1789,7 @@ MDC_URLS = {
     "arm": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-resource-manager-introduction",
     "apis": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-apis-introduction",
     "ai": "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection",
+    "ai_spm": "https://learn.microsoft.com/azure/defender-for-cloud/ai-security-posture",
     "alerts": "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview",
     "xdr_integration": "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365",
     "export_siem": "https://learn.microsoft.com/azure/defender-for-cloud/export-to-siem",
@@ -1785,11 +1806,15 @@ MDC_GOV = {
     "core": ("Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), "
              "Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource "
              "Manager, and the SQL/open-source database plans are GA."),
-    "gaps": ("Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, "
-             "Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI "
-             "security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not "
-             "available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data "
-             "scanning is GA)."),
+    # 2026-11-27 (AUDIT-FINDINGS SS42): AI Services threat protection and Defender for Cosmos DB removed from
+    # this list; the support matrix (updated 2026-11-24) now shows both GA in Azure Government.
+    "gaps": ("Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not "
+             "available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow "
+             "integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat "
+             "detection is not available (DSPM sensitive data scanning is GA)."),
+    "ai": ("Defender for AI Services and AI security posture management (Defender CSPM) are GA in Azure "
+           "Government. Suspicious prompt evidence, the Data & AI security dashboard, and DevOps security, which "
+           "scans code and infrastructure as code, are not available there."),
     "dashboard": ("Regulatory compliance dashboard: GA in Azure Government (configuration via the Azure portal "
                   "experience; available standards vary by cloud, so verify the standard list in the target cloud)."),
     "servers": ("Defender for Servers P1/P2: GA in Azure Government; file integrity monitoring GA (not supported in "

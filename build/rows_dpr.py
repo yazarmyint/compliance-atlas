@@ -20,7 +20,7 @@ FRAMEWORK = {
                 "F Data Subjects", "G Subcontractors", "H Quality", "I Monitoring & Enforcement",
                 "J Security", "K AI Systems"],
     "applies_to": "Suppliers processing Microsoft Personal Data and/or Microsoft Confidential Data (SSPA-enrolled)",
-    "notes": "v12 (63 requirements) is current for FY26. Sections B, C, G, H and K carry no defensible Purview mapping (contractual/organizational or supplier-AI-system controls); these are deliberate exclusions, see AUDIT-FINDINGS.md.",
+    "notes": "v12 (63 requirements) is current for FY26. Sections B, C, G and H carry no defensible mapping (contractual or organizational controls); these are deliberate exclusions, see AUDIT-FINDINGS.md. Section K (AI Systems, #51 to #63) applies only to suppliers whose service involves AI Systems. Its technical requirements are mapped from 3.6.0, mostly to Defender for Cloud, and its contractual and disclosure duties are one boundary row.",
 }
 
 def row(id, ref, domain, intent, sol, cap, how, cfg, op, deps, cov, conf, lic, cloud, sources, also=None):
@@ -400,4 +400,116 @@ ROWS += [
        MDC_GOV["gaps"],
        [SSPA, DPR_PDF, MDC_URLS["alerts"], MDC_URLS["xdr_integration"]],
        also=["Defender for Servers"]),
+]
+
+
+# ==== Section K: AI Systems (#51 to #63; added 2026-11-27, Session 24, v3.6.0) ====
+# Section K applies only to suppliers whose service to Microsoft involves AI Systems. Planned in
+# Session 23 (AUDIT-FINDINGS SS41.3), authored in SS42. The technical slice lands on Defender for Cloud
+# (workload-level AI posture and AI threat protection) and Purview Audit; the contractual, disclosure,
+# and governance duties are one coarse boundary row. Agent-level Defender posture is deliberately not
+# mapped: since 2026-07-01 it needs Microsoft Agent 365, a reference-only related product.
+from common import LIC as _LIC_K, URLS as _URLS_K, GOV as _GOV_K, rel as _rel_K, prow as _prow_K
+_K = "2026-11-27"
+
+def kr(product, id, ref, intent, sol, cap, how, cfg, op, related, ext, cov, conf, lic, cloud, sources,
+       licensing_model="consumption"):
+    return _prow_K(product, "sspa-dpr", "v12 (March 2026)", id, ref, "K AI Systems", intent, sol, cap, how,
+                   cfg, op, related, ext, cov, conf, lic, cloud, sources, _K, licensing_model=licensing_model)
+
+ROWS += [
+    kr("defender-cloud", "dpr-k53-mdc", "K #53",
+       "Keep an AI System incident response plan that notifies Microsoft promptly on a Data Incident or on a failure that would harm an AI System's Intended Uses, with steps for rollback, switching features off, and releasing model updates.",
+       "Workload Protection Plans",
+       "Defender for AI Services raises real-time security alerts on generative AI deployments in Azure OpenAI and the Azure AI model inference service, for threats including data leakage, data poisoning, jailbreak, and credential theft, and sends them to the Defender portal, where they correlate into incidents with the supplier's other alerts",
+       "Supplies the detection and timing input to the plan: an AI security event arrives as a dated alert and incident, which is what starts the clock on notifying Microsoft. The plan itself is not a product function. Rollback, switching features off, model updates, and notifying Microsoft and end users are supplier processes, and failures that are not security events, such as accuracy drift, raise no alert here.",
+       "Defender for AI Services enabled on every subscription hosting AI deployments used for Microsoft work; AI alerts routed to the SOC queue in the Defender portal",
+       "AI alert and incident history with timestamps; incident records linked to the supplier's notifications to Microsoft",
+       [_rel_K("sentinel", "contributing", "The Section I incident-response row (dpr-i30-31-sentinel) carries the estate-wide incident workflow; Defender for Cloud alerts ingest into Sentinel free of charge", "Incident Management & Investigation"),
+        _rel_K("foundry", "contributing", "Where the AI System is built on Microsoft Foundry, its model deployments are the resources these alerts cover")],
+       "AI System incident response plan; rollback and feature shut-off procedures; model update and release process; contractual notification to Microsoft",
+       "Evidence Support Only", "Medium",
+       MDC_LIC["workload"], MDC_GOV["ai"],
+       [SSPA, DPR_PDF, MDC_URLS["ai"], MDC_URLS["xdr_integration"]]),
+
+    kr("defender-cloud", "dpr-k57-mdc", "K #57",
+       "Assess AI Systems for privacy, security, and responsible-AI risk, covering bias, security vulnerabilities, and unintended consequences, and keep the evidence, including testing and the annual maintenance that follows.",
+       "Defender CSPM",
+       "AI security posture management in Defender CSPM discovers deployed AI workloads in Azure OpenAI, Azure AI Foundry, Azure Machine Learning, Amazon Bedrock, and Google Vertex AI into an AI bill of materials, issues recommendations on the identity, data security, and internet exposure of AI resources, and runs attack path analysis that finds grounding or fine-tuning data reachable from the internet",
+       "Carries the security-vulnerability part of the assessment, and runs it continuously rather than once a year: the AI workloads in scope are found, their configuration weaknesses are ranked, and the paths an attacker could take to training or grounding data are shown. Bias and unintended-consequence assessment, and the privacy assessment of what the system is for, are responsible-AI work that no mapped product performs. Agent-level discovery and posture for Foundry and third-party agents need a Microsoft Agent 365 license since July 1, 2026, not Defender CSPM.",
+       "Defender CSPM enabled on the subscriptions and AWS or GCP connectors that host AI workloads; AI workloads visible in the AI bill of materials; AWS connector permissions updated for AI discovery",
+       "AI security recommendation status and remediation history; attack path findings on AI resources with resolution dates; AI inventory export attached to the annual assessment",
+       [_rel_K("foundry", "contributing", "Foundry accounts and projects are among the AI workloads Defender CSPM discovers"),
+        _rel_K("agent-365", "contributing", "Agent-level discovery and posture for Foundry and third-party cloud agents (if licensed; required since July 1, 2026)")],
+       "Responsible-AI impact and bias assessment; privacy assessment of the AI System's purpose; testing program; annual review",
+       "Partial Support", "Medium",
+       MDC_LIC["cspm"], MDC_GOV["ai"],
+       [SSPA, DPR_PDF, MDC_URLS["ai_spm"], MDC_URLS["attack_path"]]),
+
+    kr("purview", "dpr-k58", "K #58",
+       "Make AI Systems transparent and explainable to Microsoft, and log every system failure, corruption, hallucination, or reported misuse, with evidence of the steps taken to resolve it.",
+       "Audit",
+       "Audit (Standard) records user interactions with Microsoft Copilot and with custom AI applications built on Microsoft Copilot Studio and Microsoft Foundry: who interacted, when, in which service, which files a response drew on, and whether a policy blocked access. Interactions with non-Microsoft AI applications are recorded under pay-as-you-go billing",
+       "Gives an investigation into reported misuse a record of how the AI application was used. It does not record failures, corruption, or hallucinations as such, and it explains nothing about how a model reached an output: transparency and explainability are disclosures the supplier writes, and failure logging is the AI application's own telemetry.",
+       "Auditing on for the tenant; pay-as-you-go billing enabled where non-Microsoft AI applications are in scope",
+       "Audit search export of the AI interaction records behind an investigated misuse report, linked to its remediation ticket",
+       [_rel_K("foundry", "contributing", "Interaction records for custom AI applications built on Foundry are included in Audit (Standard)")],
+       "Transparency and explainability disclosures; application telemetry for failures, corruption, and hallucinations; issue tracking that shows resolution",
+       "Evidence Support Only", "Low",
+       _LIC_K["audit_std"], _GOV_K["audit"],
+       [SSPA, DPR_PDF, _URLS_K["audit_ai"]],
+       licensing_model="per_user"),
+
+    kr("defender-cloud", "dpr-k59-mdc", "K #59",
+       "Monitor AI Systems continuously and adapt and update them as new risks emerge, logging failures and misuse with the steps taken to resolve them.",
+       "Workload Protection Plans",
+       "Defender for AI Services monitors activity on Azure OpenAI and Azure AI model inference deployments in real time, using Azure AI Content Safety Prompt Shields and Microsoft threat intelligence, and alerts on jailbreak attempts, data leakage, data poisoning, and credential theft; alerts can carry the suspicious prompt as evidence. Text tokens only: image and audio are not scanned",
+       "Implements continuous security monitoring of the AI workload, so new attack techniques reach the supplier as alerts without its own detection engineering. Adapting the system in response (retraining, filter and prompt changes, model updates) is the supplier's engineering, and monitoring for quality, accuracy, or harmful output that is not an attack belongs to the AI platform's own evaluation tooling.",
+       "Defender for AI Services on for every subscription with AI deployments used in Microsoft work; suspicious prompt evidence enabled",
+       "AI alert history by deployment; triage and resolution records per alert",
+       [_rel_K("foundry", "contributing", "Model deployments in Foundry are the resources monitored"),
+        _rel_K("sentinel", "contributing", "Defender for Cloud alerts ingest into Sentinel free of charge for retention and correlation", "Data Collection & Connectors")],
+       "Model evaluation for quality and safety; change and release process for model and prompt updates; failure and misuse log",
+       "Partial Support", "Medium",
+       MDC_LIC["workload"], MDC_GOV["ai"],
+       [SSPA, DPR_PDF, MDC_URLS["ai"]]),
+
+    kr("defender-cloud", "dpr-k60-mdc", "K #60",
+       "Disclose for each Intended Use the error types, performance metrics, and safety and reliability indicators, including documented mitigations for well-known AI risks such as jailbreaks, data poisoning, and prompt extraction, and evidence of accuracy.",
+       "Workload Protection Plans",
+       "Defender for AI Services alerts on jailbreak attempts, data poisoning, and data leakage against Azure OpenAI and Azure AI model inference deployments, drawing on Azure AI Content Safety Prompt Shields, and can attach the prompt involved as evidence",
+       "Supplies evidence that the mitigations for well-known AI risks are watched in production: attempted jailbreaks and poisoning appear as dated alerts the supplier can cite in its disclosure. The mitigations themselves (Prompt Shields filters, input validation, grounding controls) are configured in Azure AI Content Safety and the application, outside the six mapped products. Error ranges, performance metrics, accuracy evidence, and automation-bias controls come from the supplier's own evaluation and documentation.",
+       "Prompt Shields enabled on the AI deployments; Defender for AI Services on for the same subscriptions",
+       "Jailbreak and data-leakage alert counts per deployment over the disclosure period, cited in the disclosure's mitigation section",
+       [_rel_K("foundry", "contributing", "Foundry hosts the model deployments and their content filters")],
+       "Azure AI Content Safety Prompt Shields and application-level mitigations; evaluation of error types, accuracy, and reliability; transparency documentation",
+       "Evidence Support Only", "Medium",
+       MDC_LIC["workload"], MDC_GOV["ai"],
+       [SSPA, DPR_PDF, MDC_URLS["ai"]]),
+
+    kr("defender-cloud", "dpr-k62-mdc", "K #62",
+       "Keep, as part of the transparency disclosures, a standard operating procedure and system-health monitoring framework for each AI system: monitoring methods and tools, how failures are reproduced, which events are monitored and how fast they are reviewed, how feedback is gathered, and how third-party AI components, including open source, are kept up to date.",
+       "Defender CSPM",
+       "AI security posture management keeps an AI bill of materials for discovered AI workloads and finds vulnerabilities in generative AI library dependencies such as TensorFlow, PyTorch, and LangChain by scanning source code, infrastructure as code, and container images, with recommendations to update or patch them",
+       "Implements the third-party-components clause on its security side: vulnerable AI libraries and model-serving components are found and tracked to remediation. It is one tool inside the framework, not the framework. The procedure, the list of monitored events and review timings, failure reproduction, and feedback gathering are the supplier's to write and run.",
+       "Defender CSPM on, with code repositories and container registries holding AI applications connected for scanning; AI workloads in the AI bill of materials",
+       "AI library vulnerability findings with remediation dates; AI bill of materials export attached to the procedure",
+       [_rel_K("foundry", "contributing", "Foundry projects appear in the AI bill of materials")],
+       "System-health monitoring procedure; failure reproduction and feedback processes; dependency update process in the build pipeline",
+       "Partial Support", "Medium",
+       MDC_LIC["cspm"], MDC_GOV["ai"],
+       [SSPA, DPR_PDF, MDC_URLS["ai_spm"]]),
+
+    kr("purview", "dpr-k-boundary", "K #51, #52, #54–#56, #61, #63",
+       "Have AI Systems contract terms and disclosed Intended Uses in place; avoid prohibited AI practices; keep transparency disclosures and update them when uses, functionality, or performance change; sign AI-supplier agreements covering data, intellectual property, liability, and incidents; assign accountability for AI oversight; and withdraw or fix an AI System found unfit for its Intended Use.",
+       "None (boundary row)",
+       "n/a",
+       "Deliberate boundary row kept coarse (uniform verdict across the seven requirements): these are contractual, disclosure, and governance duties the supplier performs through its contracts, documentation, and responsible-AI program. No mapped product performs them or produces evidence of them.",
+       "n/a", "n/a",
+       [],
+       "AI Systems contract terms with Microsoft; transparency disclosures and Intended Use documentation; responsible-AI program with a named accountable owner; AI-supplier agreements",
+       "Not Covered", "High",
+       "n/a", None,
+       [SSPA, DPR_PDF],
+       licensing_model="n/a"),
 ]

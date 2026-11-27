@@ -52,6 +52,8 @@ const ALL_ROUTES = [
   "#/industry/insurance",
   "#/row/iso-a-5-10",                                 // PR-004 row deep link, valid id (single-row view)
   "#/row/iso-a-5-34",                                 // PR-031: a row with a Related-products block, rendered open, so the point-of-use note is audited in both themes
+  "#/row/dpr-k57-mdc",                                // 3.6.0: a Section K row naming the Agent 365 and Foundry reference-only products
+  "#/framework/sspa-dpr",                            // 3.6.0: the framework that gained the AI Systems section
   "#/row/no-such-row",                               // PR-004 row deep link, invalid id (not-found state)
 ];
 

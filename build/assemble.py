@@ -174,10 +174,10 @@ INDUSTRIES = {
                 "Defender for Cloud brings the CA family in: CA-7 continuous monitoring rated Direct via the dashboard's NIST 800-53 standard, plus CM-8 cloud inventory and SI-7 file integrity monitoring; cloud-resource scope, so verify the Azure Government gaps (CIEM, Data & AI dashboard, several plans absent)."},
     "ms-supplier": {"name": "Microsoft suppliers & partners",
         "frameworks": ["sspa-dpr", "iso-27001-2022", "soc-2"],
-        "note": "For vendors and partners enrolled in Microsoft's Supplier Security and Privacy Assurance program, whose contracts drive the Data Protection Requirements. This is the most Purview-centric lens: classification, DLP, retention, records, audit, and eDiscovery carry the data-handling obligations, while non-data controls stay deliberately unmapped.",
+        "note": "For vendors and partners enrolled in Microsoft's Supplier Security and Privacy Assurance program, whose contracts drive the Data Protection Requirements. This is the most Purview-centric lens: classification, DLP, retention, records, audit, and eDiscovery carry the data-handling obligations.",
         "note_detail": "SSPA enrollment drives DPR compliance; ISO 27001 certification can qualify for SSPA alternative-compliance paths, and SOC 2 reports often accompany them. "
                 "The DPR story is Purview-dense: classification and DLP for the data-handling requirements, retention and records management for return-or-destroy, and audit plus eDiscovery for the incident and data-subject obligations. "
-                "Requirements outside the data layer (identity, transport encryption, supplier AI systems) stay deliberately unmapped."},
+                "Outside the data layer, Entra carries access and authentication (J #36, J #45), Intune asset inventory and disk encryption (J #35, J #48), and Defender for Cloud the technical requirements of the AI Systems section (K), added in 3.6.0. Contractual and disclosure requirements stay unmapped."},
 }
 
 BRAND = {
@@ -648,7 +648,9 @@ def main():
             if by_lic or by_src:
                 basis[r["id"]] = ("licensing+sources" if by_lic and by_src
                                   else "licensing" if by_lic else "sources")
-                r["last_verified"] = pass_date
+                # Forward only (Session 24): a row authored after a pass keeps its own, later date.
+                # Every row authored before the first pass is unaffected, so no existing date moves.
+                r["last_verified"] = max(r["last_verified"], pass_date)
         verified_rows |= set(basis)
         print(f"  Re-verified {len(basis)}/{len(rows)} rows to {pass_date} "
               f"({sum(1 for v in basis.values() if v != 'sources')} via licensing constants, "
