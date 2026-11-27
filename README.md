@@ -17,12 +17,12 @@ all. A **partial** badge marks rows where the band is the floor rather than the 
 
 ## What's in it
 
-**378 rows · 11 frameworks · 6 products** — every row `verified` against live sources.
+**385 rows · 11 frameworks · 6 products** — every row `verified` against live sources.
 
 | | |
 |---|---|
-| **Frameworks** | ISO/IEC 27001:2022 (57) · NIST SP 800-53 R5 subset (54) · NIST 800-171 R2 / CMMC L2 (46) · SOC 2 (41) · NIST CSF 2.0 (40) · HIPAA Security Rule (32) · PCI DSS v4.0.1 (31) · Microsoft SSPA DPR (26) · EU GDPR (24) · GLBA Safeguards Rule (21) · FERPA (6) |
-| **Products** | Purview (150) · Defender XDR (53) · Entra (48) · Sentinel (46) · Intune (41) · Defender for Cloud (40) |
+| **Frameworks** | ISO/IEC 27001:2022 (57) · NIST SP 800-53 R5 subset (54) · NIST 800-171 R2 / CMMC L2 (46) · SOC 2 (41) · NIST CSF 2.0 (40) · Microsoft SSPA DPR (33) · HIPAA Security Rule (32) · PCI DSS v4.0.1 (31) · EU GDPR (24) · GLBA Safeguards Rule (21) · FERPA (6) |
+| **Products** | Purview (152) · Defender XDR (53) · Entra (48) · Sentinel (46) · Defender for Cloud (45) · Intune (41) |
 | **Industry lenses** | 12 |
 
 Each framework is pinned to a specific published version, and each product's licensing strings come

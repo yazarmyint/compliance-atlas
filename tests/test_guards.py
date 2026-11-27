@@ -133,6 +133,17 @@ class RowIntegrity(GuardTest):
         self.copy.append("build/rows_ferpa.py", 'ROWS[0]["sources"] = ROWS[0]["sources"][:1]')
         self.assertFailsWith("has no Microsoft source", "--check")
 
+    def test_row_authored_after_a_pass_keeps_its_date(self):
+        # 3.6.0: a pass moves last_verified forward only. A row dated after the latest pass
+        # (as every row authored after 2026-11-14 is) must not be stamped back to the pass date.
+        import json
+        self.copy.append("build/rows_ferpa.py", 'ROWS[0]["last_verified"] = "2026-11-20"')
+        code, out = self.copy.run("build/assemble.py")
+        self.assertEqual(code, 0, out[-1500:])
+        with open(self.copy.path("compliance-atlas.json"), encoding="utf-8") as f:
+            rows = {r["id"]: r for r in json.load(f)["rows"]}
+        self.assertEqual(rows["ferpa-99-10"]["last_verified"], "2026-11-20")
+
     def test_future_last_verified(self):
         self.copy.append("build/common.py", 'REVERIFY_DATE_3 = "2999-01-01"')
         self.assertFailsWith("last_verified is in the future", "--check")

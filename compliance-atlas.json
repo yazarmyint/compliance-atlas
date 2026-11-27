@@ -1,12 +1,12 @@
 {
  "meta": {
   "title": "Compliance Atlas",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "brand": {
    "title": "Compliance Atlas",
    "working_title": false,
    "tagline": "Mapping frameworks to the Microsoft security stack",
-   "atlas_version": "3.5.0"
+   "atlas_version": "3.6.0"
   },
   "project": {
    "maintainer": "Yazar",
@@ -787,6 +787,17 @@
      "note": "ADDED by PR-050, not migrated: MDC_LIC['workload'] carries the per-resource meters (including the 73M-transaction Storage threshold that PROJECT-REVIEW SS4.4 challenged and SS22.5 confirmed against pricing-page footnote 6) and had no trigger owner in the prose list. Consumption clock, re-derived from the Azure pricing page. 2026-11-14: meter names, the 73M Storage threshold, per-1K-token AI Services billing, the 30-day trial, and the 22% pre-purchase ceiling re-confirmed. The pricing page hides its per- unit columns from scripted and text reads, so the App Service and database billing units were not visible; check them in a full browser at the next pass."
     },
     {
+     "id": "TRG-EU-AI-ACT",
+     "type": "watch",
+     "cadence_days": null,
+     "title": "EU AI Act: decide whether it becomes a framework module or stays out",
+     "next_review": "2027-06-01",
+     "last_executed": "2026-11-27",
+     "affects": [],
+     "rows": [],
+     "note": "Deferred in Session 23 (owner ruling 2026-11-27, AUDIT-FINDINGS SS41.2). Regulation (EU) 2024/1689 as amended by the 2026 AI Omnibus: high-risk obligations apply from 2 Dec 2027 (Annex III) and 2 Aug 2028 (Annex I). The technical articles bind mainly high-risk providers, and the harmonised standards were not settled in November 2026. When this fires, six months before the Annex III date: re-read the Commission's AI Act page for dates and the standards' status, then choose between a module, a note on the ISO 42001 and NIST AI RMF rows, or another deferral."
+    },
+    {
      "id": "TRG-CJIS-DEMAND",
      "type": "watch",
      "cadence_days": null,
@@ -919,13 +930,13 @@
   },
   "verified_range": {
    "earliest": "2026-07-16",
-   "latest": "2026-11-14"
+   "latest": "2026-11-27"
   },
   "reverification_schedule": {
    "last_pass": "2026-11-14",
    "next_due": "2027-05-14"
   },
-  "description_meta": "Mapping frameworks to the Microsoft security stack. 378 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
+  "description_meta": "Mapping frameworks to the Microsoft security stack. 385 control mappings across 11 compliance frameworks and 6 Microsoft security products, each rated for claim strength and verified against an official source."
  },
  "products": {
   "purview": {
@@ -1040,7 +1051,9 @@
   }
  },
  "related_products": {
-  "priva": "Microsoft Priva"
+  "priva": "Microsoft Priva",
+  "agent-365": "Microsoft Agent 365",
+  "foundry": "Microsoft Foundry"
  },
  "solutions": {
   "Information Protection": {
@@ -1305,7 +1318,7 @@
     "K AI Systems"
    ],
    "applies_to": "Suppliers processing Microsoft Personal Data and/or Microsoft Confidential Data (SSPA-enrolled)",
-   "notes": "v12 (63 requirements) is current for FY26. Sections B, C, G, H and K carry no defensible Purview mapping (contractual/organizational or supplier-AI-system controls); these are deliberate exclusions, see AUDIT-FINDINGS.md."
+   "notes": "v12 (63 requirements) is current for FY26. Sections B, C, G and H carry no defensible mapping (contractual or organizational controls); these are deliberate exclusions, see AUDIT-FINDINGS.md. Section K (AI Systems, #51 to #63) applies only to suppliers whose service involves AI Systems. Its technical requirements are mapped from 3.6.0, mostly to Defender for Cloud, and its contractual and disclosure duties are one boundary row."
   },
   "iso-27001-2022": {
    "id": "iso-27001-2022",
@@ -1696,8 +1709,8 @@
     "iso-27001-2022",
     "soc-2"
    ],
-   "note": "For vendors and partners enrolled in Microsoft's Supplier Security and Privacy Assurance program, whose contracts drive the Data Protection Requirements. This is the most Purview-centric lens: classification, DLP, retention, records, audit, and eDiscovery carry the data-handling obligations, while non-data controls stay deliberately unmapped.",
-   "note_detail": "SSPA enrollment drives DPR compliance; ISO 27001 certification can qualify for SSPA alternative-compliance paths, and SOC 2 reports often accompany them. The DPR story is Purview-dense: classification and DLP for the data-handling requirements, retention and records management for return-or-destroy, and audit plus eDiscovery for the incident and data-subject obligations. Requirements outside the data layer (identity, transport encryption, supplier AI systems) stay deliberately unmapped."
+   "note": "For vendors and partners enrolled in Microsoft's Supplier Security and Privacy Assurance program, whose contracts drive the Data Protection Requirements. This is the most Purview-centric lens: classification, DLP, retention, records, audit, and eDiscovery carry the data-handling obligations.",
+   "note_detail": "SSPA enrollment drives DPR compliance; ISO 27001 certification can qualify for SSPA alternative-compliance paths, and SOC 2 reports often accompany them. The DPR story is Purview-dense: classification and DLP for the data-handling requirements, retention and records management for return-or-destroy, and audit plus eDiscovery for the incident and data-subject obligations. Outside the data layer, Entra carries access and authentication (J #36, J #45), Intune asset inventory and disk encryption (J #35, J #48), and Defender for Cloud the technical requirements of the AI Systems section (K), added in 3.6.0. Contractual and disclosure requirements stay unmapped."
   }
  },
  "rows": [
@@ -2709,7 +2722,7 @@
    "confidence": "High",
    "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.microsoft.com/en-us/procurement/sspa",
     "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
@@ -2719,6 +2732,291 @@
    "status": "verified",
    "last_verified": "2026-11-14",
    "license_band": "consumption",
+   "license_band_partial": false
+  },
+  {
+   "id": "dpr-k53-mdc",
+   "product": "defender-cloud",
+   "framework": "sspa-dpr",
+   "framework_version": "v12 (March 2026)",
+   "control_ref": "K #53",
+   "control_domain": "K AI Systems",
+   "control_intent": "Keep an AI System incident response plan that notifies Microsoft promptly on a Data Incident or on a failure that would harm an AI System's Intended Uses, with steps for rollback, switching features off, and releasing model updates.",
+   "purview_solution": "Workload Protection Plans",
+   "also_involves": [],
+   "capability_detail": "Defender for AI Services raises real-time security alerts on generative AI deployments in Azure OpenAI and the Azure AI model inference service, for threats including data leakage, data poisoning, jailbreak, and credential theft, and sends them to the Defender portal, where they correlate into incidents with the supplier's other alerts",
+   "how_it_supports": "Supplies the detection and timing input to the plan: an AI security event arrives as a dated alert and incident, which is what starts the clock on notifying Microsoft. The plan itself is not a product function. Rollback, switching features off, model updates, and notifying Microsoft and end users are supplier processes, and failures that are not security events, such as accuracy drift, raise no alert here.",
+   "config_evidence_example": "Defender for AI Services enabled on every subscription hosting AI deployments used for Microsoft work; AI alerts routed to the SOC queue in the Defender portal",
+   "operational_evidence_example": "AI alert and incident history with timestamps; incident records linked to the supplier's notifications to Microsoft",
+   "related_microsoft": [
+    {
+     "product": "sentinel",
+     "solution": "Incident Management & Investigation",
+     "role": "contributing",
+     "note": "The Section I incident-response row (dpr-i30-31-sentinel) carries the estate-wide incident workflow; Defender for Cloud alerts ingest into Sentinel free of charge"
+    },
+    {
+     "product": "foundry",
+     "solution": null,
+     "role": "contributing",
+     "note": "Where the AI System is built on Microsoft Foundry, its model deployments are the resources these alerts cover"
+    }
+   ],
+   "external_dependencies": "AI System incident response plan; rollback and feature shut-off procedures; model update and release process; contractual notification to Microsoft",
+   "legacy_dependencies": "",
+   "coverage": "Evidence Support Only",
+   "confidence": "Medium",
+   "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
+   "licensing_model": "consumption",
+   "cloud_availability_note": "Defender for AI Services and AI security posture management (Defender CSPM) are GA in Azure Government. Suspicious prompt evidence, the Data & AI security dashboard, and DevOps security, which scans code and infrastructure as code, are not available there.",
+   "sources": [
+    "https://www.microsoft.com/en-us/procurement/sspa",
+    "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
+    "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection",
+    "https://learn.microsoft.com/azure/defender-for-cloud/concept-integration-365"
+   ],
+   "status": "verified",
+   "last_verified": "2026-11-27",
+   "license_band": "consumption",
+   "license_band_partial": false
+  },
+  {
+   "id": "dpr-k57-mdc",
+   "product": "defender-cloud",
+   "framework": "sspa-dpr",
+   "framework_version": "v12 (March 2026)",
+   "control_ref": "K #57",
+   "control_domain": "K AI Systems",
+   "control_intent": "Assess AI Systems for privacy, security, and responsible-AI risk, covering bias, security vulnerabilities, and unintended consequences, and keep the evidence, including testing and the annual maintenance that follows.",
+   "purview_solution": "Defender CSPM",
+   "also_involves": [],
+   "capability_detail": "AI security posture management in Defender CSPM discovers deployed AI workloads in Azure OpenAI, Azure AI Foundry, Azure Machine Learning, Amazon Bedrock, and Google Vertex AI into an AI bill of materials, issues recommendations on the identity, data security, and internet exposure of AI resources, and runs attack path analysis that finds grounding or fine-tuning data reachable from the internet",
+   "how_it_supports": "Carries the security-vulnerability part of the assessment, and runs it continuously rather than once a year: the AI workloads in scope are found, their configuration weaknesses are ranked, and the paths an attacker could take to training or grounding data are shown. Bias and unintended-consequence assessment, and the privacy assessment of what the system is for, are responsible-AI work that no mapped product performs. Agent-level discovery and posture for Foundry and third-party agents need a Microsoft Agent 365 license since July 1, 2026, not Defender CSPM.",
+   "config_evidence_example": "Defender CSPM enabled on the subscriptions and AWS or GCP connectors that host AI workloads; AI workloads visible in the AI bill of materials; AWS connector permissions updated for AI discovery",
+   "operational_evidence_example": "AI security recommendation status and remediation history; attack path findings on AI resources with resolution dates; AI inventory export attached to the annual assessment",
+   "related_microsoft": [
+    {
+     "product": "foundry",
+     "solution": null,
+     "role": "contributing",
+     "note": "Foundry accounts and projects are among the AI workloads Defender CSPM discovers"
+    },
+    {
+     "product": "agent-365",
+     "solution": null,
+     "role": "contributing",
+     "note": "Agent-level discovery and posture for Foundry and third-party cloud agents (if licensed; required since July 1, 2026)"
+    }
+   ],
+   "external_dependencies": "Responsible-AI impact and bias assessment; privacy assessment of the AI System's purpose; testing program; annual review",
+   "legacy_dependencies": "",
+   "coverage": "Partial Support",
+   "confidence": "Medium",
+   "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
+   "licensing_model": "consumption",
+   "cloud_availability_note": "Defender for AI Services and AI security posture management (Defender CSPM) are GA in Azure Government. Suspicious prompt evidence, the Data & AI security dashboard, and DevOps security, which scans code and infrastructure as code, are not available there.",
+   "sources": [
+    "https://www.microsoft.com/en-us/procurement/sspa",
+    "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
+    "https://learn.microsoft.com/azure/defender-for-cloud/ai-security-posture",
+    "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path"
+   ],
+   "status": "verified",
+   "last_verified": "2026-11-27",
+   "license_band": "consumption",
+   "license_band_partial": false
+  },
+  {
+   "id": "dpr-k58",
+   "product": "purview",
+   "framework": "sspa-dpr",
+   "framework_version": "v12 (March 2026)",
+   "control_ref": "K #58",
+   "control_domain": "K AI Systems",
+   "control_intent": "Make AI Systems transparent and explainable to Microsoft, and log every system failure, corruption, hallucination, or reported misuse, with evidence of the steps taken to resolve it.",
+   "purview_solution": "Audit",
+   "also_involves": [],
+   "capability_detail": "Audit (Standard) records user interactions with Microsoft Copilot and with custom AI applications built on Microsoft Copilot Studio and Microsoft Foundry: who interacted, when, in which service, which files a response drew on, and whether a policy blocked access. Interactions with non-Microsoft AI applications are recorded under pay-as-you-go billing",
+   "how_it_supports": "Gives an investigation into reported misuse a record of how the AI application was used. It does not record failures, corruption, or hallucinations as such, and it explains nothing about how a model reached an output: transparency and explainability are disclosures the supplier writes, and failure logging is the AI application's own telemetry.",
+   "config_evidence_example": "Auditing on for the tenant; pay-as-you-go billing enabled where non-Microsoft AI applications are in scope",
+   "operational_evidence_example": "Audit search export of the AI interaction records behind an investigated misuse report, linked to its remediation ticket",
+   "related_microsoft": [
+    {
+     "product": "foundry",
+     "solution": null,
+     "role": "contributing",
+     "note": "Interaction records for custom AI applications built on Foundry are included in Audit (Standard)"
+    }
+   ],
+   "external_dependencies": "Transparency and explainability disclosures; application telemetry for failures, corruption, and hallucinations; issue tracking that shows resolution",
+   "legacy_dependencies": "",
+   "coverage": "Evidence Support Only",
+   "confidence": "Low",
+   "license_requirement": "Audit (Standard): included across Microsoft 365/Office 365 enterprise, government, and business plans (180-day retention)",
+   "licensing_model": "per_user",
+   "cloud_availability_note": "Audit (Standard/Premium) incl. 1-year and 10-year retention: Available in GCC High/DoD.",
+   "sources": [
+    "https://www.microsoft.com/en-us/procurement/sspa",
+    "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
+    "https://learn.microsoft.com/purview/audit-copilot"
+   ],
+   "status": "verified",
+   "last_verified": "2026-11-27",
+   "license_band": "e3",
+   "license_band_partial": false
+  },
+  {
+   "id": "dpr-k59-mdc",
+   "product": "defender-cloud",
+   "framework": "sspa-dpr",
+   "framework_version": "v12 (March 2026)",
+   "control_ref": "K #59",
+   "control_domain": "K AI Systems",
+   "control_intent": "Monitor AI Systems continuously and adapt and update them as new risks emerge, logging failures and misuse with the steps taken to resolve them.",
+   "purview_solution": "Workload Protection Plans",
+   "also_involves": [],
+   "capability_detail": "Defender for AI Services monitors activity on Azure OpenAI and Azure AI model inference deployments in real time, using Azure AI Content Safety Prompt Shields and Microsoft threat intelligence, and alerts on jailbreak attempts, data leakage, data poisoning, and credential theft; alerts can carry the suspicious prompt as evidence. Text tokens only: image and audio are not scanned",
+   "how_it_supports": "Implements continuous security monitoring of the AI workload, so new attack techniques reach the supplier as alerts without its own detection engineering. Adapting the system in response (retraining, filter and prompt changes, model updates) is the supplier's engineering, and monitoring for quality, accuracy, or harmful output that is not an attack belongs to the AI platform's own evaluation tooling.",
+   "config_evidence_example": "Defender for AI Services on for every subscription with AI deployments used in Microsoft work; suspicious prompt evidence enabled",
+   "operational_evidence_example": "AI alert history by deployment; triage and resolution records per alert",
+   "related_microsoft": [
+    {
+     "product": "foundry",
+     "solution": null,
+     "role": "contributing",
+     "note": "Model deployments in Foundry are the resources monitored"
+    },
+    {
+     "product": "sentinel",
+     "solution": "Data Collection & Connectors",
+     "role": "contributing",
+     "note": "Defender for Cloud alerts ingest into Sentinel free of charge for retention and correlation"
+    }
+   ],
+   "external_dependencies": "Model evaluation for quality and safety; change and release process for model and prompt updates; failure and misuse log",
+   "legacy_dependencies": "",
+   "coverage": "Partial Support",
+   "confidence": "Medium",
+   "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
+   "licensing_model": "consumption",
+   "cloud_availability_note": "Defender for AI Services and AI security posture management (Defender CSPM) are GA in Azure Government. Suspicious prompt evidence, the Data & AI security dashboard, and DevOps security, which scans code and infrastructure as code, are not available there.",
+   "sources": [
+    "https://www.microsoft.com/en-us/procurement/sspa",
+    "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
+    "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection"
+   ],
+   "status": "verified",
+   "last_verified": "2026-11-27",
+   "license_band": "consumption",
+   "license_band_partial": false
+  },
+  {
+   "id": "dpr-k60-mdc",
+   "product": "defender-cloud",
+   "framework": "sspa-dpr",
+   "framework_version": "v12 (March 2026)",
+   "control_ref": "K #60",
+   "control_domain": "K AI Systems",
+   "control_intent": "Disclose for each Intended Use the error types, performance metrics, and safety and reliability indicators, including documented mitigations for well-known AI risks such as jailbreaks, data poisoning, and prompt extraction, and evidence of accuracy.",
+   "purview_solution": "Workload Protection Plans",
+   "also_involves": [],
+   "capability_detail": "Defender for AI Services alerts on jailbreak attempts, data poisoning, and data leakage against Azure OpenAI and Azure AI model inference deployments, drawing on Azure AI Content Safety Prompt Shields, and can attach the prompt involved as evidence",
+   "how_it_supports": "Supplies evidence that the mitigations for well-known AI risks are watched in production: attempted jailbreaks and poisoning appear as dated alerts the supplier can cite in its disclosure. The mitigations themselves (Prompt Shields filters, input validation, grounding controls) are configured in Azure AI Content Safety and the application, outside the six mapped products. Error ranges, performance metrics, accuracy evidence, and automation-bias controls come from the supplier's own evaluation and documentation.",
+   "config_evidence_example": "Prompt Shields enabled on the AI deployments; Defender for AI Services on for the same subscriptions",
+   "operational_evidence_example": "Jailbreak and data-leakage alert counts per deployment over the disclosure period, cited in the disclosure's mitigation section",
+   "related_microsoft": [
+    {
+     "product": "foundry",
+     "solution": null,
+     "role": "contributing",
+     "note": "Foundry hosts the model deployments and their content filters"
+    }
+   ],
+   "external_dependencies": "Azure AI Content Safety Prompt Shields and application-level mitigations; evaluation of error types, accuracy, and reliability; transparency documentation",
+   "legacy_dependencies": "",
+   "coverage": "Evidence Support Only",
+   "confidence": "Medium",
+   "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
+   "licensing_model": "consumption",
+   "cloud_availability_note": "Defender for AI Services and AI security posture management (Defender CSPM) are GA in Azure Government. Suspicious prompt evidence, the Data & AI security dashboard, and DevOps security, which scans code and infrastructure as code, are not available there.",
+   "sources": [
+    "https://www.microsoft.com/en-us/procurement/sspa",
+    "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
+    "https://learn.microsoft.com/azure/defender-for-cloud/ai-threat-protection"
+   ],
+   "status": "verified",
+   "last_verified": "2026-11-27",
+   "license_band": "consumption",
+   "license_band_partial": false
+  },
+  {
+   "id": "dpr-k62-mdc",
+   "product": "defender-cloud",
+   "framework": "sspa-dpr",
+   "framework_version": "v12 (March 2026)",
+   "control_ref": "K #62",
+   "control_domain": "K AI Systems",
+   "control_intent": "Keep, as part of the transparency disclosures, a standard operating procedure and system-health monitoring framework for each AI system: monitoring methods and tools, how failures are reproduced, which events are monitored and how fast they are reviewed, how feedback is gathered, and how third-party AI components, including open source, are kept up to date.",
+   "purview_solution": "Defender CSPM",
+   "also_involves": [],
+   "capability_detail": "AI security posture management keeps an AI bill of materials for discovered AI workloads and finds vulnerabilities in generative AI library dependencies such as TensorFlow, PyTorch, and LangChain by scanning source code, infrastructure as code, and container images, with recommendations to update or patch them",
+   "how_it_supports": "Implements the third-party-components clause on its security side: vulnerable AI libraries and model-serving components are found and tracked to remediation. It is one tool inside the framework, not the framework. The procedure, the list of monitored events and review timings, failure reproduction, and feedback gathering are the supplier's to write and run.",
+   "config_evidence_example": "Defender CSPM on, with code repositories and container registries holding AI applications connected for scanning; AI workloads in the AI bill of materials",
+   "operational_evidence_example": "AI library vulnerability findings with remediation dates; AI bill of materials export attached to the procedure",
+   "related_microsoft": [
+    {
+     "product": "foundry",
+     "solution": null,
+     "role": "contributing",
+     "note": "Foundry projects appear in the AI bill of materials"
+    }
+   ],
+   "external_dependencies": "System-health monitoring procedure; failure reproduction and feedback processes; dependency update process in the build pipeline",
+   "legacy_dependencies": "",
+   "coverage": "Partial Support",
+   "confidence": "Medium",
+   "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
+   "licensing_model": "consumption",
+   "cloud_availability_note": "Defender for AI Services and AI security posture management (Defender CSPM) are GA in Azure Government. Suspicious prompt evidence, the Data & AI security dashboard, and DevOps security, which scans code and infrastructure as code, are not available there.",
+   "sources": [
+    "https://www.microsoft.com/en-us/procurement/sspa",
+    "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf",
+    "https://learn.microsoft.com/azure/defender-for-cloud/ai-security-posture"
+   ],
+   "status": "verified",
+   "last_verified": "2026-11-27",
+   "license_band": "consumption",
+   "license_band_partial": false
+  },
+  {
+   "id": "dpr-k-boundary",
+   "product": "purview",
+   "framework": "sspa-dpr",
+   "framework_version": "v12 (March 2026)",
+   "control_ref": "K #51, #52, #54–#56, #61, #63",
+   "control_domain": "K AI Systems",
+   "control_intent": "Have AI Systems contract terms and disclosed Intended Uses in place; avoid prohibited AI practices; keep transparency disclosures and update them when uses, functionality, or performance change; sign AI-supplier agreements covering data, intellectual property, liability, and incidents; assign accountability for AI oversight; and withdraw or fix an AI System found unfit for its Intended Use.",
+   "purview_solution": "None (boundary row)",
+   "also_involves": [],
+   "capability_detail": "n/a",
+   "how_it_supports": "Deliberate boundary row kept coarse (uniform verdict across the seven requirements): these are contractual, disclosure, and governance duties the supplier performs through its contracts, documentation, and responsible-AI program. No mapped product performs them or produces evidence of them.",
+   "config_evidence_example": "n/a",
+   "operational_evidence_example": "n/a",
+   "related_microsoft": [],
+   "external_dependencies": "AI Systems contract terms with Microsoft; transparency disclosures and Intended Use documentation; responsible-AI program with a named accountable owner; AI-supplier agreements",
+   "legacy_dependencies": "",
+   "coverage": "Not Covered",
+   "confidence": "High",
+   "license_requirement": "n/a",
+   "licensing_model": "n/a",
+   "cloud_availability_note": null,
+   "sources": [
+    "https://www.microsoft.com/en-us/procurement/sspa",
+    "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/accex/documents/presentations/FY26-Microsoft-Supplier-Data-Protection-Requirements-v12_en-US.pdf"
+   ],
+   "status": "verified",
+   "last_verified": "2026-11-27",
+   "license_band": "na",
    "license_band_partial": false
   },
   {
@@ -4805,7 +5103,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.iso.org/standard/27001",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-agentless-data-collection",
@@ -4934,7 +5232,7 @@
    "confidence": "High",
    "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.iso.org/standard/27001",
     "https://learn.microsoft.com/azure/defender-for-cloud/introduction-malware-scanning",
@@ -4981,7 +5279,7 @@
    "confidence": "High",
    "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.iso.org/standard/27001",
     "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview",
@@ -6449,7 +6747,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022",
     "https://learn.microsoft.com/azure/defender-for-cloud/tutorial-enable-cspm-plan",
@@ -6543,7 +6841,7 @@
    "confidence": "High",
    "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022",
     "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview",
@@ -7684,7 +7982,7 @@
    "confidence": "Medium",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path",
@@ -9471,7 +9769,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-agentless-data-collection",
@@ -9600,7 +9898,7 @@
    "confidence": "High",
    "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded). Defender for Servers Plan 2: consumption-priced per protected server per hour, billed monthly. Includes everything in Plan 1 (incl. the integrated MDE for Servers license) plus agentless machine scanning, premium Defender Vulnerability Management capabilities, file integrity monitoring, just-in-time VM access, OS baseline/system-updates assessment, DNS-layer alerts, and a 500 MB/day free security-data ingestion allowance on the associated Log Analytics/Microsoft Sentinel workspace (applies to designated security tables).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
     "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview",
@@ -9639,7 +9937,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/171/r2/upd1/final",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path",
@@ -11474,7 +11772,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-agentless-data-collection",
@@ -11727,7 +12025,7 @@
    "confidence": "High",
    "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded). Defender for Servers Plan 2: consumption-priced per protected server per hour, billed monthly. Includes everything in Plan 1 (incl. the integrated MDE for Servers license) plus agentless machine scanning, premium Defender Vulnerability Management capabilities, file integrity monitoring, just-in-time VM access, OS baseline/system-updates assessment, DNS-layer alerts, and a 500 MB/day free security-data ingestion allowance on the associated Log Analytics/Microsoft Sentinel workspace (applies to designated security tables).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Available in Azure Government: Foundational CSPM (asset inventory, MCSB recommendations, secure score), Defender CSPM, Defender for Servers (P1/P2), Defender for Storage, Containers, Key Vault, Resource Manager, and the SQL/open-source database plans are GA. Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
     "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview",
@@ -13140,7 +13438,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.nist.gov/cyberframework",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-agentless-data-collection",
@@ -13315,7 +13613,7 @@
    "confidence": "High",
    "license_requirement": "Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded). Defender for Servers Plan 1: consumption-priced per protected server per hour, billed monthly. Plan 1 centers on the integrated Microsoft Defender for Endpoint for Servers license (EDR); customers already licensed for MDE for Servers can request a price adjustment through Azure support (the MDE portion is not double-charged).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.nist.gov/cyberframework",
     "https://learn.microsoft.com/azure/defender-for-cloud/alerts-overview",
@@ -14378,7 +14676,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.pcisecuritystandards.org/document_library/",
     "https://learn.microsoft.com/azure/governance/policy/samples/pci-dss-4-0",
@@ -15266,7 +15564,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%. Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-C/part-314",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-agentless-data-collection",
@@ -15313,7 +15611,7 @@
    "confidence": "High",
    "license_requirement": "Foundational CSPM is free on every subscription/account onboarded to Defender for Cloud (secure score, MCSB security recommendations, asset inventory, multicloud connectors): no per-user license and no charge. The paid plans below are consumption-priced per protected resource. Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%.",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-C/part-314",
     "https://learn.microsoft.com/azure/defender-for-cloud/asset-inventory",
@@ -16488,7 +16786,7 @@
    "confidence": "High",
    "license_requirement": "Defender CSPM: consumption-priced per billable resource per month. It protects all multicloud workloads but bills only on servers, storage accounts, databases (OSS/SQL incl. servers-on-machines), and serverless resources (conversion ratios apply). 30-day free trial on first enablement; a 1-year pre-purchase plan (Commit Units) discounts up to 22%. Consumption-priced per protected resource, metered by plan: Defender for Storage per storage account/month plus per-transaction overage above 73M/month and per-GB malware scanning; Defender for Databases per database server (Cosmos DB per provisioned RU); Defender for Containers per vCore of Kubernetes worker nodes (includes a monthly image-scan allowance); Defender for App Service per app instance; Defender for Key Vault per vault/month; Defender for Resource Manager per subscription/month; Defender for APIs by call-volume plan tier (Plans 1–5); AI Services per 1K tokens. 30-day free trial on first enablement (malware scanning excluded).",
    "licensing_model": "consumption",
-   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, AI Services threat protection, Defender for Cosmos DB, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
+   "cloud_availability_note": "Azure Government gaps: Defender for APIs, Defender for App Service, and DevOps security are not available; within Defender CSPM, CIEM, the Data & AI security dashboard, EASM integration, ServiceNow integration, and code-to-runtime mapping are not available; Defender for Storage sensitive data threat detection is not available (DSPM sensitive data scanning is GA).",
    "sources": [
     "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
     "https://learn.microsoft.com/azure/defender-for-cloud/concept-data-security-posture",
