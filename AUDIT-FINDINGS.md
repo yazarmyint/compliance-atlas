@@ -4116,3 +4116,92 @@ owner first and approved on 2026-11-26.
 it to the software, which the detector does not recognize. Making it detectable means restructuring a
 legal file (MIT text alone in `LICENSE`, the scoping note moved beside `LICENSE-CONTENT.md`); that is a
 licensing edit, so it waits for an owner decision rather than riding on a metadata session.
+
+## 41. AI phase 1: decisions (2026-11-27) — REVIEW-2026-11 session 23; no version
+
+Session 23. Decisions only: nothing in the built artifact changed. Every fact below was re-read live on
+2026-11-27; the rows themselves are authored, and their refs pinned, in sessions 24 and 25.
+
+### 41.1 What was verified
+
+| Fact | Source | Consequence |
+|---|---|---|
+| Microsoft 365 E7, GA 2026-05-01, is E5 + Microsoft Copilot + Agent 365 + Entra Suite | Agent 365 admin overview, licensing; Copilot E3/E5/E7 comparison | Agent features are gated on Agent 365 |
+| Agent 365 is also a standalone add-on (to E5/A5/Business Premium, or Defender Suite + Purview Suite) | Entra licensing, "Microsoft Entra Agent ID" | Agent-gated rows band **addon** |
+| Conditional Access for agents: E7, or Agent 365 with at least Entra ID P1 / Microsoft 365 E3 (P2 / E5 for agent risk) | Entra licensing; CA for agents | New `ENTRA_LIC['agent_ca']` |
+| DLP for Microsoft Copilot: restricting Copilot from processing labeled files and emails needs E5-class licensing; DLP on prompts is available to every Copilot and Copilot Chat user | Purview service description | New `LIC['dlp_copilot']`, band e3 with partial |
+| Purview for "agentic workloads" (Foundry agents, Entra-connected AI apps) "will be supported by" E7 and Agent 365 | Purview service description | Future tense: no row may rest on it until it is present tense |
+| Since 2026-07-01, AI agent discovery and posture for Foundry and third-party cloud agents need Agent 365, not Defender CSPM | Defender for Cloud AI-SPM overview | Defender for Cloud rows stay at workload level (AI BOM, library vulnerabilities, AI threat protection) on existing `MDC_LIC['cspm']` and `MDC_LIC['workload']` |
+| Compliance Manager premium AI templates: EU AI Act, ISO/IEC 23894, ISO/IEC 42001, NIST AI RMF 1.0 | Compliance Manager assessments | 42001 card: `compliance_manager_template.exists = True` |
+| DPR v12 (March 2026) is still the current version; Section K is #51 to #63 and applies only to suppliers whose service to Microsoft involves AI systems | SSPA page; v12 PDF read locally, not stored (copyright rule) | B-01 authors against v12 |
+| Unified DSPM is current; DSPM for AI is "(classic)" | DSPM learn-about | New AI rows use **DSPM**; `TRG-DSPM-CLASSIC` still governs the split |
+
+Not verified: ISO/IEC 42001 edition status (iso.org refuses scripts; hand-check at authoring). NIST AI RMF
+revision status (session 26 Phase 1).
+
+### 41.2 Owner rulings
+
+| # | Question | Ruling |
+|---|---|---|
+| 4 | AI scope | **Microsoft Agent 365 and Microsoft Foundry enter as reference-only related products**, on the Priva pattern. Security Copilot stays out: a tool for the security team, not a control on the organization's AI |
+| 5 | Fit threshold | **Accept the honest fit.** No Direct quota; every row clears its own tier on evidence |
+| 6 | Order | **DPR Section K, then ISO 42001, then NIST AI RMF** |
+| 7 | EU AI Act | **Defer.** A dated trigger for 2027-06-01, six months before the Annex III date, lands with session 24 |
+| 8 | Version rule | **Rows added to a framework already shipped are MINOR** (now in the CHANGELOG policy). Section K ships as 3.6.0 |
+| 9 | E7 | **Strings only.** Agent-gated rows band addon; no new band, no MAJOR |
+| — | Entra in 42001 | **Yes**: one Entra Agent ID row on A.4.2, 18 rows in all |
+
+### 41.3 B-01, DPR v12 Section K: 7 rows (session 24, 3.6.0)
+
+| Ref | Requirement (paraphrase) | Product and capability | Forecast |
+|---|---|---|---|
+| #53 | AI incident response plan: notify Microsoft, roll back, switch features off | Defender for Cloud: AI threat protection alerts into XDR incidents | Evidence Support Only, Medium |
+| #57 | Privacy, security, and responsible-AI risk assessment | Defender for Cloud: AI security posture recommendations and attack paths (security slice) | Partial, Medium |
+| #58 | Log failures, hallucinations, misuse; show remediation | Purview Audit of AI interactions | Evidence Support Only, Low |
+| #59 | Continuous monitoring and adaptation | Defender for Cloud: AI threat protection | Partial, Medium |
+| #60 | Mitigations for jailbreaks, poisoning, prompt extraction; accuracy evidence | Defender for Cloud: AI threat protection detections (the mitigation itself, Prompt Shields, is outside the six products) | Evidence Support Only, Medium |
+| #62 | Health-monitoring SOP, third-party AI components kept current | Defender for Cloud: AI BOM and AI library vulnerabilities | Partial, Medium |
+| #51, #52, #54–#56, #61, #63 | Contract terms, prohibited practices, transparency disclosures, AI-supplier agreements, accountability, disclosure updates, unfit-for-use handling | Coarse boundary row | Not Covered |
+
+0 Direct, 3 Partial, 3 Evidence, 1 boundary. The DPR module's `row()` helper hard-codes Purview, so a second
+helper is needed. The framework note calling Section K a deliberate exclusion is reversed in the same commit:
+it was right for Purview alone and is wrong once Defender for Cloud is in scope.
+
+### 41.4 B-02, ISO/IEC 42001:2023 Annex A: 18 rows (session 25, 3.7.0)
+
+Refs are indicative and must be pinned against the standard's text at authoring.
+
+| Ref | Control area | Product and capability | Forecast |
+|---|---|---|---|
+| A.4.4 / A.4.5 | Tooling and computing resources | Defender for Cloud: AI BOM | Partial, Medium |
+| A.4.2 | Resource documentation | Purview DSPM: AI observability inventory | Partial, Medium |
+| A.4.2 | (same) | Entra: Agent ID inventory and Conditional Access for agents (addon, Agent 365) | Partial, Medium |
+| A.6.2.6 | Operation and monitoring | Defender for Cloud: AI threat protection | Partial, Medium |
+| A.6.2.6 | (same) | Sentinel: AI alert and audit correlation | Partial, Medium |
+| A.6.2.8 | Recording of event logs | Purview Audit: AI interactions and agent activities | Direct, Medium (Microsoft-supported AI apps) |
+| A.6.2.8 | (same) | Sentinel: retention and analysis | Partial, High |
+| A.7.2 | Data for development and enhancement | Information Protection: labels honored by Copilot | Partial, Medium |
+| A.7.3–A.7.6 | Acquisition, quality, provenance, preparation | Boundary | Not Covered |
+| A.8.4 | Communication of incidents | Defender XDR: AI-related incidents | Evidence Support Only, Medium |
+| A.9.2 | Processes for responsible use | DLP for Copilot and Endpoint DLP to generative AI sites | Partial, High |
+| A.9.2 | (same) | Communication Compliance over AI interactions | Partial, Medium |
+| A.9.2 | (same) | Insider Risk Management: risky AI usage | Partial, Medium |
+| A.9.4 | Intended use | Defender for Cloud Apps: sanction or unsanction generative AI apps | Partial, Medium |
+| A.10.3 | Suppliers | Defender for Cloud Apps: generative AI app risk scores | Evidence Support Only, Medium |
+| A.2.2 | AI policy | Compliance Manager: 42001 premium template | Evidence Support Only, Medium |
+| A.5.2 | AI system impact assessment | Boundary | Not Covered |
+| A.3.2 | Roles and responsibilities | Boundary | Not Covered |
+
+1 Direct, 11 Partial, 3 Evidence, 3 boundary (6% Direct). Purview 7, Defender XDR 3, Defender for Cloud 2,
+Sentinel 2, Entra 1, Intune 0.
+
+### 41.5 New licensing constants
+
+| Constant | Basis | Band | First used |
+|---|---|---|---|
+| `LIC['dlp_copilot']` | Service description, DLP for Microsoft Copilot | e3 + partial | Session 25 |
+| `ENTRA_LIC['agent_ca']` | Entra licensing, CA for agents | addon | Session 25 |
+| `LIC['ai_payg']` | Purview pay-as-you-go for non-Microsoft AI interactions | consumption | Only if a row covers custom or third-party AI apps; verify first |
+
+Each enters with a band (G1) and a maintenance trigger, re-fetched on the day it is written. Section K needs
+none of them: its rows rest on `MDC_LIC['cspm']`, `MDC_LIC['workload']`, and `LIC['audit_std']`.

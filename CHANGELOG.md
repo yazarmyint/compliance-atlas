@@ -11,6 +11,10 @@ All notable changes to Compliance Atlas — the dataset (`compliance-atlas.json`
 | **MINOR** | A framework, product, industry lens, or reader-facing feature added. Existing rows keep their shape and their meaning. |
 | **PATCH** | Row corrections and re-verifications. Claims may change; nothing structural does. |
 
+**Rows added to a framework already shipped are MINOR** (owner ruling, 2026-11-27, AUDIT-FINDINGS §41). They
+make readable a part of the framework that readers could not see before, which is a reader-facing addition, not a
+correction. Corrections to existing rows stay PATCH.
+
 **Machinery-only changes are PATCH.** Build code, tooling, documentation, and process — where no
 reader gains anything, no claim moves, and the shape of `compliance-atlas.json` does not change — sort
 PATCH, because the version number speaks to readers and consumers and to them nothing happened. All
