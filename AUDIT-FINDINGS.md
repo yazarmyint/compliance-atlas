@@ -4205,3 +4205,73 @@ Sentinel 2, Entra 1, Intune 0.
 
 Each enters with a band (G1) and a maintenance trigger, re-fetched on the day it is written. Section K needs
 none of them: its rows rest on `MDC_LIC['cspm']`, `MDC_LIC['workload']`, and `LIC['audit_std']`.
+
+## 42. DPR Section K (2026-11-27) — REVIEW-2026-11 B-01; v3.6.0
+
+Session 24, authored to the plan in §41.3. Every capability, licensing, and government claim on the new
+rows was re-read live on 2026-11-27; Section K itself was read in the v12 PDF (not stored, per the
+copyright rule). DPR v12 is still the current version on the SSPA page.
+
+### 42.1 Rows
+
+| Id | Ref | Product, solution | Coverage, confidence | Licensing constant |
+|---|---|---|---|---|
+| `dpr-k53-mdc` | #53 | Defender for Cloud, Workload Protection Plans | Evidence Support Only, Medium | `MDC_LIC['workload']` |
+| `dpr-k57-mdc` | #57 | Defender for Cloud, Defender CSPM | Partial Support, Medium | `MDC_LIC['cspm']` |
+| `dpr-k58` | #58 | Purview, Audit | Evidence Support Only, Low | `LIC['audit_std']` |
+| `dpr-k59-mdc` | #59 | Defender for Cloud, Workload Protection Plans | Partial Support, Medium | `MDC_LIC['workload']` |
+| `dpr-k60-mdc` | #60 | Defender for Cloud, Workload Protection Plans | Evidence Support Only, Medium | `MDC_LIC['workload']` |
+| `dpr-k62-mdc` | #62 | Defender for Cloud, Defender CSPM | Partial Support, Medium | `MDC_LIC['cspm']` |
+| `dpr-k-boundary` | #51, #52, #54–#56, #61, #63 | None (boundary row) | Not Covered, High | n/a |
+
+As forecast: 0 Direct, 3 Partial, 3 Evidence, 1 boundary. The ids were blessed into the permanent roster
+with `update_row_ids.py --write` and become binding when merged.
+
+Choices worth recording:
+
+- **Agent-level posture is not mapped.** Since 2026-07-01, AI agent discovery and posture for Foundry and
+  third-party agents need Agent 365, not Defender CSPM (AI-SPM overview). The Defender for Cloud rows stay
+  at workload level and name Agent 365 as a reference-only product on #57.
+- **#58 rests on Audit (Standard) only.** The audit-copilot page states that custom applications built on
+  Copilot Studio and Foundry are included in Audit (Standard), and that non-Microsoft AI applications use
+  pay-as-you-go billing. The row says so in its capability text; no `ai_payg` constant was needed.
+- **#60 is Evidence, not Partial.** The mitigations the requirement names (Prompt Shields, input
+  validation, grounding controls) are configured in Azure AI Content Safety and the application, outside
+  the six products. Defender for Cloud's alerts are evidence the mitigations are watched.
+- **The boundary row is a Purview row**, as every boundary row in the atlas is.
+
+### 42.2 Related products
+
+`RELATED_PRODUCTS` gains `agent-365` (Microsoft Agent 365) and `foundry` (Microsoft Foundry), per the
+§41.2 ruling. Foundry is named on six rows, Agent 365 on one. The About page's "Some products appear only
+as references" section names both.
+
+### 42.3 A correction found on the way: Azure Government
+
+The Defender for Cloud support matrix (page updated 2026-11-24) now shows Defender for AI Services and
+Defender for Azure Cosmos DB GA in Azure Government. `MDC_GOV['gaps']`, written 2026-07-18, said both
+were unavailable; it is on 18 rows. Corrected, and `MDC_GOV['ai']` written for the new rows. This is the
+first entry in `REVERIFIED_GOV_PASSES`. The other government notes were not re-checked and stay due from
+2027-01-12.
+
+### 42.4 Machinery
+
+- **`last_verified` moves forward only.** A pass used to overwrite every row it touched with the pass
+  date, so a row authored on 2026-11-27 on a constant re-verified 2026-11-14 would have shown the older
+  date. Now `max(row date, pass date)`. Every row authored before the first pass is unaffected, and the
+  JSON diff confirms no existing date moved. New test: `test_row_authored_after_a_pass_keeps_its_date`.
+- **`TRG-EU-AI-ACT`**, watch type, next review 2027-06-01, per §41.2.
+- **Lens text.** The `ms-supplier` notes said identity, transport encryption, and supplier AI systems
+  stay unmapped. Identity has been mapped since the Entra rows landed on 2026-07-17 (`dpr-j36-entra`, `dpr-j45-entra`) and disk
+  encryption by `dpr-j48-intune`; the sentence now names the rows instead.
+- **axe routes** gain `#/row/dpr-k57-mdc` and `#/framework/sspa-dpr` (20 routes).
+
+### 42.5 Gate
+
+`python -m unittest discover -s tests`: all pass. `assemble.py --check --strict-maintenance`: exit 0. JSON
+diff against 3.5.0: 7 rows added; on existing rows only `cloud_availability_note` (18) changed; `meta`
+changes are the version, `maintenance`, `verified_range`, and `description_meta`. Spelling lint and
+em-dash guards clean. URLs new to the atlas return 200. `axe_check.mjs`: 0 violation nodes across 20
+routes × 2 themes. On screen: `#/row/dpr-k57-mdc` renders both reference-only products in the
+Related Microsoft products block and the corrected Azure Government note; the DPR framework page shows
+"K AI Systems 7"; About names Agent 365 and Foundry. Merge held for owner review.

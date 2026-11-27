@@ -52,6 +52,42 @@ before 2.9.0 was ever public.
 
 ---
 
+## 3.6.0 — 2026-11-27
+
+DPR Section K: AI Systems (Session 24, REVIEW-2026-11 finding B-01). The first AI rows in the atlas.
+
+**For readers.**
+
+- **Microsoft SSPA DPR now maps Section K (AI Systems, #51 to #63)**, which applies only to suppliers whose
+  service to Microsoft involves AI Systems. Until now the section was listed as a deliberate exclusion, a
+  call that was right when the DPR was mapped to Purview alone. Seven rows, none of them Direct:
+  - **Defender for Cloud (5):** AI threat protection as the detection input to the AI incident plan (#53)
+    and as evidence for the jailbreak and poisoning mitigations a supplier must disclose (#60); AI
+    security posture for the security part of the risk assessment (#57) and for keeping third-party AI
+    libraries current (#62); continuous monitoring of AI workloads (#59).
+  - **Purview Audit (1):** a record of AI interactions for misuse investigations (#58), rated low because
+    the requirement is mostly about transparency and explainability.
+  - **One boundary row** for the contractual, disclosure, and accountability duties (#51, #52, #54 to
+    #56, #61, #63).
+- **Microsoft Agent 365 and Microsoft Foundry appear as reference-only products** on AI rows, the way
+  Microsoft Priva does on privacy rows: named where they matter, with no rows of their own. Agent 365
+  because Microsoft now licenses agent-level security through it (Defender for Cloud's agent posture
+  moved to it on July 1, 2026); Foundry because it is where custom AI applications are built.
+- **Correction:** the Azure Government note on 18 Defender for Cloud rows said Defender for AI Services
+  and Defender for Azure Cosmos DB were unavailable there. Both are now GA in Azure Government.
+- The Microsoft supplier lens no longer says identity and supplier AI systems are unmapped; it names
+  the rows that carry them.
+
+**For consumers of `compliance-atlas.json`.** 7 rows added (385 in all), all in `sspa-dpr`, dated
+2026-11-27. `related_products` gains `agent-365` and `foundry`. Changed: `cloud_availability_note` on 18
+rows, `frameworks[sspa-dpr].notes`, the `ms-supplier` industry notes, and `meta.maintenance` (one new
+watch trigger, `TRG-EU-AI-ACT`, for 2027-06-01). No existing row changed in any other field.
+`last_verified` is now moved forward only by a re-verification pass, so a row authored after a pass keeps
+its own date; no existing date moved.
+
+**Why MINOR.** Rows added to a framework already shipped, under the rule set on 2026-11-27 (see the
+versioning policy above). Detail in AUDIT-FINDINGS §42.
+
 ## 3.5.0 — 2026-11-26
 
 Reader fixes (Session 21, REVIEW-2026-11 findings C-01, C-04, C-05, C-07, and E-03, plus the card
